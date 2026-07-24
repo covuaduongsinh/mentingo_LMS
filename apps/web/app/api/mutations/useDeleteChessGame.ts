@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { chessApi } from "~/api/chess-api";
+import { ApiClient } from "~/api/api-client";
 import { CHESS_GAMES_QUERY_KEY } from "~/api/queries/useChessGames";
 import { queryClient } from "~/api/queryClient";
 import { getTranslatedApiErrorMessage } from "~/api/utils/getTranslatedApiErrorMessage";
@@ -13,8 +13,8 @@ export function useDeleteChessGame() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await chessApi.deleteGame(id);
-      return response.data;
+      const response = await ApiClient.api.chessControllerDeleteGame(id);
+      return response.data.data;
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: CHESS_GAMES_QUERY_KEY });

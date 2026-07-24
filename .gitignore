@@ -55,3 +55,4 @@ tmp-cookies.txt
 apps/api/api-stdout.log
 apps/api/api-stderr.log
 
+tmp-*.log

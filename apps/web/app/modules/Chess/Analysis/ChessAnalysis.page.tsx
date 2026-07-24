@@ -14,7 +14,7 @@ import { ChessBoard } from "~/modules/Chess/board";
 import { setPageTitle } from "~/utils/setPageTitle";
 
 import type { MetaFunction } from "@remix-run/react";
-import type { ChessEngineAnalyzeResult } from "~/api/chess-api";
+import type { AnalyzeResponse } from "~/api/generated-api";
 
 export const meta: MetaFunction = ({ matches }) => setPageTitle(matches, "pages.chessAnalysis");
 
@@ -28,7 +28,7 @@ export default function ChessAnalysisPage() {
   const [fenInput, setFenInput] = useState(START_FEN);
   const [fen, setFen] = useState(START_FEN);
   const [moveList, setMoveList] = useState<string[]>([]);
-  const [analysis, setAnalysis] = useState<ChessEngineAnalyzeResult | null>(null);
+  const [analysis, setAnalysis] = useState<AnalyzeResponse["data"] | null>(null);
 
   const evalPercent = useMemo(() => {
     if (!analysis) return 50;

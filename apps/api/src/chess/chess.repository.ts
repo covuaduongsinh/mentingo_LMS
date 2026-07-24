@@ -2,17 +2,25 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, count, desc, eq, ilike, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
-import { chessExerciseAttempts, chessExercises, chessGames } from "src/storage/schema";
+import {
+  chessExerciseAttempts,
+  chessExercises,
+  chessGames,
+  chessPlaySessions,
+} from "src/storage/schema";
 
 import type {
   ChessExerciseRecord,
   ChessGameRecord,
+  ChessPlaySessionRecord,
   ListChessExercisesParams,
   ListChessGamesParams,
+  ListChessPlaySessionsParams,
 } from "./chess.types";
 import type {
   CreateChessExerciseBody,
   CreateChessGameBody,
+  CreateChessPlaySessionBody,
   UpdateChessExerciseBody,
   UpdateChessGameBody,
 } from "./schemas/chess.schema";
@@ -232,6 +240,74 @@ export class ChessRepository {
       .where(eq(chessGames.id, id))
       .returning({ id: chessGames.id });
     return deleted.length > 0;
+  }
+
+  async createPlaySession(
+    userId: UUIDType,
+    body: CreateChessPlaySessionBody,
+  ): Promise<ChessPlaySessionRecord> {
+    const [row] = await this.db
+      .insert(chessPlaySessions)
+      .values({
+        userId,
+        playerColor: body.playerColor,
+        level: body.level,
+        engine: body.engine,
+        outcome: body.outcome,
+        endReason: body.endReason,
+        pgn: body.pgn,
+        movesUci: body.movesUci,
+        timeControl: body.timeControl ?? null,
+        playerTimeLeftMs: body.playerTimeLeftMs ?? null,
+        engineTimeLeftMs: body.engineTimeLeftMs ?? null,
+        durationMs: body.durationMs ?? null,
+        moveCount: body.movesUci.length,
+      })
+      .returning();
+
+    return row as ChessPlaySessionRecord;
+  }
+
+  async listPlaySessions(
+    userId: UUIDType,
+    params: ListChessPlaySessionsParams,
+  ): Promise<{
+    data: ChessPlaySessionRecord[];
+    pagination: { totalItems: number; page: number; perPage: number };
+  }> {
+    const page = params.page ?? 1;
+    const perPage = params.perPage ?? 20;
+    const offset = (page - 1) * perPage;
+
+    const where = eq(chessPlaySessions.userId, userId);
+
+    const [rows, totalRow] = await Promise.all([
+      this.db
+        .select()
+        .from(chessPlaySessions)
+        .where(where)
+        .orderBy(desc(chessPlaySessions.createdAt))
+        .limit(perPage)
+        .offset(offset),
+      this.db.select({ total: count() }).from(chessPlaySessions).where(where),
+    ]);
+
+    return {
+      data: rows as ChessPlaySessionRecord[],
+      pagination: {
+        totalItems: Number(totalRow[0]?.total ?? 0),
+        page,
+        perPage,
+      },
+    };
+  }
+
+  async getPlaySessionById(id: UUIDType, userId: UUIDType): Promise<ChessPlaySessionRecord | null> {
+    const [row] = await this.db
+      .select()
+      .from(chessPlaySessions)
+      .where(and(eq(chessPlaySessions.id, id), eq(chessPlaySessions.userId, userId)));
+    return (row as ChessPlaySessionRecord | undefined) ?? null;
   }
 
   async insertExerciseAttempt(input: {

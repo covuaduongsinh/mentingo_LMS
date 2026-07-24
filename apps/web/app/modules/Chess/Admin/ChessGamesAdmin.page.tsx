@@ -120,7 +120,7 @@ export default function ChessGamesAdminPage() {
             </Button>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button>
+                <Button data-testid="chess-admin-add-game-button">
                   <Plus className="mr-2 size-4" />
                   {t("chess.admin.addGame", { defaultValue: "Add game" })}
                 </Button>

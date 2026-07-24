@@ -5,10 +5,15 @@ import { match } from "ts-pattern";
 import { ChessRepository } from "./chess.repository";
 import { fenPieceCount, uciMoveSequencesEqual } from "./utils/chess-moves.utils";
 
-import type { ListChessExercisesParams, ListChessGamesParams } from "./chess.types";
+import type {
+  ListChessExercisesParams,
+  ListChessGamesParams,
+  ListChessPlaySessionsParams,
+} from "./chess.types";
 import type {
   CreateChessExerciseBody,
   CreateChessGameBody,
+  CreateChessPlaySessionBody,
   SubmitChessExerciseAttemptBody,
   UpdateChessExerciseBody,
   UpdateChessGameBody,
@@ -100,6 +105,22 @@ export class ChessService {
       throw new NotFoundException("Chess game not found");
     }
     return { id };
+  }
+
+  createPlaySession(userId: UUIDType, body: CreateChessPlaySessionBody) {
+    return this.chessRepository.createPlaySession(userId, body);
+  }
+
+  listPlaySessions(userId: UUIDType, params: ListChessPlaySessionsParams) {
+    return this.chessRepository.listPlaySessions(userId, params);
+  }
+
+  async getPlaySession(id: UUIDType, userId: UUIDType) {
+    const session = await this.chessRepository.getPlaySessionById(id, userId);
+    if (!session) {
+      throw new NotFoundException("Chess play session not found");
+    }
+    return session;
   }
 
   async submitExerciseAttempt(

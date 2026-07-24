@@ -1,21 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { chessApi, type UpdateChessExerciseBody } from "~/api/chess-api";
+import { ApiClient } from "~/api/api-client";
 import { CHESS_EXERCISE_QUERY_KEY } from "~/api/queries/useChessExercise";
 import { CHESS_EXERCISES_QUERY_KEY } from "~/api/queries/useChessExercises";
 import { queryClient } from "~/api/queryClient";
 import { getTranslatedApiErrorMessage } from "~/api/utils/getTranslatedApiErrorMessage";
 import { useToast } from "~/components/ui/use-toast";
 
+import type { UpdateExerciseBody } from "~/api/generated-api";
+
 export function useUpdateChessExercise() {
   const { toast } = useToast();
   const { t } = useTranslation();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: UpdateChessExerciseBody }) => {
-      const response = await chessApi.updateExercise(id, data);
-      return response.data;
+    mutationFn: async ({ id, data }: { id: string; data: UpdateExerciseBody }) => {
+      const response = await ApiClient.api.chessControllerUpdateExercise(id, data);
+      return response.data.data;
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: CHESS_EXERCISES_QUERY_KEY });

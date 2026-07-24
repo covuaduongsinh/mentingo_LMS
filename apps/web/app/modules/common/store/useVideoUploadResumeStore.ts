@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { safeLocalStorage } from "~/lib/stores/safeStorage";
+
 import type { VideoProviderType } from "@repo/shared";
 
 export type StoredVideoUpload = {
@@ -82,6 +84,7 @@ export const useVideoUploadResumeStore = create<VideoUploadResumeState>()(
     }),
     {
       name: "video-upload-resume-storage",
+      storage: safeLocalStorage,
     },
   ),
 );

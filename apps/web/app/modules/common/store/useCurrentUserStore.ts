@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { safeLocalStorage } from "~/lib/stores/safeStorage";
+
 import type { CurrentUserResponse } from "~/api/generated-api";
 
 type CurrentUserStore = {
@@ -20,6 +22,7 @@ export const useCurrentUserStore = create<CurrentUserStore>()(
     }),
     {
       name: "current-user-storage",
+      storage: safeLocalStorage,
     },
   ),
 );

@@ -43,7 +43,8 @@
       "de": "Vokiečių",
       "lt": "Lietuvių",
       "cs": "Čekų",
-      "es": "ispanų"
+      "es": "ispanų",
+      "vi": "Vietnamiečių"
     },
     "lessonTypes": {
       "content": "Turinys",
@@ -803,7 +804,8 @@
       "german": "Vokiečių",
       "czech": "Čekų",
       "lithuanian": "Lietuvių",
-      "spanish": "Ispanų"
+      "spanish": "Ispanų",
+      "vietnamese": "Vietnamiečių"
     }
   },
   "resetOnboarding": {

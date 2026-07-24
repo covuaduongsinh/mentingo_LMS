@@ -23,14 +23,17 @@ import {
   chessExerciseSchema,
   chessGameLevelSchema,
   chessGameSchema,
+  chessPlaySessionSchema,
   chessTopicSchema,
   createChessExerciseBodySchema,
   createChessGameBodySchema,
+  createChessPlaySessionBodySchema,
   submitChessExerciseAttemptBodySchema,
   updateChessExerciseBodySchema,
   updateChessGameBodySchema,
   type CreateChessExerciseBody,
   type CreateChessGameBody,
+  type CreateChessPlaySessionBody,
   type SubmitChessExerciseAttemptBody,
   type UpdateChessExerciseBody,
   type UpdateChessGameBody,
@@ -241,5 +244,46 @@ export class ChessController {
   })
   async deleteGame(@Param("id") id: UUIDType) {
     return new BaseResponse(await this.chessService.deleteGame(id));
+  }
+
+  @Post("play-sessions")
+  @RequirePermission(PERMISSIONS.CHESS_GAME_READ)
+  @Validate({
+    request: [{ type: "body", schema: createChessPlaySessionBodySchema }],
+    response: baseResponse(chessPlaySessionSchema),
+  })
+  async createPlaySession(
+    @Body() body: CreateChessPlaySessionBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.chessService.createPlaySession(user.userId, body));
+  }
+
+  @Get("play-sessions")
+  @RequirePermission(PERMISSIONS.CHESS_GAME_READ)
+  @Validate({
+    request: [
+      { type: "query", name: "page", schema: Type.Optional(Type.Number({ minimum: 1 })) },
+      { type: "query", name: "perPage", schema: Type.Optional(Type.Number({ minimum: 1 })) },
+    ],
+    response: paginatedResponse(Type.Array(chessPlaySessionSchema)),
+  })
+  async listPlaySessions(
+    @Query("page") page: number,
+    @Query("perPage") perPage: number,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    const result = await this.chessService.listPlaySessions(user.userId, { page, perPage });
+    return new PaginatedResponse(result);
+  }
+
+  @Get("play-sessions/:id")
+  @RequirePermission(PERMISSIONS.CHESS_GAME_READ)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(chessPlaySessionSchema),
+  })
+  async getPlaySession(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessService.getPlaySession(id, user.userId));
   }
 }

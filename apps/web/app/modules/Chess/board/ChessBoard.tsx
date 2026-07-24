@@ -135,6 +135,8 @@ export function ChessBoard({
                 role="gridcell"
                 disabled={!interactive}
                 onClick={() => handleSquareClick(square)}
+                data-testid={`chess-square-${square}`}
+                data-square={square}
                 className={cn(
                   "relative flex items-center justify-center select-none",
                   isDark ? "bg-[#769656]" : "bg-[#eeeed2]",

@@ -36,6 +36,11 @@
       "levelEasy": "Easy",
       "levelMedium": "Medium",
       "levelHard": "Hard",
+      "levelLabel": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+      },
       "playWhite": "New game as White",
       "playBlack": "New game as Black",
       "thinking": "Engine thinking…",
@@ -46,7 +51,40 @@
       "draw": "Draw.",
       "check": "Check!",
       "noMoves": "No moves yet",
-      "arasanHint": "Set ARASAN_PATH on the API to use the real Arasan UCI binary. Without it, a built-in MIT engine is used."
+      "arasanHint": "Set ARASAN_PATH on the API to use the real Arasan UCI binary. Without it, a built-in MIT engine is used.",
+      "timeControl": "Time control",
+      "timeControlNone": "No clock",
+      "timeControl5_0": "5 min",
+      "timeControl10_0": "10 min",
+      "timeControl15_10": "15 min + 10s",
+      "clockYou": "You",
+      "clockEngine": "Engine",
+      "resign": "Resign",
+      "resignConfirmTitle": "Resign?",
+      "resignConfirmBody": "This will end the game as a loss and save it to your history.",
+      "resultResign": "You resigned.",
+      "resultTimeoutWin": "Engine ran out of time — you win!",
+      "resultTimeoutLoss": "Time's up — you lost.",
+      "outcome": {
+        "win": "Win",
+        "loss": "Loss",
+        "draw": "Draw"
+      },
+      "toast": {
+        "sessionSaveFailed": "Could not save the game"
+      },
+      "history": {
+        "title": "Your games vs the engine",
+        "loading": "Loading…",
+        "empty": "No games saved yet.",
+        "noClock": "No clock",
+        "moves": "{{count}} moves",
+        "review": "Review",
+        "reviewTitle": "Reviewing saved game",
+        "prev": "Prev",
+        "next": "Next",
+        "backToPlay": "Back to play"
+      }
     },
     "analysis": {
       "title": "Analysis board",
@@ -163,7 +201,8 @@
       "de": "German",
       "lt": "Lithuanian",
       "cs": "Czech",
-      "es": "Spanish"
+      "es": "Spanish",
+      "vi": "Vietnamese"
     },
     "lessonTypes": {
       "content": "Content",
@@ -924,7 +963,8 @@
       "german": "German",
       "czech": "Czech",
       "lithuanian": "Lithuanian",
-      "spanish": "Spanish"
+      "spanish": "Spanish",
+      "vietnamese": "Vietnamese"
     }
   },
   "resetOnboarding": {

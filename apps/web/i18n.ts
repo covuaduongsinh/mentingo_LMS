@@ -8,11 +8,12 @@ import enTranslations from "app/locales/en/translation.json";
 import esTranslations from "app/locales/es/translation.json";
 import ltTranslations from "app/locales/lt/translation.json";
 import plTranslations from "app/locales/pl/translation.json";
+import viTranslations from "app/locales/vi/translation.json";
 
 // eslint-disable-next-line import/no-named-as-default-member
 i18n.use(initReactI18next).init({
   fallbackLng: SUPPORTED_LANGUAGES.EN,
-  lng: import.meta.env.VITE_E2E === "true" ? "en" : "pl",
+  lng: import.meta.env.VITE_E2E === "true" ? "en" : "vi",
   ns: ["translation"],
   defaultNS: "translation",
   interpolation: {
@@ -36,6 +37,9 @@ i18n.use(initReactI18next).init({
     },
     es: {
       translation: esTranslations,
+    },
+    vi: {
+      translation: viTranslations,
     },
   },
 });

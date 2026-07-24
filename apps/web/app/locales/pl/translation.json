@@ -44,7 +44,8 @@
       "de": "Niemiecki",
       "lt": "Litewski",
       "cs": "Czeski",
-      "es": "hiszpański"
+      "es": "hiszpański",
+      "vi": "Wietnamski"
     },
     "lessonTypes": {
       "content": "Treść",
@@ -1043,7 +1044,8 @@
       "german": "Niemiecki",
       "czech": "Czeski",
       "lithuanian": "Litewski",
-      "spanish": "Hiszpański"
+      "spanish": "Hiszpański",
+      "vietnamese": "Wietnamski"
     }
   },
   "resetOnboarding": {

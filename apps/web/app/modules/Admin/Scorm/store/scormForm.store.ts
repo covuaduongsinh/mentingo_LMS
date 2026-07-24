@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { safeLocalStorage } from "~/lib/stores/safeStorage";
+
 import type { CourseFormState, CourseFormStore } from "../types/scorm.types";
 
 const initialState: CourseFormState = {
@@ -31,6 +33,7 @@ export const useScormFormStore = create<CourseFormStore>()(
     }),
     {
       name: "scorm-form-storage",
+      storage: safeLocalStorage,
       partialize: (state) => ({
         currentStep: state.currentStep,
         formData: {

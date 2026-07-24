@@ -725,6 +725,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -1241,6 +1245,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -1901,6 +1909,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -2109,6 +2121,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   }
@@ -2137,6 +2153,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]

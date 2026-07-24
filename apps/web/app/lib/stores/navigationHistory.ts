@@ -1,5 +1,7 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
+
+import { safeSessionStorage } from "~/lib/stores/safeStorage";
 
 export interface HistoryEntry {
   pathname: string;
@@ -45,7 +47,7 @@ export const useNavigationHistoryStore = create<NavigationHistoryState>()(
     }),
     {
       name: "navigation-history",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: safeSessionStorage,
     },
   ),
 );

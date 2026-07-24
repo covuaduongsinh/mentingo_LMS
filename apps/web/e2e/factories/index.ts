@@ -1,5 +1,6 @@
 import { ArticleFactory } from "./article.factory";
 import { CategoryFactory } from "./category.factory";
+import { ChessExerciseFactory, ChessGameFactory, ChessPlaySessionFactory } from "./chess.factory";
 import { CourseFactory } from "./course.factory";
 import { CurriculumFactory } from "./curriculum.factory";
 import { EnrollmentFactory } from "./enrollment.factory";
@@ -15,6 +16,9 @@ import type { FixtureApiClient } from "../utils/api-client";
 export type FixtureFactories = {
   createArticleFactory: () => ArticleFactory;
   createCategoryFactory: () => CategoryFactory;
+  createChessExerciseFactory: () => ChessExerciseFactory;
+  createChessGameFactory: () => ChessGameFactory;
+  createChessPlaySessionFactory: () => ChessPlaySessionFactory;
   createCourseFactory: () => CourseFactory;
   createCurriculumFactory: () => CurriculumFactory;
   createEnrollmentFactory: () => EnrollmentFactory;
@@ -29,6 +33,9 @@ export type FixtureFactories = {
 export const createFixtureFactories = (apiClient: FixtureApiClient): FixtureFactories => {
   let articleFactory: ArticleFactory | undefined;
   let categoryFactory: CategoryFactory | undefined;
+  let chessExerciseFactory: ChessExerciseFactory | undefined;
+  let chessGameFactory: ChessGameFactory | undefined;
+  let chessPlaySessionFactory: ChessPlaySessionFactory | undefined;
   let courseFactory: CourseFactory | undefined;
   let curriculumFactory: CurriculumFactory | undefined;
   let enrollmentFactory: EnrollmentFactory | undefined;
@@ -47,6 +54,18 @@ export const createFixtureFactories = (apiClient: FixtureApiClient): FixtureFact
     createCategoryFactory: () => {
       categoryFactory ??= new CategoryFactory(apiClient);
       return categoryFactory;
+    },
+    createChessExerciseFactory: () => {
+      chessExerciseFactory ??= new ChessExerciseFactory(apiClient);
+      return chessExerciseFactory;
+    },
+    createChessGameFactory: () => {
+      chessGameFactory ??= new ChessGameFactory(apiClient);
+      return chessGameFactory;
+    },
+    createChessPlaySessionFactory: () => {
+      chessPlaySessionFactory ??= new ChessPlaySessionFactory(apiClient);
+      return chessPlaySessionFactory;
     },
     createCourseFactory: () => {
       courseFactory ??= new CourseFactory(apiClient);
@@ -89,6 +108,7 @@ export const createFixtureFactories = (apiClient: FixtureApiClient): FixtureFact
 
 export { ArticleFactory } from "./article.factory";
 export { CategoryFactory } from "./category.factory";
+export { ChessExerciseFactory, ChessGameFactory, ChessPlaySessionFactory } from "./chess.factory";
 export { CourseFactory } from "./course.factory";
 export { CurriculumFactory } from "./curriculum.factory";
 export { EnrollmentFactory } from "./enrollment.factory";

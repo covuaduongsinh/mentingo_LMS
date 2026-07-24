@@ -1,8 +1,12 @@
 import type {
   ChessAudience,
   ChessContentSource,
+  ChessEngineLevelShared,
+  ChessEngineName,
   ChessExerciseFormat,
   ChessGameLevel,
+  ChessPlayEndReason,
+  ChessPlayOutcome,
   ChessTopic,
 } from "@repo/shared";
 import type { UUIDType } from "src/common";
@@ -60,4 +64,28 @@ export type ListChessGamesParams = {
   topic?: ChessTopic;
   level?: ChessGameLevel;
   publishedOnly?: boolean;
+};
+
+export type ChessPlaySessionRecord = {
+  id: UUIDType;
+  userId: UUIDType;
+  playerColor: "w" | "b";
+  level: ChessEngineLevelShared;
+  engine: ChessEngineName;
+  outcome: ChessPlayOutcome;
+  endReason: ChessPlayEndReason;
+  pgn: string;
+  movesUci: string[];
+  timeControl: string | null;
+  playerTimeLeftMs: number | null;
+  engineTimeLeftMs: number | null;
+  durationMs: number | null;
+  moveCount: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ListChessPlaySessionsParams = {
+  page?: number;
+  perPage?: number;
 };

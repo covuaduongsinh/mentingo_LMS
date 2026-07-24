@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { safeLocalStorage } from "~/lib/stores/safeStorage";
+
 type ThemeStore = {
   theme: "light" | "dark";
   toggleTheme: () => void;
@@ -17,6 +19,7 @@ export const useThemeStore = create<ThemeStore>()(
     }),
     {
       name: "theme-storage",
+      storage: safeLocalStorage,
     },
   ),
 );

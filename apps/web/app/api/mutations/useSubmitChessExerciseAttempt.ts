@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { chessApi } from "~/api/chess-api";
+import { ApiClient } from "~/api/api-client";
 import { getTranslatedApiErrorMessage } from "~/api/utils/getTranslatedApiErrorMessage";
 import { useToast } from "~/components/ui/use-toast";
 
@@ -19,8 +19,8 @@ export function useSubmitChessExerciseAttempt() {
       movesUci?: string[];
       timeMs?: number;
     }) => {
-      const response = await chessApi.submitExerciseAttempt(id, { movesUci, timeMs });
-      return response.data;
+      const response = await ApiClient.api.chessControllerSubmitAttempt(id, { movesUci, timeMs });
+      return response.data.data;
     },
     onError: (error) => {
       toast({
