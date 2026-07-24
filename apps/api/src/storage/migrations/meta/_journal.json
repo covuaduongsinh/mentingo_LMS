@@ -1135,6 +1135,20 @@
       "when": 1783673985611,
       "tag": "0161_add_require_password_change_field",
       "breakpoints": true
+    },
+    {
+      "idx": 162,
+      "version": "7",
+      "when": 1784849249249,
+      "tag": "0162_chess_exercise_game_banks",
+      "breakpoints": true
+    },
+    {
+      "idx": 163,
+      "version": "7",
+      "when": 1784864007575,
+      "tag": "0163_enable_chess_tenant_rls",
+      "breakpoints": true
     }
   ]
 }

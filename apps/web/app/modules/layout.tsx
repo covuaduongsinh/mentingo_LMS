@@ -19,9 +19,25 @@ export const meta: MetaFunction<typeof clientLoader> = ({ data }) => {
 };
 
 export const clientLoader = async () => {
-  const companyInfo = await queryClient.ensureQueryData(companyInformationQueryOptions);
-
-  return { companyInfo };
+  try {
+    const companyInfo = await queryClient.ensureQueryData(companyInformationQueryOptions);
+    return { companyInfo };
+  } catch {
+    // Public shell must stay available when API is down/restarting.
+    // Without this, login and other public routes crash the whole app on 5xx.
+    return {
+      companyInfo: {
+        data: {
+          companyShortName: "",
+          companyName: "",
+          taxNumber: "",
+          emailAddress: "",
+          registeredAddress: "",
+          courtRegisterNumber: "",
+        },
+      },
+    };
+  }
 };
 
 export default function Layout() {

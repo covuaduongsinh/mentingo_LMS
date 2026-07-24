@@ -19,6 +19,7 @@ import { ContentTypes, DeleteContentType } from "../../../EditCourse.types";
 import Breadcrumb from "../components/Breadcrumb";
 
 import AnswerSelectQuestion from "./components/AnswerSelectQuestion";
+import { ChessQuestion } from "./components/ChessQuestion";
 import FillInTheBlanksQuestion from "./components/FillInTheBlanksQuestion";
 import MatchWordsQuestion from "./components/MatchWordsQuestion";
 import PhotoQuestion from "./components/PhotoQuestion";
@@ -192,6 +193,17 @@ const QuizLessonForm = ({
           ];
         }
 
+        if (type === QuestionType.CHESS_FIND_BEST || type === QuestionType.CHESS_MOVE_LINE) {
+          return [
+            {
+              sortableId: crypto.randomUUID(),
+              optionText: "",
+              isCorrect: true,
+              displayOrder: 1,
+            },
+          ];
+        }
+
         if (singleChoiceTypes.includes(type)) {
           return [
             { sortableId: crypto.randomUUID(), optionText: "", isCorrect: false, displayOrder: 1 },
@@ -299,6 +311,13 @@ const QuizLessonForm = ({
             ))
             .with(QuestionType.SCALE_1_5, () => (
               <ScaleQuestion
+                questionIndex={questionIndex}
+                form={form}
+                isStructureLocked={isStructureLocked}
+              />
+            ))
+            .with(QuestionType.CHESS_FIND_BEST, QuestionType.CHESS_MOVE_LINE, () => (
+              <ChessQuestion
                 questionIndex={questionIndex}
                 form={form}
                 isStructureLocked={isStructureLocked}

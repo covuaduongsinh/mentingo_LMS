@@ -12218,6 +12218,668 @@
         }
       }
     },
+    "/api/chess/topics": {
+      "get": {
+        "operationId": "ChessController_getTopics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTopicsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/exercises": {
+      "get": {
+        "operationId": "ChessController_listExercises",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "topic",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "intro",
+                  "type": "string"
+                },
+                {
+                  "const": "rules",
+                  "type": "string"
+                },
+                {
+                  "const": "tournament_rules",
+                  "type": "string"
+                },
+                {
+                  "const": "opening",
+                  "type": "string"
+                },
+                {
+                  "const": "middlegame",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame",
+                  "type": "string"
+                },
+                {
+                  "const": "tactics",
+                  "type": "string"
+                },
+                {
+                  "const": "strategy",
+                  "type": "string"
+                },
+                {
+                  "const": "story",
+                  "type": "string"
+                },
+                {
+                  "const": "competitive_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "student_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "pedagogy",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "audience",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "student",
+                  "type": "string"
+                },
+                {
+                  "const": "teacher",
+                  "type": "string"
+                },
+                {
+                  "const": "both",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "format",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "chess_find_best",
+                  "type": "string"
+                },
+                {
+                  "const": "chess_move_line",
+                  "type": "string"
+                },
+                {
+                  "const": "single_choice",
+                  "type": "string"
+                },
+                {
+                  "const": "true_false",
+                  "type": "string"
+                },
+                {
+                  "const": "brief_response",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "publishedOnly",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "const": "true",
+                  "type": "string"
+                },
+                {
+                  "const": "false",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListExercisesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "ChessController_createExercise",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExerciseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateExerciseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/exercises/{id}": {
+      "get": {
+        "operationId": "ChessController_getExercise",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetExerciseResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "ChessController_updateExercise",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExerciseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateExerciseResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "ChessController_deleteExercise",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteExerciseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/exercises/{id}/attempts": {
+      "post": {
+        "operationId": "ChessController_submitAttempt",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitAttemptBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitAttemptResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/games": {
+      "get": {
+        "operationId": "ChessController_listGames",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "topic",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "intro",
+                  "type": "string"
+                },
+                {
+                  "const": "rules",
+                  "type": "string"
+                },
+                {
+                  "const": "tournament_rules",
+                  "type": "string"
+                },
+                {
+                  "const": "opening",
+                  "type": "string"
+                },
+                {
+                  "const": "middlegame",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame",
+                  "type": "string"
+                },
+                {
+                  "const": "tactics",
+                  "type": "string"
+                },
+                {
+                  "const": "strategy",
+                  "type": "string"
+                },
+                {
+                  "const": "story",
+                  "type": "string"
+                },
+                {
+                  "const": "competitive_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "student_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "pedagogy",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "level",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "beginner",
+                  "type": "string"
+                },
+                {
+                  "const": "intermediate",
+                  "type": "string"
+                },
+                {
+                  "const": "advanced",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "publishedOnly",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "const": "true",
+                  "type": "string"
+                },
+                {
+                  "const": "false",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListGamesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "ChessController_createGame",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGameBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateGameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/games/{id}": {
+      "get": {
+        "operationId": "ChessController_getGame",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGameResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "ChessController_updateGame",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGameBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateGameResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "ChessController_deleteGame",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteGameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/engine/status": {
+      "get": {
+        "operationId": "ChessEngineController_getStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/engine/bestmove": {
+      "post": {
+        "operationId": "ChessEngineController_bestMove",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BestMoveBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BestMoveResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/engine/analyze": {
+      "post": {
+        "operationId": "ChessEngineController_analyze",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/integration/tenants": {
       "get": {
         "operationId": "IntegrationController_getTenants",
@@ -16670,6 +17332,22 @@
                     },
                     {
                       "const": "activity_log.read",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.exercise.read",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.exercise.manage",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.game.read",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.game.manage",
                       "type": "string"
                     }
                   ]
@@ -26185,6 +26863,14 @@
                                     {
                                       "const": "fill_in_the_blanks_dnd",
                                       "type": "string"
+                                    },
+                                    {
+                                      "const": "chess_find_best",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "chess_move_line",
+                                      "type": "string"
                                     }
                                   ]
                                 },
@@ -29359,6 +30045,14 @@
                               {
                                 "const": "fill_in_the_blanks_dnd",
                                 "type": "string"
+                              },
+                              {
+                                "const": "chess_find_best",
+                                "type": "string"
+                              },
+                              {
+                                "const": "chess_move_line",
+                                "type": "string"
                               }
                             ]
                           },
@@ -29865,6 +30559,14 @@
                                   },
                                   {
                                     "const": "fill_in_the_blanks_dnd",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "const": "chess_find_best",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "const": "chess_move_line",
                                     "type": "string"
                                   }
                                 ]
@@ -30580,6 +31282,14 @@
                             },
                             {
                               "const": "fill_in_the_blanks_dnd",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_find_best",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_move_line",
                               "type": "string"
                             }
                           ]
@@ -31834,6 +32544,14 @@
                         {
                           "const": "fill_in_the_blanks_dnd",
                           "type": "string"
+                        },
+                        {
+                          "const": "chess_find_best",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess_move_line",
+                          "type": "string"
                         }
                       ]
                     },
@@ -32665,6 +33383,14 @@
                         {
                           "const": "fill_in_the_blanks_dnd",
                           "type": "string"
+                        },
+                        {
+                          "const": "chess_find_best",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess_move_line",
+                          "type": "string"
                         }
                       ]
                     },
@@ -33146,6 +33872,14 @@
                             },
                             {
                               "const": "fill_in_the_blanks_dnd",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_find_best",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_move_line",
                               "type": "string"
                             }
                           ]
@@ -33658,6 +34392,14 @@
                         {
                           "const": "fill_in_the_blanks_dnd",
                           "type": "string"
+                        },
+                        {
+                          "const": "chess_find_best",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess_move_line",
+                          "type": "string"
                         }
                       ]
                     },
@@ -33975,6 +34717,14 @@
                             },
                             {
                               "const": "fill_in_the_blanks_dnd",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_find_best",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_move_line",
                               "type": "string"
                             }
                           ]
@@ -34340,6 +35090,14 @@
                             },
                             {
                               "const": "fill_in_the_blanks_dnd",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_find_best",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_move_line",
                               "type": "string"
                             }
                           ]
@@ -46019,6 +46777,2571 @@
               "messageKey",
               "scormStatus",
               "nextScoId"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetTopicsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "anyOf": [
+                    {
+                      "const": "intro",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tournament_rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tactics",
+                      "type": "string"
+                    },
+                    {
+                      "const": "strategy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "story",
+                      "type": "string"
+                    },
+                    {
+                      "const": "competitive_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pedagogy",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "labelKey": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "labelKey"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListExercisesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "audience": {
+                  "anyOf": [
+                    {
+                      "const": "student",
+                      "type": "string"
+                    },
+                    {
+                      "const": "teacher",
+                      "type": "string"
+                    },
+                    {
+                      "const": "both",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "topics": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "const": "intro",
+                        "type": "string"
+                      },
+                      {
+                        "const": "rules",
+                        "type": "string"
+                      },
+                      {
+                        "const": "tournament_rules",
+                        "type": "string"
+                      },
+                      {
+                        "const": "opening",
+                        "type": "string"
+                      },
+                      {
+                        "const": "middlegame",
+                        "type": "string"
+                      },
+                      {
+                        "const": "endgame",
+                        "type": "string"
+                      },
+                      {
+                        "const": "tactics",
+                        "type": "string"
+                      },
+                      {
+                        "const": "strategy",
+                        "type": "string"
+                      },
+                      {
+                        "const": "story",
+                        "type": "string"
+                      },
+                      {
+                        "const": "competitive_psychology",
+                        "type": "string"
+                      },
+                      {
+                        "const": "student_psychology",
+                        "type": "string"
+                      },
+                      {
+                        "const": "pedagogy",
+                        "type": "string"
+                      }
+                    ]
+                  }
+                },
+                "difficulty": {
+                  "minimum": 1,
+                  "maximum": 10,
+                  "type": "number"
+                },
+                "format": {
+                  "anyOf": [
+                    {
+                      "const": "chess_find_best",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess_move_line",
+                      "type": "string"
+                    },
+                    {
+                      "const": "single_choice",
+                      "type": "string"
+                    },
+                    {
+                      "const": "true_false",
+                      "type": "string"
+                    },
+                    {
+                      "const": "brief_response",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "fen": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "solution": {
+                  "type": "object",
+                  "properties": {
+                    "movesUci": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "choiceIds": {
+                      "type": "array",
+                      "items": {
+                        "format": "uuid",
+                        "type": "string"
+                      }
+                    },
+                    "isTrue": {
+                      "type": "boolean"
+                    },
+                    "text": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "explanation": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "source": {
+                  "anyOf": [
+                    {
+                      "const": "original",
+                      "type": "string"
+                    },
+                    {
+                      "const": "lichess_cc0",
+                      "type": "string"
+                    },
+                    {
+                      "const": "import",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "pieceCount": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "rating": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "published": {
+                  "type": "boolean"
+                },
+                "authorId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "audience",
+                "topics",
+                "difficulty",
+                "format",
+                "fen",
+                "solution",
+                "explanation",
+                "source",
+                "pieceCount",
+                "rating",
+                "published",
+                "authorId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "GetExerciseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "audience": {
+                "anyOf": [
+                  {
+                    "const": "student",
+                    "type": "string"
+                  },
+                  {
+                    "const": "teacher",
+                    "type": "string"
+                  },
+                  {
+                    "const": "both",
+                    "type": "string"
+                  }
+                ]
+              },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "intro",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tournament_rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tactics",
+                      "type": "string"
+                    },
+                    {
+                      "const": "strategy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "story",
+                      "type": "string"
+                    },
+                    {
+                      "const": "competitive_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pedagogy",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "difficulty": {
+                "minimum": 1,
+                "maximum": 10,
+                "type": "number"
+              },
+              "format": {
+                "anyOf": [
+                  {
+                    "const": "chess_find_best",
+                    "type": "string"
+                  },
+                  {
+                    "const": "chess_move_line",
+                    "type": "string"
+                  },
+                  {
+                    "const": "single_choice",
+                    "type": "string"
+                  },
+                  {
+                    "const": "true_false",
+                    "type": "string"
+                  },
+                  {
+                    "const": "brief_response",
+                    "type": "string"
+                  }
+                ]
+              },
+              "fen": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "solution": {
+                "type": "object",
+                "properties": {
+                  "movesUci": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "choiceIds": {
+                    "type": "array",
+                    "items": {
+                      "format": "uuid",
+                      "type": "string"
+                    }
+                  },
+                  "isTrue": {
+                    "type": "boolean"
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                }
+              },
+              "explanation": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "source": {
+                "anyOf": [
+                  {
+                    "const": "original",
+                    "type": "string"
+                  },
+                  {
+                    "const": "lichess_cc0",
+                    "type": "string"
+                  },
+                  {
+                    "const": "import",
+                    "type": "string"
+                  }
+                ]
+              },
+              "pieceCount": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "rating": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "published": {
+                "type": "boolean"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "audience",
+              "topics",
+              "difficulty",
+              "format",
+              "fen",
+              "solution",
+              "explanation",
+              "source",
+              "pieceCount",
+              "rating",
+              "published",
+              "authorId",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateExerciseBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "audience": {
+            "anyOf": [
+              {
+                "const": "student",
+                "type": "string"
+              },
+              {
+                "const": "teacher",
+                "type": "string"
+              },
+              {
+                "const": "both",
+                "type": "string"
+              }
+            ]
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "const": "intro",
+                  "type": "string"
+                },
+                {
+                  "const": "rules",
+                  "type": "string"
+                },
+                {
+                  "const": "tournament_rules",
+                  "type": "string"
+                },
+                {
+                  "const": "opening",
+                  "type": "string"
+                },
+                {
+                  "const": "middlegame",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame",
+                  "type": "string"
+                },
+                {
+                  "const": "tactics",
+                  "type": "string"
+                },
+                {
+                  "const": "strategy",
+                  "type": "string"
+                },
+                {
+                  "const": "story",
+                  "type": "string"
+                },
+                {
+                  "const": "competitive_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "student_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "pedagogy",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "difficulty": {
+            "minimum": 1,
+            "maximum": 10,
+            "type": "number"
+          },
+          "format": {
+            "anyOf": [
+              {
+                "const": "chess_find_best",
+                "type": "string"
+              },
+              {
+                "const": "chess_move_line",
+                "type": "string"
+              },
+              {
+                "const": "single_choice",
+                "type": "string"
+              },
+              {
+                "const": "true_false",
+                "type": "string"
+              },
+              {
+                "const": "brief_response",
+                "type": "string"
+              }
+            ]
+          },
+          "fen": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "solution": {
+            "type": "object",
+            "properties": {
+              "movesUci": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "choiceIds": {
+                "type": "array",
+                "items": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              },
+              "isTrue": {
+                "type": "boolean"
+              },
+              "text": {
+                "type": "string"
+              }
+            }
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "anyOf": [
+              {
+                "const": "original",
+                "type": "string"
+              },
+              {
+                "const": "lichess_cc0",
+                "type": "string"
+              },
+              {
+                "const": "import",
+                "type": "string"
+              }
+            ]
+          },
+          "pieceCount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "published": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "title",
+          "format"
+        ]
+      },
+      "CreateExerciseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "audience": {
+                "anyOf": [
+                  {
+                    "const": "student",
+                    "type": "string"
+                  },
+                  {
+                    "const": "teacher",
+                    "type": "string"
+                  },
+                  {
+                    "const": "both",
+                    "type": "string"
+                  }
+                ]
+              },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "intro",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tournament_rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tactics",
+                      "type": "string"
+                    },
+                    {
+                      "const": "strategy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "story",
+                      "type": "string"
+                    },
+                    {
+                      "const": "competitive_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pedagogy",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "difficulty": {
+                "minimum": 1,
+                "maximum": 10,
+                "type": "number"
+              },
+              "format": {
+                "anyOf": [
+                  {
+                    "const": "chess_find_best",
+                    "type": "string"
+                  },
+                  {
+                    "const": "chess_move_line",
+                    "type": "string"
+                  },
+                  {
+                    "const": "single_choice",
+                    "type": "string"
+                  },
+                  {
+                    "const": "true_false",
+                    "type": "string"
+                  },
+                  {
+                    "const": "brief_response",
+                    "type": "string"
+                  }
+                ]
+              },
+              "fen": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "solution": {
+                "type": "object",
+                "properties": {
+                  "movesUci": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "choiceIds": {
+                    "type": "array",
+                    "items": {
+                      "format": "uuid",
+                      "type": "string"
+                    }
+                  },
+                  "isTrue": {
+                    "type": "boolean"
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                }
+              },
+              "explanation": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "source": {
+                "anyOf": [
+                  {
+                    "const": "original",
+                    "type": "string"
+                  },
+                  {
+                    "const": "lichess_cc0",
+                    "type": "string"
+                  },
+                  {
+                    "const": "import",
+                    "type": "string"
+                  }
+                ]
+              },
+              "pieceCount": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "rating": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "published": {
+                "type": "boolean"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "audience",
+              "topics",
+              "difficulty",
+              "format",
+              "fen",
+              "solution",
+              "explanation",
+              "source",
+              "pieceCount",
+              "rating",
+              "published",
+              "authorId",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateExerciseBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "audience": {
+            "anyOf": [
+              {
+                "const": "student",
+                "type": "string"
+              },
+              {
+                "const": "teacher",
+                "type": "string"
+              },
+              {
+                "const": "both",
+                "type": "string"
+              }
+            ]
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "const": "intro",
+                  "type": "string"
+                },
+                {
+                  "const": "rules",
+                  "type": "string"
+                },
+                {
+                  "const": "tournament_rules",
+                  "type": "string"
+                },
+                {
+                  "const": "opening",
+                  "type": "string"
+                },
+                {
+                  "const": "middlegame",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame",
+                  "type": "string"
+                },
+                {
+                  "const": "tactics",
+                  "type": "string"
+                },
+                {
+                  "const": "strategy",
+                  "type": "string"
+                },
+                {
+                  "const": "story",
+                  "type": "string"
+                },
+                {
+                  "const": "competitive_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "student_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "pedagogy",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "difficulty": {
+            "minimum": 1,
+            "maximum": 10,
+            "type": "number"
+          },
+          "format": {
+            "anyOf": [
+              {
+                "const": "chess_find_best",
+                "type": "string"
+              },
+              {
+                "const": "chess_move_line",
+                "type": "string"
+              },
+              {
+                "const": "single_choice",
+                "type": "string"
+              },
+              {
+                "const": "true_false",
+                "type": "string"
+              },
+              {
+                "const": "brief_response",
+                "type": "string"
+              }
+            ]
+          },
+          "fen": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "solution": {
+            "type": "object",
+            "properties": {
+              "movesUci": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "choiceIds": {
+                "type": "array",
+                "items": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              },
+              "isTrue": {
+                "type": "boolean"
+              },
+              "text": {
+                "type": "string"
+              }
+            }
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "anyOf": [
+              {
+                "const": "original",
+                "type": "string"
+              },
+              {
+                "const": "lichess_cc0",
+                "type": "string"
+              },
+              {
+                "const": "import",
+                "type": "string"
+              }
+            ]
+          },
+          "pieceCount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "published": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateExerciseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "audience": {
+                "anyOf": [
+                  {
+                    "const": "student",
+                    "type": "string"
+                  },
+                  {
+                    "const": "teacher",
+                    "type": "string"
+                  },
+                  {
+                    "const": "both",
+                    "type": "string"
+                  }
+                ]
+              },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "intro",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tournament_rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tactics",
+                      "type": "string"
+                    },
+                    {
+                      "const": "strategy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "story",
+                      "type": "string"
+                    },
+                    {
+                      "const": "competitive_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pedagogy",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "difficulty": {
+                "minimum": 1,
+                "maximum": 10,
+                "type": "number"
+              },
+              "format": {
+                "anyOf": [
+                  {
+                    "const": "chess_find_best",
+                    "type": "string"
+                  },
+                  {
+                    "const": "chess_move_line",
+                    "type": "string"
+                  },
+                  {
+                    "const": "single_choice",
+                    "type": "string"
+                  },
+                  {
+                    "const": "true_false",
+                    "type": "string"
+                  },
+                  {
+                    "const": "brief_response",
+                    "type": "string"
+                  }
+                ]
+              },
+              "fen": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "solution": {
+                "type": "object",
+                "properties": {
+                  "movesUci": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "choiceIds": {
+                    "type": "array",
+                    "items": {
+                      "format": "uuid",
+                      "type": "string"
+                    }
+                  },
+                  "isTrue": {
+                    "type": "boolean"
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                }
+              },
+              "explanation": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "source": {
+                "anyOf": [
+                  {
+                    "const": "original",
+                    "type": "string"
+                  },
+                  {
+                    "const": "lichess_cc0",
+                    "type": "string"
+                  },
+                  {
+                    "const": "import",
+                    "type": "string"
+                  }
+                ]
+              },
+              "pieceCount": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "rating": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "published": {
+                "type": "boolean"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "audience",
+              "topics",
+              "difficulty",
+              "format",
+              "fen",
+              "solution",
+              "explanation",
+              "source",
+              "pieceCount",
+              "rating",
+              "published",
+              "authorId",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "DeleteExerciseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SubmitAttemptBody": {
+        "type": "object",
+        "properties": {
+          "movesUci": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "choiceIds": {
+            "type": "array",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          "isTrue": {
+            "type": "boolean"
+          },
+          "text": {
+            "type": "string"
+          },
+          "timeMs": {
+            "minimum": 0,
+            "type": "number"
+          }
+        }
+      },
+      "SubmitAttemptResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "isCorrect": {
+                "type": "boolean"
+              },
+              "explanation": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "isCorrect",
+              "explanation"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListGamesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "pgn": {
+                  "type": "string"
+                },
+                "topics": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "const": "intro",
+                        "type": "string"
+                      },
+                      {
+                        "const": "rules",
+                        "type": "string"
+                      },
+                      {
+                        "const": "tournament_rules",
+                        "type": "string"
+                      },
+                      {
+                        "const": "opening",
+                        "type": "string"
+                      },
+                      {
+                        "const": "middlegame",
+                        "type": "string"
+                      },
+                      {
+                        "const": "endgame",
+                        "type": "string"
+                      },
+                      {
+                        "const": "tactics",
+                        "type": "string"
+                      },
+                      {
+                        "const": "strategy",
+                        "type": "string"
+                      },
+                      {
+                        "const": "story",
+                        "type": "string"
+                      },
+                      {
+                        "const": "competitive_psychology",
+                        "type": "string"
+                      },
+                      {
+                        "const": "student_psychology",
+                        "type": "string"
+                      },
+                      {
+                        "const": "pedagogy",
+                        "type": "string"
+                      }
+                    ]
+                  }
+                },
+                "level": {
+                  "anyOf": [
+                    {
+                      "const": "beginner",
+                      "type": "string"
+                    },
+                    {
+                      "const": "intermediate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "advanced",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "teachingNotes": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "published": {
+                  "type": "boolean"
+                },
+                "authorId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "pgn",
+                "topics",
+                "level",
+                "teachingNotes",
+                "tags",
+                "published",
+                "authorId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "GetGameResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "pgn": {
+                "type": "string"
+              },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "intro",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tournament_rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tactics",
+                      "type": "string"
+                    },
+                    {
+                      "const": "strategy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "story",
+                      "type": "string"
+                    },
+                    {
+                      "const": "competitive_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pedagogy",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "level": {
+                "anyOf": [
+                  {
+                    "const": "beginner",
+                    "type": "string"
+                  },
+                  {
+                    "const": "intermediate",
+                    "type": "string"
+                  },
+                  {
+                    "const": "advanced",
+                    "type": "string"
+                  }
+                ]
+              },
+              "teachingNotes": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "published": {
+                "type": "boolean"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "pgn",
+              "topics",
+              "level",
+              "teachingNotes",
+              "tags",
+              "published",
+              "authorId",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateGameBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "pgn": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "const": "intro",
+                  "type": "string"
+                },
+                {
+                  "const": "rules",
+                  "type": "string"
+                },
+                {
+                  "const": "tournament_rules",
+                  "type": "string"
+                },
+                {
+                  "const": "opening",
+                  "type": "string"
+                },
+                {
+                  "const": "middlegame",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame",
+                  "type": "string"
+                },
+                {
+                  "const": "tactics",
+                  "type": "string"
+                },
+                {
+                  "const": "strategy",
+                  "type": "string"
+                },
+                {
+                  "const": "story",
+                  "type": "string"
+                },
+                {
+                  "const": "competitive_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "student_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "pedagogy",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "level": {
+            "anyOf": [
+              {
+                "const": "beginner",
+                "type": "string"
+              },
+              {
+                "const": "intermediate",
+                "type": "string"
+              },
+              {
+                "const": "advanced",
+                "type": "string"
+              }
+            ]
+          },
+          "teachingNotes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "published": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "title",
+          "pgn"
+        ]
+      },
+      "CreateGameResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "pgn": {
+                "type": "string"
+              },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "intro",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tournament_rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tactics",
+                      "type": "string"
+                    },
+                    {
+                      "const": "strategy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "story",
+                      "type": "string"
+                    },
+                    {
+                      "const": "competitive_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pedagogy",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "level": {
+                "anyOf": [
+                  {
+                    "const": "beginner",
+                    "type": "string"
+                  },
+                  {
+                    "const": "intermediate",
+                    "type": "string"
+                  },
+                  {
+                    "const": "advanced",
+                    "type": "string"
+                  }
+                ]
+              },
+              "teachingNotes": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "published": {
+                "type": "boolean"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "pgn",
+              "topics",
+              "level",
+              "teachingNotes",
+              "tags",
+              "published",
+              "authorId",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateGameBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "pgn": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "const": "intro",
+                  "type": "string"
+                },
+                {
+                  "const": "rules",
+                  "type": "string"
+                },
+                {
+                  "const": "tournament_rules",
+                  "type": "string"
+                },
+                {
+                  "const": "opening",
+                  "type": "string"
+                },
+                {
+                  "const": "middlegame",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame",
+                  "type": "string"
+                },
+                {
+                  "const": "tactics",
+                  "type": "string"
+                },
+                {
+                  "const": "strategy",
+                  "type": "string"
+                },
+                {
+                  "const": "story",
+                  "type": "string"
+                },
+                {
+                  "const": "competitive_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "student_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "pedagogy",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "level": {
+            "anyOf": [
+              {
+                "const": "beginner",
+                "type": "string"
+              },
+              {
+                "const": "intermediate",
+                "type": "string"
+              },
+              {
+                "const": "advanced",
+                "type": "string"
+              }
+            ]
+          },
+          "teachingNotes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "published": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateGameResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "pgn": {
+                "type": "string"
+              },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "intro",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tournament_rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tactics",
+                      "type": "string"
+                    },
+                    {
+                      "const": "strategy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "story",
+                      "type": "string"
+                    },
+                    {
+                      "const": "competitive_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pedagogy",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "level": {
+                "anyOf": [
+                  {
+                    "const": "beginner",
+                    "type": "string"
+                  },
+                  {
+                    "const": "intermediate",
+                    "type": "string"
+                  },
+                  {
+                    "const": "advanced",
+                    "type": "string"
+                  }
+                ]
+              },
+              "teachingNotes": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "published": {
+                "type": "boolean"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "pgn",
+              "topics",
+              "level",
+              "teachingNotes",
+              "tags",
+              "published",
+              "authorId",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "DeleteGameResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetStatusResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "arasanConfigured": {
+                "type": "boolean"
+              },
+              "arasanAvailable": {
+                "type": "boolean"
+              },
+              "defaultEngine": {
+                "anyOf": [
+                  {
+                    "const": "arasan",
+                    "type": "string"
+                  },
+                  {
+                    "const": "builtin",
+                    "type": "string"
+                  }
+                ]
+              },
+              "levels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "arasanConfigured",
+              "arasanAvailable",
+              "defaultEngine",
+              "levels"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "BestMoveBody": {
+        "type": "object",
+        "properties": {
+          "fen": {
+            "minLength": 10,
+            "type": "string"
+          },
+          "movesUci": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "level": {
+            "anyOf": [
+              {
+                "const": "easy",
+                "type": "string"
+              },
+              {
+                "const": "medium",
+                "type": "string"
+              },
+              {
+                "const": "hard",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "fen"
+        ]
+      },
+      "BestMoveResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "bestMoveUci": {
+                "type": "string"
+              },
+              "engine": {
+                "anyOf": [
+                  {
+                    "const": "arasan",
+                    "type": "string"
+                  },
+                  {
+                    "const": "builtin",
+                    "type": "string"
+                  }
+                ]
+              },
+              "depth": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "bestMoveUci",
+              "engine",
+              "depth"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AnalyzeBody": {
+        "type": "object",
+        "properties": {
+          "fen": {
+            "minLength": 10,
+            "type": "string"
+          },
+          "movesUci": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "depth": {
+            "minimum": 1,
+            "maximum": 16,
+            "type": "number"
+          }
+        },
+        "required": [
+          "fen"
+        ]
+      },
+      "AnalyzeResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "bestMoveUci": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "scoreCp": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "mate": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "pv": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "depth": {
+                "type": "number"
+              },
+              "engine": {
+                "anyOf": [
+                  {
+                    "const": "arasan",
+                    "type": "string"
+                  },
+                  {
+                    "const": "builtin",
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "bestMoveUci",
+              "scoreCp",
+              "mate",
+              "pv",
+              "depth",
+              "engine"
             ]
           }
         },

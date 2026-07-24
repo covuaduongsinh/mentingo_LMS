@@ -1,6 +1,8 @@
 export type QuizForm = {
   briefResponses: Record<string, string>;
   detailedResponses: Record<string, string>;
+  /** UCI move strings for chess_find_best / chess_move_line questions */
+  chessResponses: Record<string, string>;
   singleAnswerQuestions: {
     [key: string]: Record<string, string | null>;
   };

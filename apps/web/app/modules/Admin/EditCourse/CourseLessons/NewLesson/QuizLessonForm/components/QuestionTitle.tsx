@@ -49,6 +49,8 @@ const QuestionTitle = ({
     [QuestionType.FILL_IN_THE_BLANKS_DND]: QuestionIcons.FillInTheBlanks,
     [QuestionType.MATCH_WORDS]: QuestionIcons.MatchWords,
     [QuestionType.SCALE_1_5]: QuestionIcons.Scale_1_5,
+    [QuestionType.CHESS_FIND_BEST]: QuestionIcons.Chess,
+    [QuestionType.CHESS_MOVE_LINE]: QuestionIcons.Chess,
   };
 
   const getIconForQuestionType = (type: QuestionType): QuestionIcons => {

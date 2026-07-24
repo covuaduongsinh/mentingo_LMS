@@ -87,12 +87,26 @@ export const quizLessonFormSchema = (t: (key: string) => string) =>
               question.type === QuestionType.MULTIPLE_CHOICE ||
               question.type === QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE ||
               question.type === QuestionType.FILL_IN_THE_BLANKS_DND ||
-              question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT) &&
+              question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT ||
+              question.type === QuestionType.CHESS_FIND_BEST ||
+              question.type === QuestionType.CHESS_MOVE_LINE) &&
             (!question.options || !question.options.some((option) => option.isCorrect === true))
           ) {
             ctx.addIssue({
               path: [index, "options"],
               message: t("adminCourseView.curriculum.lesson.validation.atLeastOneOptionCorrect"),
+              code: z.ZodIssueCode.custom,
+            });
+          }
+
+          if (
+            (question.type === QuestionType.CHESS_FIND_BEST ||
+              question.type === QuestionType.CHESS_MOVE_LINE) &&
+            !(question.description ?? "").trim()
+          ) {
+            ctx.addIssue({
+              path: [index, "description"],
+              message: t("chess.author.fenRequired"),
               code: z.ZodIssueCode.custom,
             });
           }

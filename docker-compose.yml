@@ -9,7 +9,8 @@ services:
     volumes:
       - lms-db-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      # 5434 on host avoids clash with other local/WSL Postgres on 5432
+      - 5434:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 3s

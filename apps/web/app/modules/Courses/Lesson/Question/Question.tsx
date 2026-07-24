@@ -1,4 +1,5 @@
 import { BriefResponse } from "./BriefResponse";
+import { ChessMoveQuestion } from "./ChessMoveQuestion";
 import { DetailedResponse } from "./DetailedResponse";
 import { FillInTheBlanksDnd } from "./FillInTheBlanks/dnd/FillInTheBlanksDnd";
 import { FillInTheBlanks } from "./FillInTheBlanks/FillInTheBlanks";
@@ -62,6 +63,16 @@ export const Question = ({ question, isCompleted, lessonId }: QuestionProps) => 
 
     case isScaleQuestion:
       return <ScaleQuestion question={question} isCompleted={isCompleted} />;
+
+    case (question.type as string) === "chess_find_best":
+      return (
+        <ChessMoveQuestion question={question} isCompleted={isCompleted} mode="chess_find_best" />
+      );
+
+    case (question.type as string) === "chess_move_line":
+      return (
+        <ChessMoveQuestion question={question} isCompleted={isCompleted} mode="chess_move_line" />
+      );
 
     default:
       return null;

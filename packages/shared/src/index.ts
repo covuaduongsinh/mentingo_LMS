@@ -9,6 +9,7 @@ export * from "./constants/articlesSettings";
 export * from "./constants/articlesTypes";
 export * from "./constants/calendar";
 export * from "./constants/certificate";
+export * from "./constants/chess";
 export * from "./constants/course";
 export * from "./constants/courseChat";
 export * from "./constants/courseDuplication";

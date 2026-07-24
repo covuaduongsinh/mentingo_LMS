@@ -35,6 +35,7 @@ import {
 
 import { e2eCourses } from "./e2e-data-seeds";
 import { niceCourses } from "./nice-data-seeds";
+import { seedChessBanks } from "./seed-chess-data";
 import {
   addEmailSuffix,
   assignSystemRoleToUser,
@@ -153,10 +154,23 @@ async function insertUserDetails(userId: UUIDType, tenantId: UUIDType) {
 }
 
 export async function insertGlobalSettings(database: DatabasePg, tenantId: UUIDType) {
+  const chessBrandingSettings = {
+    ...DEFAULT_GLOBAL_SETTINGS,
+    companyInformation: {
+      ...DEFAULT_GLOBAL_SETTINGS.companyInformation,
+      companyName: "Cờ Vua Học Đường",
+      companyShortName: "CVHD",
+      emailAddress: "lienhe@covuahocduong.com",
+    },
+    // Warm green chess-friendly accent (optional brand seed)
+    primaryColor: "#0F766E",
+    contrastColor: "#FFFFFF",
+  };
+
   const [createdGlobalSettings] = await database
     .insert(settings)
     .values({
-      settings: settingsToJSONBuildObject(DEFAULT_GLOBAL_SETTINGS),
+      settings: settingsToJSONBuildObject(chessBrandingSettings),
       tenantId,
     })
     .returning({
@@ -413,6 +427,12 @@ async function seed() {
       console.log("✨✨✨Created nice courses✨✨✨");
       await createNiceCourses([createdAdmin.id], db, e2eCourses, tenantId);
       console.log("🧪 Created e2e courses");
+
+      const chessSeed = await seedChessBanks(db, tenantId, createdAdmin.id);
+      console.log(
+        `♟️ Seeded chess banks: ${chessSeed.exercises} exercises, ${chessSeed.games} games`,
+      );
+
       await refreshSeedSearchDocuments(db, tenantId);
 
       console.log("Selected random courses for student from createdCourses");

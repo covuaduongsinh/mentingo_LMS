@@ -2254,6 +2254,8 @@
           "briefResponse": "Krátká odpověď",
           "detailedResponse": "Volný text",
           "scale_1_5": "Stupnice 1 až 5",
+          "chessFindBest": "Chess – best move",
+          "chessMoveLine": "Chess – move line",
           "selectQuestionType": "Vyberte typ otázky",
           "contentLessonDescription": "Text s multimédii (obrázky, videa, prezentace).",
           "quizLessonDescription": "Sada otázek pro ověření znalostí.",

@@ -9,6 +9,7 @@ export enum QuestionIcons {
   GapFill = "GapFill",
   MatchWords = "Equal",
   Scale_1_5 = "Questionnaire",
+  Chess = "QuizStar",
 }
 
 export type QuestionOption = {
@@ -45,4 +46,6 @@ export enum QuestionType {
   FILL_IN_THE_BLANKS_TEXT = "fill_in_the_blanks_text",
   FILL_IN_THE_BLANKS_DND = "fill_in_the_blanks_dnd",
   SCALE_1_5 = "scale_1_5",
+  CHESS_FIND_BEST = "chess_find_best",
+  CHESS_MOVE_LINE = "chess_move_line",
 }

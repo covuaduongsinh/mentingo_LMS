@@ -84,6 +84,20 @@ const QuestionSelector = ({ addQuestion, disabled = false }: QuestionSelectorPro
       label: t("adminCourseView.curriculum.lesson.other.scale_1_5"),
       icon: QuestionIcons.Scale_1_5,
     },
+    {
+      type: QuestionType.CHESS_FIND_BEST,
+      label: t("adminCourseView.curriculum.lesson.other.chessFindBest", {
+        defaultValue: "Chess – best move",
+      }),
+      icon: QuestionIcons.Chess,
+    },
+    {
+      type: QuestionType.CHESS_MOVE_LINE,
+      label: t("adminCourseView.curriculum.lesson.other.chessMoveLine", {
+        defaultValue: "Chess – move line",
+      }),
+      icon: QuestionIcons.Chess,
+    },
   ];
 
   if (disabled) return null;

@@ -11,6 +11,10 @@ export const QuizFormSchema = (t: typeof i18next.t) =>
       detailedResponses: z
         .record(z.string().min(1, t("studentLessonView.validation.answerCannotBeEmpty")))
         .optional(),
+      /** UCI move strings for chess_find_best / chess_move_line (must not be stripped by Zod). */
+      chessResponses: z
+        .record(z.string().min(1, t("studentLessonView.validation.answerCannotBeEmpty")))
+        .optional(),
       singleAnswerQuestions: z
         .record(
           z.record(
@@ -48,6 +52,7 @@ export const QuizFormSchema = (t: typeof i18next.t) =>
           ),
         )
         .optional(),
+      scaleQuestions: z.record(z.record(z.string().nullable())).optional(),
     })
     .superRefine((data, ctx) => {
       const requiredFields = {
@@ -115,6 +120,19 @@ export const QuizFormSchema = (t: typeof i18next.t) =>
             ctx.addIssue({
               code: "custom",
               path: ["trueOrFalseQuestions", questionId],
+              message: t("studentLessonView.validation.answerCannotBeEmpty"),
+            });
+          }
+        });
+      }
+
+      const chessResponses = data.chessResponses;
+      if (chessResponses) {
+        Object.entries(chessResponses).forEach(([questionId, value]) => {
+          if (!value || !value.trim()) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["chessResponses", questionId],
               message: t("studentLessonView.validation.answerCannotBeEmpty"),
             });
           }

@@ -26,6 +26,10 @@ import {
   ANNOUNCEMENT_SOURCE_TYPES,
   ANNOUNCEMENT_STATUSES,
   COURSE_GENERATION_SYNC_STATUS,
+  CHESS_AUDIENCES,
+  CHESS_CONTENT_SOURCE,
+  CHESS_DIFFICULTY,
+  CHESS_GAME_LEVELS,
 } from "@repo/shared";
 import { sql } from "drizzle-orm";
 import {
@@ -98,6 +102,11 @@ import type {
   CourseGenerationSyncStatus,
   LiveTrainingDeliveryType,
   LiveTrainingLinkEntityType,
+  ChessAudience,
+  ChessContentSource,
+  ChessExerciseFormat,
+  ChessGameLevel,
+  ChessTopic,
   LiveTrainingMemberRole,
   LiveTrainingParticipantRole,
   LiveTrainingSettings,
@@ -2479,6 +2488,103 @@ export const learningPathEntityMap = pgTable(
       table.exportId,
       table.entityType,
       table.sourceEntityId,
+    ),
+  }),
+);
+
+export type ChessExerciseSolution = {
+  movesUci?: string[];
+  choiceIds?: string[];
+  isTrue?: boolean;
+  text?: string;
+};
+
+export const chessExercises = pgTable(
+  "chess_exercises",
+  {
+    ...id,
+    ...timestamps,
+    title: text("title").notNull(),
+    audience: text("audience").$type<ChessAudience>().notNull().default(CHESS_AUDIENCES.STUDENT),
+    topics: text("topics")
+      .array()
+      .$type<ChessTopic[]>()
+      .notNull()
+      .default(sql`ARRAY[]::text[]`),
+    difficulty: integer("difficulty").notNull().default(CHESS_DIFFICULTY.DEFAULT),
+    format: text("format").$type<ChessExerciseFormat>().notNull(),
+    fen: text("fen"),
+    solution: jsonb("solution").$type<ChessExerciseSolution>().default({}).notNull(),
+    explanation: text("explanation"),
+    source: text("source")
+      .$type<ChessContentSource>()
+      .notNull()
+      .default(CHESS_CONTENT_SOURCE.ORIGINAL),
+    pieceCount: integer("piece_count"),
+    rating: integer("rating"),
+    published: boolean("published").notNull().default(false),
+    authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_exercises")(table),
+    publishedIdx: index("chess_exercises_published_idx").on(table.published),
+    formatIdx: index("chess_exercises_format_idx").on(table.format),
+    difficultyIdx: index("chess_exercises_difficulty_idx").on(table.difficulty),
+  }),
+);
+
+export const chessGames = pgTable(
+  "chess_games",
+  {
+    ...id,
+    ...timestamps,
+    title: text("title").notNull(),
+    pgn: text("pgn").notNull(),
+    topics: text("topics")
+      .array()
+      .$type<ChessTopic[]>()
+      .notNull()
+      .default(sql`ARRAY[]::text[]`),
+    level: text("level").$type<ChessGameLevel>().notNull().default(CHESS_GAME_LEVELS.BEGINNER),
+    teachingNotes: text("teaching_notes"),
+    tags: text("tags")
+      .array()
+      .$type<string[]>()
+      .notNull()
+      .default(sql`ARRAY[]::text[]`),
+    published: boolean("published").notNull().default(false),
+    authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_games")(table),
+    publishedIdx: index("chess_games_published_idx").on(table.published),
+    levelIdx: index("chess_games_level_idx").on(table.level),
+  }),
+);
+
+export const chessExerciseAttempts = pgTable(
+  "chess_exercise_attempts",
+  {
+    ...id,
+    ...timestamps,
+    exerciseId: uuid("exercise_id")
+      .references(() => chessExercises.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    isCorrect: boolean("is_correct").notNull(),
+    answer: jsonb("answer").default({}).notNull(),
+    timeMs: integer("time_ms"),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_exercise_attempts")(table),
+    exerciseUserIdx: index("chess_exercise_attempts_exercise_user_idx").on(
+      table.exerciseId,
+      table.userId,
     ),
   }),
 );

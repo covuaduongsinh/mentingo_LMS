@@ -162,6 +162,30 @@ export const routeAccessConfig = createRouteConfig({
   "admin/activity-logs": {
     allOf: [PERMISSIONS.ACTIVITY_LOG_READ],
   },
+  "admin/chess/exercises": {
+    anyOf: [PERMISSIONS.CHESS_EXERCISE_MANAGE, PERMISSIONS.CHESS_EXERCISE_READ],
+  },
+  "admin/chess/games": {
+    anyOf: [PERMISSIONS.CHESS_GAME_MANAGE, PERMISSIONS.CHESS_GAME_READ],
+  },
+  "chess/practice": {
+    anyOf: [PERMISSIONS.CHESS_EXERCISE_READ],
+  },
+  "chess/practice/:id": {
+    anyOf: [PERMISSIONS.CHESS_EXERCISE_READ],
+  },
+  "chess/games": {
+    anyOf: [PERMISSIONS.CHESS_GAME_READ],
+  },
+  "chess/games/:id": {
+    anyOf: [PERMISSIONS.CHESS_GAME_READ],
+  },
+  "chess/play": {
+    anyOf: [PERMISSIONS.CHESS_EXERCISE_READ, PERMISSIONS.CHESS_GAME_READ],
+  },
+  "chess/analysis": {
+    anyOf: [PERMISSIONS.CHESS_EXERCISE_READ, PERMISSIONS.CHESS_GAME_READ],
+  },
   "super-admin/*": {
     allOf: [PERMISSIONS.TENANT_MANAGE],
   },

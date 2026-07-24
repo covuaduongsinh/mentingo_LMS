@@ -2255,6 +2255,8 @@
           "briefResponse": "Kurze Antwort",
           "detailedResponse": "Freitext",
           "scale1_5": "Skala 1 bis 5",
+          "chessFindBest": "Schach – bester Zug",
+          "chessMoveLine": "Schach – Zugfolge",
           "selectQuestionType": "Wählen Sie den Fragetyp aus",
           "contentLessonDescription": "Text mit Multimedia (Bilder, Videos, Präsentationen).",
           "quizLessonDescription": "Eine Reihe von Fragen zur Überprüfung des Wissens.",

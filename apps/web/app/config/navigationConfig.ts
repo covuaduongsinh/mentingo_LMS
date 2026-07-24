@@ -93,6 +93,38 @@ export const getNavigationConfig = (
           iconName: "Target",
           testId: NAVIGATION_HANDLES.PROGRESS_LINK,
         },
+        {
+          label: t("chess.nav.practice", { defaultValue: "Chess practice" }),
+          path: "chess/practice",
+          iconName: "Quiz",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_EXERCISE_READ],
+          },
+        },
+        {
+          label: t("chess.nav.gameLibrary", { defaultValue: "Game library" }),
+          path: "chess/games",
+          iconName: "Course",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_GAME_READ],
+          },
+        },
+        {
+          label: t("chess.nav.play", { defaultValue: "Play engine" }),
+          path: "chess/play",
+          iconName: "Course",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_EXERCISE_READ, PERMISSIONS.CHESS_GAME_READ],
+          },
+        },
+        {
+          label: t("chess.nav.analysis", { defaultValue: "Analysis" }),
+          path: "chess/analysis",
+          iconName: "ChartNoAxes",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_EXERCISE_READ, PERMISSIONS.CHESS_GAME_READ],
+          },
+        },
       ],
     },
     ...(isAnyContentFeatureEnabled
@@ -161,6 +193,8 @@ export const getNavigationConfig = (
           PERMISSIONS.GROUP_MANAGE,
           PERMISSIONS.CATEGORY_MANAGE,
           PERMISSIONS.BILLING_MANAGE,
+          PERMISSIONS.CHESS_EXERCISE_MANAGE,
+          PERMISSIONS.CHESS_GAME_MANAGE,
         ],
       },
       items: [
@@ -181,6 +215,22 @@ export const getNavigationConfig = (
           path: "admin/categories",
           iconName: "Category",
           testId: NAVIGATION_HANDLES.CATEGORIES_LINK,
+        },
+        {
+          label: t("chess.nav.exercises", { defaultValue: "Exercise bank" }),
+          path: "admin/chess/exercises",
+          iconName: "Quiz",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_EXERCISE_MANAGE, PERMISSIONS.CHESS_EXERCISE_READ],
+          },
+        },
+        {
+          label: t("chess.nav.games", { defaultValue: "Game bank" }),
+          path: "admin/chess/games",
+          iconName: "Course",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_GAME_MANAGE, PERMISSIONS.CHESS_GAME_READ],
+          },
         },
         ...(isStripeConfigured
           ? [

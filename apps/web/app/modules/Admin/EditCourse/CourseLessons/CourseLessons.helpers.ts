@@ -41,4 +41,12 @@ export const mapQuestionTypeToLabel = (questionType: QuestionType): string =>
     )
     .with(QuestionType.MATCH_WORDS, () => "adminCourseView.curriculum.lesson.other.matchWords")
     .with(QuestionType.SCALE_1_5, () => "adminCourseView.curriculum.lesson.other.scale1_5")
+    .with(
+      QuestionType.CHESS_FIND_BEST,
+      () => "adminCourseView.curriculum.lesson.other.chessFindBest",
+    )
+    .with(
+      QuestionType.CHESS_MOVE_LINE,
+      () => "adminCourseView.curriculum.lesson.other.chessMoveLine",
+    )
     .otherwise(() => "");

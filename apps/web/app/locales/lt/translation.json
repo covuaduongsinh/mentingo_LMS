@@ -2254,6 +2254,8 @@
           "briefResponse": "Trumpas atsakymas",
           "detailedResponse": "Laisvas tekstas",
           "scale_1_5": "Skalė nuo 1 iki 5",
+          "chessFindBest": "Chess – best move",
+          "chessMoveLine": "Chess – move line",
           "selectQuestionType": "Pasirinkite klausimo tipą",
           "contentLessonDescription": "Tekstas su multimedija (vaizdai, vaizdo įrašai, pristatymai).",
           "quizLessonDescription": "Klausimų rinkinys žinioms patikrinti.",

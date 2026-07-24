@@ -1,4 +1,124 @@
 {
+  "chess": {
+    "author": {
+      "fen": "FEN position",
+      "fenRequired": "FEN position is required for chess questions",
+      "solutionUci": "Solution moves (UCI, space-separated)",
+      "solutionHint": "Example: e2e4 for one best move, or e2e4 e7e5 g1f3 for a full line."
+    },
+    "quiz": {
+      "movesPlayed": "Moves",
+      "reset": "Reset board"
+    },
+    "pgn": {
+      "start": "Start",
+      "prev": "Prev",
+      "next": "Next",
+      "end": "End"
+    },
+    "nav": {
+      "practice": "Chess practice",
+      "gameLibrary": "Game library",
+      "exercises": "Exercise bank",
+      "games": "Game bank",
+      "adminBanks": "Chess banks",
+      "play": "Play engine",
+      "analysis": "Analysis"
+    },
+    "engine": {
+      "errorBestMove": "Engine could not move",
+      "errorAnalyze": "Engine analysis failed"
+    },
+    "play": {
+      "title": "Play vs engine",
+      "subtitle": "Play against Arasan (MIT) or the built-in school engine.",
+      "level": "Difficulty",
+      "levelEasy": "Easy",
+      "levelMedium": "Medium",
+      "levelHard": "Hard",
+      "playWhite": "New game as White",
+      "playBlack": "New game as Black",
+      "thinking": "Engine thinking…",
+      "yourTurn": "Your turn",
+      "engineTurn": "Engine turn",
+      "youWin": "Checkmate — you win!",
+      "youLose": "Checkmate — you lost.",
+      "draw": "Draw.",
+      "check": "Check!",
+      "noMoves": "No moves yet",
+      "arasanHint": "Set ARASAN_PATH on the API to use the real Arasan UCI binary. Without it, a built-in MIT engine is used."
+    },
+    "analysis": {
+      "title": "Analysis board",
+      "subtitle": "Analyze positions with Arasan (MIT) or the built-in engine.",
+      "analyze": "Analyze",
+      "analyzing": "Analyzing…",
+      "reset": "Reset",
+      "loadFen": "Load FEN",
+      "moves": "Moves (UCI)",
+      "bestMove": "Best move",
+      "eval": "Eval"
+    },
+    "admin": {
+      "exercisesTitle": "Exercise bank",
+      "exercisesSubtitle": "Reusable drills and knowledge checks across tactics, rules, pedagogy, and more.",
+      "gamesTitle": "Game bank",
+      "gamesSubtitle": "PGN games with teaching notes for lessons and demos.",
+      "addExercise": "Add exercise",
+      "addGame": "Add game",
+      "fieldTitle": "Title",
+      "format": "Format",
+      "audience": "Audience",
+      "topic": "Topic",
+      "allTopics": "All topics",
+      "difficulty": "Difficulty",
+      "level": "Level",
+      "explanation": "Explanation",
+      "teachingNotes": "Teaching notes",
+      "published": "Published",
+      "draft": "Draft",
+      "status": "Status",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "search": "Search…",
+      "emptyExercises": "No exercises yet.",
+      "emptyGames": "No games yet.",
+      "confirmDelete": "Delete this item?"
+    },
+    "practice": {
+      "title": "Practice hub",
+      "subtitle": "Train by topic: tactics, endgames, rules, strategy, and teacher-track knowledge.",
+      "empty": "No published exercises yet. Ask your teacher to publish some.",
+      "solve": "Solve",
+      "submit": "Check answer",
+      "correct": "Correct!",
+      "incorrect": "Not quite.",
+      "notFound": "Exercise not found.",
+      "nonBoardHint": "This knowledge item is best practiced inside a course quiz. Board formats: find best / move line."
+    },
+    "library": {
+      "title": "Game library",
+      "subtitle": "Model games and teaching PGNs for school chess.",
+      "empty": "No published games yet.",
+      "view": "Game",
+      "notFound": "Game not found."
+    },
+    "toast": {
+      "exerciseCreated": "Exercise created",
+      "exerciseCreateFailed": "Could not create exercise",
+      "exerciseUpdated": "Exercise updated",
+      "exerciseUpdateFailed": "Could not update exercise",
+      "exerciseDeleted": "Exercise deleted",
+      "exerciseDeleteFailed": "Could not delete exercise",
+      "gameCreated": "Game created",
+      "gameCreateFailed": "Could not create game",
+      "gameUpdated": "Game updated",
+      "gameUpdateFailed": "Could not update game",
+      "gameDeleted": "Game deleted",
+      "gameDeleteFailed": "Could not delete game",
+      "attemptFailed": "Could not submit attempt"
+    }
+  },
   "common": {
     "button": {
       "save": "Save",
@@ -2315,6 +2435,8 @@
           "briefResponse": "Short answer",
           "detailedResponse": "Free text",
           "scale_1_5": "Scale 1 to 5",
+          "chessFindBest": "Chess – best move",
+          "chessMoveLine": "Chess – move line",
           "selectQuestionType": "Select question type",
           "contentLessonDescription": "Text with multimedia (images, videos, presentations).",
           "quizLessonDescription": "A set of questions to check knowledge.",
@@ -2769,6 +2891,8 @@
       "false": "False",
       "oneOrTwoWordSentence": "Instruction: Provide a brief response (1-2 sentences).",
       "threeOrFiveWordSentence": "Instruction: Write a detailed response (3-5 sentences).",
+      "chessFindBest": "Play the best move on the board.",
+      "chessMoveLine": "Play the full solution line on the board.",
       "single": "Single",
       "multiple": "Multiple",
       "fillInTheBlanks": "Fill in the blanks.",

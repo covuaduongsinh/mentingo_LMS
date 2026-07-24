@@ -44,6 +44,12 @@ export const routes: (
           route("news/:newsId", "modules/News/NewsDetails.page.tsx", {
             id: "news-details",
           });
+          route("chess/practice", "modules/Chess/Practice/ChessPractice.page.tsx");
+          route("chess/practice/:id", "modules/Chess/Practice/ChessPracticeSolve.page.tsx");
+          route("chess/games", "modules/Chess/Practice/ChessGamesLibrary.page.tsx");
+          route("chess/games/:id", "modules/Chess/Practice/ChessGameView.page.tsx");
+          route("chess/play", "modules/Chess/Play/ChessPlay.page.tsx");
+          route("chess/analysis", "modules/Chess/Analysis/ChessAnalysis.page.tsx");
         });
         route("", "modules/Dashboard/UserDashboard.layout.tsx", () => {
           route("", "modules/Dashboard/IndexRedirect.page.tsx", { index: true });
@@ -85,6 +91,8 @@ export const routes: (
             "modules/Admin/PromotionCodes/PromotionCodeDetails.page.tsx",
           );
           route("activity-logs", "modules/ActivityLogs/ActivityLogs.page.tsx");
+          route("chess/exercises", "modules/Chess/Admin/ChessExercisesAdmin.page.tsx");
+          route("chess/games", "modules/Chess/Admin/ChessGamesAdmin.page.tsx");
         });
         route("super-admin", "modules/SuperAdmin/SuperAdmin.layout.tsx", () => {
           route("tenants", "modules/SuperAdmin/Tenants.page.tsx", { index: true });

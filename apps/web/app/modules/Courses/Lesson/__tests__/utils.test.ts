@@ -485,6 +485,7 @@ describe("parseQuizFormData", () => {
     const formData: QuizForm = {
       briefResponses: {},
       detailedResponses: {},
+      chessResponses: {},
       singleAnswerQuestions: {},
       multiAnswerQuestions: {},
       photoQuestionSingleChoice: {},
@@ -590,6 +591,7 @@ describe("fill in the blanks text mapping", () => {
     const formData: QuizForm = {
       briefResponses: {},
       detailedResponses: {},
+      chessResponses: {},
       singleAnswerQuestions: {},
       multiAnswerQuestions: {},
       photoQuestionSingleChoice: {},

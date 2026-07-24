@@ -2315,6 +2315,8 @@
           "briefResponse": "Respuesta corta",
           "detailedResponse": "Texto libre",
           "scale_1_5": "Escala del 1 al 5",
+          "chessFindBest": "Chess – best move",
+          "chessMoveLine": "Chess – move line",
           "selectQuestionType": "Seleccionar tipo de pregunta",
           "contentLessonDescription": "Texto con multimedia (imágenes, vídeos, presentaciones).",
           "quizLessonDescription": "Un conjunto de preguntas para comprobar conocimientos.",

@@ -11,7 +11,9 @@ type QuestionCardProps = {
     | "trueOrFalseQuestion"
     | "oneOrTwoWordSentence"
     | "threeOrFiveWordSentence"
-    | "scale_1_5";
+    | "scale_1_5"
+    | "chessFindBest"
+    | "chessMoveLine";
   children: ReactNode;
 };
 

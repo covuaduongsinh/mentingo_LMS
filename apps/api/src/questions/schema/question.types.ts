@@ -10,6 +10,10 @@ export const QUESTION_TYPE = {
   PHOTO_QUESTION_MULTIPLE_CHOICE: "photo_question_multiple_choice",
   FILL_IN_THE_BLANKS_TEXT: "fill_in_the_blanks_text",
   FILL_IN_THE_BLANKS_DND: "fill_in_the_blanks_dnd",
+  /** Board question: one best move (UCI). FEN in description; solution in correct optionText. */
+  CHESS_FIND_BEST: "chess_find_best",
+  /** Board question: full solution line (UCI space-separated). FEN in description. */
+  CHESS_MOVE_LINE: "chess_move_line",
 } as const;
 
 export type QuestionType = (typeof QUESTION_TYPE)[keyof typeof QUESTION_TYPE];

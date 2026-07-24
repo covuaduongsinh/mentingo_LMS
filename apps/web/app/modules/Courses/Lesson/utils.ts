@@ -31,6 +31,10 @@ export const getUserAnswers = (questions: Questions): QuizForm => {
     fillInTheBlanksDnd: prepareOptionAnswers(groupedQuestions.fill_in_the_blanks_dnd),
     briefResponses: prepareOpenAnswers(groupedQuestions.brief_response),
     detailedResponses: prepareOpenAnswers(groupedQuestions.detailed_response),
+    chessResponses: prepareOpenAnswers([
+      ...groupedQuestions.chess_find_best,
+      ...groupedQuestions.chess_move_line,
+    ]),
     scaleQuestions: prepareOptionAnswers(groupedQuestions.scale_1_5),
   } as const;
 };
@@ -52,6 +56,10 @@ export const getEmptyQuizAnswers = (questions: Questions): QuizForm => {
     fillInTheBlanksDnd: prepareEmptyOptionAnswers(groupedQuestions.fill_in_the_blanks_dnd),
     briefResponses: prepareEmptyOpenAnswers(groupedQuestions.brief_response),
     detailedResponses: prepareEmptyOpenAnswers(groupedQuestions.detailed_response),
+    chessResponses: prepareEmptyOpenAnswers([
+      ...groupedQuestions.chess_find_best,
+      ...groupedQuestions.chess_move_line,
+    ]),
     scaleQuestions: prepareEmptyOptionAnswers(groupedQuestions.scale_1_5),
   };
 };
@@ -73,6 +81,8 @@ const groupQuestionsByType = (questions: Questions) => {
     scale_1_5: questions.filter(({ type }) => type === "scale_1_5"),
     brief_response: questions.filter(({ type }) => type === "brief_response"),
     detailed_response: questions.filter(({ type }) => type === "detailed_response"),
+    chess_find_best: questions.filter(({ type }) => (type as string) === "chess_find_best"),
+    chess_move_line: questions.filter(({ type }) => (type as string) === "chess_move_line"),
   };
 };
 
@@ -206,8 +216,12 @@ function prepareOpenAnswers(questions: Questions): OpenAnswersMap {
   return questions.reduce((result, question) => {
     const studentAnswer = question.options?.[0]?.studentAnswer || "";
     const isStudentAnswer = question.options?.[0]?.isStudentAnswer || false;
+    const isChessQuestion =
+      (question.type as string) === "chess_find_best" ||
+      (question.type as string) === "chess_move_line";
 
-    result[question.id] = isStudentAnswer ? studentAnswer : "";
+    // Chess stores UCI under display-order key; keep replay even when answer was wrong.
+    result[question.id] = isChessQuestion || isStudentAnswer ? studentAnswer : "";
     return result;
   }, {} as OpenAnswersMap);
 }
@@ -269,14 +283,20 @@ export const parseQuizFormData = (input: QuizForm) => {
     }
   };
 
-  const processSimpleResponses = (questionMap: Record<string, string>) => {
+  const processSimpleResponses = (questionMap: Record<string, string> | undefined) => {
+    if (!questionMap) return;
+
     for (const questionId in questionMap) {
+      const value = questionMap[questionId];
+      // Skip empty values so backend "missing question" stays accurate.
+      if (typeof value !== "string" || !value.trim()) continue;
+
       result.push({
         questionId,
         answers: [
           {
             answerId: questionId,
-            value: questionMap[questionId],
+            value,
           },
         ],
       });
@@ -285,6 +305,7 @@ export const parseQuizFormData = (input: QuizForm) => {
 
   processSimpleResponses(input.detailedResponses);
   processSimpleResponses(input.briefResponses);
+  processSimpleResponses(input.chessResponses);
   processSingleAnswerQuestions(input.singleAnswerQuestions);
   processSingleAnswerQuestions(input.photoQuestionSingleChoice);
   processSingleAnswerQuestions(input.multiAnswerQuestions);

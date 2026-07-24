@@ -2,6 +2,7 @@ import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { sql } from "drizzle-orm";
 import { match } from "ts-pattern";
 
+import { uciMoveSequencesEqual } from "src/chess/utils/chess-moves.utils";
 import { DatabasePg } from "src/common";
 
 import { QuestionRepository } from "./question.repository";
@@ -160,6 +161,19 @@ export class QuestionService {
         // TODO: implement this
         return true;
       })
+      .with(QUESTION_TYPE.CHESS_FIND_BEST, QUESTION_TYPE.CHESS_MOVE_LINE, () => {
+        if (studentAnswer.answers.length !== 1) {
+          throw new ConflictException(question.id, "Chess answer must have exactly one answer");
+        }
+
+        const answer = studentAnswer.answers[0];
+        if (!this.isAnswerWithValue(answer)) {
+          return false;
+        }
+
+        const expectedMoves = question.correctAnswers.map((item) => item.value).join(" ");
+        return uciMoveSequencesEqual(expectedMoves, this.getValue(answer));
+      })
       .otherwise(() => {
         throw new Error(`Unsupported question type: ${question.type}`);
       });
@@ -171,7 +185,9 @@ export class QuestionService {
   ): FormattedAnswer[] {
     if (
       question.type === QUESTION_TYPE.BRIEF_RESPONSE ||
-      question.type === QUESTION_TYPE.DETAILED_RESPONSE
+      question.type === QUESTION_TYPE.DETAILED_RESPONSE ||
+      question.type === QUESTION_TYPE.CHESS_FIND_BEST ||
+      question.type === QUESTION_TYPE.CHESS_MOVE_LINE
     ) {
       const answer = studentAnswer.answers[0];
       return [{ key: "1", value: "value" in answer ? answer.value : "" }];

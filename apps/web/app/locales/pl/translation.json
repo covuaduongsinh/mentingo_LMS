@@ -2544,6 +2544,8 @@
           "briefResponse": "Krótka odpowiedź",
           "detailedResponse": "Odpowiedź rozwinięta",
           "scale_1_5": "Skala 1 do 5",
+          "chessFindBest": "Szachy – najlepszy ruch",
+          "chessMoveLine": "Szachy – sekwencja ruchów",
           "updateAiMentorAvatarDescription": "Prześlij nowe zdjęcie dla AI Mentora lub usuń obecne.",
           "updateAiMentorAvatar": "Zaktualizuj avatar AI Mentora",
           "taskDescriptionTooltip": "Krótko opisz, co uczestnik powinien zrobić podczas rozmowy z AI mentorem.",
