@@ -49,3 +49,9 @@ yarn-error.log*
 .gitnexus
 
 .pnpm-store
+# Local agent/debug temp files
+tmp-*.json
+tmp-cookies.txt
+apps/api/api-stdout.log
+apps/api/api-stderr.log
+
