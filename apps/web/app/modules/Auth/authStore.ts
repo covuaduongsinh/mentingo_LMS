@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { safeLocalStorage } from "~/lib/stores/safeStorage";
+
 type AuthStore = {
   isLoggedIn: boolean;
   setLoggedIn: (value: boolean) => void;
@@ -14,6 +16,7 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: "auth-storage",
+      storage: safeLocalStorage,
     },
   ),
 );

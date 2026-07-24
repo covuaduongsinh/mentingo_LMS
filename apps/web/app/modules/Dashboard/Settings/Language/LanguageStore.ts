@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { safeLocalStorage } from "~/lib/stores/safeStorage";
+
 import { detectBrowserLanguage, isSupportedLanguage } from "../../../../utils/browser-language";
 
 import type { SupportedLanguages } from "@repo/shared";
@@ -39,6 +41,7 @@ export const useLanguageStore = create<LanguageStore>()(
     }),
     {
       name: "language-storage",
+      storage: safeLocalStorage,
     },
   ),
 );

@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { safeLocalStorage } from "~/lib/stores/safeStorage";
+
 import type { CourseListLayout } from "~/types/shared";
 
 interface ILayoutsStore {
@@ -16,6 +18,7 @@ export const useLayoutsStore = create<ILayoutsStore>()(
     }),
     {
       name: "layouts-storage",
+      storage: safeLocalStorage,
       partialize: (state) => ({
         courseListLayout: state.courseListLayout,
       }),

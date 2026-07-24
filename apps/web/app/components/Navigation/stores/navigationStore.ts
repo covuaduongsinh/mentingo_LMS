@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { safeLocalStorage } from "~/lib/stores/safeStorage";
+
 interface INavigationStore {
   expandedMenus: string[];
   setExpandedMenus: (menus: string[]) => void;
@@ -21,6 +23,7 @@ export const useNavigationStore = create<INavigationStore>()(
     }),
     {
       name: "navigation-storage",
+      storage: safeLocalStorage,
       partialize: (state) => ({
         expandedMenus: state.expandedMenus,
         isSidebarCollapsed: state.isSidebarCollapsed,
