@@ -5,6 +5,7 @@ export const baseArticleTitle = {
   lt: "Nenurodytas straipsnis",
   cs: "Nezařazený článek",
   es: "Artículo sin título",
+  vi: "Bài viết chưa có tiêu đề",
 };
 
 export const baseArticleSectionTitle = {
@@ -14,4 +15,5 @@ export const baseArticleSectionTitle = {
   lt: "Nenurodyta sekcija",
   cs: "Nezařazená sekce",
   es: "Sección sin título",
+  vi: "Phần chưa có tiêu đề",
 };

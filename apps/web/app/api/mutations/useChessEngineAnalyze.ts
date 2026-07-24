@@ -1,22 +1,20 @@
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { chessApi, type ChessEngineAnalyzeResult } from "~/api/chess-api";
+import { ApiClient } from "~/api/api-client";
 import { getTranslatedApiErrorMessage } from "~/api/utils/getTranslatedApiErrorMessage";
 import { useToast } from "~/components/ui/use-toast";
+
+import type { AnalyzeBody } from "~/api/generated-api";
 
 export function useChessEngineAnalyze() {
   const { toast } = useToast();
   const { t } = useTranslation();
 
   return useMutation({
-    mutationFn: async (body: {
-      fen: string;
-      movesUci?: string[];
-      depth?: number;
-    }): Promise<ChessEngineAnalyzeResult> => {
-      const response = await chessApi.engineAnalyze(body);
-      return response.data;
+    mutationFn: async (body: AnalyzeBody) => {
+      const response = await ApiClient.api.chessEngineControllerAnalyze(body);
+      return response.data.data;
     },
     onError: (error) => {
       toast({

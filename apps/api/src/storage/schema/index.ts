@@ -104,8 +104,12 @@ import type {
   LiveTrainingLinkEntityType,
   ChessAudience,
   ChessContentSource,
+  ChessEngineLevelShared,
+  ChessEngineName,
   ChessExerciseFormat,
   ChessGameLevel,
+  ChessPlayEndReason,
+  ChessPlayOutcome,
   ChessTopic,
   LiveTrainingMemberRole,
   LiveTrainingParticipantRole,
@@ -2586,5 +2590,37 @@ export const chessExerciseAttempts = pgTable(
       table.exerciseId,
       table.userId,
     ),
+  }),
+);
+
+export const chessPlaySessions = pgTable(
+  "chess_play_sessions",
+  {
+    ...id,
+    ...timestamps,
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    playerColor: text("player_color").$type<"w" | "b">().notNull(),
+    level: text("level").$type<ChessEngineLevelShared>().notNull(),
+    engine: text("engine").$type<ChessEngineName>().notNull(),
+    outcome: text("outcome").$type<ChessPlayOutcome>().notNull(),
+    endReason: text("end_reason").$type<ChessPlayEndReason>().notNull(),
+    pgn: text("pgn").notNull(),
+    movesUci: text("moves_uci")
+      .array()
+      .$type<string[]>()
+      .notNull()
+      .default(sql`ARRAY[]::text[]`),
+    timeControl: text("time_control"),
+    playerTimeLeftMs: integer("player_time_left_ms"),
+    engineTimeLeftMs: integer("engine_time_left_ms"),
+    durationMs: integer("duration_ms"),
+    moveCount: integer("move_count").notNull().default(0),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_play_sessions")(table),
+    userCreatedIdx: index("chess_play_sessions_user_created_idx").on(table.userId, table.createdAt),
   }),
 );

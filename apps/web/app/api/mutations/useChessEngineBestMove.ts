@@ -1,26 +1,20 @@
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import {
-  chessApi,
-  type ChessEngineBestMoveResult,
-  type ChessEnginePlayLevel,
-} from "~/api/chess-api";
+import { ApiClient } from "~/api/api-client";
 import { getTranslatedApiErrorMessage } from "~/api/utils/getTranslatedApiErrorMessage";
 import { useToast } from "~/components/ui/use-toast";
+
+import type { BestMoveBody } from "~/api/generated-api";
 
 export function useChessEngineBestMove() {
   const { toast } = useToast();
   const { t } = useTranslation();
 
   return useMutation({
-    mutationFn: async (body: {
-      fen: string;
-      movesUci?: string[];
-      level?: ChessEnginePlayLevel;
-    }): Promise<ChessEngineBestMoveResult> => {
-      const response = await chessApi.engineBestMove(body);
-      return response.data;
+    mutationFn: async (body: BestMoveBody) => {
+      const response = await ApiClient.api.chessEngineControllerBestMove(body);
+      return response.data.data;
     },
     onError: (error) => {
       toast({

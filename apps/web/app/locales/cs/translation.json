@@ -43,7 +43,8 @@
       "de": "Němčina",
       "lt": "Litevština",
       "cs": "Čeština",
-      "es": "španělština"
+      "es": "španělština",
+      "vi": "Vietnamština"
     },
     "lessonTypes": {
       "content": "Obsah",
@@ -803,7 +804,8 @@
       "german": "Němčina",
       "czech": "Čeština",
       "lithuanian": "Litevština",
-      "spanish": "Španělština"
+      "spanish": "Španělština",
+      "vietnamese": "Vietnamština"
     }
   },
   "resetOnboarding": {

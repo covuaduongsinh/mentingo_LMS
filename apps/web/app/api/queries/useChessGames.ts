@@ -1,6 +1,8 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-import { chessApi, type ListChessGamesParams } from "~/api/chess-api";
+import { ApiClient } from "~/api/api-client";
+
+export type ListChessGamesParams = Parameters<typeof ApiClient.api.chessControllerListGames>[0];
 
 export const CHESS_GAMES_QUERY_KEY = ["chess-games"] as const;
 
@@ -11,8 +13,8 @@ export const chessGamesQueryOptions = (
   queryOptions({
     queryKey: [...CHESS_GAMES_QUERY_KEY, params],
     queryFn: async () => {
-      const response = await chessApi.listGames(params);
-      return response;
+      const response = await ApiClient.api.chessControllerListGames(params);
+      return response.data;
     },
     ...options,
   });

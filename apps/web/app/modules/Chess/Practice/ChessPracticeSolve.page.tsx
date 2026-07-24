@@ -132,6 +132,7 @@ export default function ChessPracticeSolvePage() {
                 </Button>
                 <Button
                   type="button"
+                  data-testid="chess-practice-submit-button"
                   onClick={handleSubmit}
                   disabled={isPending || moves.length === 0 || Boolean(result)}
                 >
@@ -149,6 +150,11 @@ export default function ChessPracticeSolvePage() {
           )}
           {result ? (
             <div
+              data-testid={
+                result.isCorrect
+                  ? "chess-practice-feedback-correct"
+                  : "chess-practice-feedback-incorrect"
+              }
               className={
                 result.isCorrect
                   ? "rounded-md border border-emerald-200 bg-emerald-50 p-3 text-emerald-900"

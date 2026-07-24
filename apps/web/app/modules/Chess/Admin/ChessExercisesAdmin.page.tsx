@@ -131,7 +131,7 @@ export default function ChessExercisesAdminPage() {
             </Button>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button>
+                <Button data-testid="chess-admin-add-exercise-button">
                   <Plus className="mr-2 size-4" />
                   {t("chess.admin.addExercise", { defaultValue: "Add exercise" })}
                 </Button>
@@ -146,6 +146,7 @@ export default function ChessExercisesAdminPage() {
                   <div className="space-y-1">
                     <Label>{t("chess.admin.fieldTitle", { defaultValue: "Title" })}</Label>
                     <Input
+                      data-testid="chess-admin-exercise-title-input"
                       value={form.title}
                       onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
                     />
@@ -266,7 +267,11 @@ export default function ChessExercisesAdminPage() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button onClick={handleCreate} disabled={!form.title.trim() || isCreating}>
+                  <Button
+                    data-testid="chess-admin-exercise-save-button"
+                    onClick={handleCreate}
+                    disabled={!form.title.trim() || isCreating}
+                  >
                     {t("common.button.save", { defaultValue: "Save" })}
                   </Button>
                 </DialogFooter>
@@ -319,7 +324,11 @@ export default function ChessExercisesAdminPage() {
               </thead>
               <tbody>
                 {exercises.map((exercise) => (
-                  <tr key={exercise.id} className="border-t border-neutral-100">
+                  <tr
+                    key={exercise.id}
+                    data-testid={`chess-admin-exercise-row-${exercise.id}`}
+                    className="border-t border-neutral-100"
+                  >
                     <td className="p-3 font-medium text-neutral-900">{exercise.title}</td>
                     <td className="p-3">
                       <div className="flex flex-wrap gap-1">
@@ -343,6 +352,7 @@ export default function ChessExercisesAdminPage() {
                         <Button
                           size="sm"
                           variant="outline"
+                          data-testid={`chess-admin-exercise-publish-${exercise.id}`}
                           disabled={isUpdating}
                           onClick={() =>
                             updateExercise({
@@ -358,6 +368,7 @@ export default function ChessExercisesAdminPage() {
                         <Button
                           size="sm"
                           variant="ghost"
+                          data-testid={`chess-admin-exercise-delete-${exercise.id}`}
                           onClick={() => {
                             if (
                               window.confirm(

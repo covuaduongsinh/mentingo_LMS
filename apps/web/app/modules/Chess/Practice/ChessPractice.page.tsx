@@ -95,6 +95,7 @@ export default function ChessPracticePage() {
               <Link
                 key={exercise.id}
                 to={`/chess/practice/${exercise.id}`}
+                data-testid={`chess-practice-exercise-card-${exercise.id}`}
                 className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm transition hover:border-primary-300"
               >
                 <h2 className="h6 mb-2 text-neutral-950">{exercise.title}</h2>

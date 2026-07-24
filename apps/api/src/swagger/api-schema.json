@@ -703,6 +703,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -1591,6 +1595,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -1642,6 +1650,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -1839,6 +1851,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -2413,6 +2429,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -2472,6 +2492,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -2624,6 +2648,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -2736,6 +2764,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -2793,6 +2825,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -2927,6 +2963,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -3118,6 +3158,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -3292,6 +3336,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -3420,6 +3468,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -3621,6 +3673,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -3804,6 +3860,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -3871,6 +3931,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -3979,6 +4043,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -4038,6 +4106,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -4124,6 +4196,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -4185,6 +4261,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -4245,6 +4325,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -5009,6 +5093,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -5078,6 +5166,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -5221,6 +5313,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -5373,6 +5469,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -5524,6 +5624,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -5575,6 +5679,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -5640,6 +5748,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -5685,6 +5797,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -5749,6 +5865,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -6026,6 +6146,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -6218,6 +6342,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -6446,6 +6574,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -6506,6 +6638,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -6887,7 +7023,8 @@
                       "de",
                       "lt",
                       "cs",
-                      "es"
+                      "es",
+                      "vi"
                     ]
                   },
                   "title": {
@@ -7212,6 +7349,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -7272,6 +7413,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -7367,6 +7512,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -7514,6 +7663,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -7600,6 +7753,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -8014,6 +8171,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -8074,6 +8235,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -8346,6 +8511,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -8425,6 +8594,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -8592,7 +8765,8 @@
                       "de",
                       "lt",
                       "cs",
-                      "es"
+                      "es",
+                      "vi"
                     ]
                   }
                 },
@@ -8673,6 +8847,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -8743,6 +8921,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -8802,6 +8984,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -8863,6 +9049,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -8923,6 +9113,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -8982,6 +9176,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -9052,6 +9250,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -9121,6 +9323,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -9182,6 +9388,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -9342,6 +9552,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -10141,6 +10355,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -10225,6 +10443,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -10320,6 +10542,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -10377,6 +10603,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -10753,6 +10983,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -10845,6 +11079,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -10965,6 +11203,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -11544,6 +11786,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -11708,6 +11954,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -11759,6 +12009,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -12115,6 +12369,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -12802,6 +13060,94 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteGameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/play-sessions": {
+      "post": {
+        "operationId": "ChessController_createPlaySession",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlaySessionBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePlaySessionResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "ChessController_listPlaySessions",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListPlaySessionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/play-sessions/{id}": {
+      "get": {
+        "operationId": "ChessController_getPlaySession",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPlaySessionResponse"
                 }
               }
             }
@@ -13603,6 +13949,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -14603,6 +14953,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -14661,6 +15015,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -14736,6 +15094,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -14823,6 +15185,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -14878,6 +15244,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -14923,6 +15293,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -15050,6 +15424,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -15199,6 +15577,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -15294,6 +15676,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -15345,7 +15731,8 @@
                       "de",
                       "lt",
                       "cs",
-                      "es"
+                      "es",
+                      "vi"
                     ]
                   },
                   "title": {
@@ -15447,6 +15834,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -15599,6 +15990,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -15644,6 +16039,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -15696,6 +16095,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -15795,6 +16198,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -15909,6 +16316,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -16035,6 +16446,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -16175,6 +16590,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             }
@@ -16244,6 +16663,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -16667,6 +17090,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -17578,6 +18005,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -18334,6 +18765,10 @@
                         {
                           "const": "es",
                           "type": "string"
+                        },
+                        {
+                          "const": "vi",
+                          "type": "string"
                         }
                       ]
                     },
@@ -18363,6 +18798,10 @@
                           },
                           {
                             "const": "es",
+                            "type": "string"
+                          },
+                          {
+                            "const": "vi",
                             "type": "string"
                           }
                         ]
@@ -18441,6 +18880,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   },
@@ -18493,6 +18936,10 @@
                       },
                       {
                         "const": "es",
+                        "type": "string"
+                      },
+                      {
+                        "const": "vi",
                         "type": "string"
                       }
                     ]
@@ -18568,6 +19015,10 @@
                   {
                     "const": "es",
                     "type": "string"
+                  },
+                  {
+                    "const": "vi",
+                    "type": "string"
                   }
                 ]
               },
@@ -18615,6 +19066,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -18680,6 +19135,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   },
@@ -18732,6 +19191,10 @@
                       },
                       {
                         "const": "es",
+                        "type": "string"
+                      },
+                      {
+                        "const": "vi",
                         "type": "string"
                       }
                     ]
@@ -18807,6 +19270,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -20909,6 +21376,10 @@
                   {
                     "const": "es",
                     "type": "string"
+                  },
+                  {
+                    "const": "vi",
+                    "type": "string"
                   }
                 ]
               },
@@ -20981,6 +21452,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -21338,6 +21813,10 @@
                         "es": {
                           "minLength": 1,
                           "type": "string"
+                        },
+                        "vi": {
+                          "minLength": 1,
+                          "type": "string"
                         }
                       },
                       "minProperties": 1
@@ -21366,6 +21845,10 @@
                         },
                         {
                           "const": "es",
+                          "type": "string"
+                        },
+                        {
+                          "const": "vi",
                           "type": "string"
                         }
                       ]
@@ -21396,6 +21879,10 @@
                           },
                           {
                             "const": "es",
+                            "type": "string"
+                          },
+                          {
+                            "const": "vi",
                             "type": "string"
                           }
                         ]
@@ -21483,6 +21970,10 @@
                     "es": {
                       "minLength": 1,
                       "type": "string"
+                    },
+                    "vi": {
+                      "minLength": 1,
+                      "type": "string"
                     }
                   },
                   "minProperties": 1
@@ -21511,6 +22002,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -21541,6 +22036,10 @@
                       },
                       {
                         "const": "es",
+                        "type": "string"
+                      },
+                      {
+                        "const": "vi",
                         "type": "string"
                       }
                     ]
@@ -21615,6 +22114,10 @@
                         "es": {
                           "minLength": 1,
                           "type": "string"
+                        },
+                        "vi": {
+                          "minLength": 1,
+                          "type": "string"
                         }
                       },
                       "minProperties": 1
@@ -21643,6 +22146,10 @@
                         },
                         {
                           "const": "es",
+                          "type": "string"
+                        },
+                        {
+                          "const": "vi",
                           "type": "string"
                         }
                       ]
@@ -21673,6 +22180,10 @@
                           },
                           {
                             "const": "es",
+                            "type": "string"
+                          },
+                          {
+                            "const": "vi",
                             "type": "string"
                           }
                         ]
@@ -21961,6 +22472,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -23359,6 +23874,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -23607,6 +24126,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   }
@@ -23635,6 +24158,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -23796,6 +24323,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 }
@@ -23824,6 +24355,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -23960,6 +24495,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   }
@@ -23988,6 +24527,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -24133,6 +24676,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -24200,6 +24747,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -24255,6 +24806,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 }
@@ -24283,6 +24838,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -24428,6 +24987,10 @@
                   {
                     "const": "es",
                     "type": "string"
+                  },
+                  {
+                    "const": "vi",
+                    "type": "string"
                   }
                 ]
               },
@@ -24457,6 +25020,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -24530,6 +25097,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 }
@@ -24558,6 +25129,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -24625,6 +25200,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -24673,6 +25252,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 }
@@ -24701,6 +25284,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -24863,6 +25450,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   }
@@ -24891,6 +25482,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -25740,6 +26335,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   }
@@ -25768,6 +26367,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -26598,6 +27201,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 }
@@ -26626,6 +27233,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -26989,6 +27600,10 @@
                                           {
                                             "const": "es",
                                             "type": "string"
+                                          },
+                                          {
+                                            "const": "vi",
+                                            "type": "string"
                                           }
                                         ]
                                       }
@@ -27025,6 +27640,10 @@
                                     },
                                     {
                                       "const": "es",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "vi",
                                       "type": "string"
                                     }
                                   ]
@@ -27340,6 +27959,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 }
@@ -27368,6 +27991,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -27508,6 +28135,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -27787,6 +28418,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -30171,6 +30806,10 @@
                                     {
                                       "const": "es",
                                       "type": "string"
+                                    },
+                                    {
+                                      "const": "vi",
+                                      "type": "string"
                                     }
                                   ]
                                 }
@@ -30207,6 +30846,10 @@
                               },
                               {
                                 "const": "es",
+                                "type": "string"
+                              },
+                              {
+                                "const": "vi",
                                 "type": "string"
                               }
                             ]
@@ -30686,6 +31329,10 @@
                                         {
                                           "const": "es",
                                           "type": "string"
+                                        },
+                                        {
+                                          "const": "vi",
+                                          "type": "string"
                                         }
                                       ]
                                     }
@@ -30722,6 +31369,10 @@
                                   },
                                   {
                                     "const": "es",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "const": "vi",
                                     "type": "string"
                                   }
                                 ]
@@ -30932,6 +31583,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -31431,6 +32086,10 @@
                             {
                               "const": "es",
                               "type": "string"
+                            },
+                            {
+                              "const": "vi",
+                              "type": "string"
                             }
                           ]
                         },
@@ -31600,6 +32259,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -32670,6 +33333,10 @@
                               {
                                 "const": "es",
                                 "type": "string"
+                              },
+                              {
+                                "const": "vi",
+                                "type": "string"
                               }
                             ]
                           }
@@ -32706,6 +33373,10 @@
                         },
                         {
                           "const": "es",
+                          "type": "string"
+                        },
+                        {
+                          "const": "vi",
                           "type": "string"
                         }
                       ]
@@ -32926,6 +33597,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           },
@@ -33116,6 +33791,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -33509,6 +34188,10 @@
                               {
                                 "const": "es",
                                 "type": "string"
+                              },
+                              {
+                                "const": "vi",
+                                "type": "string"
                               }
                             ]
                           }
@@ -33545,6 +34228,10 @@
                         },
                         {
                           "const": "es",
+                          "type": "string"
+                        },
+                        {
+                          "const": "vi",
                           "type": "string"
                         }
                       ]
@@ -33999,6 +34686,10 @@
                                   {
                                     "const": "es",
                                     "type": "string"
+                                  },
+                                  {
+                                    "const": "vi",
+                                    "type": "string"
                                   }
                                 ]
                               }
@@ -34035,6 +34726,10 @@
                             },
                             {
                               "const": "es",
+                              "type": "string"
+                            },
+                            {
+                              "const": "vi",
                               "type": "string"
                             }
                           ]
@@ -34261,6 +34956,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -34518,6 +35217,10 @@
                               {
                                 "const": "es",
                                 "type": "string"
+                              },
+                              {
+                                "const": "vi",
+                                "type": "string"
                               }
                             ]
                           }
@@ -34554,6 +35257,10 @@
                         },
                         {
                           "const": "es",
+                          "type": "string"
+                        },
+                        {
+                          "const": "vi",
                           "type": "string"
                         }
                       ]
@@ -34844,6 +35551,10 @@
                                   {
                                     "const": "es",
                                     "type": "string"
+                                  },
+                                  {
+                                    "const": "vi",
+                                    "type": "string"
                                   }
                                 ]
                               }
@@ -34880,6 +35591,10 @@
                             },
                             {
                               "const": "es",
+                              "type": "string"
+                            },
+                            {
+                              "const": "vi",
                               "type": "string"
                             }
                           ]
@@ -34935,6 +35650,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -35217,6 +35936,10 @@
                                   {
                                     "const": "es",
                                     "type": "string"
+                                  },
+                                  {
+                                    "const": "vi",
+                                    "type": "string"
                                   }
                                 ]
                               }
@@ -35253,6 +35976,10 @@
                             },
                             {
                               "const": "es",
+                              "type": "string"
+                            },
+                            {
+                              "const": "vi",
                               "type": "string"
                             }
                           ]
@@ -35423,6 +36150,10 @@
                   {
                     "const": "es",
                     "type": "string"
+                  },
+                  {
+                    "const": "vi",
+                    "type": "string"
                   }
                 ]
               }
@@ -35564,6 +36295,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -35807,6 +36542,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -36135,6 +36874,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -36455,6 +37198,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -37083,6 +37830,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -37956,6 +38707,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           },
@@ -38190,6 +38945,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -40207,6 +40966,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 },
@@ -40236,6 +40999,10 @@
                       },
                       {
                         "const": "es",
+                        "type": "string"
+                      },
+                      {
+                        "const": "vi",
                         "type": "string"
                       }
                     ]
@@ -40447,6 +41214,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 },
@@ -40476,6 +41247,10 @@
                       },
                       {
                         "const": "es",
+                        "type": "string"
+                      },
+                      {
+                        "const": "vi",
                         "type": "string"
                       }
                     ]
@@ -40588,6 +41363,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           },
@@ -40621,6 +41400,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -40786,6 +41569,10 @@
                   {
                     "const": "es",
                     "type": "string"
+                  },
+                  {
+                    "const": "vi",
+                    "type": "string"
                   }
                 ]
               },
@@ -40815,6 +41602,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -41319,6 +42110,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -41477,6 +42272,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -42247,6 +43046,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -42298,6 +43101,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   }
@@ -42326,6 +43133,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -42432,6 +43243,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 }
@@ -42460,6 +43275,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -42529,6 +43348,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -42601,6 +43424,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -42646,6 +43473,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 }
@@ -42674,6 +43505,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -43951,6 +44786,10 @@
                         {
                           "const": "es",
                           "type": "string"
+                        },
+                        {
+                          "const": "vi",
+                          "type": "string"
                         }
                       ]
                     },
@@ -43980,6 +44819,10 @@
                           },
                           {
                             "const": "es",
+                            "type": "string"
+                          },
+                          {
+                            "const": "vi",
                             "type": "string"
                           }
                         ]
@@ -44302,6 +45145,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   },
@@ -44331,6 +45178,10 @@
                         },
                         {
                           "const": "es",
+                          "type": "string"
+                        },
+                        {
+                          "const": "vi",
                           "type": "string"
                         }
                       ]
@@ -44593,6 +45444,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           },
@@ -44777,6 +45632,10 @@
                   {
                     "const": "es",
                     "type": "string"
+                  },
+                  {
+                    "const": "vi",
+                    "type": "string"
                   }
                 ]
               },
@@ -44806,6 +45665,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -44866,6 +45729,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -45046,6 +45913,10 @@
                   {
                     "const": "es",
                     "type": "string"
+                  },
+                  {
+                    "const": "vi",
+                    "type": "string"
                   }
                 ]
               },
@@ -45075,6 +45946,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -46093,6 +46968,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   },
@@ -46196,6 +47075,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   }
@@ -46269,6 +47152,10 @@
                       },
                       {
                         "const": "es",
+                        "type": "string"
+                      },
+                      {
+                        "const": "vi",
                         "type": "string"
                       }
                     ]
@@ -46588,6 +47475,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -46713,6 +47604,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -49141,6 +50036,762 @@
           "data"
         ]
       },
+      "CreatePlaySessionBody": {
+        "type": "object",
+        "properties": {
+          "playerColor": {
+            "anyOf": [
+              {
+                "const": "w",
+                "type": "string"
+              },
+              {
+                "const": "b",
+                "type": "string"
+              }
+            ]
+          },
+          "level": {
+            "anyOf": [
+              {
+                "const": "easy",
+                "type": "string"
+              },
+              {
+                "const": "medium",
+                "type": "string"
+              },
+              {
+                "const": "hard",
+                "type": "string"
+              }
+            ]
+          },
+          "engine": {
+            "anyOf": [
+              {
+                "const": "arasan",
+                "type": "string"
+              },
+              {
+                "const": "builtin",
+                "type": "string"
+              }
+            ]
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "const": "win",
+                "type": "string"
+              },
+              {
+                "const": "loss",
+                "type": "string"
+              },
+              {
+                "const": "draw",
+                "type": "string"
+              }
+            ]
+          },
+          "endReason": {
+            "anyOf": [
+              {
+                "const": "checkmate",
+                "type": "string"
+              },
+              {
+                "const": "resignation",
+                "type": "string"
+              },
+              {
+                "const": "timeout",
+                "type": "string"
+              },
+              {
+                "const": "stalemate",
+                "type": "string"
+              },
+              {
+                "const": "draw_claimed",
+                "type": "string"
+              },
+              {
+                "const": "insufficient_material",
+                "type": "string"
+              },
+              {
+                "const": "fifty_move",
+                "type": "string"
+              },
+              {
+                "const": "threefold",
+                "type": "string"
+              }
+            ]
+          },
+          "pgn": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "movesUci": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timeControl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "playerTimeLeftMs": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "engineTimeLeftMs": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "durationMs": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "playerColor",
+          "level",
+          "engine",
+          "outcome",
+          "endReason",
+          "pgn",
+          "movesUci"
+        ]
+      },
+      "CreatePlaySessionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "userId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "playerColor": {
+                "anyOf": [
+                  {
+                    "const": "w",
+                    "type": "string"
+                  },
+                  {
+                    "const": "b",
+                    "type": "string"
+                  }
+                ]
+              },
+              "level": {
+                "anyOf": [
+                  {
+                    "const": "easy",
+                    "type": "string"
+                  },
+                  {
+                    "const": "medium",
+                    "type": "string"
+                  },
+                  {
+                    "const": "hard",
+                    "type": "string"
+                  }
+                ]
+              },
+              "engine": {
+                "anyOf": [
+                  {
+                    "const": "arasan",
+                    "type": "string"
+                  },
+                  {
+                    "const": "builtin",
+                    "type": "string"
+                  }
+                ]
+              },
+              "outcome": {
+                "anyOf": [
+                  {
+                    "const": "win",
+                    "type": "string"
+                  },
+                  {
+                    "const": "loss",
+                    "type": "string"
+                  },
+                  {
+                    "const": "draw",
+                    "type": "string"
+                  }
+                ]
+              },
+              "endReason": {
+                "anyOf": [
+                  {
+                    "const": "checkmate",
+                    "type": "string"
+                  },
+                  {
+                    "const": "resignation",
+                    "type": "string"
+                  },
+                  {
+                    "const": "timeout",
+                    "type": "string"
+                  },
+                  {
+                    "const": "stalemate",
+                    "type": "string"
+                  },
+                  {
+                    "const": "draw_claimed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "insufficient_material",
+                    "type": "string"
+                  },
+                  {
+                    "const": "fifty_move",
+                    "type": "string"
+                  },
+                  {
+                    "const": "threefold",
+                    "type": "string"
+                  }
+                ]
+              },
+              "pgn": {
+                "type": "string"
+              },
+              "movesUci": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "timeControl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "playerTimeLeftMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "engineTimeLeftMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "durationMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "moveCount": {
+                "type": "number"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "userId",
+              "playerColor",
+              "level",
+              "engine",
+              "outcome",
+              "endReason",
+              "pgn",
+              "movesUci",
+              "timeControl",
+              "playerTimeLeftMs",
+              "engineTimeLeftMs",
+              "durationMs",
+              "moveCount",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListPlaySessionsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "userId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "playerColor": {
+                  "anyOf": [
+                    {
+                      "const": "w",
+                      "type": "string"
+                    },
+                    {
+                      "const": "b",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "level": {
+                  "anyOf": [
+                    {
+                      "const": "easy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "medium",
+                      "type": "string"
+                    },
+                    {
+                      "const": "hard",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "engine": {
+                  "anyOf": [
+                    {
+                      "const": "arasan",
+                      "type": "string"
+                    },
+                    {
+                      "const": "builtin",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "outcome": {
+                  "anyOf": [
+                    {
+                      "const": "win",
+                      "type": "string"
+                    },
+                    {
+                      "const": "loss",
+                      "type": "string"
+                    },
+                    {
+                      "const": "draw",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "endReason": {
+                  "anyOf": [
+                    {
+                      "const": "checkmate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "resignation",
+                      "type": "string"
+                    },
+                    {
+                      "const": "timeout",
+                      "type": "string"
+                    },
+                    {
+                      "const": "stalemate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "draw_claimed",
+                      "type": "string"
+                    },
+                    {
+                      "const": "insufficient_material",
+                      "type": "string"
+                    },
+                    {
+                      "const": "fifty_move",
+                      "type": "string"
+                    },
+                    {
+                      "const": "threefold",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "pgn": {
+                  "type": "string"
+                },
+                "movesUci": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "timeControl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "playerTimeLeftMs": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "engineTimeLeftMs": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "durationMs": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "moveCount": {
+                  "type": "number"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "playerColor",
+                "level",
+                "engine",
+                "outcome",
+                "endReason",
+                "pgn",
+                "movesUci",
+                "timeControl",
+                "playerTimeLeftMs",
+                "engineTimeLeftMs",
+                "durationMs",
+                "moveCount",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "GetPlaySessionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "userId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "playerColor": {
+                "anyOf": [
+                  {
+                    "const": "w",
+                    "type": "string"
+                  },
+                  {
+                    "const": "b",
+                    "type": "string"
+                  }
+                ]
+              },
+              "level": {
+                "anyOf": [
+                  {
+                    "const": "easy",
+                    "type": "string"
+                  },
+                  {
+                    "const": "medium",
+                    "type": "string"
+                  },
+                  {
+                    "const": "hard",
+                    "type": "string"
+                  }
+                ]
+              },
+              "engine": {
+                "anyOf": [
+                  {
+                    "const": "arasan",
+                    "type": "string"
+                  },
+                  {
+                    "const": "builtin",
+                    "type": "string"
+                  }
+                ]
+              },
+              "outcome": {
+                "anyOf": [
+                  {
+                    "const": "win",
+                    "type": "string"
+                  },
+                  {
+                    "const": "loss",
+                    "type": "string"
+                  },
+                  {
+                    "const": "draw",
+                    "type": "string"
+                  }
+                ]
+              },
+              "endReason": {
+                "anyOf": [
+                  {
+                    "const": "checkmate",
+                    "type": "string"
+                  },
+                  {
+                    "const": "resignation",
+                    "type": "string"
+                  },
+                  {
+                    "const": "timeout",
+                    "type": "string"
+                  },
+                  {
+                    "const": "stalemate",
+                    "type": "string"
+                  },
+                  {
+                    "const": "draw_claimed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "insufficient_material",
+                    "type": "string"
+                  },
+                  {
+                    "const": "fifty_move",
+                    "type": "string"
+                  },
+                  {
+                    "const": "threefold",
+                    "type": "string"
+                  }
+                ]
+              },
+              "pgn": {
+                "type": "string"
+              },
+              "movesUci": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "timeControl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "playerTimeLeftMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "engineTimeLeftMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "durationMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "moveCount": {
+                "type": "number"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "userId",
+              "playerColor",
+              "level",
+              "engine",
+              "outcome",
+              "endReason",
+              "pgn",
+              "movesUci",
+              "timeControl",
+              "playerTimeLeftMs",
+              "engineTimeLeftMs",
+              "durationMs",
+              "moveCount",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "GetStatusResponse": {
         "type": "object",
         "properties": {
@@ -49440,6 +51091,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -49898,6 +51553,10 @@
                       {
                         "const": "es",
                         "type": "string"
+                      },
+                      {
+                        "const": "vi",
+                        "type": "string"
                       }
                     ]
                   }
@@ -49926,6 +51585,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -50914,6 +52577,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           },
@@ -50943,6 +52610,10 @@
                 },
                 {
                   "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
                   "type": "string"
                 }
               ]
@@ -51011,6 +52682,10 @@
                 {
                   "const": "es",
                   "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
                 }
               ]
             },
@@ -51040,6 +52715,10 @@
                   },
                   {
                     "const": "es",
+                    "type": "string"
+                  },
+                  {
+                    "const": "vi",
                     "type": "string"
                   }
                 ]
@@ -51088,6 +52767,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -51182,6 +52865,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 },
@@ -51212,6 +52899,10 @@
                       },
                       {
                         "const": "es",
+                        "type": "string"
+                      },
+                      {
+                        "const": "vi",
                         "type": "string"
                       }
                     ]
@@ -51502,6 +53193,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           },
@@ -51587,6 +53282,10 @@
                   {
                     "const": "es",
                     "type": "string"
+                  },
+                  {
+                    "const": "vi",
+                    "type": "string"
                   }
                 ]
               },
@@ -51617,6 +53316,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -51900,6 +53603,10 @@
                     {
                       "const": "es",
                       "type": "string"
+                    },
+                    {
+                      "const": "vi",
+                      "type": "string"
                     }
                   ]
                 },
@@ -51930,6 +53637,10 @@
                       },
                       {
                         "const": "es",
+                        "type": "string"
+                      },
+                      {
+                        "const": "vi",
                         "type": "string"
                       }
                     ]
@@ -52216,6 +53927,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -52275,6 +53990,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -52376,6 +54095,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -52504,6 +54227,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           }
@@ -52574,6 +54301,10 @@
                   {
                     "const": "es",
                     "type": "string"
+                  },
+                  {
+                    "const": "vi",
+                    "type": "string"
                   }
                 ]
               },
@@ -52604,6 +54335,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -52654,6 +54389,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -52717,6 +54456,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -53108,6 +54851,10 @@
                   {
                     "const": "es",
                     "type": "string"
+                  },
+                  {
+                    "const": "vi",
+                    "type": "string"
                   }
                 ]
               },
@@ -53138,6 +54885,10 @@
                     },
                     {
                       "const": "es",
+                      "type": "string"
+                    },
+                    {
+                      "const": "vi",
                       "type": "string"
                     }
                   ]
@@ -53666,6 +55417,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           },
@@ -53730,6 +55485,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]
@@ -53845,6 +55604,10 @@
               {
                 "const": "es",
                 "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
               }
             ]
           },
@@ -53913,6 +55676,10 @@
               },
               {
                 "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
                 "type": "string"
               }
             ]

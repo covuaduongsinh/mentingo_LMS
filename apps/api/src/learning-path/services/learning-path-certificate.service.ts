@@ -421,6 +421,10 @@ export class LearningPathCertificateService {
         pageTitle: `Certificado de finalización de la ruta de desarrollo "${title}"`,
         pageDescription: `${context.certificate.fullName} completó "${title}" y obtuvo un certificado.`,
       },
+      vi: {
+        pageTitle: `Chứng chỉ hoàn thành lộ trình phát triển "${title}"`,
+        pageDescription: `${context.certificate.fullName} đã hoàn thành "${title}" và nhận được chứng chỉ.`,
+      },
     } as const satisfies Record<SupportedLanguages, { pageTitle: string; pageDescription: string }>;
 
     const localizedContent = translations[context.language as SupportedLanguages];

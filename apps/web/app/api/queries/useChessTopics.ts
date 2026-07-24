@@ -1,7 +1,7 @@
 import { CHESS_TOPIC_LABELS, CHESS_TOPIC_LIST, type ChessTopic } from "@repo/shared";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-import { chessApi } from "~/api/chess-api";
+import { ApiClient } from "~/api/api-client";
 
 export const CHESS_TOPICS_QUERY_KEY = ["chess-topics"] as const;
 
@@ -10,8 +10,8 @@ export const chessTopicsQueryOptions = (options: { enabled?: boolean } = { enabl
     queryKey: CHESS_TOPICS_QUERY_KEY,
     queryFn: async () => {
       try {
-        const response = await chessApi.getTopics();
-        return response.data;
+        const response = await ApiClient.api.chessControllerGetTopics();
+        return response.data.data;
       } catch {
         return CHESS_TOPIC_LIST.map((id) => ({
           id,

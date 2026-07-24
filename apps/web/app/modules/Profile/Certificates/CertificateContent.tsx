@@ -98,6 +98,18 @@ const translations = {
     expiryDate: "Caduca",
     signature: "Firma",
   },
+  vi: {
+    certificate: "CHỨNG CHỈ",
+    certifyThat: "CHỨNG NHẬN RẰNG",
+    successfulCompletion: {
+      [CERTIFICATE_KIND.COURSE]: "đã hoàn thành khóa học",
+      [CERTIFICATE_KIND.LEARNING_PATH]: "đã hoàn thành lộ trình phát triển",
+    },
+    confirmation: "qua đó xác nhận đã tham gia đầy đủ chương trình đào tạo.",
+    date: "Ngày",
+    expiryDate: "Hết hạn",
+    signature: "Chữ ký",
+  },
 } satisfies Record<
   SupportedLanguages,
   {

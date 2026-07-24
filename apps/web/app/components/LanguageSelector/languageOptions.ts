@@ -8,6 +8,7 @@ export type LanguageOption = {
 };
 
 export const languageOptions: LanguageOption[] = [
+  { key: "vi", iconName: "VN", translationKey: "changeUserLanguageView.options.vietnamese" },
   { key: "pl", iconName: "PL", translationKey: "changeUserLanguageView.options.polish" },
   { key: "en", iconName: "GB", translationKey: "changeUserLanguageView.options.english" },
   { key: "de", iconName: "DE", translationKey: "changeUserLanguageView.options.german" },

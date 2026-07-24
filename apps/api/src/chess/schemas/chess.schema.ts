@@ -2,8 +2,12 @@ import {
   CHESS_AUDIENCES,
   CHESS_CONTENT_SOURCE,
   CHESS_DIFFICULTY,
+  CHESS_ENGINE_LEVELS,
+  CHESS_ENGINE_NAMES,
   CHESS_EXERCISE_FORMATS,
   CHESS_GAME_LEVELS,
+  CHESS_PLAY_END_REASONS,
+  CHESS_PLAY_OUTCOMES,
   CHESS_TOPICS,
 } from "@repo/shared";
 import { Type, type Static } from "@sinclair/typebox";
@@ -100,8 +104,48 @@ export const chessExerciseAttemptResultSchema = Type.Object({
   explanation: Type.Union([Type.String(), Type.Null()]),
 });
 
+export const chessPlayerColorSchema = Type.Union([Type.Literal("w"), Type.Literal("b")]);
+export const chessPlayLevelSchema = Type.Enum(CHESS_ENGINE_LEVELS);
+export const chessPlayEngineSchema = Type.Enum(CHESS_ENGINE_NAMES);
+export const chessPlayOutcomeSchema = Type.Enum(CHESS_PLAY_OUTCOMES);
+export const chessPlayEndReasonSchema = Type.Enum(CHESS_PLAY_END_REASONS);
+
+export const chessPlaySessionSchema = Type.Object({
+  id: UUIDSchema,
+  userId: UUIDSchema,
+  playerColor: chessPlayerColorSchema,
+  level: chessPlayLevelSchema,
+  engine: chessPlayEngineSchema,
+  outcome: chessPlayOutcomeSchema,
+  endReason: chessPlayEndReasonSchema,
+  pgn: Type.String(),
+  movesUci: Type.Array(Type.String()),
+  timeControl: Type.Union([Type.String(), Type.Null()]),
+  playerTimeLeftMs: Type.Union([Type.Number(), Type.Null()]),
+  engineTimeLeftMs: Type.Union([Type.Number(), Type.Null()]),
+  durationMs: Type.Union([Type.Number(), Type.Null()]),
+  moveCount: Type.Number(),
+  createdAt: Type.String(),
+  updatedAt: Type.String(),
+});
+
+export const createChessPlaySessionBodySchema = Type.Object({
+  playerColor: chessPlayerColorSchema,
+  level: chessPlayLevelSchema,
+  engine: chessPlayEngineSchema,
+  outcome: chessPlayOutcomeSchema,
+  endReason: chessPlayEndReasonSchema,
+  pgn: Type.String({ minLength: 1 }),
+  movesUci: Type.Array(Type.String(), { minItems: 1 }),
+  timeControl: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  playerTimeLeftMs: Type.Optional(Type.Union([Type.Number({ minimum: 0 }), Type.Null()])),
+  engineTimeLeftMs: Type.Optional(Type.Union([Type.Number({ minimum: 0 }), Type.Null()])),
+  durationMs: Type.Optional(Type.Union([Type.Number({ minimum: 0 }), Type.Null()])),
+});
+
 export type CreateChessExerciseBody = Static<typeof createChessExerciseBodySchema>;
 export type UpdateChessExerciseBody = Static<typeof updateChessExerciseBodySchema>;
 export type CreateChessGameBody = Static<typeof createChessGameBodySchema>;
 export type UpdateChessGameBody = Static<typeof updateChessGameBodySchema>;
 export type SubmitChessExerciseAttemptBody = Static<typeof submitChessExerciseAttemptBodySchema>;
+export type CreateChessPlaySessionBody = Static<typeof createChessPlaySessionBodySchema>;

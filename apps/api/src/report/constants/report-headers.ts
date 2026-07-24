@@ -65,4 +65,13 @@ export const REPORT_HEADERS: Record<SupportedLanguages, ReportHeaders> = {
     progressPercentage: "Progreso (%)",
     quizResults: "Resultados del último intento de cuestionario (%)",
   },
+  vi: {
+    studentName: "Họ và tên",
+    groupName: "Nhóm",
+    courseName: "Tên khóa học",
+    lessonCount: "Số bài học",
+    completedLessons: "Bài học đã hoàn thành",
+    progressPercentage: "Tiến độ (%)",
+    quizResults: "Kết quả lần làm quiz gần nhất (%)",
+  },
 };

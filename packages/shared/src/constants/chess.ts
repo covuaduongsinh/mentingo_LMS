@@ -109,3 +109,53 @@ export const CHESS_ENGINE_LEVELS = {
 } as const;
 
 export type ChessEngineLevelShared = (typeof CHESS_ENGINE_LEVELS)[keyof typeof CHESS_ENGINE_LEVELS];
+
+/** Engines that can answer a play session (see apps/api chess engine service) */
+export const CHESS_ENGINE_NAMES = {
+  ARASAN: "arasan",
+  BUILTIN: "builtin",
+} as const;
+
+export type ChessEngineName = (typeof CHESS_ENGINE_NAMES)[keyof typeof CHESS_ENGINE_NAMES];
+
+export const CHESS_ENGINE_NAME_LIST = Object.values(CHESS_ENGINE_NAMES);
+
+/** Result of a play-vs-engine session, from the player's perspective */
+export const CHESS_PLAY_OUTCOMES = {
+  WIN: "win",
+  LOSS: "loss",
+  DRAW: "draw",
+} as const;
+
+export type ChessPlayOutcome = (typeof CHESS_PLAY_OUTCOMES)[keyof typeof CHESS_PLAY_OUTCOMES];
+
+export const CHESS_PLAY_OUTCOME_LIST = Object.values(CHESS_PLAY_OUTCOMES);
+
+export const CHESS_PLAY_END_REASONS = {
+  CHECKMATE: "checkmate",
+  RESIGNATION: "resignation",
+  TIMEOUT: "timeout",
+  STALEMATE: "stalemate",
+  DRAW_CLAIMED: "draw_claimed",
+  INSUFFICIENT_MATERIAL: "insufficient_material",
+  FIFTY_MOVE: "fifty_move",
+  THREEFOLD: "threefold",
+} as const;
+
+export type ChessPlayEndReason =
+  (typeof CHESS_PLAY_END_REASONS)[keyof typeof CHESS_PLAY_END_REASONS];
+
+export const CHESS_PLAY_END_REASON_LIST = Object.values(CHESS_PLAY_END_REASONS);
+
+/** Clock presets for play vs engine; id doubles as the persisted value */
+export const CHESS_TIME_CONTROLS = {
+  NONE: { id: "none", baseSeconds: null, incrementSeconds: null },
+  BLITZ_5_0: { id: "5+0", baseSeconds: 300, incrementSeconds: 0 },
+  RAPID_10_0: { id: "10+0", baseSeconds: 600, incrementSeconds: 0 },
+  RAPID_15_10: { id: "15+10", baseSeconds: 900, incrementSeconds: 10 },
+} as const;
+
+export type ChessTimeControlId =
+  (typeof CHESS_TIME_CONTROLS)[keyof typeof CHESS_TIME_CONTROLS]["id"];
+
+export const CHESS_TIME_CONTROL_LIST = Object.values(CHESS_TIME_CONTROLS);

@@ -1,6 +1,6 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-import { chessApi } from "~/api/chess-api";
+import { ApiClient } from "~/api/api-client";
 
 export const CHESS_ENGINE_STATUS_QUERY_KEY = ["chess-engine-status"] as const;
 
@@ -8,8 +8,8 @@ export const chessEngineStatusQueryOptions = (options: { enabled?: boolean } = {
   queryOptions({
     queryKey: CHESS_ENGINE_STATUS_QUERY_KEY,
     queryFn: async () => {
-      const response = await chessApi.getEngineStatus();
-      return response.data;
+      const response = await ApiClient.api.chessEngineControllerGetStatus();
+      return response.data.data;
     },
     staleTime: 60_000,
     ...options,

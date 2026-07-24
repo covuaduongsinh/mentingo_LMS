@@ -43,7 +43,8 @@
       "de": "Alemán",
       "lt": "Lituano",
       "cs": "Checo",
-      "es": "Español"
+      "es": "Español",
+      "vi": "Vietnamita"
     },
     "lessonTypes": {
       "content": "Contenido",
@@ -804,7 +805,8 @@
       "german": "Alemán",
       "czech": "Checo",
       "lithuanian": "Lituano",
-      "spanish": "Español"
+      "spanish": "Español",
+      "vietnamese": "Vietnamita"
     }
   },
   "resetOnboarding": {

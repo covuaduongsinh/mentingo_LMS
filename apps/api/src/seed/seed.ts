@@ -162,8 +162,8 @@ export async function insertGlobalSettings(database: DatabasePg, tenantId: UUIDT
       companyShortName: "CVHD",
       emailAddress: "lienhe@covuahocduong.com",
     },
-    // Warm green chess-friendly accent (optional brand seed)
-    primaryColor: "#0F766E",
+    // Navy accent from the Dương Sinh chess visual identity (optional brand seed)
+    primaryColor: "#2B3990",
     contrastColor: "#FFFFFF",
   };
 
