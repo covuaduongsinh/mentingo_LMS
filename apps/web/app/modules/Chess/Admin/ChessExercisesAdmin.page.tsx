@@ -8,7 +8,7 @@ import {
   type ChessExerciseFormat,
   type ChessTopic,
 } from "@repo/shared";
-import { Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -41,6 +41,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { setPageTitle } from "~/utils/setPageTitle";
 
 import type { MetaFunction } from "@remix-run/react";
+import type { ListExercisesResponse } from "~/api/generated-api";
 
 export const meta: MetaFunction = ({ matches }) => setPageTitle(matches, "pages.chessExercises");
 
@@ -62,6 +63,7 @@ export default function ChessExercisesAdminPage() {
   const [topicFilter, setTopicFilter] = useState<string>("all");
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const { data, isLoading } = useChessExercises({
     page: 1,
@@ -90,8 +92,30 @@ export default function ChessExercisesAdminPage() {
     [t],
   );
 
-  const handleCreate = async () => {
-    await createExercise({
+  const handleOpenCreate = () => {
+    setEditingId(null);
+    setForm(emptyForm);
+    setOpen(true);
+  };
+
+  const handleOpenEdit = (exercise: ListExercisesResponse["data"][number]) => {
+    setEditingId(exercise.id);
+    setForm({
+      title: exercise.title,
+      format: exercise.format,
+      audience: exercise.audience,
+      topic: exercise.topics[0] ?? emptyForm.topic,
+      difficulty: exercise.difficulty,
+      fen: exercise.fen ?? "",
+      solutionMoves: (exercise.solution.movesUci ?? []).join(" "),
+      explanation: exercise.explanation ?? "",
+      published: exercise.published,
+    });
+    setOpen(true);
+  };
+
+  const handleSave = async () => {
+    const data = {
       title: form.title.trim(),
       format: form.format,
       audience: form.audience,
@@ -103,8 +127,16 @@ export default function ChessExercisesAdminPage() {
       },
       explanation: form.explanation.trim() || null,
       published: form.published,
-    });
+    };
+
+    if (editingId) {
+      await updateExercise({ id: editingId, data });
+    } else {
+      await createExercise(data);
+    }
+
     setForm(emptyForm);
+    setEditingId(null);
     setOpen(false);
   };
 
@@ -129,9 +161,18 @@ export default function ChessExercisesAdminPage() {
                 {t("chess.nav.games", { defaultValue: "Game bank" })}
               </Link>
             </Button>
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog
+              open={open}
+              onOpenChange={(nextOpen) => {
+                setOpen(nextOpen);
+                if (!nextOpen) {
+                  setEditingId(null);
+                  setForm(emptyForm);
+                }
+              }}
+            >
               <DialogTrigger asChild>
-                <Button data-testid="chess-admin-add-exercise-button">
+                <Button data-testid="chess-admin-add-exercise-button" onClick={handleOpenCreate}>
                   <Plus className="mr-2 size-4" />
                   {t("chess.admin.addExercise", { defaultValue: "Add exercise" })}
                 </Button>
@@ -139,7 +180,9 @@ export default function ChessExercisesAdminPage() {
               <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
                 <DialogHeader>
                   <DialogTitle>
-                    {t("chess.admin.addExercise", { defaultValue: "Add exercise" })}
+                    {editingId
+                      ? t("chess.admin.editExercise", { defaultValue: "Edit exercise" })
+                      : t("chess.admin.addExercise", { defaultValue: "Add exercise" })}
                   </DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-3 py-2">
@@ -269,8 +312,8 @@ export default function ChessExercisesAdminPage() {
                 <DialogFooter>
                   <Button
                     data-testid="chess-admin-exercise-save-button"
-                    onClick={handleCreate}
-                    disabled={!form.title.trim() || isCreating}
+                    onClick={handleSave}
+                    disabled={!form.title.trim() || isCreating || isUpdating}
                   >
                     {t("common.button.save", { defaultValue: "Save" })}
                   </Button>
@@ -364,6 +407,17 @@ export default function ChessExercisesAdminPage() {
                           {exercise.published
                             ? t("chess.admin.unpublish", { defaultValue: "Unpublish" })
                             : t("chess.admin.publish", { defaultValue: "Publish" })}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          data-testid={`chess-admin-exercise-edit-${exercise.id}`}
+                          title={t("chess.admin.editExerciseTooltip", {
+                            defaultValue: "Edit exercise",
+                          })}
+                          onClick={() => handleOpenEdit(exercise)}
+                        >
+                          <Pencil className="size-4" />
                         </Button>
                         <Button
                           size="sm"

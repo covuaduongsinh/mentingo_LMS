@@ -103,6 +103,8 @@
       "gamesTitle": "Ngân hàng ván đấu",
       "gamesSubtitle": "Các ván đấu PGN kèm ghi chú giảng dạy dùng cho bài học và minh họa.",
       "addExercise": "Thêm bài tập",
+      "editExercise": "Sửa bài tập",
+      "editExerciseTooltip": "Sửa bài tập",
       "addGame": "Thêm ván đấu",
       "fieldTitle": "Tiêu đề",
       "format": "Định dạng",

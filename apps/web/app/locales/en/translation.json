@@ -103,6 +103,8 @@
       "gamesTitle": "Game bank",
       "gamesSubtitle": "PGN games with teaching notes for lessons and demos.",
       "addExercise": "Add exercise",
+      "editExercise": "Edit exercise",
+      "editExerciseTooltip": "Edit exercise",
       "addGame": "Add game",
       "fieldTitle": "Title",
       "format": "Format",
