@@ -6811,6 +6811,7 @@ export interface CreateAssignmentLessonResponse {
           maxFileSizeMb?: number;
         };
         referenceFileS3Key: string | null;
+        referenceFileUrl?: string;
         /** @min 1 */
         maxGradeValue: number;
         displayOrder: number;
@@ -6911,6 +6912,7 @@ export interface CreateAssignmentResponse {
         maxFileSizeMb?: number;
       };
       referenceFileS3Key: string | null;
+      referenceFileUrl?: string;
       /** @min 1 */
       maxGradeValue: number;
       displayOrder: number;
@@ -6967,6 +6969,7 @@ export interface GetAssignmentForAuthorResponse {
         maxFileSizeMb?: number;
       };
       referenceFileS3Key: string | null;
+      referenceFileUrl?: string;
       /** @min 1 */
       maxGradeValue: number;
       displayOrder: number;
@@ -7075,6 +7078,7 @@ export interface AddTaskResponse {
       maxFileSizeMb?: number;
     };
     referenceFileS3Key: string | null;
+    referenceFileUrl?: string;
     /** @min 1 */
     maxGradeValue: number;
     displayOrder: number;
@@ -7137,6 +7141,7 @@ export interface UpdateTaskResponse {
       maxFileSizeMb?: number;
     };
     referenceFileS3Key: string | null;
+    referenceFileUrl?: string;
     /** @min 1 */
     maxGradeValue: number;
     displayOrder: number;
@@ -7200,6 +7205,7 @@ export interface GetAssignmentForLearnerResponse {
         maxFileSizeMb?: number;
       };
       referenceFileS3Key: string | null;
+      referenceFileUrl?: string;
       /** @min 1 */
       maxGradeValue: number;
       displayOrder: number;
@@ -7462,6 +7468,7 @@ export interface GetSubmissionForGradingResponse {
         maxFileSizeMb?: number;
       };
       referenceFileS3Key: string | null;
+      referenceFileUrl?: string;
       /** @min 1 */
       maxGradeValue: number;
       displayOrder: number;
@@ -7541,6 +7548,70 @@ export interface GradeTaskSubmissionResponse {
       createdAt: string;
       updatedAt: string;
     }[];
+  };
+}
+
+export interface RejectTaskSubmissionResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    assignmentId: string;
+    /** @format uuid */
+    userId: string;
+    status: "not_submitted" | "pending" | "submitted" | "graded" | "late";
+    grade: number | null;
+    overallFeedback: string | null;
+    attemptNumber: number;
+    submittedAt: string | null;
+    gradedAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+    taskSubmissions?: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      taskId: string;
+      /** @format uuid */
+      userId: string;
+      submission: {
+        text?: string;
+        number?: number;
+        movesUci?: string[];
+        pgn?: string;
+        fileS3Key?: string;
+        fileName?: string;
+        fileUrl?: string;
+      };
+      grade: number | null;
+      feedback: string | null;
+      manuallyGraded: boolean;
+      gradedByUserId: string | null;
+      gradedAt: string | null;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+  };
+}
+
+export interface GetAssignmentSummaryResponse {
+  data: {
+    /** @min 0 */
+    totalLearners: number;
+    statusCounts: {
+      /** @min 0 */
+      not_submitted: number;
+      /** @min 0 */
+      pending: number;
+      /** @min 0 */
+      submitted: number;
+      /** @min 0 */
+      graded: number;
+      /** @min 0 */
+      late: number;
+    };
+    averageGrade: number | null;
+    passRate: number | null;
   };
 }
 
@@ -15585,6 +15656,37 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "PATCH",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerRejectTaskSubmission
+     * @request POST:/api/assignments/task-submissions/{taskSubmissionId}/reject
+     */
+    assignmentsControllerRejectTaskSubmission: (
+      taskSubmissionId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<RejectTaskSubmissionResponse, any>({
+        path: `/api/assignments/task-submissions/${taskSubmissionId}/reject`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerGetAssignmentSummary
+     * @request GET:/api/assignments/{id}/summary
+     */
+    assignmentsControllerGetAssignmentSummary: (id: string, params: RequestParams = {}) =>
+      this.request<GetAssignmentSummaryResponse, any>({
+        path: `/api/assignments/${id}/summary`,
+        method: "GET",
         format: "json",
         ...params,
       }),

@@ -1,3 +1,4 @@
+import { Download, Lightbulb } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -15,6 +16,7 @@ import Loader from "~/modules/common/Loader/Loader";
 import { AssignmentChessMoveInput } from "./AssignmentChessMoveInput";
 import { DEFAULT_CHESS_START_FEN } from "./chessAssignmentUtils";
 
+import type React from "react";
 import type { GetAssignmentForLearnerResponse, GetLessonByIdResponse } from "~/api/generated-api";
 
 type AssignmentTask = GetAssignmentForLearnerResponse["data"]["tasks"][number];
@@ -41,6 +43,7 @@ export const AssignmentLesson = ({ lessonId }: AssignmentLessonProps) => {
   const { mutateAsync: uploadFile, isPending: isUploading } = useUploadFile();
   const [submittingTaskId, setSubmittingTaskId] = useState<string | null>(null);
   const [drafts, setDrafts] = useState<Record<string, SubmissionDraft>>({});
+  const [visibleHints, setVisibleHints] = useState<Record<string, boolean>>({});
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   if (isLoading) return <Loader />;
@@ -88,6 +91,16 @@ export const AssignmentLesson = ({ lessonId }: AssignmentLessonProps) => {
     }
   };
 
+  const handleBlockedPaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    if (!assignment.antiCopyPaste) return;
+    event.preventDefault();
+    toast({
+      title: t("studentLessonView.assignment.pasteDisabled", {
+        defaultValue: "Pasting is disabled for this assignment",
+      }),
+    });
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <Card>
@@ -112,6 +125,9 @@ export const AssignmentLesson = ({ lessonId }: AssignmentLessonProps) => {
         const draft = drafts[task.id];
         const startFen = task.contents.fen?.trim() || DEFAULT_CHESS_START_FEN;
 
+        const hintText = localizedText(task.hint);
+        const isHintVisible = Boolean(visibleHints[task.id]);
+
         return (
           <Card key={task.id}>
             <CardContent className="flex flex-col gap-3 pt-6">
@@ -120,11 +136,53 @@ export const AssignmentLesson = ({ lessonId }: AssignmentLessonProps) => {
                 <p className="body-sm text-neutral-700">{localizedText(task.description)}</p>
               )}
 
+              {hintText && (
+                <div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="w-fit px-0 text-primary-700"
+                    onClick={() =>
+                      setVisibleHints((previous) => ({
+                        ...previous,
+                        [task.id]: !previous[task.id],
+                      }))
+                    }
+                  >
+                    <Lightbulb className="mr-1.5 size-3.5" aria-hidden />
+                    {t(
+                      isHintVisible
+                        ? "studentLessonView.assignment.hideHint"
+                        : "studentLessonView.assignment.showHint",
+                    )}
+                  </Button>
+                  {isHintVisible && (
+                    <p className="body-sm rounded bg-amber-50 p-3 text-amber-900">{hintText}</p>
+                  )}
+                </div>
+              )}
+
+              {task.referenceFileUrl && (
+                <a
+                  href={task.referenceFileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="body-sm inline-flex w-fit items-center gap-1.5 text-primary-700 underline"
+                >
+                  <Download className="size-3.5" aria-hidden />
+                  {t("studentLessonView.assignment.downloadReferenceFile", {
+                    defaultValue: "Download reference file",
+                  })}
+                </a>
+              )}
+
               {task.taskType === "short_answer" && (
                 <Textarea
                   defaultValue={submission?.submission.text ?? ""}
                   placeholder={t("studentLessonView.assignment.answerPlaceholder")}
                   onChange={(event) => setDraft(task.id, { text: event.target.value })}
+                  onPaste={handleBlockedPaste}
                 />
               )}
 
@@ -137,6 +195,7 @@ export const AssignmentLesson = ({ lessonId }: AssignmentLessonProps) => {
                     defaultValue={submission?.submission.pgn ?? ""}
                     placeholder={t("studentLessonView.assignment.pgnPlaceholder")}
                     onChange={(event) => setDraft(task.id, { pgn: event.target.value })}
+                    onPaste={handleBlockedPaste}
                   />
                 </div>
               )}

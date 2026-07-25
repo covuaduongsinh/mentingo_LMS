@@ -11,6 +11,7 @@ import { CurrentUserType } from "src/common/types/current-user.type";
 import { AssignmentsService } from "./assignments.service";
 import {
   assignmentSchema,
+  assignmentSummarySchema,
   assignmentTaskSchema,
   assignmentTaskSubmissionSchema,
   assignmentUserSubmissionSchema,
@@ -242,5 +243,25 @@ export class AssignmentsController {
         body,
       ),
     );
+  }
+
+  @Post("task-submissions/:taskSubmissionId/reject")
+  @RequirePermission(PERMISSIONS.ASSIGNMENT_GRADE)
+  @Validate({
+    request: [{ type: "param", name: "taskSubmissionId", schema: UUIDSchema }],
+    response: baseResponse(assignmentUserSubmissionSchema),
+  })
+  async rejectTaskSubmission(@Param("taskSubmissionId") taskSubmissionId: UUIDType) {
+    return new BaseResponse(await this.assignmentsService.rejectTaskSubmission(taskSubmissionId));
+  }
+
+  @Get(":id/summary")
+  @RequirePermission(PERMISSIONS.ASSIGNMENT_GRADE)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(assignmentSummarySchema),
+  })
+  async getAssignmentSummary(@Param("id") id: UUIDType) {
+    return new BaseResponse(await this.assignmentsService.getAssignmentSummary(id));
   }
 }

@@ -2209,6 +2209,10 @@
           "includeFiles_other": "Hängen Sie bis zu {{ count }} Dateien mit weniger als {{ MAX_FILE_SIZE }} MB an, um sie als Kontext in Lektionen zu verwenden",
           "allowRetries": "Wiederholungen erlauben",
           "showCorrectAnswers": "Richtige Antworten nach der Bewertung anzeigen",
+          "antiCopyPaste": "Einfügen in Textantworten deaktivieren",
+          "hint": "Hinweis (optional)",
+          "attachReferenceFile": "Referenzdatei anhängen (nach Bewertung sichtbar)",
+          "referenceFileAttached": "Datei angehängt",
           "expectedAnswer": "Referenzantwort (für Lernende ausgeblendet)",
           "expectedNumber": "Erwartete Zahl",
           "chessFen": "Start-FEN (optional)",
@@ -2576,9 +2580,37 @@
       "saveGrade": "Note speichern",
       "downloadFile": "Datei herunterladen",
       "noFile": "Keine Datei eingereicht.",
+      "reject": "Ablehnen",
+      "searchPlaceholder": "Nach Name oder E-Mail suchen",
+      "toggleSortDirection": "Sortierrichtung umkehren",
+      "statusFilter": {
+        "all": "Alle Status",
+        "not_submitted": "Nicht eingereicht",
+        "submitted": "Eingereicht",
+        "graded": "Bewertet",
+        "late": "Verspätet"
+      },
+      "sortField": {
+        "name": "Nach Name sortieren",
+        "status": "Nach Status sortieren",
+        "grade": "Nach Note sortieren"
+      },
+      "quickGrade": {
+        "full": "Volle Punktzahl",
+        "half": "Halbe Punktzahl",
+        "zero": "Null"
+      },
+      "summary": {
+        "totalLearners": "Lernende",
+        "averageGrade": "Durchschnittsnote",
+        "passRate": "Bestehensquote",
+        "graded": "Bewertet"
+      },
       "toast": {
         "graded": "Note gespeichert",
-        "gradeFailed": "Note konnte nicht gespeichert werden"
+        "gradeFailed": "Note konnte nicht gespeichert werden",
+        "rejected": "Einreichung abgelehnt",
+        "rejectFailed": "Einreichung konnte nicht abgelehnt werden"
       }
     }
   },
@@ -2913,7 +2945,11 @@
       "submit": "Einreichen",
       "fileUploadError": "Datei konnte nicht hochgeladen werden.",
       "chooseFile": "Datei auswählen",
-      "maxFileSize": "Max. {{size}} MB"
+      "maxFileSize": "Max. {{size}} MB",
+      "showHint": "Hinweis anzeigen",
+      "hideHint": "Hinweis ausblenden",
+      "downloadReferenceFile": "Referenzdatei herunterladen",
+      "pasteDisabled": "Einfügen ist für diese Aufgabe deaktiviert"
     }
   },
   "studentCourseView": {

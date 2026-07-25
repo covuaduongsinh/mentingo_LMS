@@ -1,17 +1,28 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { LESSON_TYPES, type SupportedLanguages } from "@repo/shared";
-import { and, asc, eq, getTableColumns, sql } from "drizzle-orm";
+import { COURSE_ENROLLMENT, LESSON_TYPES, type SupportedLanguages } from "@repo/shared";
+import { addDays, endOfDay, startOfDay } from "date-fns";
+import { and, asc, eq, getTableColumns, isNotNull, isNull, or, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 
 import { DatabasePg, type UUIDType } from "src/common";
+import { EmailService } from "src/common/emails/emails.service";
 import { buildJsonbField } from "src/common/helpers/sqlHelpers";
+import { LocalizationService } from "src/localization/localization.service";
 import {
   assignments,
   assignmentTasks,
   assignmentTaskSubmissions,
   assignmentUserSubmissions,
+  chapters,
+  courses,
   lessons,
+  settings,
+  studentCourses,
+  tenants,
   users,
 } from "src/storage/schema";
+
+import { ASSIGNMENT_DUE_DATE_REMINDER_DAYS } from "./constants/assignment-due-date-reminders.constants";
 
 import type {
   AssignmentRecord,
@@ -26,11 +37,19 @@ import type {
   UpdateAssignmentBody,
   UpdateAssignmentTaskBody,
 } from "./schemas/assignment.schema";
+import type {
+  AssignmentDueDateReminderDays,
+  AssignmentDueDateReminderRecipient,
+} from "./types/assignment-due-date-reminder.types";
 import type { AssignmentSubmissionContents } from "src/storage/schema";
 
 @Injectable()
 export class AssignmentsRepository {
-  constructor(@Inject("DB") private readonly db: DatabasePg) {}
+  constructor(
+    @Inject("DB") private readonly db: DatabasePg,
+    private readonly localizationService: LocalizationService,
+    private readonly emailService: EmailService,
+  ) {}
 
   /**
    * Insert the curriculum-tree `lessons` row for a new assignment lesson.
@@ -307,6 +326,28 @@ export class AssignmentsRepository {
     return (row as AssignmentTaskSubmissionRecord | undefined) ?? null;
   }
 
+  /**
+   * A trainer rejecting a not-gradable-as-is submission — resets the row to
+   * the same "never submitted" shape `upsertTaskSubmission`'s onConflict
+   * branch resets to, so the learner sees this task as not-yet-submitted.
+   */
+  async resetTaskSubmission(id: UUIDType): Promise<AssignmentTaskSubmissionRecord | null> {
+    const [row] = await this.db
+      .update(assignmentTaskSubmissions)
+      .set({
+        submission: {},
+        grade: null,
+        feedback: null,
+        manuallyGraded: false,
+        gradedByUserId: null,
+        gradedAt: null,
+      })
+      .where(eq(assignmentTaskSubmissions.id, id))
+      .returning();
+
+    return (row as AssignmentTaskSubmissionRecord | undefined) ?? null;
+  }
+
   async getUserSubmission(
     assignmentId: UUIDType,
     userId: UUIDType,
@@ -391,5 +432,99 @@ export class AssignmentsRepository {
       .innerJoin(users, eq(users.id, assignmentUserSubmissions.userId))
       .where(eq(assignmentUserSubmissions.assignmentId, assignmentId));
     return rows as AssignmentUserSubmissionWithUserRecord[];
+  }
+
+  /**
+   * Recipients for the two due-date reminder windows (7 days / 1 day before
+   * `assignments.dueDate`), mirroring CourseService#getCourseDueDateReminderRecipients
+   * exactly (same reminder-window SQL shape, same default-email-settings
+   * resolution) but joining assignment -> lesson -> chapter -> course ->
+   * enrolled student instead of group_courses, since an assignment's due
+   * date is on the assignment itself, not on a group-course row. A learner
+   * already `graded` for this assignment is excluded from both windows.
+   */
+  async getAssignmentDueDateReminderRecipients(): Promise<AssignmentDueDateReminderRecipient[]> {
+    const globalSettings = alias(settings, "global_settings");
+    const userSettings = alias(settings, "user_settings");
+
+    const reminderWindows = ASSIGNMENT_DUE_DATE_REMINDER_DAYS.map((daysBeforeDueDate) => {
+      const reminderDate = addDays(new Date(), daysBeforeDueDate);
+      return {
+        daysBeforeDueDate,
+        startsAt: startOfDay(reminderDate).toISOString(),
+        endsAt: endOfDay(reminderDate).toISOString(),
+      };
+    });
+
+    const dueDateCondition = or(
+      ...reminderWindows.map(
+        ({ startsAt, endsAt }) =>
+          sql`${assignments.dueDate} BETWEEN ${startsAt}::timestamptz AND ${endsAt}::timestamptz`,
+      ),
+    );
+    if (!dueDateCondition) return [];
+
+    const rows = await this.db
+      .selectDistinct({
+        studentId: users.id,
+        studentEmail: users.email,
+        tenantId: users.tenantId,
+        tenantHost: tenants.host,
+        lessonId: lessons.id,
+        courseId: courses.id,
+        courseAuthorId: courses.authorId,
+        assignmentName: this.localizationService.getLocalizedSqlField(
+          assignments.title,
+          sql<SupportedLanguages>`${userSettings.settings}->>'language'`,
+        ),
+        dueDate: sql<string>`${assignments.dueDate}`,
+        daysBeforeDueDate: sql<AssignmentDueDateReminderDays>`CASE ${sql.join(
+          reminderWindows.map(
+            ({ daysBeforeDueDate, startsAt, endsAt }) =>
+              sql`WHEN ${assignments.dueDate} BETWEEN ${startsAt}::timestamptz AND ${endsAt}::timestamptz THEN ${daysBeforeDueDate}`,
+          ),
+          sql` `,
+        )} END`,
+        defaultEmailSettings: this.emailService.getDefaultEmailPropertiesSql(
+          userSettings.settings,
+          globalSettings.settings,
+        ),
+      })
+      .from(assignments)
+      .innerJoin(lessons, eq(lessons.id, assignments.lessonId))
+      .innerJoin(chapters, eq(chapters.id, lessons.chapterId))
+      .innerJoin(courses, eq(courses.id, chapters.courseId))
+      .innerJoin(
+        studentCourses,
+        and(
+          eq(studentCourses.courseId, courses.id),
+          eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
+        ),
+      )
+      .innerJoin(users, eq(users.id, studentCourses.studentId))
+      .innerJoin(userSettings, eq(userSettings.userId, users.id))
+      .leftJoin(globalSettings, isNull(globalSettings.userId))
+      .innerJoin(tenants, eq(tenants.id, users.tenantId))
+      .leftJoin(
+        assignmentUserSubmissions,
+        and(
+          eq(assignmentUserSubmissions.assignmentId, assignments.id),
+          eq(assignmentUserSubmissions.userId, users.id),
+        ),
+      )
+      .where(
+        and(
+          isNotNull(assignments.dueDate),
+          eq(assignments.published, true),
+          dueDateCondition,
+          isNull(users.deletedAt),
+          or(
+            isNull(assignmentUserSubmissions.status),
+            sql`${assignmentUserSubmissions.status} != 'graded'`,
+          ),
+        ),
+      );
+
+    return rows as AssignmentDueDateReminderRecipient[];
   }
 }

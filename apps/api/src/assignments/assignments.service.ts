@@ -10,12 +10,14 @@ import {
   ASSIGNMENT_TASK_TYPE,
   COURSE_FEATURE,
   ENTITY_TYPES,
+  type AssignmentSubmissionStatus,
   type SupportedLanguages,
 } from "@repo/shared";
 import { match } from "ts-pattern";
 
 import { CourseFeaturePolicyService } from "src/courses/course-feature-policy.service";
 import { MasterCourseService } from "src/courses/master-course.service";
+import { AssignmentDueDateReminderEmailEvent } from "src/events/assignment/assignment-due-date-reminder-email.event";
 import { AssignmentGradedEvent } from "src/events/assignment/assignment-graded.event";
 import { FileService } from "src/file/file.service";
 import { AdminLessonRepository } from "src/lesson/repositories/adminLesson.repository";
@@ -269,9 +271,19 @@ export class AssignmentsService {
       userId,
     );
 
+    const visibleTasks = await Promise.all(
+      tasks.map(async (task) => {
+        if (!canSeeAnswers) return this.stripAnswerKey(task);
+        if (!task.referenceFileS3Key) return task;
+
+        const referenceFileUrl = await this.fileService.getFileUrl(task.referenceFileS3Key);
+        return { ...task, referenceFileUrl };
+      }),
+    );
+
     return {
       assignment,
-      tasks: tasks.map((task) => (canSeeAnswers ? task : this.stripAnswerKey(task))),
+      tasks: visibleTasks,
       userSubmission,
       taskSubmissions,
     };
@@ -524,6 +536,86 @@ export class AssignmentsService {
     return this.recomputeAggregate(assignment, graded.userId, currentAggregate?.attemptNumber ?? 1);
   }
 
+  /**
+   * Rejects a single task's submission (empty, off-topic, or otherwise not
+   * gradable as-is) — resets it to not-yet-submitted and recomputes the
+   * assignment aggregate. Does not touch `attemptNumber`: rejecting one task
+   * is not the same as the learner starting a whole new attempt, so it never
+   * counts against the assignment's retry limit.
+   */
+  async rejectTaskSubmission(taskSubmissionId: UUIDType) {
+    const reset = await this.assignmentsRepository.resetTaskSubmission(taskSubmissionId);
+    if (!reset) throw new NotFoundException("assignment.errors.submissionNotFound");
+
+    const task = await this.assignmentsRepository.getTaskById(reset.taskId);
+    if (!task) throw new NotFoundException("assignment.errors.taskNotFound");
+    const assignment = await this.assignmentsRepository.getAssignmentById(task.assignmentId);
+    if (!assignment) throw new NotFoundException("assignment.errors.notFound");
+
+    const currentAggregate = await this.assignmentsRepository.getUserSubmission(
+      assignment.id,
+      reset.userId,
+    );
+
+    return this.recomputeAggregate(assignment, reset.userId, currentAggregate?.attemptNumber ?? 1);
+  }
+
+  /**
+   * A small read-only grading-page summary: how many learners are in each
+   * submission status, the average grade among graded submissions, and the
+   * pass rate — using the same threshold-resolution rule `recomputeAggregate`
+   * already uses, so this never disagrees with what learners see.
+   */
+  async getAssignmentSummary(assignmentId: UUIDType) {
+    const assignment = await this.requireAssignment(assignmentId);
+    const submissions =
+      await this.assignmentsRepository.listUserSubmissionsForAssignment(assignmentId);
+
+    const statusCounts: Record<AssignmentSubmissionStatus, number> = {
+      [ASSIGNMENT_SUBMISSION_STATUS.NOT_SUBMITTED]: 0,
+      [ASSIGNMENT_SUBMISSION_STATUS.PENDING]: 0,
+      [ASSIGNMENT_SUBMISSION_STATUS.SUBMITTED]: 0,
+      [ASSIGNMENT_SUBMISSION_STATUS.GRADED]: 0,
+      [ASSIGNMENT_SUBMISSION_STATUS.LATE]: 0,
+    };
+    for (const submission of submissions) {
+      statusCounts[submission.status] += 1;
+    }
+
+    const gradedSubmissions = submissions.filter(
+      (submission) => submission.status === ASSIGNMENT_SUBMISSION_STATUS.GRADED,
+    );
+    const passThreshold =
+      assignment.passThresholdPercentage ??
+      match(assignment.gradingType)
+        .with("letter", "gpa", () => ASSIGNMENT_GRADING_DEFAULTS.PASS_THRESHOLD_LETTER_GPA)
+        .otherwise(() => ASSIGNMENT_GRADING_DEFAULTS.PASS_THRESHOLD_NUMERIC_PERCENTAGE_PASS_FAIL);
+
+    const averageGrade =
+      gradedSubmissions.length > 0
+        ? Math.round(
+            gradedSubmissions.reduce((sum, submission) => sum + (submission.grade ?? 0), 0) /
+              gradedSubmissions.length,
+          )
+        : null;
+    const passRate =
+      gradedSubmissions.length > 0
+        ? Math.round(
+            (gradedSubmissions.filter((submission) => (submission.grade ?? 0) >= passThreshold)
+              .length /
+              gradedSubmissions.length) *
+              100,
+          )
+        : null;
+
+    return {
+      totalLearners: submissions.length,
+      statusCounts,
+      averageGrade,
+      passRate,
+    };
+  }
+
   private async requireAssignment(id: UUIDType): Promise<AssignmentRecord> {
     const assignment = await this.assignmentsRepository.getAssignmentById(id);
     if (!assignment) throw new NotFoundException("assignment.errors.notFound");
@@ -534,5 +626,16 @@ export class AssignmentsService {
     const task = await this.assignmentsRepository.getTaskById(taskId);
     if (!task) throw new NotFoundException("assignment.errors.taskNotFound");
     return this.requireAssignment(task.assignmentId);
+  }
+
+  /**
+   * Only queries recipients and publishes one outbox event — never sends
+   * email synchronously from a cron, matching CourseService#sendCourseDueDateReminders.
+   */
+  async sendAssignmentDueDateReminders() {
+    const recipients = await this.assignmentsRepository.getAssignmentDueDateReminderRecipients();
+    if (!recipients.length) return;
+
+    await this.outboxPublisher.publish(new AssignmentDueDateReminderEmailEvent({ recipients }));
   }
 }

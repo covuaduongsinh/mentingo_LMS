@@ -1,3 +1,14 @@
+<a name="assignment-engine-v2"></a>
+
+## [Assignment engine v2] - 26.07.2026
+
+### Features:
+
+- wire up 3 previously dead-in-the-UI fields end-to-end: task hints, answer-key reference file attachments, and an assignment-level anti-copy-paste toggle (schema/API already had them; only the authoring form and learner view were missing)
+- add a due-date reminder cron (daily 9am) + email + in-app announcement for assignments with a due date, mirroring the existing course due-date reminder
+- add a trainer "Reject" action per task submission, and a small read-only assignment summary (status breakdown, average grade, pass rate)
+- add search/status-filter/sort and quick-grade (Full/Half/Zero) buttons to the assignment grading page
+
 <a name="rich-text-blocks-slash-commands"></a>
 
 ## [Rich text blocks & slash commands] - 26.07.2026

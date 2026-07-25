@@ -44,6 +44,8 @@ export const assignmentTaskSchema = Type.Object({
   taskType: assignmentTaskTypeSchema,
   contents: assignmentTaskContentsSchema,
   referenceFileS3Key: Type.Union([Type.String(), Type.Null()]),
+  /** Signed download URL — set only for a learner who can see answers, never stored. */
+  referenceFileUrl: Type.Optional(Type.String()),
   maxGradeValue: Type.Number({ minimum: 1 }),
   displayOrder: Type.Number(),
   createdAt: Type.String(),
@@ -157,6 +159,19 @@ export const assignmentUserSubmissionWithUserSchema = Type.Composite([
 ]);
 
 export const retryAssignmentBodySchema = Type.Object({});
+
+export const assignmentSummarySchema = Type.Object({
+  totalLearners: Type.Number({ minimum: 0 }),
+  statusCounts: Type.Object({
+    not_submitted: Type.Number({ minimum: 0 }),
+    pending: Type.Number({ minimum: 0 }),
+    submitted: Type.Number({ minimum: 0 }),
+    graded: Type.Number({ minimum: 0 }),
+    late: Type.Number({ minimum: 0 }),
+  }),
+  averageGrade: Type.Union([Type.Number(), Type.Null()]),
+  passRate: Type.Union([Type.Number(), Type.Null()]),
+});
 
 /**
  * Creates a `lessons` row (type "assignment") and its Assignment definition

@@ -2209,6 +2209,10 @@
           "includeFiles_other": "Pridėkite iki {{ count }} failų, mažesnių nei {{ MAX_FILE_SIZE }} MB, kad galėtumėte naudoti kaip kontekstą pamokose",
           "allowRetries": "Leisti bandyti dar kartą",
           "showCorrectAnswers": "Rodyti teisingus atsakymus po įvertinimo",
+          "antiCopyPaste": "Išjungti įklijavimą teksto atsakymuose",
+          "hint": "Užuomina (neprivaloma)",
+          "attachReferenceFile": "Pridėti pavyzdinį failą (matomas įvertinus)",
+          "referenceFileAttached": "Failas pridėtas",
           "expectedAnswer": "Atsakymo pavyzdys (paslėptas nuo besimokančiųjų)",
           "expectedNumber": "Laukiamas skaičius",
           "chessFen": "Pradinė FEN (nebūtina)",
@@ -2576,9 +2580,37 @@
       "saveGrade": "Išsaugoti įvertinimą",
       "downloadFile": "Atsisiųsti failą",
       "noFile": "Failas nepateiktas.",
+      "reject": "Atmesti",
+      "searchPlaceholder": "Ieškoti pagal vardą arba el. paštą",
+      "toggleSortDirection": "Keisti rikiavimo kryptį",
+      "statusFilter": {
+        "all": "Visos būsenos",
+        "not_submitted": "Nepateikta",
+        "submitted": "Pateikta",
+        "graded": "Įvertinta",
+        "late": "Pavėluota"
+      },
+      "sortField": {
+        "name": "Rikiuoti pagal vardą",
+        "status": "Rikiuoti pagal būseną",
+        "grade": "Rikiuoti pagal įvertinimą"
+      },
+      "quickGrade": {
+        "full": "Visas",
+        "half": "Pusė",
+        "zero": "Nulis"
+      },
+      "summary": {
+        "totalLearners": "Besimokantieji",
+        "averageGrade": "Vidutinis įvertinimas",
+        "passRate": "Išlaikymo rodiklis",
+        "graded": "Įvertinta"
+      },
       "toast": {
         "graded": "Įvertinimas išsaugotas",
-        "gradeFailed": "Nepavyko išsaugoti įvertinimo"
+        "gradeFailed": "Nepavyko išsaugoti įvertinimo",
+        "rejected": "Pateiktis atmesta",
+        "rejectFailed": "Nepavyko atmesti pateikties"
       }
     }
   },
@@ -2913,7 +2945,11 @@
       "submit": "Pateikti",
       "fileUploadError": "Nepavyko įkelti failo.",
       "chooseFile": "Pasirinkti failą",
-      "maxFileSize": "Ne daugiau kaip {{size}} MB"
+      "maxFileSize": "Ne daugiau kaip {{size}} MB",
+      "showHint": "Rodyti užuominą",
+      "hideHint": "Slėpti užuominą",
+      "downloadReferenceFile": "Atsisiųsti pavyzdinį failą",
+      "pasteDisabled": "Įklijavimas šiai užduočiai išjungtas"
     }
   },
   "studentCourseView": {

@@ -1,6 +1,8 @@
 import { emailTemplateFactory } from "./email-factory";
 import AnnouncementEmailTemplate from "./templates/AnnouncementEmail";
 export const AnnouncementEmail = emailTemplateFactory(AnnouncementEmailTemplate);
+import AssignmentDueDateReminderEmailTemplate from "./templates/AssignmentDueDateReminderEmail";
+export const AssignmentDueDateReminderEmail = emailTemplateFactory(AssignmentDueDateReminderEmailTemplate);
 import BaseEmailTemplateTemplate from "./templates/BaseEmailTemplate";
 export const BaseEmailTemplate = emailTemplateFactory(BaseEmailTemplateTemplate);
 import CertificateExpirationWarningEmailTemplate from "./templates/CertificateExpirationWarningEmail";
@@ -44,3 +46,4 @@ export const UserShortInactivityEmail = emailTemplateFactory(UserShortInactivity
 import WelcomeEmailTemplate from "./templates/WelcomeEmail";
 export const WelcomeEmail = emailTemplateFactory(WelcomeEmailTemplate);
 export { getCourseDueDateReminderEmailTranslations } from "./translations/courseDueDateReminder";
+export { getAssignmentDueDateReminderEmailTranslations } from "./translations/assignmentDueDateReminder";

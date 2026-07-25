@@ -71,6 +71,20 @@ const generateIndexContent = () => {
           t.stringLiteral("./translations/courseDueDateReminder")
         )
       );
+
+      path.pushContainer(
+        "body",
+        t.exportNamedDeclaration(
+          null,
+          [
+            t.exportSpecifier(
+              t.identifier("getAssignmentDueDateReminderEmailTranslations"),
+              t.identifier("getAssignmentDueDateReminderEmailTranslations")
+            ),
+          ],
+          t.stringLiteral("./translations/assignmentDueDateReminder")
+        )
+      );
     },
   });
 

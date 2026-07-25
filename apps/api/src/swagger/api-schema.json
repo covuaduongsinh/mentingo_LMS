@@ -13728,6 +13728,60 @@
         }
       }
     },
+    "/api/assignments/task-submissions/{taskSubmissionId}/reject": {
+      "post": {
+        "operationId": "AssignmentsController_rejectTaskSubmission",
+        "parameters": [
+          {
+            "name": "taskSubmissionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RejectTaskSubmissionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments/{id}/summary": {
+      "get": {
+        "operationId": "AssignmentsController_getAssignmentSummary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAssignmentSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/integration/tenants": {
       "get": {
         "operationId": "IntegrationController_getTenants",
@@ -52219,6 +52273,9 @@
                                 }
                               ]
                             },
+                            "referenceFileUrl": {
+                              "type": "string"
+                            },
                             "maxGradeValue": {
                               "minimum": 1,
                               "type": "number"
@@ -52745,6 +52802,9 @@
                             }
                           ]
                         },
+                        "referenceFileUrl": {
+                          "type": "string"
+                        },
                         "maxGradeValue": {
                           "minimum": 1,
                           "type": "number"
@@ -53038,6 +53098,9 @@
                               "type": "null"
                             }
                           ]
+                        },
+                        "referenceFileUrl": {
+                          "type": "string"
                         },
                         "maxGradeValue": {
                           "minimum": 1,
@@ -53568,6 +53631,9 @@
                   }
                 ]
               },
+              "referenceFileUrl": {
+                "type": "string"
+              },
               "maxGradeValue": {
                 "minimum": 1,
                 "type": "number"
@@ -53839,6 +53905,9 @@
                     "type": "null"
                   }
                 ]
+              },
+              "referenceFileUrl": {
+                "type": "string"
               },
               "maxGradeValue": {
                 "minimum": 1,
@@ -54142,6 +54211,9 @@
                           "type": "null"
                         }
                       ]
+                    },
+                    "referenceFileUrl": {
+                      "type": "string"
                     },
                     "maxGradeValue": {
                       "minimum": 1,
@@ -55489,6 +55561,9 @@
                         }
                       ]
                     },
+                    "referenceFileUrl": {
+                      "type": "string"
+                    },
                     "maxGradeValue": {
                       "minimum": 1,
                       "type": "number"
@@ -55882,6 +55957,304 @@
               "gradedAt",
               "createdAt",
               "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RejectTaskSubmissionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "assignmentId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "userId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "const": "not_submitted",
+                    "type": "string"
+                  },
+                  {
+                    "const": "pending",
+                    "type": "string"
+                  },
+                  {
+                    "const": "submitted",
+                    "type": "string"
+                  },
+                  {
+                    "const": "graded",
+                    "type": "string"
+                  },
+                  {
+                    "const": "late",
+                    "type": "string"
+                  }
+                ]
+              },
+              "grade": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "overallFeedback": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "attemptNumber": {
+                "type": "number"
+              },
+              "submittedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "gradedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "taskSubmissions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "taskId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "submission": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string"
+                        },
+                        "number": {
+                          "type": "number"
+                        },
+                        "movesUci": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "pgn": {
+                          "type": "string"
+                        },
+                        "fileS3Key": {
+                          "type": "string"
+                        },
+                        "fileName": {
+                          "type": "string"
+                        },
+                        "fileUrl": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "grade": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "feedback": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "manuallyGraded": {
+                      "type": "boolean"
+                    },
+                    "gradedByUserId": {
+                      "anyOf": [
+                        {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "gradedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "taskId",
+                    "userId",
+                    "submission",
+                    "grade",
+                    "feedback",
+                    "manuallyGraded",
+                    "gradedByUserId",
+                    "gradedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "assignmentId",
+              "userId",
+              "status",
+              "grade",
+              "overallFeedback",
+              "attemptNumber",
+              "submittedAt",
+              "gradedAt",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetAssignmentSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "totalLearners": {
+                "minimum": 0,
+                "type": "number"
+              },
+              "statusCounts": {
+                "type": "object",
+                "properties": {
+                  "not_submitted": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "pending": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "submitted": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "graded": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "late": {
+                    "minimum": 0,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "not_submitted",
+                  "pending",
+                  "submitted",
+                  "graded",
+                  "late"
+                ]
+              },
+              "averageGrade": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "passRate": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "totalLearners",
+              "statusCounts",
+              "averageGrade",
+              "passRate"
             ]
           }
         },
