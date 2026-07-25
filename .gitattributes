@@ -1,0 +1,5 @@
+# Shell scripts MUST stay LF, kể cả khi checkout trên Windows (core.autocrlf=true).
+# Nếu không, working tree thành CRLF -> shebang "#!/bin/sh\r" làm Docker ENTRYPOINT
+# lỗi "exec: no such file or directory" khi build image từ checkout Windows.
+*.sh text eol=lf
+entrypoint.sh text eol=lf

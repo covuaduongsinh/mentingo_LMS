@@ -1,0 +1,30 @@
+# Caddyfile cho staging — chạy ở HOST (systemd), KHÔNG trong docker-compose.
+# Cài đặt: copy nội dung này vào /etc/caddy/Caddyfile trên VPS, đổi domain, rồi:
+#   sudo systemctl reload caddy
+# Caddy tự xin & gia hạn chứng chỉ HTTPS (Let's Encrypt) khi domain đã trỏ A record về IP VPS.
+#
+# 1 origin duy nhất => cookie auth same-origin, không cần cấu hình CORS/SameSite=None.
+
+staging.covuahocduong.com {
+	encode zstd gzip
+
+	# API (NestJS) — giữ prefix /api để đúng global prefix của backend.
+	# reverse_proxy hỗ trợ nâng cấp WebSocket (Socket.IO ở /api/ws) tự động.
+	@api path /api/*
+	handle @api {
+		reverse_proxy localhost:3000
+	}
+
+	# (Tùy chọn) Expose MinIO công khai cho file/media nếu dùng presigned URL cho asset public.
+	# Bật kèm: mở ports minio trong compose + đặt S3_ENDPOINT/S3_PUBLIC_URL = https://staging.covuahocduong.com/files
+	# @files path /files/*
+	# handle @files {
+	# 	uri strip_prefix /files
+	# 	reverse_proxy localhost:9100
+	# }
+
+	# Phần còn lại → frontend SPA (nginx phục vụ build/client, có fallback /index.html).
+	handle {
+		reverse_proxy localhost:3080
+	}
+}

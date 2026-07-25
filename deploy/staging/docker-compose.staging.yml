@@ -1,0 +1,146 @@
+# Staging (demo) — toàn bộ stack Mentingo LMS (Cờ Vua Học Đường) trên 1 Hetzner VPS.
+# Build image thẳng trên VPS (không dùng AWS ECR). Caddy chạy ở host (systemd), không nằm trong compose.
+#
+# Dùng qua script: deploy/staging/deploy.sh  (script tự source .env.staging.ui để cấp build-arg VITE_* cho web)
+# Hoặc thủ công (đứng ở thư mục repo root):
+#   set -a; . deploy/staging/.env.staging.ui; set +a
+#   docker compose -f deploy/staging/docker-compose.staging.yml build
+#   docker compose -f deploy/staging/docker-compose.staging.yml up -d
+#
+# Lưu ý: mọi path (context, env_file, volumes) đều tương đối theo repo root vì ta chạy compose từ repo root.
+
+x-logging: &default-logging
+  driver: "journald"
+  options:
+    tag: "{{.Name}}"
+
+services:
+  app:
+    build:
+      # Path tương đối theo THƯ MỤC CHỨA compose file (deploy/staging/), nên ../.. = repo root.
+      context: ../..
+      dockerfile: api.Dockerfile
+    image: mentingo-staging-api:latest
+    container_name: mentingo-staging-app
+    restart: unless-stopped
+    logging: *default-logging
+    env_file: .env.staging.api
+    command: server
+    ports:
+      - "3000:3000"
+    volumes:
+      - staging-uploads:/app/apps/api/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+
+  # Mailhog: bắt toàn bộ email ở staging (không gửi ra ngoài). Web UI cổng 8025 (không expose;
+  # xem qua SSH tunnel nếu cần). EMAIL_ADAPTER=mailhog + SMTP_HOST=mailhog trong .env.staging.api.
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mentingo-staging-mailhog
+    restart: unless-stopped
+    logging: *default-logging
+
+  frontend:
+    build:
+      context: ../..
+      dockerfile: web.Dockerfile
+      args:
+        # Các biến này là build-time (Vite inline lúc build). deploy.sh source .env.staging.ui rồi export
+        # nên chúng có mặt trong môi trường khi compose interpolate ${...}. Đổi giá trị => phải build lại.
+        VITE_API_URL: "${VITE_API_URL:-}"
+        VITE_APP_URL: "${VITE_APP_URL:-}"
+        VITE_STRIPE_PUBLISHABLE_KEY: "${VITE_STRIPE_PUBLISHABLE_KEY:-}"
+        VITE_SENTRY_DSN: "${VITE_SENTRY_DSN:-}"
+        VITE_GOOGLE_OAUTH_ENABLED: "${VITE_GOOGLE_OAUTH_ENABLED:-false}"
+        VITE_MICROSOFT_OAUTH_ENABLED: "${VITE_MICROSOFT_OAUTH_ENABLED:-false}"
+        VITE_SLACK_OAUTH_ENABLED: "${VITE_SLACK_OAUTH_ENABLED:-false}"
+        VITE_POSTHOG_KEY: "${VITE_POSTHOG_KEY:-}"
+        VITE_POSTHOG_HOST: "${VITE_POSTHOG_HOST:-}"
+    image: mentingo-staging-web:latest
+    container_name: mentingo-staging-frontend
+    restart: unless-stopped
+    logging: *default-logging
+    ports:
+      - "3080:8080"
+
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: mentingo-staging-db
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-guidebook}"
+      POSTGRES_DB: "${POSTGRES_DB:-guidebook}"
+    volumes:
+      - staging-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:8.0-M02-alpine3.20
+    container_name: mentingo-staging-redis
+    restart: unless-stopped
+    logging: *default-logging
+    volumes:
+      - staging-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: mentingo-staging-minio
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      MINIO_ROOT_USER: "${S3_ACCESS_KEY_ID:-minioadmin}"
+      MINIO_ROOT_PASSWORD: "${S3_SECRET_ACCESS_KEY:-minioadmin}"
+    command: server /data --console-address ":9001"
+    volumes:
+      - staging-minio-data:/data
+    # Chỉ mở ra host khi muốn expose MinIO công khai (xem README mục "File/MinIO").
+    # Mặc định giữ nội bộ trong mạng compose; API gọi qua http://minio:9000.
+    # ports:
+    #   - "9100:9000"   # S3 API
+    #   - "9101:9001"   # Web console
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  create-minio-bucket:
+    image: quay.io/minio/mc:latest
+    container_name: mentingo-staging-minio-setup
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: "no"
+    env_file: .env.staging.api
+    volumes:
+      - ../../create-minio-bucket.sh:/create-minio-bucket.sh
+    entrypoint: ["/bin/sh", "/create-minio-bucket.sh"]
+
+volumes:
+  staging-db-data:
+    driver: local
+  staging-redis-data:
+    driver: local
+  staging-minio-data:
+    driver: local
+  staging-uploads:
+    driver: local
