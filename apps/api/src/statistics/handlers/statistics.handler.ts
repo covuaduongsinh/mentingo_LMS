@@ -2,16 +2,21 @@ import { Injectable } from "@nestjs/common";
 import { EventsHandler } from "@nestjs/cqrs";
 import { match } from "ts-pattern";
 
-import { CourseStartedEvent, QuizCompletedEvent, UserActivityEvent } from "src/events";
+import { QuizCompletedEvent, UserActivityEvent } from "src/events";
 
 import { StatisticsService } from "../statistics.service";
 
 import type { IEventHandler } from "@nestjs/cqrs";
 
-type StatisticsEvent = QuizCompletedEvent | UserActivityEvent | CourseStartedEvent;
+type StatisticsEvent = QuizCompletedEvent | UserActivityEvent;
 
+// Previously also registered for CourseStartedEvent, but nothing in the app
+// ever publishes that event (only activity-logs' course-activity.handler.ts
+// consumes it) and this handler has no logic for it — it only ever hit the
+// `.otherwise()` throw below. Dropped the registration rather than add
+// speculative handling; re-add both if course-start statistics are needed.
 @Injectable()
-@EventsHandler(QuizCompletedEvent, UserActivityEvent, CourseStartedEvent)
+@EventsHandler(QuizCompletedEvent, UserActivityEvent)
 export class StatisticsHandler implements IEventHandler<QuizCompletedEvent | UserActivityEvent> {
   constructor(private readonly statisticsService: StatisticsService) {}
 

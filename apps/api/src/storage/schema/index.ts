@@ -1526,11 +1526,18 @@ export const certificates = pgTable(
     archivedAt: timestampWithTimezone({ name: "archived_at" }),
     archiveReason: text("archive_reason").$type<CertificateArchiveReason>(),
     expirationWarningSentAt: timestampWithTimezone({ name: "expiration_warning_sent_at" }),
+    // Public identifier for the /api/certificates/share* endpoints. Nullable:
+    // no token exists until a share link is requested; set back to null on
+    // revoke. Never expose `id` (the internal UUID) on those public routes —
+    // it has no per-share secret, so anyone who learned it could look up the
+    // certificate holder's full name/course/dates indefinitely.
+    shareToken: text("share_token"),
     tenantId,
   },
   withTenantIdIndex("certificates", (table) => ({
     activeExpiryIdx: index("certificates_active_expiry_idx").on(table.status, table.expiresAt),
     userCourseIdx: index("certificates_user_course_idx").on(table.userId, table.courseId),
+    shareTokenUniqueIdx: uniqueIndex("certificates_share_token_unique_idx").on(table.shareToken),
   })),
 );
 

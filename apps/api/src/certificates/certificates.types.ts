@@ -10,6 +10,7 @@ import type {
   downloadCertificateSchema,
   resetCourseCertificatesResponseSchema,
   resetCourseCertificatesSchema,
+  revokeCertificateShareLinkSchema,
   singleCertificateSchema,
 } from "./certificates.schema";
 import type { CertificateArchiveReason, SupportedLanguages } from "@repo/shared";
@@ -22,6 +23,7 @@ export type SingleCertificateResponse = Static<typeof singleCertificateSchema>;
 export type CreateCertificateShareLinkBody = Static<typeof createCertificateShareLinkSchema>;
 export type DownloadCertificateBody = Static<typeof downloadCertificateSchema>;
 export type CertificateShareLinkResponse = Static<typeof certificateShareLinkResponseSchema>;
+export type RevokeCertificateShareLinkBody = Static<typeof revokeCertificateShareLinkSchema>;
 export type ResetCourseCertificatesBody = Static<typeof resetCourseCertificatesSchema>;
 export type ResetCourseCertificatesResponse = Static<typeof resetCourseCertificatesResponseSchema>;
 export type CertificateResetOptionsResponse = Static<typeof certificateResetOptionsResponseSchema>;

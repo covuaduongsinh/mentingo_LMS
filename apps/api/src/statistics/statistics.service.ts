@@ -194,8 +194,11 @@ export class StatisticsService {
     const yesterday = subDays(new Date(), 1);
     const startDate = startOfMonth(yesterday).toISOString();
     const endDate = endOfMonth(yesterday).toISOString();
+    // 1-indexed (1-12) to match courseStudentsStats.month's convention read by getCourseStudentsStats.
+    const month = yesterday.getMonth() + 1;
+    const year = yesterday.getFullYear();
 
-    await this.statisticsRepository.calculateCoursesStudentsStats(startDate, endDate);
+    await this.statisticsRepository.calculateCoursesStudentsStats(startDate, endDate, month, year);
   }
 
   private calculateTotalStats(coursesStatsByMonth: StatsByMonth[]) {
@@ -214,6 +217,13 @@ export class StatisticsService {
     return totalStats;
   }
 
+  /**
+   * Keys by "yyyy-MM" rather than bare month name ("January") — a bare
+   * name collides across years in a 12-month rolling window (e.g. two
+   * Januaries), silently overwriting one month's data with the other's.
+   * The frontend (parseRatesChartData) turns the key back into a display
+   * label.
+   */
   private formatStats = (stats: StatsByMonth[]) => {
     const monthlyStats: { [key: string]: Omit<StatsByMonth, "month"> } = {};
 
@@ -221,7 +231,7 @@ export class StatisticsService {
     for (let index = 11; index >= 0; index--) {
       const month = format(
         new Date(currentDate.getFullYear(), currentDate.getMonth() - index, 1),
-        "MMMM",
+        "yyyy-MM",
       );
       monthlyStats[month] = {
         started: 0,
@@ -231,7 +241,7 @@ export class StatisticsService {
     }
 
     for (const stat of stats) {
-      const month = format(new Date(stat.month), "MMMM");
+      const month = format(new Date(stat.month), "yyyy-MM");
       monthlyStats[month] = {
         started: stat.started,
         completed: stat.completed,
@@ -242,6 +252,7 @@ export class StatisticsService {
     return monthlyStats;
   };
 
+  /** See formatStats — same "yyyy-MM" keying to avoid cross-year collisions. */
   private formatCourseStudentStats(stats: CourseStudentsStatsByMonth[]) {
     const monthlyStats: { [key: string]: Omit<CourseStudentsStatsByMonth, "month"> } = {};
 
@@ -249,7 +260,7 @@ export class StatisticsService {
     for (let index = 11; index >= 0; index--) {
       const month = format(
         new Date(currentDate.getFullYear(), currentDate.getMonth() - index, 1),
-        "MMMM",
+        "yyyy-MM",
       );
       monthlyStats[month] = {
         newStudentsCount: 0,
@@ -257,7 +268,7 @@ export class StatisticsService {
     }
 
     for (const stat of stats) {
-      const month = format(new Date(stat.month), "MMMM");
+      const month = format(new Date(stat.month), "yyyy-MM");
       monthlyStats[month] = {
         newStudentsCount: stat.newStudentsCount,
       };

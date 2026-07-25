@@ -101,16 +101,16 @@ export const AdminStatistics = () => {
     () => [
       {
         state: t("adminStatisticsView.other.correct"),
-        percentage: 7,
+        percentage: correctAnswers,
         fill: "var(--primary-700)",
       },
       {
         state: t("adminStatisticsView.other.incorrect"),
-        percentage: 13,
+        percentage: Math.max(totalAnswers - correctAnswers, 0),
         fill: "var(--primary-300)",
       },
     ],
-    [t],
+    [t, correctAnswers, totalAnswers],
   );
 
   const breadcrumbs = [{ title: t("navigationSideBar.analytics"), href: "/admin/analytics" }];

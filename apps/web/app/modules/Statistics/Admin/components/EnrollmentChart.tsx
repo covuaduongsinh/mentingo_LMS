@@ -1,3 +1,4 @@
+import { format, parse } from "date-fns";
 import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, Customized, Text, XAxis, YAxis } from "recharts";
@@ -23,11 +24,16 @@ type EnrollmentChartProps = {
   isLoading?: boolean;
 };
 
+// Backend keys are "yyyy-MM" (see statistics.service.ts#formatCourseStudentStats)
+// so they stay unique across years — see apps/web/app/modules/Statistics/utils.ts
+// for the same treatment on the student-facing rates chart.
+const monthKeyToLabel = (key: string) => format(parse(key, "yyyy-MM", new Date()), "MMMM");
+
 export const parseRatesChartData = (data: Data) => {
   if (!data) return [];
 
   return Object.entries(data).map(([month, values]) => ({
-    month,
+    month: monthKeyToLabel(month),
     newStudentsCount: values.newStudentsCount,
   }));
 };

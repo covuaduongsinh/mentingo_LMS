@@ -45,6 +45,18 @@ From a course management view, permitted users can open the Statistics tab. Ment
 - Learner and admin aggregate endpoints live in `apps/api/src/statistics`; course-level statistics endpoints are in `apps/api/src/courses/course.controller.ts`.
 - `STATISTICS_READ` gates admin analytics, and `COURSE_STATISTICS` gates course-level reporting.
 - Statistics draw from course progress, lesson progress, quiz attempts, AI mentor progress, learning-time records, and activity streak data.
+- A nightly cron (`StatisticsService#refreshCourseStudentsStats`) rolls up the previous calendar month's new enrollments per course into `course_students_stats`, which backs the admin enrollment chart.
+- Rolling 12-month breakdowns (student rates chart, admin enrollment chart) are keyed internally by `"yyyy-MM"`, not by bare month name, so two different years never collide into the same bucket; the frontend derives the display month name from that key.
+
+### Fixes (2026-07-25)
+
+Three defects were found while reviewing this module and fixed in the same pass:
+
+- The admin "average quiz score" chart rendered a hardcoded `7`/`13` split regardless of real data — it now uses the same `correctAnswerCount`/`answerCount` values already shown in the chart's center label.
+- The enrollment-stats cron computed new-enrollment counts per course but never wrote them anywhere, so `course_students_stats` was permanently empty and the enrollment chart always showed no data. It now upserts into `course_students_stats` (and the read query's month/year formatting, which had an unrelated string-concatenation bug, was fixed alongside it).
+- `formatStats`/`formatCourseStudentStats` keyed their rolling-12-month objects by bare month name (e.g. `"January"`), which silently collided across years in edge cases. Both now key by `"yyyy-MM"`.
+- `StatisticsHandler` was registered for `CourseStartedEvent` (via `@EventsHandler`) but had no handling logic for it and nothing in the app ever publishes that event — every dispatch would have hit `.otherwise(() => throw)`. The dead registration was removed.
+- Found while manually verifying the cron fix against real data: the demo seed script (`src/seed/seed.ts#getLast12Months`) wrote `courseStudentsStats.month` 0-indexed (`date.getMonth()`, January = 0), while the cron now writes it 1-indexed. Left unfixed, seeded and cron-refreshed rows for the same calendar month would never collide on the `(courseId, month, year)` unique constraint, double-counting that month and — worse — mislabeling it a month off once formatted as `"yyyy-MM"` (a `month = 0` row formats and parses as December of the _previous_ year). The seed script now writes 1-indexed months to match.
 
 ## Test Evidence
 
