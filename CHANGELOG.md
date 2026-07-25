@@ -1,3 +1,12 @@
+<a name="account-security-hardening"></a>
+
+## [Account security hardening] - 26.07.2026
+
+### Features:
+
+- add temporary account lockout after too many consecutive failed login attempts (configurable threshold/duration in global settings), rejecting with the same generic "invalid credentials" message whether the account is locked or the password is simply wrong, so lockout state can never be used to probe which emails exist
+- add optional Cloudflare Turnstile captcha on `/auth/register` and `/auth/login`, fully self-disabling with no behavior change when `TURNSTILE_SITE_KEY`/`TURNSTILE_SECRET_KEY` aren't configured (same pattern as the existing Google/Slack/Microsoft SSO toggles)
+
 <a name="assignment-engine-v2"></a>
 
 ## [Assignment engine v2] - 26.07.2026

@@ -4604,6 +4604,7 @@
     "error": {
       "unauthenticated": "Benutzer nicht authentifiziert",
       "invalidEmailOrPassword": "Ungültige E-Mail-Adresse oder ungültiges Passwort",
+      "captchaVerificationFailed": "Captcha-Verifizierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
       "invalidRefreshToken": "Ungültiges Aktualisierungstoken",
       "adminRoleRequired": "Administratorrolle erforderlich",
       "missingPermission": "Sie haben keine Berechtigung, auf diese Ressource zuzugreifen",

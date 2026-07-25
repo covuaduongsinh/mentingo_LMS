@@ -444,6 +444,8 @@ export class AuthService {
         avatarReference: users.avatarReference,
         deletedAt: users.deletedAt,
         tenantId: users.tenantId,
+        failedLoginAttempts: users.failedLoginAttempts,
+        lockedUntil: users.lockedUntil,
       })
       .from(users)
       .leftJoin(credentials, eq(users.id, credentials.userId))
@@ -452,14 +454,61 @@ export class AuthService {
     if (!userWithCredentials || !userWithCredentials.password)
       throw new UnauthorizedException({ message: "auth.error.invalidEmailOrPassword" });
 
+    // A locked account is rejected with the exact same message as a wrong
+    // password — never reveal that lockout is the reason, or when it lifts,
+    // since that would both leak that this email exists and let an attacker
+    // time their next attempt precisely (see business spec).
+    const isCurrentlyLocked =
+      userWithCredentials.lockedUntil != null &&
+      new Date(userWithCredentials.lockedUntil) > new Date();
+
+    if (isCurrentlyLocked)
+      throw new UnauthorizedException({ message: "auth.error.invalidEmailOrPassword" });
+
     const isPasswordValid = await bcrypt.compare(password, userWithCredentials.password);
 
-    if (!isPasswordValid)
+    if (!isPasswordValid) {
+      await this.registerFailedLoginAttempt(userWithCredentials.id);
       throw new UnauthorizedException({ message: "auth.error.invalidEmailOrPassword" });
+    }
+
+    if (userWithCredentials.failedLoginAttempts > 0 || userWithCredentials.lockedUntil != null) {
+      await this.resetFailedLoginAttempts(userWithCredentials.id);
+    }
 
     const { password: _, ...user } = userWithCredentials;
 
     return user;
+  }
+
+  /**
+   * Increments the consecutive-failure counter and locks the account once it
+   * reaches the tenant's configured threshold. Only ever called after we've
+   * already resolved a real user by email — a nonexistent email never gets a
+   * counter (nothing to increment), so lockout state can't be used to probe
+   * which emails exist.
+   */
+  private async registerFailedLoginAttempt(userId: UUIDType) {
+    const { maxFailedLoginAttempts, lockoutMinutes } =
+      await this.settingsService.getGlobalSettings();
+
+    const [updated] = await this.db
+      .update(users)
+      .set({ failedLoginAttempts: sql`${users.failedLoginAttempts} + 1` })
+      .where(eq(users.id, userId))
+      .returning({ failedLoginAttempts: users.failedLoginAttempts });
+
+    if (updated && updated.failedLoginAttempts >= maxFailedLoginAttempts) {
+      const lockedUntil = new Date(Date.now() + lockoutMinutes * 60_000).toISOString();
+      await this.db.update(users).set({ lockedUntil }).where(eq(users.id, userId));
+    }
+  }
+
+  private async resetFailedLoginAttempts(userId: UUIDType) {
+    await this.db
+      .update(users)
+      .set({ failedLoginAttempts: 0, lockedUntil: null })
+      .where(eq(users.id, userId));
   }
 
   private async getTokens(user: TokenUser) {
@@ -590,6 +639,8 @@ export class AuthService {
         archived: users.archived,
         avatarReference: users.avatarReference,
         deletedAt: users.deletedAt,
+        failedLoginAttempts: users.failedLoginAttempts,
+        lockedUntil: users.lockedUntil,
       })
       .from(users)
       .where(eq(users.id, createToken.userId));

@@ -4590,6 +4590,7 @@
     "error": {
       "unauthenticated": "Użytkownik nie jest uwierzytelniony",
       "invalidEmailOrPassword": "Nieprawidłowy e-mail lub hasło",
+      "captchaVerificationFailed": "Weryfikacja captcha nie powiodła się. Spróbuj ponownie.",
       "invalidRefreshToken": "Nieprawidłowy token odświeżania",
       "adminRoleRequired": "Wymagana rola administratora",
       "missingPermission": "Nie masz uprawnień do tego zasobu",

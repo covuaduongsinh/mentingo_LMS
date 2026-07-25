@@ -1410,6 +1410,19 @@
                         }
                       ]
                     },
+                    "failedLoginAttempts": {
+                      "type": "number"
+                    },
+                    "lockedUntil": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
                     "profilePictureUrl": {
                       "anyOf": [
                         {
@@ -1430,6 +1443,8 @@
                     "lastName",
                     "archived",
                     "deletedAt",
+                    "failedLoginAttempts",
+                    "lockedUntil",
                     "profilePictureUrl"
                   ]
                 },
@@ -1806,6 +1821,19 @@
                   }
                 ]
               },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -1851,6 +1879,8 @@
               "lastName",
               "archived",
               "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
               "profilePictureUrl",
               "roleSlugs",
               "groups"
@@ -2022,6 +2052,19 @@
                   }
                 ]
               },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -2042,6 +2085,8 @@
               "lastName",
               "archived",
               "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
               "profilePictureUrl"
             ]
           }
@@ -2197,6 +2242,19 @@
                           }
                         ]
                       },
+                      "failedLoginAttempts": {
+                        "type": "number"
+                      },
+                      "lockedUntil": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -2217,6 +2275,8 @@
                       "lastName",
                       "archived",
                       "deletedAt",
+                      "failedLoginAttempts",
+                      "lockedUntil",
                       "profilePictureUrl"
                     ]
                   }

@@ -6,6 +6,8 @@ export const loginSchema = Type.Object({
   email: Type.String({ format: "email" }),
   password: Type.String({ minLength: 8, maxLength: 64 }),
   rememberMe: Type.Optional(Type.Boolean()),
+  /** Only required when the tenant has Cloudflare Turnstile configured — see TurnstileGuard. */
+  turnstileToken: Type.Optional(Type.String()),
 });
 
 export const loginResponseSchema = Type.Object({

@@ -140,6 +140,14 @@ export const users = pgTable(
       withTimezone: true,
       precision: 3,
     }),
+    // Login lockout: consecutive-failure counter + the timestamp it's locked
+    // until (null = not locked). See AuthService#validateUser.
+    failedLoginAttempts: integer("failed_login_attempts").notNull().default(0),
+    lockedUntil: timestamp("locked_until", {
+      mode: "string",
+      withTimezone: true,
+      precision: 3,
+    }),
     tenantId,
   },
   withTenantIdIndex("users", (table) => ({

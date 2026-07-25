@@ -137,6 +137,15 @@ export class EnvService {
     return stripePublishableKey;
   }
 
+  /**
+   * The Turnstile site key is public by Cloudflare's own design (safe to
+   * ship to the client) — `null` means the tenant hasn't configured
+   * Turnstile at all, so the frontend renders no widget and sends no token.
+   */
+  getTurnstileSiteKey(): string | null {
+    return this.configService.get<string>("turnstile.TURNSTILE_SITE_KEY") ?? null;
+  }
+
   async getStripeConfigured() {
     const [stripeSecretKey, stripeWebhookSecret, stripePublishableKey] = await Promise.all([
       this.getEnv("STRIPE_SECRET_KEY")

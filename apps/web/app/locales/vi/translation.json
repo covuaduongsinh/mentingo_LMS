@@ -4713,6 +4713,7 @@
     "error": {
       "unauthenticated": "Người dùng chưa được xác thực",
       "invalidEmailOrPassword": "Email hoặc mật khẩu không hợp lệ",
+      "captchaVerificationFailed": "Xác minh captcha thất bại. Vui lòng thử lại.",
       "invalidRefreshToken": "Token làm mới không hợp lệ",
       "adminRoleRequired": "Cần có vai trò quản trị viên",
       "missingPermission": "Bạn không có quyền truy cập tài nguyên này",
