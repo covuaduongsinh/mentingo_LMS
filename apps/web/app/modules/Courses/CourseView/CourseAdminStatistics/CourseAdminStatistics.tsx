@@ -4,10 +4,14 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
 
+import { useChapterDropoff } from "~/api/queries/admin/useChapterDropoff";
+import { useCompletionVelocity } from "~/api/queries/admin/useCompletionVelocity";
 import { useCourseAverageScorePerQuiz } from "~/api/queries/admin/useCourseAverageScorePerQuiz";
 import { useCourseStatisticsFilter } from "~/api/queries/admin/useCourseLearningTimeStatisticsFilterOptions";
 import { useCourseStatistics } from "~/api/queries/admin/useCourseStatistics";
 import { useCourseStudentsAiMentorResults } from "~/api/queries/admin/useCourseStudentsAiMentorResults";
+import { useLessonCompletionFunnel } from "~/api/queries/admin/useLessonCompletionFunnel";
+import { useTopLearners } from "~/api/queries/admin/useTopLearners";
 import { useAIConfigured } from "~/api/queries/useAIConfigured";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import {
@@ -37,6 +41,10 @@ import {
   AverageScorePerQuizChart,
   CourseStudentsProgressTable,
   CourseStudentsQuizResultsTable,
+  LessonCompletionFunnelChart,
+  ChapterDropoffChart,
+  CompletionVelocityChart,
+  TopLearnersTable,
 } from "./components";
 import { CourseStudentsAiMentorResultsTable } from "./components/CourseStudentsAiMentorResults";
 import {
@@ -141,6 +149,22 @@ export function CourseAdminStatistics({ course }: CourseAdminStatisticsProps) {
     id: courseId,
     enabled: canManageCourses,
     query: courseStatisticsParams,
+  });
+  const { data: lessonCompletionFunnel } = useLessonCompletionFunnel({
+    id: courseId,
+    enabled: canManageCourses && Boolean(courseId),
+  });
+  const { data: chapterDropoff } = useChapterDropoff({
+    id: courseId,
+    enabled: canManageCourses && Boolean(courseId),
+  });
+  const { data: completionVelocity } = useCompletionVelocity({
+    id: courseId,
+    enabled: canManageCourses && Boolean(courseId),
+  });
+  const { data: topLearners } = useTopLearners({
+    id: courseId,
+    enabled: canManageCourses && Boolean(courseId),
   });
   const { data: aiConfigured } = useAIConfigured();
 
@@ -343,6 +367,15 @@ export function CourseAdminStatistics({ course }: CourseAdminStatisticsProps) {
             />
           </div>
           <AverageScorePerQuizChart averageQuizScores={averageQuizScores} />
+          <div className="flex flex-col gap-3">
+            <h6 className="h6">{t("adminCourseView.statistics.deepAnalytics.title")}</h6>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <LessonCompletionFunnelChart data={lessonCompletionFunnel} />
+              <ChapterDropoffChart data={chapterDropoff} />
+              <CompletionVelocityChart data={completionVelocity} />
+              <TopLearnersTable data={topLearners} />
+            </div>
+          </div>
           <Tabs value={activeTab} className="h-full">
             <div className="flex items-start gap-2 flex-col pb-6">
               <h6 className="h6">{t("adminCourseView.statistics.details")}</h6>

@@ -36,6 +36,11 @@ export const COURSE_STATISTICS_HANDLES = {
   LESSON_PREVIEW_TASK_DESCRIPTION_BUTTON:
     "course-statistics-lesson-preview-task-description-button",
   LESSON_PREVIEW_RESULT_BUTTON: "course-statistics-lesson-preview-result-button",
+  LESSON_COMPLETION_FUNNEL_CHART: "course-statistics-lesson-completion-funnel-chart",
+  CHAPTER_DROPOFF_CHART: "course-statistics-chapter-dropoff-chart",
+  COMPLETION_VELOCITY_CHART: "course-statistics-completion-velocity-chart",
+  TOP_LEARNERS_TABLE: "course-statistics-top-learners-table",
+  topLearnersRow: (studentId: string) => `course-statistics-top-learners-row-${studentId}`,
 } as const;
 
 export const ADMIN_STATISTICS_HANDLES = {

@@ -2482,6 +2482,41 @@
       },
       "groupFilter": {
         "placeholder": "Visos grupės"
+      },
+      "deepAnalytics": {
+        "title": "Išsami analitika",
+        "lessonFunnel": {
+          "title": "Pamokų baigimo piltuvėlis",
+          "subtitle": "Kiekvienos šio kurso pamokos baigimo rodiklis",
+          "enrolledLabel": "Užsiregistravę",
+          "completedLabel": "Baigė",
+          "noData": "Pamokų kol kas nėra"
+        },
+        "chapterDropoff": {
+          "title": "Nubyrėjimas pagal skyrius",
+          "subtitle": "Kiek studentų pasitraukia tarp skyrių",
+          "completionLabel": "Baigimo rodiklis",
+          "dropoffLabel": "Nubyrėjimo rodiklis",
+          "noData": "Skyrių kol kas nėra"
+        },
+        "completionVelocity": {
+          "title": "Baigimo greitis",
+          "subtitle": "Kiek laiko studentams reikia kursui baigti",
+          "averageDays": "Vidutinis dienų skaičius iki baigimo",
+          "medianDays": "Mediana dienų iki baigimo",
+          "distributionLabel": "Studentai",
+          "bucketDaysSuffix": "d.",
+          "noData": "Kol kas niekas nebaigė kurso"
+        },
+        "topLearners": {
+          "title": "Aktyviausi studentai",
+          "subtitle": "Labiausiai įsitraukę studentai pagal mokymosi laiką",
+          "rank": "#",
+          "student": "Studentas",
+          "totalTime": "Praleistas laikas",
+          "completedLessons": "Baigtos pamokos",
+          "noData": "Mokymosi laikas dar neužfiksuotas"
+        }
       }
     },
     "createLanguage": {

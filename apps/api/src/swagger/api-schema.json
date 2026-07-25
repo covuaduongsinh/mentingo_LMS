@@ -11888,7 +11888,7 @@
         "operationId": "LearningPathCertificateController_getCertificateSharePage",
         "parameters": [
           {
-            "name": "certificateId",
+            "name": "token",
             "required": true,
             "in": "query",
             "schema": {
@@ -11916,7 +11916,7 @@
         "operationId": "LearningPathCertificateController_getCertificateShareImage",
         "parameters": [
           {
-            "name": "certificateId",
+            "name": "token",
             "required": true,
             "in": "query",
             "schema": {
@@ -16967,6 +16967,114 @@
         "responses": {
           "200": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/api/analytics/courses/{courseId}/lesson-completion-funnel": {
+      "get": {
+        "operationId": "CourseAnalyticsController_getLessonCompletionFunnel",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLessonCompletionFunnelResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/courses/{courseId}/chapter-dropoff": {
+      "get": {
+        "operationId": "CourseAnalyticsController_getChapterDropoff",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetChapterDropoffResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/courses/{courseId}/completion-velocity": {
+      "get": {
+        "operationId": "CourseAnalyticsController_getCompletionVelocity",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCompletionVelocityResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/courses/{courseId}/top-learners": {
+      "get": {
+        "operationId": "CourseAnalyticsController_getTopLearners",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTopLearnersResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -60367,6 +60475,207 @@
             "required": [
               "parsedContent"
             ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetLessonCompletionFunnelResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "lessonId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "chapterId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "lessonTitle": {
+                  "type": "string"
+                },
+                "chapterOrder": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lessonOrder": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "enrolledCount": {
+                  "type": "number"
+                },
+                "completedCount": {
+                  "type": "number"
+                },
+                "completionPercentage": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lessonId",
+                "chapterId",
+                "lessonTitle",
+                "chapterOrder",
+                "lessonOrder",
+                "enrolledCount",
+                "completedCount",
+                "completionPercentage"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetChapterDropoffResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "chapterId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "chapterTitle": {
+                  "type": "string"
+                },
+                "chapterOrder": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "enrolledCount": {
+                  "type": "number"
+                },
+                "completedCount": {
+                  "type": "number"
+                },
+                "completionPercentage": {
+                  "type": "number"
+                },
+                "dropoffPercentage": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "chapterId",
+                "chapterTitle",
+                "chapterOrder",
+                "enrolledCount",
+                "completedCount",
+                "completionPercentage",
+                "dropoffPercentage"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetCompletionVelocityResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "completedCount": {
+                "type": "number"
+              },
+              "averageDays": {
+                "type": "number"
+              },
+              "medianDays": {
+                "type": "number"
+              },
+              "distribution": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "bucket": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "bucket",
+                    "count"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "completedCount",
+              "averageDays",
+              "medianDays",
+              "distribution"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetTopLearnersResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "studentId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "studentName": {
+                  "type": "string"
+                },
+                "totalSeconds": {
+                  "type": "number"
+                },
+                "completedLessonCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "studentId",
+                "studentName",
+                "totalSeconds",
+                "completedLessonCount"
+              ]
+            }
           }
         },
         "required": [

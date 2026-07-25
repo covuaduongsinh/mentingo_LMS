@@ -2701,6 +2701,41 @@
       },
       "groupFilter": {
         "placeholder": "All groups"
+      },
+      "deepAnalytics": {
+        "title": "Deep analytics",
+        "lessonFunnel": {
+          "title": "Lesson completion funnel",
+          "subtitle": "Completion rate for each lesson in this course",
+          "enrolledLabel": "Enrolled",
+          "completedLabel": "Completed",
+          "noData": "No lessons to show yet"
+        },
+        "chapterDropoff": {
+          "title": "Chapter dropoff",
+          "subtitle": "How many students drop off between chapters",
+          "completionLabel": "Completion rate",
+          "dropoffLabel": "Dropoff rate",
+          "noData": "No chapters to show yet"
+        },
+        "completionVelocity": {
+          "title": "Completion velocity",
+          "subtitle": "How long it takes students to finish this course",
+          "averageDays": "Average days to complete",
+          "medianDays": "Median days to complete",
+          "distributionLabel": "Students",
+          "bucketDaysSuffix": "days",
+          "noData": "No completions yet"
+        },
+        "topLearners": {
+          "title": "Top learners",
+          "subtitle": "Most engaged students by learning time",
+          "rank": "#",
+          "student": "Student",
+          "totalTime": "Time spent",
+          "completedLessons": "Lessons completed",
+          "noData": "No learning time recorded yet"
+        }
       }
     },
     "createLanguage": {
