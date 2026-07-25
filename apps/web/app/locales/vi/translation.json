@@ -2261,7 +2261,9 @@
         "removeChapter": "Bạn có chắc chắn muốn xóa chương này không?",
         "removeQuestion": "Bạn có chắc chắn muốn xóa câu hỏi không?",
         "removeContent": "Bạn có chắc chắn muốn xóa nội dung không?",
-        "lessonCreated": "Đã tạo bài học."
+        "lessonCreated": "Đã tạo bài học.",
+        "lessonUpdated": "Đã cập nhật bài học.",
+        "removeAssignmentLesson": "Bạn có chắc chắn muốn xóa bài tập này không?"
       },
       "chapter": {
         "button": {
@@ -2427,7 +2429,11 @@
           "allowRetries": "Cho phép nộp lại",
           "showCorrectAnswers": "Hiện đáp án đúng sau khi đã chấm",
           "expectedAnswer": "Đáp án tham khảo (ẩn với học viên)",
-          "expectedNumber": "Giá trị số mong đợi"
+          "expectedNumber": "Giá trị số mong đợi",
+          "chessFen": "FEN bắt đầu (tùy chọn)",
+          "chessSolutionMoves": "Đi nước giải đúng trên bàn cờ:",
+          "allowedFileTypes": "Đuôi file cho phép, cách nhau bằng dấu phẩy (vd: .pdf,.pgn)",
+          "maxFileSizeMb": "Dung lượng file tối đa (MB)"
         },
         "placeholder": {
           "title": "Nhập tiêu đề bài học...",
@@ -2550,6 +2556,13 @@
           "assignment": "Bài tập",
           "assignmentLessonDescription": "Tạo một nhiệm vụ có chấm điểm hoặc bài tập về nhà để học viên hoàn thành.",
           "tasks": "Câu hỏi/nhiệm vụ"
+        },
+        "assignmentTaskType": {
+          "short_answer": "Trả lời ngắn",
+          "number_answer": "Trả lời bằng số",
+          "chess_position_line": "Cờ vua: tìm nước đi đúng",
+          "chess_pgn_analysis": "Cờ vua: phân tích PGN",
+          "file_submission": "Nộp file"
         }
       }
     },
@@ -2736,6 +2749,20 @@
         "bunnyNotConfigured": "Xuất video chưa được cấu hình. Hãy cấu hình Bunny Stream trước khi xuất khóa học có bài học video.",
         "invalidSnapshot": "Không thể chuẩn bị khóa học này để xuất SCORM.",
         "fallback": "Xuất SCORM thất bại."
+      }
+    },
+    "assignmentGrading": {
+      "title": "Chấm bài nộp",
+      "noSubmissions": "Chưa có bài nộp nào.",
+      "selectLearner": "Chọn một học viên để chấm bài.",
+      "grade": "Điểm",
+      "feedbackPlaceholder": "Nhận xét cho học viên (tùy chọn)",
+      "saveGrade": "Lưu điểm",
+      "downloadFile": "Tải file xuống",
+      "noFile": "Chưa nộp file.",
+      "toast": {
+        "graded": "Đã lưu điểm",
+        "gradeFailed": "Không thể lưu điểm"
       }
     }
   },
@@ -3069,7 +3096,10 @@
       "fileSubmissionFollowUp": "Tải file cho bài tập chưa được kết nối.",
       "feedback": "Nhận xét",
       "resubmit": "Nộp lại",
-      "submit": "Nộp bài"
+      "submit": "Nộp bài",
+      "fileUploadError": "Không thể tải file lên.",
+      "chooseFile": "Chọn file",
+      "maxFileSize": "Tối đa {{size}} MB"
     }
   },
   "studentCourseView": {
@@ -3948,7 +3978,8 @@
     "tenants": "Tổ chức",
     "learningPaths": "Lộ trình phát triển",
     "adminLearningPaths": "Lộ trình phát triển",
-    "adminLearningPathEditor": "Trình soạn thảo lộ trình phát triển"
+    "adminLearningPathEditor": "Trình soạn thảo lộ trình phát triển",
+    "assignmentGrading": "Chấm bài tập"
   },
   "learningPathsView": {
     "title": "Lộ trình phát triển",

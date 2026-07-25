@@ -12,6 +12,7 @@ import { CertificateRepository } from "./certificate.repository";
 import { CertificatesController } from "./certificates.controller";
 import { CertificatesCron } from "./certificates.cron";
 import { CertificatesService } from "./certificates.service";
+import { AssignmentGradedCertificateHandler } from "./handlers/assignment-graded-certificate.handler";
 import { CertificateEmailHandler } from "./handlers/certificate-email.handler";
 
 @Module({
@@ -22,6 +23,7 @@ import { CertificateEmailHandler } from "./handlers/certificate-email.handler";
     CertificateRepository,
     CertificatesCron,
     CertificateEmailHandler,
+    AssignmentGradedCertificateHandler,
     SettingsService,
     LocalizationService,
   ],

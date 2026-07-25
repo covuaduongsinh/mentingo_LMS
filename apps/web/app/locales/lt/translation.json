@@ -2042,7 +2042,9 @@
         "removeChapter": "Ar tikrai norite ištrinti šį skyrių?",
         "removeQuestion": "Ar tikrai norite ištrinti klausimą?",
         "removeContent": "Ar tikrai norite ištrinti turinį?",
-        "lessonCreated": "Pamoka sukurta."
+        "lessonCreated": "Pamoka sukurta.",
+        "lessonUpdated": "Pamoka atnaujinta.",
+        "removeAssignmentLesson": "Ar tikrai norite pašalinti šią užduotį?"
       },
       "chapter": {
         "button": {
@@ -2208,7 +2210,11 @@
           "allowRetries": "Leisti bandyti dar kartą",
           "showCorrectAnswers": "Rodyti teisingus atsakymus po įvertinimo",
           "expectedAnswer": "Atsakymo pavyzdys (paslėptas nuo besimokančiųjų)",
-          "expectedNumber": "Laukiamas skaičius"
+          "expectedNumber": "Laukiamas skaičius",
+          "chessFen": "Pradinė FEN (nebūtina)",
+          "chessSolutionMoves": "Suveskite teisingą sprendimo variantą lentoje:",
+          "allowedFileTypes": "Leidžiami failų plėtiniai, atskirti kableliais (pvz., .pdf,.pgn)",
+          "maxFileSizeMb": "Didžiausias failo dydis (MB)"
         },
         "placeholder": {
           "title": "Pateikite pamokos pavadinimą...",
@@ -2331,6 +2337,13 @@
           "assignment": "Užduotis",
           "assignmentLessonDescription": "Sukurkite vertinamą užduotį ar namų darbą, kurį turi atlikti besimokantieji.",
           "tasks": "Užduotys"
+        },
+        "assignmentTaskType": {
+          "short_answer": "Trumpas atsakymas",
+          "number_answer": "Skaitinis atsakymas",
+          "chess_position_line": "Šachmatai: rasti variantą",
+          "chess_pgn_analysis": "Šachmatai: PGN analizė",
+          "file_submission": "Failo įkėlimas"
         }
       }
     },
@@ -2517,6 +2530,20 @@
         "bunnyNotConfigured": "Vaizdo įrašų eksportas nesukonfigūruotas. Prieš eksportuodami kursus su vaizdo pamokomis sukonfigūruokite Bunny Stream.",
         "invalidSnapshot": "Nepavyko paruošti šio kurso SCORM eksportui.",
         "fallback": "SCORM eksportas nepavyko."
+      }
+    },
+    "assignmentGrading": {
+      "title": "Pateiktų darbų vertinimas",
+      "noSubmissions": "Kol kas nėra pateiktų darbų.",
+      "selectLearner": "Pasirinkite besimokantįjį, kad įvertintumėte jo darbą.",
+      "grade": "Įvertinimas",
+      "feedbackPlaceholder": "Atsiliepimas besimokančiajam (nebūtina)",
+      "saveGrade": "Išsaugoti įvertinimą",
+      "downloadFile": "Atsisiųsti failą",
+      "noFile": "Failas nepateiktas.",
+      "toast": {
+        "graded": "Įvertinimas išsaugotas",
+        "gradeFailed": "Nepavyko išsaugoti įvertinimo"
       }
     }
   },
@@ -2848,7 +2875,10 @@
       "fileSubmissionFollowUp": "Failų įkėlimas užduotims dar nesukonfigūruotas.",
       "feedback": "Atsiliepimas",
       "resubmit": "Pateikti iš naujo",
-      "submit": "Pateikti"
+      "submit": "Pateikti",
+      "fileUploadError": "Nepavyko įkelti failo.",
+      "chooseFile": "Pasirinkti failą",
+      "maxFileSize": "Ne daugiau kaip {{size}} MB"
     }
   },
   "studentCourseView": {
@@ -3711,7 +3741,8 @@
     "activityLogs": "Veiklos žurnalas",
     "learningPaths": "Tobulėjimo keliai",
     "adminLearningPaths": "Tobulėjimo keliai",
-    "adminLearningPathEditor": "Tobulėjimo kelio redaktorius"
+    "adminLearningPathEditor": "Tobulėjimo kelio redaktorius",
+    "assignmentGrading": "Užduočių vertinimas"
   },
   "masterCourse": {
     "error": {

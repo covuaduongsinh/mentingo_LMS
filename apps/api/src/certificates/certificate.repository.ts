@@ -210,6 +210,28 @@ export class CertificateRepository {
     return certificate;
   }
 
+  /** Cheaper than findCertificateByUserAndCourse — no course/user joins, only the id, for system-triggered lookups that don't render anything. */
+  async findActiveCertificateIdByUserAndCourse(
+    userId: string,
+    courseId: string,
+    trx?: DatabasePg,
+  ): Promise<{ id: string } | undefined> {
+    const dbInstance = trx || this.db;
+
+    const [certificate] = await dbInstance
+      .select({ id: certificates.id })
+      .from(certificates)
+      .where(
+        and(
+          eq(certificates.userId, userId),
+          eq(certificates.courseId, courseId),
+          eq(certificates.status, CERTIFICATE_STATUSES.ACTIVE),
+        ),
+      );
+
+    return certificate;
+  }
+
   async findOwnedCertificateById(userId: string, certificateId: string) {
     const [certificate] = await this.db
       .select({

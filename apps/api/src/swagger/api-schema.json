@@ -7583,6 +7583,33 @@
         }
       }
     },
+    "/api/certificates/share-link/revoke": {
+      "post": {
+        "operationId": "CertificatesController_revokeCertificateShareLink",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeCertificateShareLinkBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevokeCertificateShareLinkResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/certificates/course/{courseId}/validity-impact": {
       "post": {
         "operationId": "CertificatesController_getCertificateValidityImpact",
@@ -7818,7 +7845,7 @@
         "operationId": "CertificatesController_getCertificateSharePage",
         "parameters": [
           {
-            "name": "certificateId",
+            "name": "token",
             "required": true,
             "in": "query",
             "schema": {
@@ -7846,7 +7873,7 @@
         "operationId": "CertificatesController_getCertificateShareImage",
         "parameters": [
           {
-            "name": "certificateId",
+            "name": "token",
             "required": true,
             "in": "query",
             "schema": {
@@ -13226,6 +13253,412 @@
         }
       }
     },
+    "/api/assignments/lessons": {
+      "post": {
+        "operationId": "AssignmentsController_createAssignmentLesson",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssignmentLessonBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAssignmentLessonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments": {
+      "post": {
+        "operationId": "AssignmentsController_createAssignment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssignmentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAssignmentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments/lesson/{lessonId}/author": {
+      "get": {
+        "operationId": "AssignmentsController_getAssignmentForAuthor",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAssignmentForAuthorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments/{id}": {
+      "patch": {
+        "operationId": "AssignmentsController_updateAssignment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssignmentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAssignmentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "AssignmentsController_deleteAssignment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteAssignmentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments/{id}/tasks": {
+      "post": {
+        "operationId": "AssignmentsController_addTask",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTaskBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddTaskResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments/tasks/{taskId}": {
+      "patch": {
+        "operationId": "AssignmentsController_updateTask",
+        "parameters": [
+          {
+            "name": "taskId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTaskBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateTaskResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "AssignmentsController_deleteTask",
+        "parameters": [
+          {
+            "name": "taskId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteTaskResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments/lesson/{lessonId}": {
+      "get": {
+        "operationId": "AssignmentsController_getAssignmentForLearner",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAssignmentForLearnerResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments/tasks/{taskId}/submissions": {
+      "post": {
+        "operationId": "AssignmentsController_submitTask",
+        "parameters": [
+          {
+            "name": "taskId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitTaskBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitTaskResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments/{id}/submissions": {
+      "get": {
+        "operationId": "AssignmentsController_listSubmissionsForGrading",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSubmissionsForGradingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments/{id}/submissions/{userId}": {
+      "get": {
+        "operationId": "AssignmentsController_getSubmissionForGrading",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSubmissionForGradingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assignments/task-submissions/{taskSubmissionId}/grade": {
+      "patch": {
+        "operationId": "AssignmentsController_gradeTaskSubmission",
+        "parameters": [
+          {
+            "name": "taskSubmissionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GradeTaskSubmissionBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GradeTaskSubmissionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/integration/tenants": {
       "get": {
         "operationId": "IntegrationController_getTenants",
@@ -17775,6 +18208,26 @@
                     },
                     {
                       "const": "chess.game.manage",
+                      "type": "string"
+                    },
+                    {
+                      "const": "assignment.read",
+                      "type": "string"
+                    },
+                    {
+                      "const": "assignment.manage",
+                      "type": "string"
+                    },
+                    {
+                      "const": "assignment.manage_own",
+                      "type": "string"
+                    },
+                    {
+                      "const": "assignment.grade",
+                      "type": "string"
+                    },
+                    {
+                      "const": "assignment.submit",
                       "type": "string"
                     }
                   ]
@@ -26921,6 +27374,10 @@
                               {
                                 "const": "live_training",
                                 "type": "string"
+                              },
+                              {
+                                "const": "assignment",
+                                "type": "string"
                               }
                             ]
                           },
@@ -27380,6 +27837,10 @@
                               },
                               {
                                 "const": "live_training",
+                                "type": "string"
+                              },
+                              {
+                                "const": "assignment",
                                 "type": "string"
                               }
                             ]
@@ -30398,6 +30859,10 @@
                         {
                           "const": "live_training",
                           "type": "string"
+                        },
+                        {
+                          "const": "assignment",
+                          "type": "string"
                         }
                       ]
                     },
@@ -30586,6 +31051,10 @@
                         },
                         {
                           "const": "live_training",
+                          "type": "string"
+                        },
+                        {
+                          "const": "assignment",
                           "type": "string"
                         }
                       ]
@@ -31109,6 +31578,10 @@
                             },
                             {
                               "const": "live_training",
+                              "type": "string"
+                            },
+                            {
+                              "const": "assignment",
                               "type": "string"
                             }
                           ]
@@ -31741,6 +32214,10 @@
                     {
                       "const": "live_training",
                       "type": "string"
+                    },
+                    {
+                      "const": "assignment",
+                      "type": "string"
                     }
                   ]
                 },
@@ -31847,6 +32324,10 @@
                   },
                   {
                     "const": "live_training",
+                    "type": "string"
+                  },
+                  {
+                    "const": "assignment",
                     "type": "string"
                   }
                 ]
@@ -33116,6 +33597,10 @@
                   },
                   {
                     "const": "live_training",
+                    "type": "string"
+                  },
+                  {
+                    "const": "assignment",
                     "type": "string"
                   }
                 ]
@@ -35720,6 +36205,10 @@
                       {
                         "const": "live_training",
                         "type": "string"
+                      },
+                      {
+                        "const": "assignment",
+                        "type": "string"
                       }
                     ]
                   },
@@ -36403,6 +36892,10 @@
               {
                 "const": "live_training",
                 "type": "string"
+              },
+              {
+                "const": "assignment",
+                "type": "string"
               }
             ]
           },
@@ -36488,6 +36981,10 @@
               },
               {
                 "const": "live_training",
+                "type": "string"
+              },
+              {
+                "const": "assignment",
                 "type": "string"
               }
             ]
@@ -36915,6 +37412,29 @@
         "required": [
           "shareUrl",
           "linkedinShareUrl"
+        ]
+      },
+      "RevokeCertificateShareLinkBody": {
+        "type": "object",
+        "properties": {
+          "certificateId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "certificateId"
+        ]
+      },
+      "RevokeCertificateShareLinkResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
         ]
       },
       "GetCertificateValidityImpactBody": {
@@ -50993,6 +51513,4146 @@
               "pv",
               "depth",
               "engine"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateAssignmentLessonBody": {
+        "type": "object",
+        "properties": {
+          "chapterId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": {
+            "minLength": 1,
+            "maxLength": 255,
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "dueDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gradingType": {
+            "anyOf": [
+              {
+                "const": "numeric",
+                "type": "string"
+              },
+              {
+                "const": "percentage",
+                "type": "string"
+              },
+              {
+                "const": "pass_fail",
+                "type": "string"
+              },
+              {
+                "const": "letter",
+                "type": "string"
+              },
+              {
+                "const": "gpa",
+                "type": "string"
+              }
+            ]
+          },
+          "autoGrading": {
+            "type": "boolean"
+          },
+          "showCorrectAnswers": {
+            "type": "boolean"
+          },
+          "allowRetries": {
+            "type": "boolean"
+          },
+          "maxRetries": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "passThresholdPercentage": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "maximum": 100,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "antiCopyPaste": {
+            "type": "boolean"
+          },
+          "published": {
+            "type": "boolean"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "object",
+                  "patternProperties": {
+                    "^(.*)$": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^(.*)$": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "hint": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^(.*)$": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "taskType": {
+                  "anyOf": [
+                    {
+                      "const": "short_answer",
+                      "type": "string"
+                    },
+                    {
+                      "const": "number_answer",
+                      "type": "string"
+                    },
+                    {
+                      "const": "file_submission",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess_pgn_analysis",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess_position_line",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "contents": {
+                  "type": "object",
+                  "properties": {
+                    "expectedAnswer": {
+                      "type": "string"
+                    },
+                    "expectedNumber": {
+                      "type": "number"
+                    },
+                    "numberTolerance": {
+                      "minimum": 0,
+                      "type": "number"
+                    },
+                    "fen": {
+                      "type": "string"
+                    },
+                    "solutionMovesUci": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "allowedFileTypes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "maxFileSizeMb": {
+                      "minimum": 0,
+                      "type": "number"
+                    }
+                  }
+                },
+                "referenceFileS3Key": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "maxGradeValue": {
+                  "minimum": 1,
+                  "type": "number"
+                },
+                "displayOrder": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "title",
+                "taskType"
+              ]
+            }
+          }
+        },
+        "required": [
+          "chapterId",
+          "title"
+        ]
+      },
+      "CreateAssignmentLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "lessonId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "assignment": {
+                "type": "object",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "lessonId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "object",
+                        "patternProperties": {
+                          "^(.*)$": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "description": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "patternProperties": {
+                              "^(.*)$": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "dueDate": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "gradingType": {
+                        "anyOf": [
+                          {
+                            "const": "numeric",
+                            "type": "string"
+                          },
+                          {
+                            "const": "percentage",
+                            "type": "string"
+                          },
+                          {
+                            "const": "pass_fail",
+                            "type": "string"
+                          },
+                          {
+                            "const": "letter",
+                            "type": "string"
+                          },
+                          {
+                            "const": "gpa",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "autoGrading": {
+                        "type": "boolean"
+                      },
+                      "showCorrectAnswers": {
+                        "type": "boolean"
+                      },
+                      "allowRetries": {
+                        "type": "boolean"
+                      },
+                      "maxRetries": {
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      "passThresholdPercentage": {
+                        "anyOf": [
+                          {
+                            "minimum": 0,
+                            "maximum": 100,
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "antiCopyPaste": {
+                        "type": "boolean"
+                      },
+                      "published": {
+                        "type": "boolean"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "lessonId",
+                      "title",
+                      "description",
+                      "dueDate",
+                      "gradingType",
+                      "autoGrading",
+                      "showCorrectAnswers",
+                      "allowRetries",
+                      "maxRetries",
+                      "passThresholdPercentage",
+                      "antiCopyPaste",
+                      "published",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "tasks": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "assignmentId": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "title": {
+                              "type": "object",
+                              "patternProperties": {
+                                "^(.*)$": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "description": {
+                              "anyOf": [
+                                {
+                                  "type": "object",
+                                  "patternProperties": {
+                                    "^(.*)$": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "hint": {
+                              "anyOf": [
+                                {
+                                  "type": "object",
+                                  "patternProperties": {
+                                    "^(.*)$": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "taskType": {
+                              "anyOf": [
+                                {
+                                  "const": "short_answer",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "number_answer",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "file_submission",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "chess_pgn_analysis",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "chess_position_line",
+                                  "type": "string"
+                                }
+                              ]
+                            },
+                            "contents": {
+                              "type": "object",
+                              "properties": {
+                                "expectedAnswer": {
+                                  "type": "string"
+                                },
+                                "expectedNumber": {
+                                  "type": "number"
+                                },
+                                "numberTolerance": {
+                                  "minimum": 0,
+                                  "type": "number"
+                                },
+                                "fen": {
+                                  "type": "string"
+                                },
+                                "solutionMovesUci": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "allowedFileTypes": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "maxFileSizeMb": {
+                                  "minimum": 0,
+                                  "type": "number"
+                                }
+                              }
+                            },
+                            "referenceFileS3Key": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "maxGradeValue": {
+                              "minimum": 1,
+                              "type": "number"
+                            },
+                            "displayOrder": {
+                              "type": "number"
+                            },
+                            "createdAt": {
+                              "type": "string"
+                            },
+                            "updatedAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "assignmentId",
+                            "title",
+                            "description",
+                            "hint",
+                            "taskType",
+                            "contents",
+                            "referenceFileS3Key",
+                            "maxGradeValue",
+                            "displayOrder",
+                            "createdAt",
+                            "updatedAt"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "tasks"
+                    ]
+                  }
+                ]
+              }
+            },
+            "required": [
+              "lessonId",
+              "assignment"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateAssignmentBody": {
+        "type": "object",
+        "properties": {
+          "lessonId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {
+                "type": "string"
+              }
+            }
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dueDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gradingType": {
+            "anyOf": [
+              {
+                "const": "numeric",
+                "type": "string"
+              },
+              {
+                "const": "percentage",
+                "type": "string"
+              },
+              {
+                "const": "pass_fail",
+                "type": "string"
+              },
+              {
+                "const": "letter",
+                "type": "string"
+              },
+              {
+                "const": "gpa",
+                "type": "string"
+              }
+            ]
+          },
+          "autoGrading": {
+            "type": "boolean"
+          },
+          "showCorrectAnswers": {
+            "type": "boolean"
+          },
+          "allowRetries": {
+            "type": "boolean"
+          },
+          "maxRetries": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "passThresholdPercentage": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "maximum": 100,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "antiCopyPaste": {
+            "type": "boolean"
+          },
+          "published": {
+            "type": "boolean"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "object",
+                  "patternProperties": {
+                    "^(.*)$": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^(.*)$": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "hint": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^(.*)$": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "taskType": {
+                  "anyOf": [
+                    {
+                      "const": "short_answer",
+                      "type": "string"
+                    },
+                    {
+                      "const": "number_answer",
+                      "type": "string"
+                    },
+                    {
+                      "const": "file_submission",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess_pgn_analysis",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess_position_line",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "contents": {
+                  "type": "object",
+                  "properties": {
+                    "expectedAnswer": {
+                      "type": "string"
+                    },
+                    "expectedNumber": {
+                      "type": "number"
+                    },
+                    "numberTolerance": {
+                      "minimum": 0,
+                      "type": "number"
+                    },
+                    "fen": {
+                      "type": "string"
+                    },
+                    "solutionMovesUci": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "allowedFileTypes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "maxFileSizeMb": {
+                      "minimum": 0,
+                      "type": "number"
+                    }
+                  }
+                },
+                "referenceFileS3Key": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "maxGradeValue": {
+                  "minimum": 1,
+                  "type": "number"
+                },
+                "displayOrder": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "title",
+                "taskType"
+              ]
+            }
+          }
+        },
+        "required": [
+          "lessonId",
+          "title"
+        ]
+      },
+      "CreateAssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "lessonId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "object",
+                    "patternProperties": {
+                      "^(.*)$": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "patternProperties": {
+                          "^(.*)$": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "dueDate": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "gradingType": {
+                    "anyOf": [
+                      {
+                        "const": "numeric",
+                        "type": "string"
+                      },
+                      {
+                        "const": "percentage",
+                        "type": "string"
+                      },
+                      {
+                        "const": "pass_fail",
+                        "type": "string"
+                      },
+                      {
+                        "const": "letter",
+                        "type": "string"
+                      },
+                      {
+                        "const": "gpa",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "autoGrading": {
+                    "type": "boolean"
+                  },
+                  "showCorrectAnswers": {
+                    "type": "boolean"
+                  },
+                  "allowRetries": {
+                    "type": "boolean"
+                  },
+                  "maxRetries": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "passThresholdPercentage": {
+                    "anyOf": [
+                      {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "antiCopyPaste": {
+                    "type": "boolean"
+                  },
+                  "published": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "lessonId",
+                  "title",
+                  "description",
+                  "dueDate",
+                  "gradingType",
+                  "autoGrading",
+                  "showCorrectAnswers",
+                  "allowRetries",
+                  "maxRetries",
+                  "passThresholdPercentage",
+                  "antiCopyPaste",
+                  "published",
+                  "createdAt",
+                  "updatedAt"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "tasks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "assignmentId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "object",
+                          "patternProperties": {
+                            "^(.*)$": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "description": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "patternProperties": {
+                                "^(.*)$": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "hint": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "patternProperties": {
+                                "^(.*)$": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "taskType": {
+                          "anyOf": [
+                            {
+                              "const": "short_answer",
+                              "type": "string"
+                            },
+                            {
+                              "const": "number_answer",
+                              "type": "string"
+                            },
+                            {
+                              "const": "file_submission",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_pgn_analysis",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_position_line",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "contents": {
+                          "type": "object",
+                          "properties": {
+                            "expectedAnswer": {
+                              "type": "string"
+                            },
+                            "expectedNumber": {
+                              "type": "number"
+                            },
+                            "numberTolerance": {
+                              "minimum": 0,
+                              "type": "number"
+                            },
+                            "fen": {
+                              "type": "string"
+                            },
+                            "solutionMovesUci": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "allowedFileTypes": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "maxFileSizeMb": {
+                              "minimum": 0,
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "referenceFileS3Key": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "maxGradeValue": {
+                          "minimum": 1,
+                          "type": "number"
+                        },
+                        "displayOrder": {
+                          "type": "number"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "assignmentId",
+                        "title",
+                        "description",
+                        "hint",
+                        "taskType",
+                        "contents",
+                        "referenceFileS3Key",
+                        "maxGradeValue",
+                        "displayOrder",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "tasks"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetAssignmentForAuthorResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "lessonId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "object",
+                    "patternProperties": {
+                      "^(.*)$": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "patternProperties": {
+                          "^(.*)$": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "dueDate": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "gradingType": {
+                    "anyOf": [
+                      {
+                        "const": "numeric",
+                        "type": "string"
+                      },
+                      {
+                        "const": "percentage",
+                        "type": "string"
+                      },
+                      {
+                        "const": "pass_fail",
+                        "type": "string"
+                      },
+                      {
+                        "const": "letter",
+                        "type": "string"
+                      },
+                      {
+                        "const": "gpa",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "autoGrading": {
+                    "type": "boolean"
+                  },
+                  "showCorrectAnswers": {
+                    "type": "boolean"
+                  },
+                  "allowRetries": {
+                    "type": "boolean"
+                  },
+                  "maxRetries": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "passThresholdPercentage": {
+                    "anyOf": [
+                      {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "antiCopyPaste": {
+                    "type": "boolean"
+                  },
+                  "published": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "lessonId",
+                  "title",
+                  "description",
+                  "dueDate",
+                  "gradingType",
+                  "autoGrading",
+                  "showCorrectAnswers",
+                  "allowRetries",
+                  "maxRetries",
+                  "passThresholdPercentage",
+                  "antiCopyPaste",
+                  "published",
+                  "createdAt",
+                  "updatedAt"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "tasks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "assignmentId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "object",
+                          "patternProperties": {
+                            "^(.*)$": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "description": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "patternProperties": {
+                                "^(.*)$": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "hint": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "patternProperties": {
+                                "^(.*)$": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "taskType": {
+                          "anyOf": [
+                            {
+                              "const": "short_answer",
+                              "type": "string"
+                            },
+                            {
+                              "const": "number_answer",
+                              "type": "string"
+                            },
+                            {
+                              "const": "file_submission",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_pgn_analysis",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_position_line",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "contents": {
+                          "type": "object",
+                          "properties": {
+                            "expectedAnswer": {
+                              "type": "string"
+                            },
+                            "expectedNumber": {
+                              "type": "number"
+                            },
+                            "numberTolerance": {
+                              "minimum": 0,
+                              "type": "number"
+                            },
+                            "fen": {
+                              "type": "string"
+                            },
+                            "solutionMovesUci": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "allowedFileTypes": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "maxFileSizeMb": {
+                              "minimum": 0,
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "referenceFileS3Key": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "maxGradeValue": {
+                          "minimum": 1,
+                          "type": "number"
+                        },
+                        "displayOrder": {
+                          "type": "number"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "assignmentId",
+                        "title",
+                        "description",
+                        "hint",
+                        "taskType",
+                        "contents",
+                        "referenceFileS3Key",
+                        "maxGradeValue",
+                        "displayOrder",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "tasks"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateAssignmentBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {
+                "type": "string"
+              }
+            }
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dueDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gradingType": {
+            "anyOf": [
+              {
+                "const": "numeric",
+                "type": "string"
+              },
+              {
+                "const": "percentage",
+                "type": "string"
+              },
+              {
+                "const": "pass_fail",
+                "type": "string"
+              },
+              {
+                "const": "letter",
+                "type": "string"
+              },
+              {
+                "const": "gpa",
+                "type": "string"
+              }
+            ]
+          },
+          "autoGrading": {
+            "type": "boolean"
+          },
+          "showCorrectAnswers": {
+            "type": "boolean"
+          },
+          "allowRetries": {
+            "type": "boolean"
+          },
+          "maxRetries": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "passThresholdPercentage": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "maximum": 100,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "antiCopyPaste": {
+            "type": "boolean"
+          },
+          "published": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateAssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "lessonId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "patternProperties": {
+                      "^(.*)$": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "dueDate": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "gradingType": {
+                "anyOf": [
+                  {
+                    "const": "numeric",
+                    "type": "string"
+                  },
+                  {
+                    "const": "percentage",
+                    "type": "string"
+                  },
+                  {
+                    "const": "pass_fail",
+                    "type": "string"
+                  },
+                  {
+                    "const": "letter",
+                    "type": "string"
+                  },
+                  {
+                    "const": "gpa",
+                    "type": "string"
+                  }
+                ]
+              },
+              "autoGrading": {
+                "type": "boolean"
+              },
+              "showCorrectAnswers": {
+                "type": "boolean"
+              },
+              "allowRetries": {
+                "type": "boolean"
+              },
+              "maxRetries": {
+                "minimum": 0,
+                "type": "number"
+              },
+              "passThresholdPercentage": {
+                "anyOf": [
+                  {
+                    "minimum": 0,
+                    "maximum": 100,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "antiCopyPaste": {
+                "type": "boolean"
+              },
+              "published": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "lessonId",
+              "title",
+              "description",
+              "dueDate",
+              "gradingType",
+              "autoGrading",
+              "showCorrectAnswers",
+              "allowRetries",
+              "maxRetries",
+              "passThresholdPercentage",
+              "antiCopyPaste",
+              "published",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "DeleteAssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AddTaskBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {
+                "type": "string"
+              }
+            }
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hint": {
+            "anyOf": [
+              {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "taskType": {
+            "anyOf": [
+              {
+                "const": "short_answer",
+                "type": "string"
+              },
+              {
+                "const": "number_answer",
+                "type": "string"
+              },
+              {
+                "const": "file_submission",
+                "type": "string"
+              },
+              {
+                "const": "chess_pgn_analysis",
+                "type": "string"
+              },
+              {
+                "const": "chess_position_line",
+                "type": "string"
+              }
+            ]
+          },
+          "contents": {
+            "type": "object",
+            "properties": {
+              "expectedAnswer": {
+                "type": "string"
+              },
+              "expectedNumber": {
+                "type": "number"
+              },
+              "numberTolerance": {
+                "minimum": 0,
+                "type": "number"
+              },
+              "fen": {
+                "type": "string"
+              },
+              "solutionMovesUci": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "allowedFileTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "maxFileSizeMb": {
+                "minimum": 0,
+                "type": "number"
+              }
+            }
+          },
+          "referenceFileS3Key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxGradeValue": {
+            "minimum": 1,
+            "type": "number"
+          },
+          "displayOrder": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "title",
+          "taskType"
+        ]
+      },
+      "AddTaskResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "assignmentId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "patternProperties": {
+                      "^(.*)$": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "hint": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "patternProperties": {
+                      "^(.*)$": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "taskType": {
+                "anyOf": [
+                  {
+                    "const": "short_answer",
+                    "type": "string"
+                  },
+                  {
+                    "const": "number_answer",
+                    "type": "string"
+                  },
+                  {
+                    "const": "file_submission",
+                    "type": "string"
+                  },
+                  {
+                    "const": "chess_pgn_analysis",
+                    "type": "string"
+                  },
+                  {
+                    "const": "chess_position_line",
+                    "type": "string"
+                  }
+                ]
+              },
+              "contents": {
+                "type": "object",
+                "properties": {
+                  "expectedAnswer": {
+                    "type": "string"
+                  },
+                  "expectedNumber": {
+                    "type": "number"
+                  },
+                  "numberTolerance": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "fen": {
+                    "type": "string"
+                  },
+                  "solutionMovesUci": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "allowedFileTypes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "maxFileSizeMb": {
+                    "minimum": 0,
+                    "type": "number"
+                  }
+                }
+              },
+              "referenceFileS3Key": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "maxGradeValue": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "displayOrder": {
+                "type": "number"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "assignmentId",
+              "title",
+              "description",
+              "hint",
+              "taskType",
+              "contents",
+              "referenceFileS3Key",
+              "maxGradeValue",
+              "displayOrder",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateTaskBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {
+                "type": "string"
+              }
+            }
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hint": {
+            "anyOf": [
+              {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "taskType": {
+            "anyOf": [
+              {
+                "const": "short_answer",
+                "type": "string"
+              },
+              {
+                "const": "number_answer",
+                "type": "string"
+              },
+              {
+                "const": "file_submission",
+                "type": "string"
+              },
+              {
+                "const": "chess_pgn_analysis",
+                "type": "string"
+              },
+              {
+                "const": "chess_position_line",
+                "type": "string"
+              }
+            ]
+          },
+          "contents": {
+            "type": "object",
+            "properties": {
+              "expectedAnswer": {
+                "type": "string"
+              },
+              "expectedNumber": {
+                "type": "number"
+              },
+              "numberTolerance": {
+                "minimum": 0,
+                "type": "number"
+              },
+              "fen": {
+                "type": "string"
+              },
+              "solutionMovesUci": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "allowedFileTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "maxFileSizeMb": {
+                "minimum": 0,
+                "type": "number"
+              }
+            }
+          },
+          "referenceFileS3Key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxGradeValue": {
+            "minimum": 1,
+            "type": "number"
+          },
+          "displayOrder": {
+            "type": "number"
+          }
+        }
+      },
+      "UpdateTaskResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "assignmentId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "patternProperties": {
+                      "^(.*)$": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "hint": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "patternProperties": {
+                      "^(.*)$": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "taskType": {
+                "anyOf": [
+                  {
+                    "const": "short_answer",
+                    "type": "string"
+                  },
+                  {
+                    "const": "number_answer",
+                    "type": "string"
+                  },
+                  {
+                    "const": "file_submission",
+                    "type": "string"
+                  },
+                  {
+                    "const": "chess_pgn_analysis",
+                    "type": "string"
+                  },
+                  {
+                    "const": "chess_position_line",
+                    "type": "string"
+                  }
+                ]
+              },
+              "contents": {
+                "type": "object",
+                "properties": {
+                  "expectedAnswer": {
+                    "type": "string"
+                  },
+                  "expectedNumber": {
+                    "type": "number"
+                  },
+                  "numberTolerance": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "fen": {
+                    "type": "string"
+                  },
+                  "solutionMovesUci": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "allowedFileTypes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "maxFileSizeMb": {
+                    "minimum": 0,
+                    "type": "number"
+                  }
+                }
+              },
+              "referenceFileS3Key": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "maxGradeValue": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "displayOrder": {
+                "type": "number"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "assignmentId",
+              "title",
+              "description",
+              "hint",
+              "taskType",
+              "contents",
+              "referenceFileS3Key",
+              "maxGradeValue",
+              "displayOrder",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "DeleteTaskResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetAssignmentForLearnerResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "assignment": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "lessonId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "object",
+                    "patternProperties": {
+                      "^(.*)$": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "patternProperties": {
+                          "^(.*)$": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "dueDate": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "gradingType": {
+                    "anyOf": [
+                      {
+                        "const": "numeric",
+                        "type": "string"
+                      },
+                      {
+                        "const": "percentage",
+                        "type": "string"
+                      },
+                      {
+                        "const": "pass_fail",
+                        "type": "string"
+                      },
+                      {
+                        "const": "letter",
+                        "type": "string"
+                      },
+                      {
+                        "const": "gpa",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "autoGrading": {
+                    "type": "boolean"
+                  },
+                  "showCorrectAnswers": {
+                    "type": "boolean"
+                  },
+                  "allowRetries": {
+                    "type": "boolean"
+                  },
+                  "maxRetries": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "passThresholdPercentage": {
+                    "anyOf": [
+                      {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "antiCopyPaste": {
+                    "type": "boolean"
+                  },
+                  "published": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "lessonId",
+                  "title",
+                  "description",
+                  "dueDate",
+                  "gradingType",
+                  "autoGrading",
+                  "showCorrectAnswers",
+                  "allowRetries",
+                  "maxRetries",
+                  "passThresholdPercentage",
+                  "antiCopyPaste",
+                  "published",
+                  "createdAt",
+                  "updatedAt"
+                ]
+              },
+              "tasks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "assignmentId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "object",
+                      "patternProperties": {
+                        "^(.*)$": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "patternProperties": {
+                            "^(.*)$": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "hint": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "patternProperties": {
+                            "^(.*)$": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "taskType": {
+                      "anyOf": [
+                        {
+                          "const": "short_answer",
+                          "type": "string"
+                        },
+                        {
+                          "const": "number_answer",
+                          "type": "string"
+                        },
+                        {
+                          "const": "file_submission",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess_pgn_analysis",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess_position_line",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "contents": {
+                      "type": "object",
+                      "properties": {
+                        "expectedAnswer": {
+                          "type": "string"
+                        },
+                        "expectedNumber": {
+                          "type": "number"
+                        },
+                        "numberTolerance": {
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        "fen": {
+                          "type": "string"
+                        },
+                        "solutionMovesUci": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "allowedFileTypes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "maxFileSizeMb": {
+                          "minimum": 0,
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "referenceFileS3Key": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "maxGradeValue": {
+                      "minimum": 1,
+                      "type": "number"
+                    },
+                    "displayOrder": {
+                      "type": "number"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "assignmentId",
+                    "title",
+                    "description",
+                    "hint",
+                    "taskType",
+                    "contents",
+                    "referenceFileS3Key",
+                    "maxGradeValue",
+                    "displayOrder",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              },
+              "userSubmission": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "assignmentId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "userId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "status": {
+                        "anyOf": [
+                          {
+                            "const": "not_submitted",
+                            "type": "string"
+                          },
+                          {
+                            "const": "pending",
+                            "type": "string"
+                          },
+                          {
+                            "const": "submitted",
+                            "type": "string"
+                          },
+                          {
+                            "const": "graded",
+                            "type": "string"
+                          },
+                          {
+                            "const": "late",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "grade": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "overallFeedback": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "attemptNumber": {
+                        "type": "number"
+                      },
+                      "submittedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "gradedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      },
+                      "taskSubmissions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "taskId": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "userId": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "submission": {
+                              "type": "object",
+                              "properties": {
+                                "text": {
+                                  "type": "string"
+                                },
+                                "number": {
+                                  "type": "number"
+                                },
+                                "movesUci": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "pgn": {
+                                  "type": "string"
+                                },
+                                "fileS3Key": {
+                                  "type": "string"
+                                },
+                                "fileName": {
+                                  "type": "string"
+                                },
+                                "fileUrl": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "grade": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "feedback": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "manuallyGraded": {
+                              "type": "boolean"
+                            },
+                            "gradedByUserId": {
+                              "anyOf": [
+                                {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "gradedAt": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "createdAt": {
+                              "type": "string"
+                            },
+                            "updatedAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "taskId",
+                            "userId",
+                            "submission",
+                            "grade",
+                            "feedback",
+                            "manuallyGraded",
+                            "gradedByUserId",
+                            "gradedAt",
+                            "createdAt",
+                            "updatedAt"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "assignmentId",
+                      "userId",
+                      "status",
+                      "grade",
+                      "overallFeedback",
+                      "attemptNumber",
+                      "submittedAt",
+                      "gradedAt",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "taskSubmissions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "taskId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "submission": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string"
+                        },
+                        "number": {
+                          "type": "number"
+                        },
+                        "movesUci": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "pgn": {
+                          "type": "string"
+                        },
+                        "fileS3Key": {
+                          "type": "string"
+                        },
+                        "fileName": {
+                          "type": "string"
+                        },
+                        "fileUrl": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "grade": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "feedback": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "manuallyGraded": {
+                      "type": "boolean"
+                    },
+                    "gradedByUserId": {
+                      "anyOf": [
+                        {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "gradedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "taskId",
+                    "userId",
+                    "submission",
+                    "grade",
+                    "feedback",
+                    "manuallyGraded",
+                    "gradedByUserId",
+                    "gradedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "assignment",
+              "tasks",
+              "userSubmission",
+              "taskSubmissions"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SubmitTaskBody": {
+        "type": "object",
+        "properties": {
+          "submission": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "number": {
+                "type": "number"
+              },
+              "movesUci": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "pgn": {
+                "type": "string"
+              },
+              "fileS3Key": {
+                "type": "string"
+              },
+              "fileName": {
+                "type": "string"
+              },
+              "fileUrl": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "submission"
+        ]
+      },
+      "SubmitTaskResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "assignmentId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "userId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "const": "not_submitted",
+                    "type": "string"
+                  },
+                  {
+                    "const": "pending",
+                    "type": "string"
+                  },
+                  {
+                    "const": "submitted",
+                    "type": "string"
+                  },
+                  {
+                    "const": "graded",
+                    "type": "string"
+                  },
+                  {
+                    "const": "late",
+                    "type": "string"
+                  }
+                ]
+              },
+              "grade": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "overallFeedback": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "attemptNumber": {
+                "type": "number"
+              },
+              "submittedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "gradedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "taskSubmissions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "taskId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "submission": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string"
+                        },
+                        "number": {
+                          "type": "number"
+                        },
+                        "movesUci": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "pgn": {
+                          "type": "string"
+                        },
+                        "fileS3Key": {
+                          "type": "string"
+                        },
+                        "fileName": {
+                          "type": "string"
+                        },
+                        "fileUrl": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "grade": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "feedback": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "manuallyGraded": {
+                      "type": "boolean"
+                    },
+                    "gradedByUserId": {
+                      "anyOf": [
+                        {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "gradedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "taskId",
+                    "userId",
+                    "submission",
+                    "grade",
+                    "feedback",
+                    "manuallyGraded",
+                    "gradedByUserId",
+                    "gradedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "assignmentId",
+              "userId",
+              "status",
+              "grade",
+              "overallFeedback",
+              "attemptNumber",
+              "submittedAt",
+              "gradedAt",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListSubmissionsForGradingResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "assignmentId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "userId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "status": {
+                  "anyOf": [
+                    {
+                      "const": "not_submitted",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pending",
+                      "type": "string"
+                    },
+                    {
+                      "const": "submitted",
+                      "type": "string"
+                    },
+                    {
+                      "const": "graded",
+                      "type": "string"
+                    },
+                    {
+                      "const": "late",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "grade": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "overallFeedback": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "attemptNumber": {
+                  "type": "number"
+                },
+                "submittedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "gradedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "taskSubmissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "taskId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "userId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "submission": {
+                        "type": "object",
+                        "properties": {
+                          "text": {
+                            "type": "string"
+                          },
+                          "number": {
+                            "type": "number"
+                          },
+                          "movesUci": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "pgn": {
+                            "type": "string"
+                          },
+                          "fileS3Key": {
+                            "type": "string"
+                          },
+                          "fileName": {
+                            "type": "string"
+                          },
+                          "fileUrl": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "grade": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "feedback": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "manuallyGraded": {
+                        "type": "boolean"
+                      },
+                      "gradedByUserId": {
+                        "anyOf": [
+                          {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "gradedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "taskId",
+                      "userId",
+                      "submission",
+                      "grade",
+                      "feedback",
+                      "manuallyGraded",
+                      "gradedByUserId",
+                      "gradedAt",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                },
+                "userEmail": {
+                  "type": "string"
+                },
+                "userFirstName": {
+                  "type": "string"
+                },
+                "userLastName": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "assignmentId",
+                "userId",
+                "status",
+                "grade",
+                "overallFeedback",
+                "attemptNumber",
+                "submittedAt",
+                "gradedAt",
+                "createdAt",
+                "updatedAt",
+                "userEmail",
+                "userFirstName",
+                "userLastName"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetSubmissionForGradingResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "assignment": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "lessonId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "object",
+                    "patternProperties": {
+                      "^(.*)$": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "patternProperties": {
+                          "^(.*)$": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "dueDate": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "gradingType": {
+                    "anyOf": [
+                      {
+                        "const": "numeric",
+                        "type": "string"
+                      },
+                      {
+                        "const": "percentage",
+                        "type": "string"
+                      },
+                      {
+                        "const": "pass_fail",
+                        "type": "string"
+                      },
+                      {
+                        "const": "letter",
+                        "type": "string"
+                      },
+                      {
+                        "const": "gpa",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "autoGrading": {
+                    "type": "boolean"
+                  },
+                  "showCorrectAnswers": {
+                    "type": "boolean"
+                  },
+                  "allowRetries": {
+                    "type": "boolean"
+                  },
+                  "maxRetries": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "passThresholdPercentage": {
+                    "anyOf": [
+                      {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "antiCopyPaste": {
+                    "type": "boolean"
+                  },
+                  "published": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "lessonId",
+                  "title",
+                  "description",
+                  "dueDate",
+                  "gradingType",
+                  "autoGrading",
+                  "showCorrectAnswers",
+                  "allowRetries",
+                  "maxRetries",
+                  "passThresholdPercentage",
+                  "antiCopyPaste",
+                  "published",
+                  "createdAt",
+                  "updatedAt"
+                ]
+              },
+              "aggregate": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "assignmentId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "userId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "status": {
+                        "anyOf": [
+                          {
+                            "const": "not_submitted",
+                            "type": "string"
+                          },
+                          {
+                            "const": "pending",
+                            "type": "string"
+                          },
+                          {
+                            "const": "submitted",
+                            "type": "string"
+                          },
+                          {
+                            "const": "graded",
+                            "type": "string"
+                          },
+                          {
+                            "const": "late",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "grade": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "overallFeedback": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "attemptNumber": {
+                        "type": "number"
+                      },
+                      "submittedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "gradedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      },
+                      "taskSubmissions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "taskId": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "userId": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "submission": {
+                              "type": "object",
+                              "properties": {
+                                "text": {
+                                  "type": "string"
+                                },
+                                "number": {
+                                  "type": "number"
+                                },
+                                "movesUci": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "pgn": {
+                                  "type": "string"
+                                },
+                                "fileS3Key": {
+                                  "type": "string"
+                                },
+                                "fileName": {
+                                  "type": "string"
+                                },
+                                "fileUrl": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "grade": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "feedback": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "manuallyGraded": {
+                              "type": "boolean"
+                            },
+                            "gradedByUserId": {
+                              "anyOf": [
+                                {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "gradedAt": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "createdAt": {
+                              "type": "string"
+                            },
+                            "updatedAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "taskId",
+                            "userId",
+                            "submission",
+                            "grade",
+                            "feedback",
+                            "manuallyGraded",
+                            "gradedByUserId",
+                            "gradedAt",
+                            "createdAt",
+                            "updatedAt"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "assignmentId",
+                      "userId",
+                      "status",
+                      "grade",
+                      "overallFeedback",
+                      "attemptNumber",
+                      "submittedAt",
+                      "gradedAt",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tasks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "assignmentId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "object",
+                      "patternProperties": {
+                        "^(.*)$": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "patternProperties": {
+                            "^(.*)$": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "hint": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "patternProperties": {
+                            "^(.*)$": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "taskType": {
+                      "anyOf": [
+                        {
+                          "const": "short_answer",
+                          "type": "string"
+                        },
+                        {
+                          "const": "number_answer",
+                          "type": "string"
+                        },
+                        {
+                          "const": "file_submission",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess_pgn_analysis",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess_position_line",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "contents": {
+                      "type": "object",
+                      "properties": {
+                        "expectedAnswer": {
+                          "type": "string"
+                        },
+                        "expectedNumber": {
+                          "type": "number"
+                        },
+                        "numberTolerance": {
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        "fen": {
+                          "type": "string"
+                        },
+                        "solutionMovesUci": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "allowedFileTypes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "maxFileSizeMb": {
+                          "minimum": 0,
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "referenceFileS3Key": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "maxGradeValue": {
+                      "minimum": 1,
+                      "type": "number"
+                    },
+                    "displayOrder": {
+                      "type": "number"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "assignmentId",
+                    "title",
+                    "description",
+                    "hint",
+                    "taskType",
+                    "contents",
+                    "referenceFileS3Key",
+                    "maxGradeValue",
+                    "displayOrder",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              },
+              "taskSubmissions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "taskId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "submission": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string"
+                        },
+                        "number": {
+                          "type": "number"
+                        },
+                        "movesUci": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "pgn": {
+                          "type": "string"
+                        },
+                        "fileS3Key": {
+                          "type": "string"
+                        },
+                        "fileName": {
+                          "type": "string"
+                        },
+                        "fileUrl": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "grade": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "feedback": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "manuallyGraded": {
+                      "type": "boolean"
+                    },
+                    "gradedByUserId": {
+                      "anyOf": [
+                        {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "gradedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "taskId",
+                    "userId",
+                    "submission",
+                    "grade",
+                    "feedback",
+                    "manuallyGraded",
+                    "gradedByUserId",
+                    "gradedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "assignment",
+              "aggregate",
+              "tasks",
+              "taskSubmissions"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GradeTaskSubmissionBody": {
+        "type": "object",
+        "properties": {
+          "grade": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "feedback": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "grade"
+        ]
+      },
+      "GradeTaskSubmissionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "assignmentId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "userId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "const": "not_submitted",
+                    "type": "string"
+                  },
+                  {
+                    "const": "pending",
+                    "type": "string"
+                  },
+                  {
+                    "const": "submitted",
+                    "type": "string"
+                  },
+                  {
+                    "const": "graded",
+                    "type": "string"
+                  },
+                  {
+                    "const": "late",
+                    "type": "string"
+                  }
+                ]
+              },
+              "grade": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "overallFeedback": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "attemptNumber": {
+                "type": "number"
+              },
+              "submittedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "gradedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "taskSubmissions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "taskId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "submission": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string"
+                        },
+                        "number": {
+                          "type": "number"
+                        },
+                        "movesUci": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "pgn": {
+                          "type": "string"
+                        },
+                        "fileS3Key": {
+                          "type": "string"
+                        },
+                        "fileName": {
+                          "type": "string"
+                        },
+                        "fileUrl": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "grade": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "feedback": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "manuallyGraded": {
+                      "type": "boolean"
+                    },
+                    "gradedByUserId": {
+                      "anyOf": [
+                        {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "gradedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "taskId",
+                    "userId",
+                    "submission",
+                    "grade",
+                    "feedback",
+                    "manuallyGraded",
+                    "gradedByUserId",
+                    "gradedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "assignmentId",
+              "userId",
+              "status",
+              "grade",
+              "overallFeedback",
+              "attemptNumber",
+              "submittedAt",
+              "gradedAt",
+              "createdAt",
+              "updatedAt"
             ]
           }
         },

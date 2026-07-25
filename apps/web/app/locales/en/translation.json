@@ -2261,7 +2261,9 @@
         "removeChapter": "Are you sure you want to delete this chapter?",
         "removeQuestion": "Are you sure you want to delete question?",
         "removeContent": "Are you sure you want to delete content?",
-        "lessonCreated": "Lesson created."
+        "lessonCreated": "Lesson created.",
+        "lessonUpdated": "Lesson updated.",
+        "removeAssignmentLesson": "Are you sure you want to remove this assignment?"
       },
       "chapter": {
         "button": {
@@ -2427,7 +2429,11 @@
           "allowRetries": "Allow retries",
           "showCorrectAnswers": "Show correct answers once graded",
           "expectedAnswer": "Reference answer (hidden from learners)",
-          "expectedNumber": "Expected number"
+          "expectedNumber": "Expected number",
+          "chessFen": "Starting FEN (optional)",
+          "chessSolutionMoves": "Play the correct solution line on the board:",
+          "allowedFileTypes": "Allowed file extensions, comma-separated (e.g. .pdf,.pgn)",
+          "maxFileSizeMb": "Max file size (MB)"
         },
         "placeholder": {
           "title": "Provide lesson title...",
@@ -2550,6 +2556,13 @@
           "assignment": "Assignment",
           "assignmentLessonDescription": "Create a graded task or homework assignment for learners to complete.",
           "tasks": "Tasks"
+        },
+        "assignmentTaskType": {
+          "short_answer": "Short answer",
+          "number_answer": "Number answer",
+          "chess_position_line": "Chess: find the line",
+          "chess_pgn_analysis": "Chess: PGN analysis",
+          "file_submission": "File upload"
         }
       }
     },
@@ -2736,6 +2749,20 @@
         "bunnyNotConfigured": "Video export is not configured. Configure Bunny Stream before exporting courses with video lessons.",
         "invalidSnapshot": "This course could not be prepared for SCORM export.",
         "fallback": "SCORM export failed."
+      }
+    },
+    "assignmentGrading": {
+      "title": "Grade submissions",
+      "noSubmissions": "No submissions yet.",
+      "selectLearner": "Select a learner to grade their submission.",
+      "grade": "Grade",
+      "feedbackPlaceholder": "Feedback for the learner (optional)",
+      "saveGrade": "Save grade",
+      "downloadFile": "Download file",
+      "noFile": "No file submitted.",
+      "toast": {
+        "graded": "Grade saved",
+        "gradeFailed": "Could not save grade"
       }
     }
   },
@@ -3069,7 +3096,10 @@
       "fileSubmissionFollowUp": "File upload for assignments is not wired up yet.",
       "feedback": "Feedback",
       "resubmit": "Resubmit",
-      "submit": "Submit"
+      "submit": "Submit",
+      "fileUploadError": "Could not upload the file.",
+      "chooseFile": "Choose file",
+      "maxFileSize": "Max {{size}} MB"
     }
   },
   "studentCourseView": {
@@ -3948,7 +3978,8 @@
     "tenants": "Organizations",
     "learningPaths": "Development Paths",
     "adminLearningPaths": "Development Paths",
-    "adminLearningPathEditor": "Development Path Editor"
+    "adminLearningPathEditor": "Development Path Editor",
+    "assignmentGrading": "Grade Assignments"
   },
   "learningPathsView": {
     "title": "Development Paths",

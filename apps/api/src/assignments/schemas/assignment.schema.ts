@@ -31,6 +31,8 @@ export const assignmentSubmissionContentsSchema = Type.Object({
   pgn: Type.Optional(Type.String()),
   fileS3Key: Type.Optional(Type.String()),
   fileName: Type.Optional(Type.String()),
+  /** Signed download URL — set only by getSubmissionForGrading, never stored. */
+  fileUrl: Type.Optional(Type.String()),
 });
 
 export const assignmentTaskSchema = Type.Object({
@@ -144,6 +146,16 @@ export const assignmentUserSubmissionSchema = Type.Object({
   taskSubmissions: Type.Optional(Type.Array(assignmentTaskSubmissionSchema)),
 });
 
+/** listSubmissionsForGrading's response — the grading UI needs to show who it's grading, not just a userId. */
+export const assignmentUserSubmissionWithUserSchema = Type.Composite([
+  assignmentUserSubmissionSchema,
+  Type.Object({
+    userEmail: Type.String(),
+    userFirstName: Type.String(),
+    userLastName: Type.String(),
+  }),
+]);
+
 export const retryAssignmentBodySchema = Type.Object({});
 
 /**
@@ -151,9 +163,10 @@ export const retryAssignmentBodySchema = Type.Object({});
  * together, mirroring how AI Mentor lessons create `lessons` + `ai_mentor_lessons`
  * in one call (see adminLesson.service.ts#createAiMentorLesson). Kept as its
  * own endpoint in AssignmentsController rather than folded into the general
- * lesson controller/service — see docs/specs/assignment-engine-business-spec.md
- * "Follow-up work" for what full lesson-system parity would still need
- * (course-content-lock checks, curriculum-editing feature flag, activity log event).
+ * lesson controller/service, but AssignmentsService now runs the same
+ * course-content-lock / curriculum-editing-feature-flag / ownership checks
+ * and publishes CreateLessonEvent via AdminLessonService, matching every
+ * other lesson type's authoring flow.
  */
 export const createAssignmentLessonBodySchema = Type.Object({
   chapterId: UUIDSchema,

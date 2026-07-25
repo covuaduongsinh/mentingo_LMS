@@ -168,6 +168,9 @@ export const routeAccessConfig = createRouteConfig({
   "admin/chess/games": {
     anyOf: [PERMISSIONS.CHESS_GAME_MANAGE, PERMISSIONS.CHESS_GAME_READ],
   },
+  "admin/assignments/:lessonId/grading": {
+    anyOf: [PERMISSIONS.ASSIGNMENT_GRADE],
+  },
   "chess/practice": {
     anyOf: [PERMISSIONS.CHESS_EXERCISE_READ],
   },

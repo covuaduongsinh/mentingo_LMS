@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { LESSON_TYPES, type SupportedLanguages } from "@repo/shared";
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, getTableColumns, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import { buildJsonbField } from "src/common/helpers/sqlHelpers";
@@ -10,6 +10,7 @@ import {
   assignmentTaskSubmissions,
   assignmentUserSubmissions,
   lessons,
+  users,
 } from "src/storage/schema";
 
 import type {
@@ -17,6 +18,7 @@ import type {
   AssignmentTaskRecord,
   AssignmentTaskSubmissionRecord,
   AssignmentUserSubmissionRecord,
+  AssignmentUserSubmissionWithUserRecord,
 } from "./assignments.types";
 import type {
   CreateAssignmentBody,
@@ -374,13 +376,20 @@ export class AssignmentsRepository {
     return row as AssignmentUserSubmissionRecord;
   }
 
+  /** Joins in the learner's name/email — the grading UI needs to show who it's grading, not just a userId. */
   async listUserSubmissionsForAssignment(
     assignmentId: UUIDType,
-  ): Promise<AssignmentUserSubmissionRecord[]> {
+  ): Promise<AssignmentUserSubmissionWithUserRecord[]> {
     const rows = await this.db
-      .select()
+      .select({
+        ...getTableColumns(assignmentUserSubmissions),
+        userEmail: users.email,
+        userFirstName: users.firstName,
+        userLastName: users.lastName,
+      })
       .from(assignmentUserSubmissions)
+      .innerJoin(users, eq(users.id, assignmentUserSubmissions.userId))
       .where(eq(assignmentUserSubmissions.assignmentId, assignmentId));
-    return rows as AssignmentUserSubmissionRecord[];
+    return rows as AssignmentUserSubmissionWithUserRecord[];
   }
 }

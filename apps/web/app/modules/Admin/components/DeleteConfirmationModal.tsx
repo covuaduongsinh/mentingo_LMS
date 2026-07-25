@@ -49,6 +49,9 @@ const DeleteConfirmationModal = ({
       .with(DeleteContentType.LIVE_TRAINING, () =>
         t("adminCourseView.curriculum.other.removeLiveTrainingLesson"),
       )
+      .with(DeleteContentType.ASSIGNMENT, () =>
+        t("adminCourseView.curriculum.other.removeAssignmentLesson"),
+      )
       .otherwise(() => t("adminCourseView.curriculum.other.removeContent"));
   };
 
