@@ -5,12 +5,13 @@ import Viewer from "~/components/RichText/Viever";
 import { RICH_TEXT_VIEWER_VARIANT } from "~/components/RichText/viewerTypes";
 
 import AiMentorLesson from "./AiMentorLesson/AiMentorLesson";
+import { AssignmentLesson } from "./AssignmentLesson/AssignmentLesson";
 import { EmbedLesson } from "./EmbedLesson/EmbedLesson";
 import { LiveTrainingLesson } from "./LiveTrainingLesson/LiveTrainingLesson";
 import { Quiz } from "./Quiz";
 import { ScormLesson } from "./ScormLesson/ScormLesson";
 
-import type { SupportedLanguages } from "@repo/shared";
+import type { LessonTypes, SupportedLanguages } from "@repo/shared";
 import type { CurrentUserResponse, GetLessonByIdResponse } from "~/api/generated-api";
 import type { VideoCoverageSnapshotChange } from "~/components/VideoPlayer/videoCoverage.types";
 import type { LessonPreviewUser } from "~/modules/Courses/Lesson/types";
@@ -41,7 +42,11 @@ export const LessonContentRenderer = memo(
     onVideoEnded,
     videoCoverageTracking,
   }: LessonContentRendererProps) => {
-    return match(lesson.type)
+    // "assignment" is not in the generated client's lesson-type union yet
+    // (see apps/web/app/api/assignments-api.ts header comment) — cast
+    // against the shared source of truth from @repo/shared until
+    // `pnpm generate:client` is run to pick up the new lesson type.
+    return match(lesson.type as LessonTypes)
       .with("content", () => (
         <Viewer
           variant={RICH_TEXT_VIEWER_VARIANT.CONTENT}
@@ -64,6 +69,7 @@ export const LessonContentRenderer = memo(
       ))
       .with("scorm", () => <ScormLesson lessonId={lesson.id} />)
       .with("live_training", () => <LiveTrainingLesson lesson={lesson} />)
+      .with("assignment", () => <AssignmentLesson lessonId={lesson.id} lesson={lesson} />)
       .otherwise(() => null);
   },
 );

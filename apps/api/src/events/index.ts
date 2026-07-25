@@ -1,3 +1,4 @@
+export * from "./assignment/assignment-graded.event";
 export * from "./course/course-activity.event";
 export * from "./certificate/certificate-archived-email.event";
 export * from "./certificate/certificate-expiration-warning-email.event";

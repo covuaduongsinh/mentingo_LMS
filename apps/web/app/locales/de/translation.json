@@ -52,7 +52,8 @@
       "ai_mentor": "KI-Mentor",
       "embed": "Einbetten",
       "scorm": "SCORM",
-      "live_training": "Live-Schulung"
+      "live_training": "Live-Schulung",
+      "assignment": "Aufgabe"
     },
     "error": {
       "somethingWentWrong": "Hoppla! Etwas ist schief gelaufen."
@@ -485,7 +486,6 @@
       "courseTitleRequired": "Course title is required to create the course calendar event."
     }
   },
-
   "liveTrainingView": {
     "title": "Live-Schulung",
     "description": "Diese Seite wird den vollständigen Arbeitsbereich für Live-Schulungen enthalten.",
@@ -1849,7 +1849,8 @@
         "optionUpdateFailed": "Quizoption konnte nicht aktualisiert werden.",
         "optionInsertFailed": "Quizoption konnte nicht hinzugefügt werden.",
         "embedCreateFailed": "Einbettungslektion konnte nicht erstellt werden.",
-        "signedUrlDownloadFailed": "Die Datei konnte nicht von der signierten URL heruntergeladen werden."
+        "signedUrlDownloadFailed": "Die Datei konnte nicht von der signierten URL heruntergeladen werden.",
+        "assignmentCreateFailed": "Die Aufgabe konnte nicht erstellt werden."
       }
     },
     "thinking": {
@@ -2040,7 +2041,8 @@
         "removeLiveTrainingLesson": "Sind Sie sicher, dass Sie diese Live-Schulungslektion aus dem Kapitel löschen möchten?",
         "removeChapter": "Sind Sie sicher, dass Sie dieses Kapitel löschen möchten?",
         "removeQuestion": "Sind Sie sicher, dass Sie die Frage löschen möchten?",
-        "removeContent": "Sind Sie sicher, dass Sie Inhalte löschen möchten?"
+        "removeContent": "Sind Sie sicher, dass Sie Inhalte löschen möchten?",
+        "lessonCreated": "Lektion erstellt."
       },
       "chapter": {
         "button": {
@@ -2081,7 +2083,8 @@
           "addResource": "Ressource hinzufügen",
           "removeResource": "Ressource entfernen",
           "uploadFiles": "Dateien hochladen",
-          "addLessonDisabledTooltip": "Um eine Lektion zu erstellen, müssen Sie sich in der Basissprache befinden."
+          "addLessonDisabledTooltip": "Um eine Lektion zu erstellen, müssen Sie sich in der Basissprache befinden.",
+          "addTask": "Aufgabe hinzufügen"
         },
         "breadcrumbs": {
           "back": "Zurück"
@@ -2201,7 +2204,11 @@
           "ttsPreset": "TTS-Voreinstellung",
           "customTTSReference": "Benutzerdefinierte TTS-Referenz",
           "includeFiles_one": "Hängen Sie bis zu 1 Datei mit weniger als {{ MAX_FILE_SIZE }} MB an, um sie als Kontext im Unterricht zu verwenden",
-          "includeFiles_other": "Hängen Sie bis zu {{ count }} Dateien mit weniger als {{ MAX_FILE_SIZE }} MB an, um sie als Kontext in Lektionen zu verwenden"
+          "includeFiles_other": "Hängen Sie bis zu {{ count }} Dateien mit weniger als {{ MAX_FILE_SIZE }} MB an, um sie als Kontext in Lektionen zu verwenden",
+          "allowRetries": "Wiederholungen erlauben",
+          "showCorrectAnswers": "Richtige Antworten nach der Bewertung anzeigen",
+          "expectedAnswer": "Referenzantwort (für Lernende ausgeblendet)",
+          "expectedNumber": "Erwartete Zahl"
         },
         "placeholder": {
           "title": "Unterrichtstitel angeben...",
@@ -2320,7 +2327,10 @@
           },
           "betaTooltip": "Diese Funktionalität wird in einer Testversion bereitgestellt. Es kann Fehler enthalten oder nicht vollständig wie vorgesehen funktionieren. Die Nutzung erfolgt auf eigenes Risiko.",
           "dragWord": "Ziehen Sie ein Wort in einen Satz",
-          "taskDescriptionTooltip": "Beschreiben Sie kurz, was der Teilnehmer während des Gesprächs mit dem KI-Mentor tun soll."
+          "taskDescriptionTooltip": "Beschreiben Sie kurz, was der Teilnehmer während des Gesprächs mit dem KI-Mentor tun soll.",
+          "assignment": "Aufgabe",
+          "assignmentLessonDescription": "Erstelle eine bewertete Aufgabe oder Hausaufgabe für Lernende.",
+          "tasks": "Aufgaben"
         }
       }
     },
@@ -2826,6 +2836,19 @@
       "courseEnrollmentRequired": "Sie sind nicht in diesen Kurs eingeschrieben.",
       "quizRetakeUnavailable": "Die Quizantworten können wegen des Versuchslimits oder der Wartezeit nicht zurückgesetzt werden.",
       "quizResetFailed": "Die Quizantworten konnten nicht zurückgesetzt werden. Bitte versuchen Sie es erneut."
+    },
+    "assignment": {
+      "loadError": "Diese Aufgabe konnte nicht geladen werden.",
+      "submitted": "Antwort übermittelt.",
+      "submitError": "Deine Antwort konnte nicht übermittelt werden.",
+      "status": "Status",
+      "grade": "Note",
+      "pgnPlaceholder": "Füge hier deine kommentierte PGN ein…",
+      "answerPlaceholder": "Deine Antwort…",
+      "fileSubmissionFollowUp": "Datei-Uploads für Aufgaben sind noch nicht verfügbar.",
+      "feedback": "Feedback",
+      "resubmit": "Erneut einreichen",
+      "submit": "Einreichen"
     }
   },
   "studentCourseView": {

@@ -52,7 +52,8 @@
       "ai_mentor": "AI mentor",
       "embed": "Vložit",
       "scorm": "SCORM",
-      "live_training": "Živé školení"
+      "live_training": "Živé školení",
+      "assignment": "Úkol"
     },
     "error": {
       "somethingWentWrong": "Jejda! Něco se pokazilo."
@@ -1848,7 +1849,8 @@
         "optionUpdateFailed": "Možnost kvízu se nepodařilo aktualizovat.",
         "optionInsertFailed": "Možnost kvízu se nepodařilo přidat.",
         "embedCreateFailed": "Vloženou lekci se nepodařilo vytvořit.",
-        "signedUrlDownloadFailed": "Soubor se nepodařilo stáhnout z podepsané adresy URL."
+        "signedUrlDownloadFailed": "Soubor se nepodařilo stáhnout z podepsané adresy URL.",
+        "assignmentCreateFailed": "Úkol se nepodařilo vytvořit."
       }
     },
     "thinking": {
@@ -2039,7 +2041,8 @@
         "removeLiveTrainingLesson": "Opravdu chcete smazat tuto lekci Živé školení z kapitoly?",
         "removeChapter": "Opravdu chcete smazat tuto kapitolu?",
         "removeQuestion": "Opravdu chcete smazat otázku?",
-        "removeContent": "Opravdu chcete smazat obsah?"
+        "removeContent": "Opravdu chcete smazat obsah?",
+        "lessonCreated": "Lekce vytvořena."
       },
       "chapter": {
         "button": {
@@ -2080,7 +2083,8 @@
           "addResource": "Přidat zdroj",
           "removeResource": "Odebrat zdroj",
           "uploadFiles": "Nahrát soubory",
-          "addLessonDisabledTooltip": "Chcete-li vytvořit lekci, musíte být v základním jazyce."
+          "addLessonDisabledTooltip": "Chcete-li vytvořit lekci, musíte být v základním jazyce.",
+          "addTask": "Přidat úkol"
         },
         "breadcrumbs": {
           "back": "Zadní"
@@ -2200,7 +2204,11 @@
           "ttsPreset": "Předvolba TTS",
           "customTTSReference": "Vlastní reference TTS",
           "includeFiles_one": "Připojte až 1 soubor pod {{ MAX_FILE_SIZE }} MB, který bude použit jako kontext v lekcích",
-          "includeFiles_other": "Připojte až {{ count }} soubory menší než {{ MAX_FILE_SIZE }} MB, které budou použity jako kontext v lekcích"
+          "includeFiles_other": "Připojte až {{ count }} soubory menší než {{ MAX_FILE_SIZE }} MB, které budou použity jako kontext v lekcích",
+          "allowRetries": "Povolit opakované pokusy",
+          "showCorrectAnswers": "Zobrazit správné odpovědi po ohodnocení",
+          "expectedAnswer": "Referenční odpověď (skrytá před studenty)",
+          "expectedNumber": "Očekávané číslo"
         },
         "placeholder": {
           "title": "Uveďte název lekce...",
@@ -2319,7 +2327,10 @@
           },
           "betaTooltip": "Tato funkce je poskytována v testovací verzi. Může obsahovat chyby nebo nemusí plně fungovat tak, jak bylo zamýšleno, a je používán na vaše vlastní riziko.",
           "dragWord": "Přetáhněte slovo do věty",
-          "taskDescriptionTooltip": "Stručně popište, co by měl účastník dělat během rozhovoru s mentorem AI."
+          "taskDescriptionTooltip": "Stručně popište, co by měl účastník dělat během rozhovoru s mentorem AI.",
+          "assignment": "Úkol",
+          "assignmentLessonDescription": "Vytvořte hodnocený úkol nebo domácí práci pro studenty.",
+          "tasks": "Úkoly"
         }
       }
     },
@@ -2825,6 +2836,19 @@
       "courseEnrollmentRequired": "Nejste zapsáni do tohoto kurzu.",
       "quizRetakeUnavailable": "Odpovědi v kvízu nelze resetovat kvůli limitu pokusů nebo čekací době.",
       "quizResetFailed": "Odpovědi v kvízu se nepodařilo resetovat. Zkuste to prosím znovu."
+    },
+    "assignment": {
+      "loadError": "Tento úkol se nepodařilo načíst.",
+      "submitted": "Odpověď odeslána.",
+      "submitError": "Vaši odpověď se nepodařilo odeslat.",
+      "status": "Stav",
+      "grade": "Známka",
+      "pgnPlaceholder": "Sem vložte svůj okomentovaný PGN…",
+      "answerPlaceholder": "Vaše odpověď…",
+      "fileSubmissionFollowUp": "Nahrávání souborů pro úkoly zatím není zapojeno.",
+      "feedback": "Zpětná vazba",
+      "resubmit": "Odeslat znovu",
+      "submit": "Odeslat"
     }
   },
   "studentCourseView": {

@@ -5,6 +5,7 @@ const lessonTypeTranslationSuffix = {
   embed: "embed",
   scorm: "scorm",
   live_training: "live_training",
+  assignment: "assignment",
 } as const;
 
 type LessonTypeTranslationKey = keyof typeof lessonTypeTranslationSuffix;

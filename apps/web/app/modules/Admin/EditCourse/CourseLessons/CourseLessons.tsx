@@ -26,6 +26,7 @@ import { CourseGenerationChapterSkeletons } from "./components/CourseGenerationC
 import CourseLessonEmptyState from "./components/CourseLessonEmptyState";
 import NewChapter from "./NewChapter/NewChapter";
 import AiMentorLessonForm from "./NewLesson/AiMentorLessonForm/AiMentorLessonForm";
+import { AssignmentLessonForm } from "./NewLesson/AssignmentLessonForm/AssignmentLessonForm";
 import SelectLessonType from "./NewLesson/components/SelectLessonType";
 import ContentLessonForm from "./NewLesson/ContentLessonForm/ContentLessonForm";
 import { EmbedLessonForm } from "./NewLesson/EmbedLessonForm/EmbedLessonForm";
@@ -230,6 +231,15 @@ const CourseLessons = ({
       ),
       [ContentTypes.LIVE_TRAINING_LESSON_FORM]: (
         <LiveTrainingLessonForm
+          lessonToEdit={selectedLesson}
+          chapterToEdit={selectedChapter}
+          setContentTypeToDisplay={setContentTypeToDisplay}
+          setSelectedLesson={setSelectedLesson}
+          language={language}
+        />
+      ),
+      [ContentTypes.ASSIGNMENT_FORM]: (
+        <AssignmentLessonForm
           lessonToEdit={selectedLesson}
           chapterToEdit={selectedChapter}
           setContentTypeToDisplay={setContentTypeToDisplay}

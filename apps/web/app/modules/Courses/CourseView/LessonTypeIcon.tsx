@@ -1,4 +1,4 @@
-import { Users } from "lucide-react";
+import { ClipboardList, Users } from "lucide-react";
 
 import { Icon } from "~/components/Icon";
 
@@ -40,6 +40,10 @@ const lessonTypeIconConfig = {
   live_training: {
     kind: "lucide",
     Icon: Users,
+  },
+  assignment: {
+    kind: "lucide",
+    Icon: ClipboardList,
   },
 } as const satisfies Record<string, LessonTypeIconConfig>;
 
