@@ -2326,7 +2326,9 @@
         "removeChapter": "Czy na pewno chcesz usunąć ten rozdział?",
         "removeQuestion": "Czy na pewno chcesz usunąć pytanie?",
         "removeContent": "Czy na pewno chcesz usunąć treść?",
-        "lessonCreated": "Lekcja utworzona."
+        "lessonCreated": "Lekcja utworzona.",
+        "lessonUpdated": "Lekcja zaktualizowana.",
+        "removeAssignmentLesson": "Czy na pewno chcesz usunąć to zadanie?"
       },
       "chapter": {
         "button": {
@@ -2496,7 +2498,11 @@
           "allowRetries": "Zezwól na ponowne podejścia",
           "showCorrectAnswers": "Pokaż poprawne odpowiedzi po ocenieniu",
           "expectedAnswer": "Odpowiedź wzorcowa (ukryta przed uczestnikami)",
-          "expectedNumber": "Oczekiwana liczba"
+          "expectedNumber": "Oczekiwana liczba",
+          "chessFen": "Początkowy FEN (opcjonalnie)",
+          "chessSolutionMoves": "Zagraj poprawny wariant rozwiązania na szachownicy:",
+          "allowedFileTypes": "Dozwolone rozszerzenia plików, oddzielone przecinkami (np. .pdf,.pgn)",
+          "maxFileSizeMb": "Maksymalny rozmiar pliku (MB)"
         },
         "placeholder": {
           "title": "Podaj tytuł lekcji...",
@@ -2619,6 +2625,13 @@
           "assignment": "Zadanie",
           "assignmentLessonDescription": "Utwórz oceniane zadanie lub pracę domową do wykonania przez uczestników.",
           "tasks": "Zadania"
+        },
+        "assignmentTaskType": {
+          "short_answer": "Krótka odpowiedź",
+          "number_answer": "Odpowiedź liczbowa",
+          "chess_position_line": "Szachy: znajdź wariant",
+          "chess_pgn_analysis": "Szachy: analiza PGN",
+          "file_submission": "Przesłanie pliku"
         }
       },
       "validation": {
@@ -2813,6 +2826,20 @@
         "bunnyNotConfigured": "Eksport wideo nie jest skonfigurowany. Skonfiguruj Bunny Stream przed eksportem kursów z lekcjami wideo.",
         "invalidSnapshot": "Nie udało się przygotować tego kursu do eksportu SCORM.",
         "fallback": "Eksport SCORM nie powiódł się."
+      }
+    },
+    "assignmentGrading": {
+      "title": "Ocenianie zgłoszeń",
+      "noSubmissions": "Brak zgłoszeń.",
+      "selectLearner": "Wybierz uczestnika, aby ocenić jego zgłoszenie.",
+      "grade": "Ocena",
+      "feedbackPlaceholder": "Informacja zwrotna dla uczestnika (opcjonalnie)",
+      "saveGrade": "Zapisz ocenę",
+      "downloadFile": "Pobierz plik",
+      "noFile": "Nie przesłano pliku.",
+      "toast": {
+        "graded": "Ocena zapisana",
+        "gradeFailed": "Nie udało się zapisać oceny"
       }
     }
   },
@@ -3147,7 +3174,10 @@
       "fileSubmissionFollowUp": "Przesyłanie plików do zadań nie jest jeszcze podłączone.",
       "feedback": "Informacja zwrotna",
       "resubmit": "Prześlij ponownie",
-      "submit": "Prześlij"
+      "submit": "Prześlij",
+      "fileUploadError": "Nie udało się przesłać pliku.",
+      "chooseFile": "Wybierz plik",
+      "maxFileSize": "Maks. {{size}} MB"
     }
   },
   "studentCourseView": {
@@ -4053,7 +4083,8 @@
     "activityLogs": "Dziennik zdarzeń",
     "tenant": "Szczegóły organizacji",
     "createTenant": "Utwórz organizację",
-    "tenants": "Organizacje"
+    "tenants": "Organizacje",
+    "assignmentGrading": "Ocenianie zadań"
   },
   "lessonPreview": {
     "breadcrumbs": {

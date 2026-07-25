@@ -282,6 +282,11 @@ export interface CurrentUserResponse {
       | "chess.exercise.manage"
       | "chess.game.read"
       | "chess.game.manage"
+      | "assignment.read"
+      | "assignment.manage"
+      | "assignment.manage_own"
+      | "assignment.grade"
+      | "assignment.submit"
     )[];
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -2055,7 +2060,7 @@ export interface GetCourseResponse {
         /** @format uuid */
         id: string;
         title: string;
-        type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+        type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
         displayOrder: number;
         status: "not_started" | "in_progress" | "completed" | "blocked";
         quizQuestionCount: number | null;
@@ -2131,7 +2136,7 @@ export interface GetBetaCourseByIdResponse {
         /** @format uuid */
         id: string;
         title: string;
-        type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+        type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
         description?: string | null;
         displayOrder: number;
         fileS3Key?: string | null;
@@ -2783,7 +2788,7 @@ export interface GetChapterWithLessonResponse {
       /** @format uuid */
       id: string;
       title: string;
-      type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+      type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
       displayOrder: number;
       status: "not_started" | "in_progress" | "completed" | "blocked";
       quizQuestionCount: number | null;
@@ -2817,7 +2822,7 @@ export type BetaCreateChapterBody = {
     /** @format uuid */
     id: string;
     title: string;
-    type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+    type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
     description?: string | null;
     displayOrder: number;
     fileS3Key?: string | null;
@@ -2905,7 +2910,7 @@ export type UpdateChapterBody = ({
     /** @format uuid */
     id: string;
     title: string;
-    type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+    type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
     description?: string | null;
     displayOrder: number;
     fileS3Key?: string | null;
@@ -3021,7 +3026,7 @@ export interface GetLessonsResponse {
     /** @format uuid */
     id: string;
     title: string;
-    type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+    type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
     description: string | null;
     displayOrder: number;
     lessonCompleted?: boolean;
@@ -3042,7 +3047,7 @@ export interface GetLessonByIdResponse {
     /** @format uuid */
     id: string;
     title: string;
-    type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+    type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
     description: string | null;
     fileType: string | null;
     fileUrl: string | null;
@@ -3232,7 +3237,7 @@ export interface GetLessonByIdResponse {
 
 export type BetaCreateLessonBody = {
   title: string;
-  type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+  type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
   description?: string | null;
   fileS3Key?: string | null;
   avatarReferenceUrl?: string;
@@ -3718,7 +3723,7 @@ export interface BetaUpdateQuizLessonResponse {
 
 export type BetaUpdateLessonBody = ({
   title?: string;
-  type?: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+  type?: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
   description?: string | null;
   fileS3Key?: string | null;
   avatarReferenceUrl?: string;
@@ -3844,7 +3849,7 @@ export interface DeleteStudentQuizAnswersResponse {
 
 export interface CreateEmbedLessonBody {
   title: string;
-  type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+  type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
   /** @format uuid */
   chapterId: string;
   resources: {
@@ -3863,7 +3868,7 @@ export interface CreateEmbedLessonResponse {
 
 export interface UpdateEmbedLessonBody {
   title: string;
-  type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training";
+  type: "content" | "quiz" | "ai_mentor" | "embed" | "scorm" | "live_training" | "assignment";
   resources: {
     /** @format uuid */
     id?: string;
@@ -3955,6 +3960,15 @@ export interface CreateCertificateShareLinkBody {
 export interface CreateCertificateShareLinkResponse {
   shareUrl: string;
   linkedinShareUrl: string;
+}
+
+export interface RevokeCertificateShareLinkBody {
+  /** @format uuid */
+  certificateId: string;
+}
+
+export interface RevokeCertificateShareLinkResponse {
+  success: boolean;
 }
 
 export interface GetCertificateValidityImpactBody {
@@ -6688,6 +6702,836 @@ export interface AnalyzeResponse {
     pv: string[];
     depth: number;
     engine: "arasan" | "builtin";
+  };
+}
+
+export interface CreateAssignmentLessonBody {
+  /** @format uuid */
+  chapterId: string;
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  title: string;
+  description?: string;
+  dueDate?: string | null;
+  gradingType?: "numeric" | "percentage" | "pass_fail" | "letter" | "gpa";
+  autoGrading?: boolean;
+  showCorrectAnswers?: boolean;
+  allowRetries?: boolean;
+  /** @min 0 */
+  maxRetries?: number;
+  passThresholdPercentage?: number | null;
+  antiCopyPaste?: boolean;
+  published?: boolean;
+  tasks?: {
+    title: object;
+    description?: object | null;
+    hint?: object | null;
+    taskType:
+      | "short_answer"
+      | "number_answer"
+      | "file_submission"
+      | "chess_pgn_analysis"
+      | "chess_position_line";
+    contents?: {
+      expectedAnswer?: string;
+      expectedNumber?: number;
+      /** @min 0 */
+      numberTolerance?: number;
+      fen?: string;
+      solutionMovesUci?: string[];
+      allowedFileTypes?: string[];
+      /** @min 0 */
+      maxFileSizeMb?: number;
+    };
+    referenceFileS3Key?: string | null;
+    /** @min 1 */
+    maxGradeValue?: number;
+    displayOrder?: number;
+  }[];
+}
+
+export interface CreateAssignmentLessonResponse {
+  data: {
+    /** @format uuid */
+    lessonId: string;
+    assignment: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      lessonId: string;
+      title: object;
+      description: object | null;
+      dueDate: string | null;
+      gradingType: "numeric" | "percentage" | "pass_fail" | "letter" | "gpa";
+      autoGrading: boolean;
+      showCorrectAnswers: boolean;
+      allowRetries: boolean;
+      /** @min 0 */
+      maxRetries: number;
+      passThresholdPercentage: number | null;
+      antiCopyPaste: boolean;
+      published: boolean;
+      createdAt: string;
+      updatedAt: string;
+    } & {
+      tasks: {
+        /** @format uuid */
+        id: string;
+        /** @format uuid */
+        assignmentId: string;
+        title: object;
+        description: object | null;
+        hint: object | null;
+        taskType:
+          | "short_answer"
+          | "number_answer"
+          | "file_submission"
+          | "chess_pgn_analysis"
+          | "chess_position_line";
+        contents: {
+          expectedAnswer?: string;
+          expectedNumber?: number;
+          /** @min 0 */
+          numberTolerance?: number;
+          fen?: string;
+          solutionMovesUci?: string[];
+          allowedFileTypes?: string[];
+          /** @min 0 */
+          maxFileSizeMb?: number;
+        };
+        referenceFileS3Key: string | null;
+        /** @min 1 */
+        maxGradeValue: number;
+        displayOrder: number;
+        createdAt: string;
+        updatedAt: string;
+      }[];
+    };
+  };
+}
+
+export interface CreateAssignmentBody {
+  /** @format uuid */
+  lessonId: string;
+  title: object;
+  description?: object | null;
+  dueDate?: string | null;
+  gradingType?: "numeric" | "percentage" | "pass_fail" | "letter" | "gpa";
+  autoGrading?: boolean;
+  showCorrectAnswers?: boolean;
+  allowRetries?: boolean;
+  /** @min 0 */
+  maxRetries?: number;
+  passThresholdPercentage?: number | null;
+  antiCopyPaste?: boolean;
+  published?: boolean;
+  tasks?: {
+    title: object;
+    description?: object | null;
+    hint?: object | null;
+    taskType:
+      | "short_answer"
+      | "number_answer"
+      | "file_submission"
+      | "chess_pgn_analysis"
+      | "chess_position_line";
+    contents?: {
+      expectedAnswer?: string;
+      expectedNumber?: number;
+      /** @min 0 */
+      numberTolerance?: number;
+      fen?: string;
+      solutionMovesUci?: string[];
+      allowedFileTypes?: string[];
+      /** @min 0 */
+      maxFileSizeMb?: number;
+    };
+    referenceFileS3Key?: string | null;
+    /** @min 1 */
+    maxGradeValue?: number;
+    displayOrder?: number;
+  }[];
+}
+
+export interface CreateAssignmentResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    lessonId: string;
+    title: object;
+    description: object | null;
+    dueDate: string | null;
+    gradingType: "numeric" | "percentage" | "pass_fail" | "letter" | "gpa";
+    autoGrading: boolean;
+    showCorrectAnswers: boolean;
+    allowRetries: boolean;
+    /** @min 0 */
+    maxRetries: number;
+    passThresholdPercentage: number | null;
+    antiCopyPaste: boolean;
+    published: boolean;
+    createdAt: string;
+    updatedAt: string;
+  } & {
+    tasks: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      assignmentId: string;
+      title: object;
+      description: object | null;
+      hint: object | null;
+      taskType:
+        | "short_answer"
+        | "number_answer"
+        | "file_submission"
+        | "chess_pgn_analysis"
+        | "chess_position_line";
+      contents: {
+        expectedAnswer?: string;
+        expectedNumber?: number;
+        /** @min 0 */
+        numberTolerance?: number;
+        fen?: string;
+        solutionMovesUci?: string[];
+        allowedFileTypes?: string[];
+        /** @min 0 */
+        maxFileSizeMb?: number;
+      };
+      referenceFileS3Key: string | null;
+      /** @min 1 */
+      maxGradeValue: number;
+      displayOrder: number;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+  };
+}
+
+export interface GetAssignmentForAuthorResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    lessonId: string;
+    title: object;
+    description: object | null;
+    dueDate: string | null;
+    gradingType: "numeric" | "percentage" | "pass_fail" | "letter" | "gpa";
+    autoGrading: boolean;
+    showCorrectAnswers: boolean;
+    allowRetries: boolean;
+    /** @min 0 */
+    maxRetries: number;
+    passThresholdPercentage: number | null;
+    antiCopyPaste: boolean;
+    published: boolean;
+    createdAt: string;
+    updatedAt: string;
+  } & {
+    tasks: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      assignmentId: string;
+      title: object;
+      description: object | null;
+      hint: object | null;
+      taskType:
+        | "short_answer"
+        | "number_answer"
+        | "file_submission"
+        | "chess_pgn_analysis"
+        | "chess_position_line";
+      contents: {
+        expectedAnswer?: string;
+        expectedNumber?: number;
+        /** @min 0 */
+        numberTolerance?: number;
+        fen?: string;
+        solutionMovesUci?: string[];
+        allowedFileTypes?: string[];
+        /** @min 0 */
+        maxFileSizeMb?: number;
+      };
+      referenceFileS3Key: string | null;
+      /** @min 1 */
+      maxGradeValue: number;
+      displayOrder: number;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+  };
+}
+
+export interface UpdateAssignmentBody {
+  title?: object;
+  description?: object | null;
+  dueDate?: string | null;
+  gradingType?: "numeric" | "percentage" | "pass_fail" | "letter" | "gpa";
+  autoGrading?: boolean;
+  showCorrectAnswers?: boolean;
+  allowRetries?: boolean;
+  /** @min 0 */
+  maxRetries?: number;
+  passThresholdPercentage?: number | null;
+  antiCopyPaste?: boolean;
+  published?: boolean;
+}
+
+export interface UpdateAssignmentResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    lessonId: string;
+    title: object;
+    description: object | null;
+    dueDate: string | null;
+    gradingType: "numeric" | "percentage" | "pass_fail" | "letter" | "gpa";
+    autoGrading: boolean;
+    showCorrectAnswers: boolean;
+    allowRetries: boolean;
+    /** @min 0 */
+    maxRetries: number;
+    passThresholdPercentage: number | null;
+    antiCopyPaste: boolean;
+    published: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface DeleteAssignmentResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+  };
+}
+
+export interface AddTaskBody {
+  title: object;
+  description?: object | null;
+  hint?: object | null;
+  taskType:
+    | "short_answer"
+    | "number_answer"
+    | "file_submission"
+    | "chess_pgn_analysis"
+    | "chess_position_line";
+  contents?: {
+    expectedAnswer?: string;
+    expectedNumber?: number;
+    /** @min 0 */
+    numberTolerance?: number;
+    fen?: string;
+    solutionMovesUci?: string[];
+    allowedFileTypes?: string[];
+    /** @min 0 */
+    maxFileSizeMb?: number;
+  };
+  referenceFileS3Key?: string | null;
+  /** @min 1 */
+  maxGradeValue?: number;
+  displayOrder?: number;
+}
+
+export interface AddTaskResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    assignmentId: string;
+    title: object;
+    description: object | null;
+    hint: object | null;
+    taskType:
+      | "short_answer"
+      | "number_answer"
+      | "file_submission"
+      | "chess_pgn_analysis"
+      | "chess_position_line";
+    contents: {
+      expectedAnswer?: string;
+      expectedNumber?: number;
+      /** @min 0 */
+      numberTolerance?: number;
+      fen?: string;
+      solutionMovesUci?: string[];
+      allowedFileTypes?: string[];
+      /** @min 0 */
+      maxFileSizeMb?: number;
+    };
+    referenceFileS3Key: string | null;
+    /** @min 1 */
+    maxGradeValue: number;
+    displayOrder: number;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface UpdateTaskBody {
+  title?: object;
+  description?: object | null;
+  hint?: object | null;
+  taskType?:
+    | "short_answer"
+    | "number_answer"
+    | "file_submission"
+    | "chess_pgn_analysis"
+    | "chess_position_line";
+  contents?: {
+    expectedAnswer?: string;
+    expectedNumber?: number;
+    /** @min 0 */
+    numberTolerance?: number;
+    fen?: string;
+    solutionMovesUci?: string[];
+    allowedFileTypes?: string[];
+    /** @min 0 */
+    maxFileSizeMb?: number;
+  };
+  referenceFileS3Key?: string | null;
+  /** @min 1 */
+  maxGradeValue?: number;
+  displayOrder?: number;
+}
+
+export interface UpdateTaskResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    assignmentId: string;
+    title: object;
+    description: object | null;
+    hint: object | null;
+    taskType:
+      | "short_answer"
+      | "number_answer"
+      | "file_submission"
+      | "chess_pgn_analysis"
+      | "chess_position_line";
+    contents: {
+      expectedAnswer?: string;
+      expectedNumber?: number;
+      /** @min 0 */
+      numberTolerance?: number;
+      fen?: string;
+      solutionMovesUci?: string[];
+      allowedFileTypes?: string[];
+      /** @min 0 */
+      maxFileSizeMb?: number;
+    };
+    referenceFileS3Key: string | null;
+    /** @min 1 */
+    maxGradeValue: number;
+    displayOrder: number;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface DeleteTaskResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+  };
+}
+
+export interface GetAssignmentForLearnerResponse {
+  data: {
+    assignment: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      lessonId: string;
+      title: object;
+      description: object | null;
+      dueDate: string | null;
+      gradingType: "numeric" | "percentage" | "pass_fail" | "letter" | "gpa";
+      autoGrading: boolean;
+      showCorrectAnswers: boolean;
+      allowRetries: boolean;
+      /** @min 0 */
+      maxRetries: number;
+      passThresholdPercentage: number | null;
+      antiCopyPaste: boolean;
+      published: boolean;
+      createdAt: string;
+      updatedAt: string;
+    };
+    tasks: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      assignmentId: string;
+      title: object;
+      description: object | null;
+      hint: object | null;
+      taskType:
+        | "short_answer"
+        | "number_answer"
+        | "file_submission"
+        | "chess_pgn_analysis"
+        | "chess_position_line";
+      contents: {
+        expectedAnswer?: string;
+        expectedNumber?: number;
+        /** @min 0 */
+        numberTolerance?: number;
+        fen?: string;
+        solutionMovesUci?: string[];
+        allowedFileTypes?: string[];
+        /** @min 0 */
+        maxFileSizeMb?: number;
+      };
+      referenceFileS3Key: string | null;
+      /** @min 1 */
+      maxGradeValue: number;
+      displayOrder: number;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+    userSubmission: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      assignmentId: string;
+      /** @format uuid */
+      userId: string;
+      status: "not_submitted" | "pending" | "submitted" | "graded" | "late";
+      grade: number | null;
+      overallFeedback: string | null;
+      attemptNumber: number;
+      submittedAt: string | null;
+      gradedAt: string | null;
+      createdAt: string;
+      updatedAt: string;
+      taskSubmissions?: {
+        /** @format uuid */
+        id: string;
+        /** @format uuid */
+        taskId: string;
+        /** @format uuid */
+        userId: string;
+        submission: {
+          text?: string;
+          number?: number;
+          movesUci?: string[];
+          pgn?: string;
+          fileS3Key?: string;
+          fileName?: string;
+          fileUrl?: string;
+        };
+        grade: number | null;
+        feedback: string | null;
+        manuallyGraded: boolean;
+        gradedByUserId: string | null;
+        gradedAt: string | null;
+        createdAt: string;
+        updatedAt: string;
+      }[];
+    } | null;
+    taskSubmissions: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      taskId: string;
+      /** @format uuid */
+      userId: string;
+      submission: {
+        text?: string;
+        number?: number;
+        movesUci?: string[];
+        pgn?: string;
+        fileS3Key?: string;
+        fileName?: string;
+        fileUrl?: string;
+      };
+      grade: number | null;
+      feedback: string | null;
+      manuallyGraded: boolean;
+      gradedByUserId: string | null;
+      gradedAt: string | null;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+  };
+}
+
+export interface SubmitTaskBody {
+  submission: {
+    text?: string;
+    number?: number;
+    movesUci?: string[];
+    pgn?: string;
+    fileS3Key?: string;
+    fileName?: string;
+    fileUrl?: string;
+  };
+}
+
+export interface SubmitTaskResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    assignmentId: string;
+    /** @format uuid */
+    userId: string;
+    status: "not_submitted" | "pending" | "submitted" | "graded" | "late";
+    grade: number | null;
+    overallFeedback: string | null;
+    attemptNumber: number;
+    submittedAt: string | null;
+    gradedAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+    taskSubmissions?: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      taskId: string;
+      /** @format uuid */
+      userId: string;
+      submission: {
+        text?: string;
+        number?: number;
+        movesUci?: string[];
+        pgn?: string;
+        fileS3Key?: string;
+        fileName?: string;
+        fileUrl?: string;
+      };
+      grade: number | null;
+      feedback: string | null;
+      manuallyGraded: boolean;
+      gradedByUserId: string | null;
+      gradedAt: string | null;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+  };
+}
+
+export interface ListSubmissionsForGradingResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    assignmentId: string;
+    /** @format uuid */
+    userId: string;
+    status: "not_submitted" | "pending" | "submitted" | "graded" | "late";
+    grade: number | null;
+    overallFeedback: string | null;
+    attemptNumber: number;
+    submittedAt: string | null;
+    gradedAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+    taskSubmissions?: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      taskId: string;
+      /** @format uuid */
+      userId: string;
+      submission: {
+        text?: string;
+        number?: number;
+        movesUci?: string[];
+        pgn?: string;
+        fileS3Key?: string;
+        fileName?: string;
+        fileUrl?: string;
+      };
+      grade: number | null;
+      feedback: string | null;
+      manuallyGraded: boolean;
+      gradedByUserId: string | null;
+      gradedAt: string | null;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+    userEmail: string;
+    userFirstName: string;
+    userLastName: string;
+  }[];
+}
+
+export interface GetSubmissionForGradingResponse {
+  data: {
+    assignment: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      lessonId: string;
+      title: object;
+      description: object | null;
+      dueDate: string | null;
+      gradingType: "numeric" | "percentage" | "pass_fail" | "letter" | "gpa";
+      autoGrading: boolean;
+      showCorrectAnswers: boolean;
+      allowRetries: boolean;
+      /** @min 0 */
+      maxRetries: number;
+      passThresholdPercentage: number | null;
+      antiCopyPaste: boolean;
+      published: boolean;
+      createdAt: string;
+      updatedAt: string;
+    };
+    aggregate: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      assignmentId: string;
+      /** @format uuid */
+      userId: string;
+      status: "not_submitted" | "pending" | "submitted" | "graded" | "late";
+      grade: number | null;
+      overallFeedback: string | null;
+      attemptNumber: number;
+      submittedAt: string | null;
+      gradedAt: string | null;
+      createdAt: string;
+      updatedAt: string;
+      taskSubmissions?: {
+        /** @format uuid */
+        id: string;
+        /** @format uuid */
+        taskId: string;
+        /** @format uuid */
+        userId: string;
+        submission: {
+          text?: string;
+          number?: number;
+          movesUci?: string[];
+          pgn?: string;
+          fileS3Key?: string;
+          fileName?: string;
+          fileUrl?: string;
+        };
+        grade: number | null;
+        feedback: string | null;
+        manuallyGraded: boolean;
+        gradedByUserId: string | null;
+        gradedAt: string | null;
+        createdAt: string;
+        updatedAt: string;
+      }[];
+    } | null;
+    tasks: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      assignmentId: string;
+      title: object;
+      description: object | null;
+      hint: object | null;
+      taskType:
+        | "short_answer"
+        | "number_answer"
+        | "file_submission"
+        | "chess_pgn_analysis"
+        | "chess_position_line";
+      contents: {
+        expectedAnswer?: string;
+        expectedNumber?: number;
+        /** @min 0 */
+        numberTolerance?: number;
+        fen?: string;
+        solutionMovesUci?: string[];
+        allowedFileTypes?: string[];
+        /** @min 0 */
+        maxFileSizeMb?: number;
+      };
+      referenceFileS3Key: string | null;
+      /** @min 1 */
+      maxGradeValue: number;
+      displayOrder: number;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+    taskSubmissions: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      taskId: string;
+      /** @format uuid */
+      userId: string;
+      submission: {
+        text?: string;
+        number?: number;
+        movesUci?: string[];
+        pgn?: string;
+        fileS3Key?: string;
+        fileName?: string;
+        fileUrl?: string;
+      };
+      grade: number | null;
+      feedback: string | null;
+      manuallyGraded: boolean;
+      gradedByUserId: string | null;
+      gradedAt: string | null;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+  };
+}
+
+export interface GradeTaskSubmissionBody {
+  /** @min 0 */
+  grade: number;
+  feedback?: string | null;
+}
+
+export interface GradeTaskSubmissionResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    assignmentId: string;
+    /** @format uuid */
+    userId: string;
+    status: "not_submitted" | "pending" | "submitted" | "graded" | "late";
+    grade: number | null;
+    overallFeedback: string | null;
+    attemptNumber: number;
+    submittedAt: string | null;
+    gradedAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+    taskSubmissions?: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      taskId: string;
+      /** @format uuid */
+      userId: string;
+      submission: {
+        text?: string;
+        number?: number;
+        movesUci?: string[];
+        pgn?: string;
+        fileS3Key?: string;
+        fileName?: string;
+        fileUrl?: string;
+      };
+      grade: number | null;
+      feedback: string | null;
+      manuallyGraded: boolean;
+      gradedByUserId: string | null;
+      gradedAt: string | null;
+      createdAt: string;
+      updatedAt: string;
+    }[];
   };
 }
 
@@ -11734,6 +12578,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name CertificatesControllerRevokeCertificateShareLink
+     * @request POST:/api/certificates/share-link/revoke
+     */
+    certificatesControllerRevokeCertificateShareLink: (
+      data: RevokeCertificateShareLinkBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<RevokeCertificateShareLinkResponse, any>({
+        path: `/api/certificates/share-link/revoke`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name CertificatesControllerGetCertificateValidityImpact
      * @request POST:/api/certificates/course/{courseId}/validity-impact
      */
@@ -11828,7 +12691,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     certificatesControllerGetCertificateSharePage: (
       query: {
-        certificateId: string;
+        token: string;
         lang: string;
       },
       params: RequestParams = {},
@@ -11848,7 +12711,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     certificatesControllerGetCertificateShareImage: (
       query: {
-        certificateId: string;
+        token: string;
         lang: string;
       },
       params: RequestParams = {},
@@ -14379,6 +15242,228 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<AnalyzeResponse, any>({
         path: `/api/chess/engine/analyze`,
         method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerCreateAssignmentLesson
+     * @request POST:/api/assignments/lessons
+     */
+    assignmentsControllerCreateAssignmentLesson: (
+      data: CreateAssignmentLessonBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateAssignmentLessonResponse, any>({
+        path: `/api/assignments/lessons`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerCreateAssignment
+     * @request POST:/api/assignments
+     */
+    assignmentsControllerCreateAssignment: (
+      data: CreateAssignmentBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateAssignmentResponse, any>({
+        path: `/api/assignments`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerGetAssignmentForAuthor
+     * @request GET:/api/assignments/lesson/{lessonId}/author
+     */
+    assignmentsControllerGetAssignmentForAuthor: (lessonId: string, params: RequestParams = {}) =>
+      this.request<GetAssignmentForAuthorResponse, any>({
+        path: `/api/assignments/lesson/${lessonId}/author`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerUpdateAssignment
+     * @request PATCH:/api/assignments/{id}
+     */
+    assignmentsControllerUpdateAssignment: (
+      id: string,
+      data: UpdateAssignmentBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateAssignmentResponse, any>({
+        path: `/api/assignments/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerDeleteAssignment
+     * @request DELETE:/api/assignments/{id}
+     */
+    assignmentsControllerDeleteAssignment: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteAssignmentResponse, any>({
+        path: `/api/assignments/${id}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerAddTask
+     * @request POST:/api/assignments/{id}/tasks
+     */
+    assignmentsControllerAddTask: (id: string, data: AddTaskBody, params: RequestParams = {}) =>
+      this.request<AddTaskResponse, any>({
+        path: `/api/assignments/${id}/tasks`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerUpdateTask
+     * @request PATCH:/api/assignments/tasks/{taskId}
+     */
+    assignmentsControllerUpdateTask: (
+      taskId: string,
+      data: UpdateTaskBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateTaskResponse, any>({
+        path: `/api/assignments/tasks/${taskId}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerDeleteTask
+     * @request DELETE:/api/assignments/tasks/{taskId}
+     */
+    assignmentsControllerDeleteTask: (taskId: string, params: RequestParams = {}) =>
+      this.request<DeleteTaskResponse, any>({
+        path: `/api/assignments/tasks/${taskId}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerGetAssignmentForLearner
+     * @request GET:/api/assignments/lesson/{lessonId}
+     */
+    assignmentsControllerGetAssignmentForLearner: (lessonId: string, params: RequestParams = {}) =>
+      this.request<GetAssignmentForLearnerResponse, any>({
+        path: `/api/assignments/lesson/${lessonId}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerSubmitTask
+     * @request POST:/api/assignments/tasks/{taskId}/submissions
+     */
+    assignmentsControllerSubmitTask: (
+      taskId: string,
+      data: SubmitTaskBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<SubmitTaskResponse, any>({
+        path: `/api/assignments/tasks/${taskId}/submissions`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerListSubmissionsForGrading
+     * @request GET:/api/assignments/{id}/submissions
+     */
+    assignmentsControllerListSubmissionsForGrading: (id: string, params: RequestParams = {}) =>
+      this.request<ListSubmissionsForGradingResponse, any>({
+        path: `/api/assignments/${id}/submissions`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerGetSubmissionForGrading
+     * @request GET:/api/assignments/{id}/submissions/{userId}
+     */
+    assignmentsControllerGetSubmissionForGrading: (
+      id: string,
+      userId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<GetSubmissionForGradingResponse, any>({
+        path: `/api/assignments/${id}/submissions/${userId}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AssignmentsControllerGradeTaskSubmission
+     * @request PATCH:/api/assignments/task-submissions/{taskSubmissionId}/grade
+     */
+    assignmentsControllerGradeTaskSubmission: (
+      taskSubmissionId: string,
+      data: GradeTaskSubmissionBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<GradeTaskSubmissionResponse, any>({
+        path: `/api/assignments/task-submissions/${taskSubmissionId}/grade`,
+        method: "PATCH",
         body: data,
         type: ContentType.Json,
         format: "json",

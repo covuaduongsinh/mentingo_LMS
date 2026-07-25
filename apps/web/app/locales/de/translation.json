@@ -2042,7 +2042,9 @@
         "removeChapter": "Sind Sie sicher, dass Sie dieses Kapitel löschen möchten?",
         "removeQuestion": "Sind Sie sicher, dass Sie die Frage löschen möchten?",
         "removeContent": "Sind Sie sicher, dass Sie Inhalte löschen möchten?",
-        "lessonCreated": "Lektion erstellt."
+        "lessonCreated": "Lektion erstellt.",
+        "lessonUpdated": "Lektion aktualisiert.",
+        "removeAssignmentLesson": "Möchten Sie diese Aufgabe wirklich entfernen?"
       },
       "chapter": {
         "button": {
@@ -2208,7 +2210,11 @@
           "allowRetries": "Wiederholungen erlauben",
           "showCorrectAnswers": "Richtige Antworten nach der Bewertung anzeigen",
           "expectedAnswer": "Referenzantwort (für Lernende ausgeblendet)",
-          "expectedNumber": "Erwartete Zahl"
+          "expectedNumber": "Erwartete Zahl",
+          "chessFen": "Start-FEN (optional)",
+          "chessSolutionMoves": "Spielen Sie die richtige Lösungsvariante auf dem Brett:",
+          "allowedFileTypes": "Erlaubte Dateiendungen, durch Komma getrennt (z. B. .pdf,.pgn)",
+          "maxFileSizeMb": "Maximale Dateigröße (MB)"
         },
         "placeholder": {
           "title": "Unterrichtstitel angeben...",
@@ -2331,6 +2337,13 @@
           "assignment": "Aufgabe",
           "assignmentLessonDescription": "Erstelle eine bewertete Aufgabe oder Hausaufgabe für Lernende.",
           "tasks": "Aufgaben"
+        },
+        "assignmentTaskType": {
+          "short_answer": "Kurze Antwort",
+          "number_answer": "Zahlenantwort",
+          "chess_position_line": "Schach: Variante finden",
+          "chess_pgn_analysis": "Schach: PGN-Analyse",
+          "file_submission": "Datei-Upload"
         }
       }
     },
@@ -2517,6 +2530,20 @@
         "bunnyNotConfigured": "Der Videoexport ist nicht konfiguriert. Konfigurieren Sie Bunny Stream, bevor Sie Kurse mit Videolektionen exportieren.",
         "invalidSnapshot": "Dieser Kurs konnte nicht für den SCORM-Export vorbereitet werden.",
         "fallback": "Der SCORM-Export ist fehlgeschlagen."
+      }
+    },
+    "assignmentGrading": {
+      "title": "Einreichungen bewerten",
+      "noSubmissions": "Noch keine Einreichungen.",
+      "selectLearner": "Wählen Sie einen Lernenden aus, um dessen Einreichung zu bewerten.",
+      "grade": "Note",
+      "feedbackPlaceholder": "Feedback für den Lernenden (optional)",
+      "saveGrade": "Note speichern",
+      "downloadFile": "Datei herunterladen",
+      "noFile": "Keine Datei eingereicht.",
+      "toast": {
+        "graded": "Note gespeichert",
+        "gradeFailed": "Note konnte nicht gespeichert werden"
       }
     }
   },
@@ -2848,7 +2875,10 @@
       "fileSubmissionFollowUp": "Datei-Uploads für Aufgaben sind noch nicht verfügbar.",
       "feedback": "Feedback",
       "resubmit": "Erneut einreichen",
-      "submit": "Einreichen"
+      "submit": "Einreichen",
+      "fileUploadError": "Datei konnte nicht hochgeladen werden.",
+      "chooseFile": "Datei auswählen",
+      "maxFileSize": "Max. {{size}} MB"
     }
   },
   "studentCourseView": {
@@ -3708,7 +3738,8 @@
     "activityLogs": "Aktivitätsprotokoll",
     "learningPaths": "Entwicklungspfade",
     "adminLearningPaths": "Entwicklungspfade",
-    "adminLearningPathEditor": "Entwicklungspfad Editor"
+    "adminLearningPathEditor": "Entwicklungspfad Editor",
+    "assignmentGrading": "Aufgaben bewerten"
   },
   "masterCourse": {
     "error": {

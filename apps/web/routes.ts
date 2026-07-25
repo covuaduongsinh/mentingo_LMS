@@ -93,6 +93,10 @@ export const routes: (
           route("activity-logs", "modules/ActivityLogs/ActivityLogs.page.tsx");
           route("chess/exercises", "modules/Chess/Admin/ChessExercisesAdmin.page.tsx");
           route("chess/games", "modules/Chess/Admin/ChessGamesAdmin.page.tsx");
+          route(
+            "assignments/:lessonId/grading",
+            "modules/Admin/AssignmentGrading/AssignmentGrading.page.tsx",
+          );
         });
         route("super-admin", "modules/SuperAdmin/SuperAdmin.layout.tsx", () => {
           route("tenants", "modules/SuperAdmin/Tenants.page.tsx", { index: true });

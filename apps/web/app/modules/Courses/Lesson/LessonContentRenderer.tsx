@@ -11,7 +11,7 @@ import { LiveTrainingLesson } from "./LiveTrainingLesson/LiveTrainingLesson";
 import { Quiz } from "./Quiz";
 import { ScormLesson } from "./ScormLesson/ScormLesson";
 
-import type { LessonTypes, SupportedLanguages } from "@repo/shared";
+import type { SupportedLanguages } from "@repo/shared";
 import type { CurrentUserResponse, GetLessonByIdResponse } from "~/api/generated-api";
 import type { VideoCoverageSnapshotChange } from "~/components/VideoPlayer/videoCoverage.types";
 import type { LessonPreviewUser } from "~/modules/Courses/Lesson/types";
@@ -42,11 +42,7 @@ export const LessonContentRenderer = memo(
     onVideoEnded,
     videoCoverageTracking,
   }: LessonContentRendererProps) => {
-    // "assignment" is not in the generated client's lesson-type union yet
-    // (see apps/web/app/api/assignments-api.ts header comment) — cast
-    // against the shared source of truth from @repo/shared until
-    // `pnpm generate:client` is run to pick up the new lesson type.
-    return match(lesson.type as LessonTypes)
+    return match(lesson.type)
       .with("content", () => (
         <Viewer
           variant={RICH_TEXT_VIEWER_VARIANT.CONTENT}

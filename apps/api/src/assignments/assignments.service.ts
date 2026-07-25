@@ -8,11 +8,18 @@ import {
   ASSIGNMENT_GRADING_DEFAULTS,
   ASSIGNMENT_SUBMISSION_STATUS,
   ASSIGNMENT_TASK_TYPE,
+  COURSE_FEATURE,
+  ENTITY_TYPES,
+  type SupportedLanguages,
 } from "@repo/shared";
 import { match } from "ts-pattern";
 
+import { CourseFeaturePolicyService } from "src/courses/course-feature-policy.service";
+import { MasterCourseService } from "src/courses/master-course.service";
 import { AssignmentGradedEvent } from "src/events/assignment/assignment-graded.event";
+import { FileService } from "src/file/file.service";
 import { AdminLessonRepository } from "src/lesson/repositories/adminLesson.repository";
+import { AdminLessonService } from "src/lesson/services/adminLesson.service";
 import { LocalizationService } from "src/localization/localization.service";
 import { ENTITY_TYPE } from "src/localization/localization.types";
 import { OutboxPublisher } from "src/outbox/outbox.publisher";
@@ -38,6 +45,7 @@ import type {
   UpdateAssignmentTaskBody,
 } from "./schemas/assignment.schema";
 import type { UUIDType } from "src/common";
+import type { CurrentUserType } from "src/common/types/current-user.type";
 
 @Injectable()
 export class AssignmentsService {
@@ -46,19 +54,44 @@ export class AssignmentsService {
     private readonly aiGrader: AssignmentAiGraderService,
     private readonly outboxPublisher: OutboxPublisher,
     private readonly adminLessonRepository: AdminLessonRepository,
+    private readonly adminLessonService: AdminLessonService,
+    private readonly masterCourseService: MasterCourseService,
+    private readonly courseFeaturePolicyService: CourseFeaturePolicyService,
     private readonly localizationService: LocalizationService,
+    private readonly fileService: FileService,
   ) {}
+
+  /**
+   * Same content-lock / curriculum-editing-feature-flag / per-course
+   * ownership checks every other lesson type's authoring mutation already
+   * runs (see AdminLessonService's createXLesson/updateLesson/removeLesson)
+   * — reused here via the same services rather than re-implemented.
+   */
+  private async assertLessonEditableAndOwned(lessonId: UUIDType, currentUser: CurrentUserType) {
+    await this.masterCourseService.assertCourseContentEditableByLessonId(lessonId);
+    await this.courseFeaturePolicyService.assertCourseFeatureEnabledByLessonId(
+      lessonId,
+      COURSE_FEATURE.CURRICULUM_EDITING,
+    );
+    await this.adminLessonService.validateAccess(ENTITY_TYPES.LESSON, currentUser, lessonId);
+  }
 
   /**
    * Creates the `lessons` row (type "assignment") and the Assignment
    * definition together — the entry point the curriculum builder's "add
-   * assignment lesson" action calls. Deliberately does not replicate
-   * AdminLessonService's course-content-lock / curriculum-editing-feature-flag
-   * / activity-log-event steps; see the business spec's "Follow-up work".
+   * assignment lesson" action calls.
    */
   async createAssignmentLesson(
     body: CreateAssignmentLessonBody,
+    currentUser: CurrentUserType,
   ): Promise<{ lessonId: UUIDType; assignment: AssignmentWithTasks }> {
+    await this.masterCourseService.assertCourseContentEditableByChapterId(body.chapterId);
+    await this.courseFeaturePolicyService.assertCourseFeatureEnabledByChapterId(
+      body.chapterId,
+      COURSE_FEATURE.CURRICULUM_EDITING,
+    );
+    await this.adminLessonService.validateAccess(ENTITY_TYPES.CHAPTER, currentUser, body.chapterId);
+
     const { language } = await this.localizationService.getBaseLanguage(
       ENTITY_TYPE.CHAPTER,
       body.chapterId,
@@ -74,7 +107,7 @@ export class AssignmentsService {
       displayOrder,
     );
 
-    const assignment = await this.createAssignment({
+    const assignment = await this.createAssignmentRecord({
       lessonId: lessonRow.id,
       title: { [language]: body.title },
       description: body.description ? { [language]: body.description } : null,
@@ -91,6 +124,7 @@ export class AssignmentsService {
     });
 
     await this.adminLessonRepository.updateLessonCountForChapter(body.chapterId);
+    await this.adminLessonService.publishCreateLessonEvent(lessonRow.id, language, currentUser);
 
     return { lessonId: lessonRow.id, assignment };
   }
@@ -99,7 +133,20 @@ export class AssignmentsService {
   // Authoring (admin / content creator / trainer with ASSIGNMENT_MANAGE*)
   // ---------------------------------------------------------------------
 
-  async createAssignment(body: CreateAssignmentBody): Promise<AssignmentWithTasks> {
+  /**
+   * Public entry point for `POST /assignments` (attaching an assignment to
+   * an already-existing lesson). Checks ownership/lock via the lesson the
+   * caller supplies, then delegates to createAssignmentRecord.
+   */
+  async createAssignment(
+    body: CreateAssignmentBody,
+    currentUser: CurrentUserType,
+  ): Promise<AssignmentWithTasks> {
+    await this.assertLessonEditableAndOwned(body.lessonId, currentUser);
+    return this.createAssignmentRecord(body);
+  }
+
+  private async createAssignmentRecord(body: CreateAssignmentBody): Promise<AssignmentWithTasks> {
     const existing = await this.assignmentsRepository.getAssignmentByLessonId(body.lessonId);
     if (existing) {
       throw new BadRequestException("assignment.errors.lessonAlreadyHasAssignment");
@@ -128,14 +175,29 @@ export class AssignmentsService {
     return { ...assignment, tasks };
   }
 
-  async updateAssignment(id: UUIDType, body: UpdateAssignmentBody): Promise<AssignmentRecord> {
-    await this.requireAssignment(id);
+  async updateAssignment(
+    id: UUIDType,
+    body: UpdateAssignmentBody,
+    currentUser: CurrentUserType,
+  ): Promise<AssignmentRecord> {
+    const assignment = await this.requireAssignment(id);
+    await this.assertLessonEditableAndOwned(assignment.lessonId, currentUser);
     const updated = await this.assignmentsRepository.updateAssignment(id, body);
     if (!updated) throw new NotFoundException("assignment.errors.notFound");
     return updated;
   }
 
-  async deleteAssignment(id: UUIDType): Promise<{ id: UUIDType }> {
+  /**
+   * Deletes only the `assignments` row (and its cascaded tasks/submissions)
+   * — it deliberately leaves the underlying `lessons` row in place. To
+   * delete the whole assignment lesson, use the generic
+   * `DELETE /lesson?lessonId=` (AdminLessonService#removeLesson), which
+   * cascade-deletes the assignment via the FK; that's what the curriculum
+   * editor's delete button calls.
+   */
+  async deleteAssignment(id: UUIDType, currentUser: CurrentUserType): Promise<{ id: UUIDType }> {
+    const assignment = await this.requireAssignment(id);
+    await this.assertLessonEditableAndOwned(assignment.lessonId, currentUser);
     const deleted = await this.assignmentsRepository.deleteAssignment(id);
     if (!deleted) throw new NotFoundException("assignment.errors.notFound");
     return { id };
@@ -144,21 +206,28 @@ export class AssignmentsService {
   async addTask(
     assignmentId: UUIDType,
     body: CreateAssignmentTaskBody,
+    currentUser: CurrentUserType,
   ): Promise<AssignmentTaskRecord> {
-    await this.requireAssignment(assignmentId);
+    const assignment = await this.requireAssignment(assignmentId);
+    await this.assertLessonEditableAndOwned(assignment.lessonId, currentUser);
     return this.assignmentsRepository.createTask(assignmentId, body);
   }
 
   async updateTask(
     taskId: UUIDType,
     body: UpdateAssignmentTaskBody,
+    currentUser: CurrentUserType,
   ): Promise<AssignmentTaskRecord> {
+    const assignment = await this.requireAssignmentForTask(taskId);
+    await this.assertLessonEditableAndOwned(assignment.lessonId, currentUser);
     const updated = await this.assignmentsRepository.updateTask(taskId, body);
     if (!updated) throw new NotFoundException("assignment.errors.taskNotFound");
     return updated;
   }
 
-  async deleteTask(taskId: UUIDType): Promise<{ id: UUIDType }> {
+  async deleteTask(taskId: UUIDType, currentUser: CurrentUserType): Promise<{ id: UUIDType }> {
+    const assignment = await this.requireAssignmentForTask(taskId);
+    await this.assertLessonEditableAndOwned(assignment.lessonId, currentUser);
     const deleted = await this.assignmentsRepository.deleteTask(taskId);
     if (!deleted) throw new NotFoundException("assignment.errors.taskNotFound");
     return { id: taskId };
@@ -260,7 +329,11 @@ export class AssignmentsService {
     );
 
     if (assignment.autoGrading) {
-      const graded = await this.gradeTask(task, body.submission);
+      const { language } = await this.localizationService.getBaseLanguage(
+        ENTITY_TYPE.LESSON,
+        assignment.lessonId,
+      );
+      const graded = await this.gradeTask(task, body.submission, language);
       if (graded) {
         await this.assignmentsRepository.gradeTaskSubmission(submissionRow.id, {
           grade: graded.grade,
@@ -282,6 +355,7 @@ export class AssignmentsService {
   private async gradeTask(
     task: AssignmentTaskRecord,
     submission: SubmitAssignmentTaskBody["submission"],
+    language: SupportedLanguages,
   ): Promise<{ grade: number; feedback?: string } | null> {
     return match(task.taskType)
       .with(ASSIGNMENT_TASK_TYPE.NUMBER_ANSWER, () => {
@@ -298,11 +372,13 @@ export class AssignmentsService {
         async () => {
           if (!submission.text?.trim() && !submission.pgn?.trim()) return null;
           const learnerAnswer = submission.pgn ?? submission.text ?? "";
-          // Follow-up: resolve the course's base language via LocalizationService
-          // instead of taking an arbitrary locale, matching how other lesson
-          // types build AI prompts (see AiMentorLesson / JudgeService callers).
-          const titleText = Object.values(task.title)[0] ?? "";
-          const descriptionText = task.description ? Object.values(task.description)[0] : null;
+          // Course's base language, resolved via LocalizationService — not an
+          // arbitrary Object.values()[0] pick — matching how AiMentorLesson /
+          // JudgeService callers build AI prompts.
+          const titleText = task.title[language] ?? Object.values(task.title)[0] ?? "";
+          const descriptionText =
+            task.description?.[language] ??
+            (task.description ? Object.values(task.description)[0] : null);
           const result = await this.aiGrader.gradeFreeTextAnswer({
             taskTitle: titleText,
             taskDescription: descriptionText,
@@ -401,7 +477,19 @@ export class AssignmentsService {
       userId,
     );
     const tasks = await this.assignmentsRepository.listTasksByAssignmentId(assignmentId);
-    return { assignment, aggregate, tasks, taskSubmissions };
+
+    // A trainer grading a file_submission task needs to actually open the
+    // file — resolve a signed URL server-side rather than exposing the raw
+    // S3 key, matching how certificates/other file-backed resources do it.
+    const taskSubmissionsWithFileUrl = await Promise.all(
+      taskSubmissions.map(async (submission) => {
+        if (!submission.submission.fileS3Key) return submission;
+        const fileUrl = await this.fileService.getFileUrl(submission.submission.fileS3Key);
+        return { ...submission, submission: { ...submission.submission, fileUrl } };
+      }),
+    );
+
+    return { assignment, aggregate, tasks, taskSubmissions: taskSubmissionsWithFileUrl };
   }
 
   /**
@@ -440,5 +528,11 @@ export class AssignmentsService {
     const assignment = await this.assignmentsRepository.getAssignmentById(id);
     if (!assignment) throw new NotFoundException("assignment.errors.notFound");
     return assignment;
+  }
+
+  private async requireAssignmentForTask(taskId: UUIDType): Promise<AssignmentRecord> {
+    const task = await this.assignmentsRepository.getTaskById(taskId);
+    if (!task) throw new NotFoundException("assignment.errors.taskNotFound");
+    return this.requireAssignment(task.assignmentId);
   }
 }

@@ -79,3 +79,10 @@ export type AssignmentUserSubmissionRecord = {
 };
 
 export type AssignmentWithTasks = AssignmentRecord & { tasks: AssignmentTaskRecord[] };
+
+/** listSubmissionsForGrading's shape — the grading UI needs to show who it's grading, not just a userId. */
+export type AssignmentUserSubmissionWithUserRecord = AssignmentUserSubmissionRecord & {
+  userEmail: string;
+  userFirstName: string;
+  userLastName: string;
+};

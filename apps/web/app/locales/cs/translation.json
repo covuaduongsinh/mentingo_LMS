@@ -2042,7 +2042,9 @@
         "removeChapter": "Opravdu chcete smazat tuto kapitolu?",
         "removeQuestion": "Opravdu chcete smazat otázku?",
         "removeContent": "Opravdu chcete smazat obsah?",
-        "lessonCreated": "Lekce vytvořena."
+        "lessonCreated": "Lekce vytvořena.",
+        "lessonUpdated": "Lekce byla aktualizována.",
+        "removeAssignmentLesson": "Opravdu chcete tento úkol odstranit?"
       },
       "chapter": {
         "button": {
@@ -2208,7 +2210,11 @@
           "allowRetries": "Povolit opakované pokusy",
           "showCorrectAnswers": "Zobrazit správné odpovědi po ohodnocení",
           "expectedAnswer": "Referenční odpověď (skrytá před studenty)",
-          "expectedNumber": "Očekávané číslo"
+          "expectedNumber": "Očekávané číslo",
+          "chessFen": "Počáteční FEN (volitelné)",
+          "chessSolutionMoves": "Zahrajte správnou řešicí variantu na šachovnici:",
+          "allowedFileTypes": "Povolené přípony souborů oddělené čárkou (např. .pdf,.pgn)",
+          "maxFileSizeMb": "Maximální velikost souboru (MB)"
         },
         "placeholder": {
           "title": "Uveďte název lekce...",
@@ -2331,6 +2337,13 @@
           "assignment": "Úkol",
           "assignmentLessonDescription": "Vytvořte hodnocený úkol nebo domácí práci pro studenty.",
           "tasks": "Úkoly"
+        },
+        "assignmentTaskType": {
+          "short_answer": "Krátká odpověď",
+          "number_answer": "Číselná odpověď",
+          "chess_position_line": "Šachy: najít variantu",
+          "chess_pgn_analysis": "Šachy: analýza PGN",
+          "file_submission": "Nahrání souboru"
         }
       }
     },
@@ -2517,6 +2530,20 @@
         "bunnyNotConfigured": "Export videa není nakonfigurován. Před exportem kurzů s video lekcemi nakonfigurujte Bunny Stream.",
         "invalidSnapshot": "Tento kurz se nepodařilo připravit pro export SCORM.",
         "fallback": "Export SCORM se nezdařil."
+      }
+    },
+    "assignmentGrading": {
+      "title": "Hodnocení odevzdaných prací",
+      "noSubmissions": "Zatím žádné odevzdané práce.",
+      "selectLearner": "Vyberte studenta, jehož práci chcete ohodnotit.",
+      "grade": "Známka",
+      "feedbackPlaceholder": "Zpětná vazba pro studenta (volitelné)",
+      "saveGrade": "Uložit známku",
+      "downloadFile": "Stáhnout soubor",
+      "noFile": "Nebyl odevzdán žádný soubor.",
+      "toast": {
+        "graded": "Známka uložena",
+        "gradeFailed": "Známku se nepodařilo uložit"
       }
     }
   },
@@ -2848,7 +2875,10 @@
       "fileSubmissionFollowUp": "Nahrávání souborů pro úkoly zatím není zapojeno.",
       "feedback": "Zpětná vazba",
       "resubmit": "Odeslat znovu",
-      "submit": "Odeslat"
+      "submit": "Odeslat",
+      "fileUploadError": "Soubor se nepodařilo nahrát.",
+      "chooseFile": "Vybrat soubor",
+      "maxFileSize": "Max. {{size}} MB"
     }
   },
   "studentCourseView": {
@@ -3710,7 +3740,8 @@
     "activityLogs": "Log aktivit",
     "learningPaths": "Rozvojové cesty",
     "adminLearningPaths": "Rozvojové cesty",
-    "adminLearningPathEditor": "Editor rozvojové cesty"
+    "adminLearningPathEditor": "Editor rozvojové cesty",
+    "assignmentGrading": "Hodnocení úkolů"
   },
   "masterCourse": {
     "error": {

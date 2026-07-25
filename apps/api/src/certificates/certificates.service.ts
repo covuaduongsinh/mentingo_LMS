@@ -207,6 +207,30 @@ export class CertificatesService implements OnModuleDestroy {
     }
   }
 
+  /**
+   * Archives a learner's active certificate for a course WITHOUT resetting
+   * their lesson/course progress. Used when a grade change (e.g. an
+   * assignment re-grade dropping a learner below the pass threshold)
+   * invalidates the certificate itself. Unlike resetCourseCertificates /
+   * archiveAndResetCertificates (the admin "let them retake everything"
+   * flow), this is a no-op if there's nothing to revoke and never touches
+   * progress — the learner keeps their completed work and can requalify by
+   * improving the failing grade.
+   */
+  async archiveCertificateForFailedRequirement(
+    userId: UUIDType,
+    courseId: UUIDType,
+    reason: CertificateActivityReason,
+  ): Promise<void> {
+    const certificate = await this.certificateRepository.findActiveCertificateIdByUserAndCourse(
+      userId,
+      courseId,
+    );
+    if (!certificate) return;
+
+    await this.certificateRepository.archiveCertificates([certificate.id], reason);
+  }
+
   async getCertificate(
     userId: UUIDType,
     courseId: UUIDType,

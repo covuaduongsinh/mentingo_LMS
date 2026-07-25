@@ -10,6 +10,7 @@ export const CERTIFICATE_STATUSES = {
 export const CERTIFICATE_ARCHIVE_REASONS = {
   EXPIRED: "expired",
   MANUAL_RESET: "manual_reset",
+  ASSIGNMENT_REGRADE: "assignment_regrade",
 } as const;
 
 export const CERTIFICATE_VALIDITY_TYPES = {

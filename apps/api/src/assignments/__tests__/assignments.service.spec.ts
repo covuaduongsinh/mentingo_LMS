@@ -6,7 +6,11 @@ import { AssignmentsService } from "../assignments.service";
 import type { AssignmentsRepository } from "../assignments.repository";
 import type { AssignmentRecord, AssignmentTaskRecord } from "../assignments.types";
 import type { AssignmentAiGraderService } from "../graders/assignment-ai-grader.service";
+import type { CourseFeaturePolicyService } from "src/courses/course-feature-policy.service";
+import type { MasterCourseService } from "src/courses/master-course.service";
+import type { FileService } from "src/file/file.service";
 import type { AdminLessonRepository } from "src/lesson/repositories/adminLesson.repository";
+import type { AdminLessonService } from "src/lesson/services/adminLesson.service";
 import type { LocalizationService } from "src/localization/localization.service";
 import type { OutboxPublisher } from "src/outbox/outbox.publisher";
 
@@ -54,12 +58,21 @@ function buildTask(overrides: Partial<AssignmentTaskRecord> = {}): AssignmentTas
   };
 }
 
+const CHAPTER_ID = "chapter-1";
+const CURRENT_USER = { userId: "trainer-1" } as Parameters<
+  AssignmentsService["createAssignmentLesson"]
+>[1];
+
 describe("AssignmentsService", () => {
   let repo: jest.Mocked<AssignmentsRepository>;
   let aiGrader: jest.Mocked<AssignmentAiGraderService>;
   let outbox: jest.Mocked<OutboxPublisher>;
   let adminLessonRepo: jest.Mocked<AdminLessonRepository>;
+  let adminLessonService: jest.Mocked<AdminLessonService>;
+  let masterCourseService: jest.Mocked<MasterCourseService>;
+  let courseFeaturePolicyService: jest.Mocked<CourseFeaturePolicyService>;
   let localization: jest.Mocked<LocalizationService>;
+  let fileService: jest.Mocked<FileService>;
   let service: AssignmentsService;
 
   beforeEach(() => {
@@ -73,6 +86,9 @@ describe("AssignmentsService", () => {
       upsertTaskSubmission: jest.fn(),
       gradeTaskSubmission: jest.fn(),
       upsertUserSubmission: jest.fn(),
+      createLessonRow: jest.fn(),
+      createAssignment: jest.fn(),
+      createTask: jest.fn(),
     } as unknown as jest.Mocked<AssignmentsRepository>;
 
     aiGrader = {
@@ -80,12 +96,97 @@ describe("AssignmentsService", () => {
     } as unknown as jest.Mocked<AssignmentAiGraderService>;
     outbox = { publish: jest.fn() } as unknown as jest.Mocked<OutboxPublisher>;
     adminLessonRepo = {
-      getMaxDisplayOrder: jest.fn(),
+      getMaxDisplayOrder: jest.fn().mockResolvedValue(0),
       updateLessonCountForChapter: jest.fn(),
     } as unknown as jest.Mocked<AdminLessonRepository>;
-    localization = { getBaseLanguage: jest.fn() } as unknown as jest.Mocked<LocalizationService>;
+    adminLessonService = {
+      validateAccess: jest.fn().mockResolvedValue(undefined),
+      publishCreateLessonEvent: jest.fn().mockResolvedValue(undefined),
+    } as unknown as jest.Mocked<AdminLessonService>;
+    masterCourseService = {
+      assertCourseContentEditableByChapterId: jest.fn().mockResolvedValue(undefined),
+      assertCourseContentEditableByLessonId: jest.fn().mockResolvedValue(undefined),
+    } as unknown as jest.Mocked<MasterCourseService>;
+    courseFeaturePolicyService = {
+      assertCourseFeatureEnabledByChapterId: jest.fn().mockResolvedValue(undefined),
+      assertCourseFeatureEnabledByLessonId: jest.fn().mockResolvedValue(undefined),
+    } as unknown as jest.Mocked<CourseFeaturePolicyService>;
+    localization = {
+      getBaseLanguage: jest.fn().mockResolvedValue({
+        language: "en",
+        baseLanguage: "en",
+        availableLocales: ["en"],
+      }),
+    } as unknown as jest.Mocked<LocalizationService>;
+    fileService = { getFileUrl: jest.fn() } as unknown as jest.Mocked<FileService>;
 
-    service = new AssignmentsService(repo, aiGrader, outbox, adminLessonRepo, localization);
+    service = new AssignmentsService(
+      repo,
+      aiGrader,
+      outbox,
+      adminLessonRepo,
+      adminLessonService,
+      masterCourseService,
+      courseFeaturePolicyService,
+      localization,
+      fileService,
+    );
+  });
+
+  describe("createAssignmentLesson — lesson-system parity", () => {
+    it("runs the same content-lock, feature-flag, and ownership checks other lesson types run, then publishes CreateLessonEvent", async () => {
+      repo.createLessonRow.mockResolvedValue({
+        id: LESSON_ID,
+        chapterId: CHAPTER_ID,
+        displayOrder: 1,
+      });
+      repo.getAssignmentByLessonId.mockResolvedValue(null);
+      repo.createAssignment.mockResolvedValue(buildAssignment());
+
+      await service.createAssignmentLesson(
+        {
+          chapterId: CHAPTER_ID,
+          title: "Homework",
+          showCorrectAnswers: true,
+          allowRetries: false,
+        } as Parameters<AssignmentsService["createAssignmentLesson"]>[0],
+        CURRENT_USER,
+      );
+
+      expect(masterCourseService.assertCourseContentEditableByChapterId).toHaveBeenCalledWith(
+        CHAPTER_ID,
+      );
+      expect(courseFeaturePolicyService.assertCourseFeatureEnabledByChapterId).toHaveBeenCalledWith(
+        CHAPTER_ID,
+        "curriculum_editing",
+      );
+      expect(adminLessonService.validateAccess).toHaveBeenCalledWith(
+        "chapter",
+        CURRENT_USER,
+        CHAPTER_ID,
+      );
+      expect(adminLessonService.publishCreateLessonEvent).toHaveBeenCalledWith(
+        LESSON_ID,
+        "en",
+        CURRENT_USER,
+      );
+    });
+
+    it("propagates the content-lock error instead of creating the lesson, when the course is locked", async () => {
+      masterCourseService.assertCourseContentEditableByChapterId.mockRejectedValue(
+        new ForbiddenException("course locked"),
+      );
+
+      await expect(
+        service.createAssignmentLesson(
+          { chapterId: CHAPTER_ID, title: "Homework" } as Parameters<
+            AssignmentsService["createAssignmentLesson"]
+          >[0],
+          CURRENT_USER,
+        ),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(repo.createLessonRow).not.toHaveBeenCalled();
+    });
   });
 
   describe("getAssignmentForLearner — answer-key stripping", () => {

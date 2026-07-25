@@ -14,6 +14,7 @@ import {
   assignmentTaskSchema,
   assignmentTaskSubmissionSchema,
   assignmentUserSubmissionSchema,
+  assignmentUserSubmissionWithUserSchema,
   assignmentWithTasksSchema,
   createAssignmentBodySchema,
   createAssignmentLessonBodySchema,
@@ -44,8 +45,13 @@ export class AssignmentsController {
     request: [{ type: "body", schema: createAssignmentLessonBodySchema }],
     response: baseResponse(createAssignmentLessonResponseSchema),
   })
-  async createAssignmentLesson(@Body() body: CreateAssignmentLessonBody) {
-    return new BaseResponse(await this.assignmentsService.createAssignmentLesson(body));
+  async createAssignmentLesson(
+    @Body() body: CreateAssignmentLessonBody,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    return new BaseResponse(
+      await this.assignmentsService.createAssignmentLesson(body, currentUser),
+    );
   }
 
   @Post()
@@ -54,8 +60,11 @@ export class AssignmentsController {
     request: [{ type: "body", schema: createAssignmentBodySchema }],
     response: baseResponse(assignmentWithTasksSchema),
   })
-  async createAssignment(@Body() body: CreateAssignmentBody) {
-    return new BaseResponse(await this.assignmentsService.createAssignment(body));
+  async createAssignment(
+    @Body() body: CreateAssignmentBody,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.assignmentsService.createAssignment(body, currentUser));
   }
 
   @Get("lesson/:lessonId/author")
@@ -77,8 +86,12 @@ export class AssignmentsController {
     ],
     response: baseResponse(assignmentSchema),
   })
-  async updateAssignment(@Param("id") id: UUIDType, @Body() body: UpdateAssignmentBody) {
-    return new BaseResponse(await this.assignmentsService.updateAssignment(id, body));
+  async updateAssignment(
+    @Param("id") id: UUIDType,
+    @Body() body: UpdateAssignmentBody,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.assignmentsService.updateAssignment(id, body, currentUser));
   }
 
   @Delete(":id")
@@ -87,8 +100,8 @@ export class AssignmentsController {
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
     response: baseResponse(Type.Object({ id: UUIDSchema })),
   })
-  async deleteAssignment(@Param("id") id: UUIDType) {
-    return new BaseResponse(await this.assignmentsService.deleteAssignment(id));
+  async deleteAssignment(@Param("id") id: UUIDType, @CurrentUser() currentUser: CurrentUserType) {
+    return new BaseResponse(await this.assignmentsService.deleteAssignment(id, currentUser));
   }
 
   @Post(":id/tasks")
@@ -100,8 +113,12 @@ export class AssignmentsController {
     ],
     response: baseResponse(assignmentTaskSchema),
   })
-  async addTask(@Param("id") id: UUIDType, @Body() body: CreateAssignmentTaskBody) {
-    return new BaseResponse(await this.assignmentsService.addTask(id, body));
+  async addTask(
+    @Param("id") id: UUIDType,
+    @Body() body: CreateAssignmentTaskBody,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.assignmentsService.addTask(id, body, currentUser));
   }
 
   @Patch("tasks/:taskId")
@@ -113,8 +130,12 @@ export class AssignmentsController {
     ],
     response: baseResponse(assignmentTaskSchema),
   })
-  async updateTask(@Param("taskId") taskId: UUIDType, @Body() body: UpdateAssignmentTaskBody) {
-    return new BaseResponse(await this.assignmentsService.updateTask(taskId, body));
+  async updateTask(
+    @Param("taskId") taskId: UUIDType,
+    @Body() body: UpdateAssignmentTaskBody,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.assignmentsService.updateTask(taskId, body, currentUser));
   }
 
   @Delete("tasks/:taskId")
@@ -123,8 +144,8 @@ export class AssignmentsController {
     request: [{ type: "param", name: "taskId", schema: UUIDSchema }],
     response: baseResponse(Type.Object({ id: UUIDSchema })),
   })
-  async deleteTask(@Param("taskId") taskId: UUIDType) {
-    return new BaseResponse(await this.assignmentsService.deleteTask(taskId));
+  async deleteTask(@Param("taskId") taskId: UUIDType, @CurrentUser() currentUser: CurrentUserType) {
+    return new BaseResponse(await this.assignmentsService.deleteTask(taskId, currentUser));
   }
 
   // --- Learner -------------------------------------------------------------
@@ -174,7 +195,7 @@ export class AssignmentsController {
   @RequirePermission(PERMISSIONS.ASSIGNMENT_GRADE)
   @Validate({
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
-    response: baseResponse(Type.Array(assignmentUserSubmissionSchema)),
+    response: baseResponse(Type.Array(assignmentUserSubmissionWithUserSchema)),
   })
   async listSubmissionsForGrading(@Param("id") id: UUIDType) {
     return new BaseResponse(await this.assignmentsService.listSubmissionsForGrading(id));

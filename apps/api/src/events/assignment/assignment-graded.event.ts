@@ -12,9 +12,10 @@ type AssignmentGradedData = {
 
 /**
  * Published whenever an assignment's overall grade for one learner is
- * (re)computed. Not yet consumed by a listener — see
- * docs/specs/assignment-engine-business-spec.md "Follow-up work" for the
- * intended certificate-revocation-on-regrade-below-threshold consumer.
+ * (re)computed. Consumed by
+ * `AssignmentGradedCertificateHandler` (apps/api/src/certificates/handlers/)
+ * to revoke a certificate when a regrade drops the learner below the pass
+ * threshold.
  */
 export class AssignmentGradedEvent {
   public readonly assignmentId: UUIDType;
