@@ -52,7 +52,8 @@
       "ai_mentor": "AI Mentor",
       "embed": "Insertar",
       "scorm": "SCORM",
-      "live_training": "Formación en vivo"
+      "live_training": "Formación en vivo",
+      "assignment": "Tarea"
     },
     "error": {
       "somethingWentWrong": "¡Ups! Algo salió mal."
@@ -1909,7 +1910,8 @@
         "optionUpdateFailed": "No se pudo actualizar la opción de prueba.",
         "optionInsertFailed": "No se pudo agregar la opción de prueba.",
         "embedCreateFailed": "No se pudo crear la lección para insertar.",
-        "signedUrlDownloadFailed": "No se pudo descargar el archivo desde la URL firmada."
+        "signedUrlDownloadFailed": "No se pudo descargar el archivo desde la URL firmada.",
+        "assignmentCreateFailed": "No se pudo crear la tarea."
       }
     },
     "thinking": {
@@ -2100,7 +2102,8 @@
         "removeLiveTrainingLesson": "¿Seguro que deseas eliminar esta lección de formación en vivo del capítulo?",
         "removeChapter": "¿Estás seguro de que deseas eliminar este capítulo?",
         "removeQuestion": "¿Estás seguro de que deseas eliminar la pregunta?",
-        "removeContent": "¿Estás seguro de que deseas eliminar contenido?"
+        "removeContent": "¿Estás seguro de que deseas eliminar contenido?",
+        "lessonCreated": "Lección creada."
       },
       "chapter": {
         "button": {
@@ -2141,7 +2144,8 @@
           "addResource": "Agregar recurso",
           "removeResource": "Eliminar recurso",
           "uploadFiles": "Subir archivos",
-          "addLessonDisabledTooltip": "Para crear una lección, debes estar en el idioma base."
+          "addLessonDisabledTooltip": "Para crear una lección, debes estar en el idioma base.",
+          "addTask": "Añadir tarea"
         },
         "breadcrumbs": {
           "back": "Atrás"
@@ -2261,7 +2265,11 @@
           "ttsPreset": "Preajuste TTS",
           "customTTSReference": "Referencia TTS personalizada",
           "includeFiles_one": "Adjunte hasta 1 archivo debajo de {{ MAX_FILE_SIZE }} MB para usarlo como contexto en las lecciones",
-          "includeFiles_other": "Adjunte hasta archivos {{ count }} debajo de {{ MAX_FILE_SIZE }} MB para usarlos como contexto en las lecciones"
+          "includeFiles_other": "Adjunte hasta archivos {{ count }} debajo de {{ MAX_FILE_SIZE }} MB para usarlos como contexto en las lecciones",
+          "allowRetries": "Permitir reintentos",
+          "showCorrectAnswers": "Mostrar respuestas correctas una vez calificado",
+          "expectedAnswer": "Respuesta de referencia (oculta para los alumnos)",
+          "expectedNumber": "Número esperado"
         },
         "placeholder": {
           "title": "Proporcione el título de la lección...",
@@ -2380,7 +2388,10 @@
           },
           "betaTooltip": "Esta funcionalidad se proporciona en una versión de prueba. Puede contener errores o no funcionar completamente según lo previsto y se utiliza bajo su propio riesgo.",
           "dragWord": "Arrastra la palabra a la oración",
-          "taskDescriptionTooltip": "Describa brevemente lo que debe hacer el participante durante la conversación con el mentor de IA."
+          "taskDescriptionTooltip": "Describa brevemente lo que debe hacer el participante durante la conversación con el mentor de IA.",
+          "assignment": "Tarea",
+          "assignmentLessonDescription": "Crea una tarea calificada o deberes para que los alumnos completen.",
+          "tasks": "Tareas"
         }
       }
     },
@@ -2886,6 +2897,19 @@
       "courseEnrollmentRequired": "No estás inscrito en este curso.",
       "quizRetakeUnavailable": "Las respuestas del cuestionario no se pueden restablecer debido al límite de intentos o al tiempo de reutilización.",
       "quizResetFailed": "No se pudieron restablecer las respuestas del cuestionario. Por favor inténtalo de nuevo."
+    },
+    "assignment": {
+      "loadError": "No se pudo cargar esta tarea.",
+      "submitted": "Respuesta enviada.",
+      "submitError": "No se pudo enviar tu respuesta.",
+      "status": "Estado",
+      "grade": "Calificación",
+      "pgnPlaceholder": "Pega aquí tu PGN comentado…",
+      "answerPlaceholder": "Tu respuesta…",
+      "fileSubmissionFollowUp": "La subida de archivos para tareas aún no está disponible.",
+      "feedback": "Comentarios",
+      "resubmit": "Reenviar",
+      "submit": "Enviar"
     }
   },
   "studentCourseView": {

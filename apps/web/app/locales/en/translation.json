@@ -210,7 +210,8 @@
       "ai_mentor": "AI Mentor",
       "embed": "Embed",
       "scorm": "SCORM",
-      "live_training": "Live Training"
+      "live_training": "Live Training",
+      "assignment": "Assignment"
     },
     "error": {
       "somethingWentWrong": "Oops! Something went wrong."
@@ -2067,7 +2068,8 @@
         "optionUpdateFailed": "Failed to update quiz option.",
         "optionInsertFailed": "Failed to add quiz option.",
         "embedCreateFailed": "Failed to create embed lesson.",
-        "signedUrlDownloadFailed": "Failed to download the file from the signed URL."
+        "signedUrlDownloadFailed": "Failed to download the file from the signed URL.",
+        "assignmentCreateFailed": "Could not create the assignment."
       }
     },
     "thinking": {
@@ -2258,7 +2260,8 @@
         "removeLiveTrainingLesson": "Are you sure you want to delete this Live Training lesson from chapter?",
         "removeChapter": "Are you sure you want to delete this chapter?",
         "removeQuestion": "Are you sure you want to delete question?",
-        "removeContent": "Are you sure you want to delete content?"
+        "removeContent": "Are you sure you want to delete content?",
+        "lessonCreated": "Lesson created."
       },
       "chapter": {
         "button": {
@@ -2299,7 +2302,8 @@
           "addResource": "Add resource",
           "removeResource": "Remove resource",
           "uploadFiles": "Upload files",
-          "addLessonDisabledTooltip": "To create a lesson, you must be in the base language."
+          "addLessonDisabledTooltip": "To create a lesson, you must be in the base language.",
+          "addTask": "Add task"
         },
         "breadcrumbs": {
           "back": "Back"
@@ -2419,7 +2423,11 @@
           "ttsPreset": "TTS Preset",
           "customTTSReference": "Custom TTS Reference",
           "includeFiles_one": "Attach up to 1 file below {{ MAX_FILE_SIZE }} MB to be used as context in lessons",
-          "includeFiles_other": "Attach up to {{ count }} files below {{ MAX_FILE_SIZE }} MB to be used as context in lessons"
+          "includeFiles_other": "Attach up to {{ count }} files below {{ MAX_FILE_SIZE }} MB to be used as context in lessons",
+          "allowRetries": "Allow retries",
+          "showCorrectAnswers": "Show correct answers once graded",
+          "expectedAnswer": "Reference answer (hidden from learners)",
+          "expectedNumber": "Expected number"
         },
         "placeholder": {
           "title": "Provide lesson title...",
@@ -2538,7 +2546,10 @@
           },
           "betaTooltip": "This functionality is provided in a test version. It may contain errors or may not work fully as intended and is used at your own risk.",
           "dragWord": "Drag word into sentence",
-          "taskDescriptionTooltip": "Briefly describe what the participant should do during the conversation with the AI mentor."
+          "taskDescriptionTooltip": "Briefly describe what the participant should do during the conversation with the AI mentor.",
+          "assignment": "Assignment",
+          "assignmentLessonDescription": "Create a graded task or homework assignment for learners to complete.",
+          "tasks": "Tasks"
         }
       }
     },
@@ -3046,6 +3057,19 @@
       "courseEnrollmentRequired": "You are not enrolled in this course.",
       "quizRetakeUnavailable": "Quiz answers cannot be reset because of the attempts limit or cooldown.",
       "quizResetFailed": "Failed to reset quiz answers. Please try again."
+    },
+    "assignment": {
+      "loadError": "Could not load this assignment.",
+      "submitted": "Answer submitted.",
+      "submitError": "Could not submit your answer.",
+      "status": "Status",
+      "grade": "Grade",
+      "pgnPlaceholder": "Paste your annotated PGN here…",
+      "answerPlaceholder": "Your answer…",
+      "fileSubmissionFollowUp": "File upload for assignments is not wired up yet.",
+      "feedback": "Feedback",
+      "resubmit": "Resubmit",
+      "submit": "Submit"
     }
   },
   "studentCourseView": {

@@ -5,6 +5,7 @@ export const LESSON_TYPES = {
   EMBED: "embed",
   SCORM: "scorm",
   LIVE_TRAINING: "live_training",
+  ASSIGNMENT: "assignment",
 } as const;
 
 export type LessonTypes = (typeof LESSON_TYPES)[keyof typeof LESSON_TYPES];

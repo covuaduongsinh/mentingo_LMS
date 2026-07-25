@@ -34,6 +34,9 @@ import { StudentLessonProgressModule } from "src/studentLessonProgress/studentLe
     RagService,
     RagRepository,
   ],
-  exports: [AiService, AiRuntimeService, AiRepository, ThreadService],
+  // ChatService exported so other modules can reuse the generic OpenAI
+  // judge/generation primitives without wiring the AI Mentor thread system
+  // — see src/assignments/graders/assignment-ai-grader.service.ts.
+  exports: [AiService, AiRuntimeService, AiRepository, ThreadService, ChatService],
 })
 export class AiModule {}

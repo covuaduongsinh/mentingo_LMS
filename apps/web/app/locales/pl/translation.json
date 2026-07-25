@@ -53,7 +53,8 @@
       "ai_mentor": "AI Mentor",
       "embed": "Osadzenie",
       "scorm": "SCORM",
-      "live_training": "Szkolenia na żywo"
+      "live_training": "Szkolenia na żywo",
+      "assignment": "Zadanie"
     },
     "error": {
       "somethingWentWrong": "Ups! Coś poszło nie tak."
@@ -2131,7 +2132,8 @@
         "optionUpdateFailed": "Nie udało się zaktualizować odpowiedzi quizu.",
         "optionInsertFailed": "Nie udało się dodać odpowiedzi quizu.",
         "embedCreateFailed": "Nie udało się utworzyć lekcji z osadzeniem.",
-        "signedUrlDownloadFailed": "Nie udało się pobrać pliku z podpisanego adresu URL."
+        "signedUrlDownloadFailed": "Nie udało się pobrać pliku z podpisanego adresu URL.",
+        "assignmentCreateFailed": "Nie udało się utworzyć zadania."
       }
     },
     "thinking": {
@@ -2323,7 +2325,8 @@
         "removeLiveTrainingLesson": "Czy na pewno chcesz usunąć tę lekcję szkolenia na żywo z rozdziału?",
         "removeChapter": "Czy na pewno chcesz usunąć ten rozdział?",
         "removeQuestion": "Czy na pewno chcesz usunąć pytanie?",
-        "removeContent": "Czy na pewno chcesz usunąć treść?"
+        "removeContent": "Czy na pewno chcesz usunąć treść?",
+        "lessonCreated": "Lekcja utworzona."
       },
       "chapter": {
         "button": {
@@ -2364,7 +2367,8 @@
           "addResource": "Dodaj zasób",
           "removeResource": "Usuń zasób",
           "uploadFiles": "Prześlij pliki",
-          "addLessonDisabledTooltip": "Aby utworzyć lekcję, musisz być w języku domyślnym."
+          "addLessonDisabledTooltip": "Aby utworzyć lekcję, musisz być w języku domyślnym.",
+          "addTask": "Dodaj zadanie"
         },
         "breadcrumbs": {
           "back": "Wstecz"
@@ -2488,7 +2492,11 @@
           "includeFiles_one": "Dołącz maksymalnie 1 plik, poniżej {{ MAX_FILE_SIZE }} MB, który będzie używany jako kontekst w lekcjach",
           "includeFiles_few": "Dołącz maksymalnie {{ count }} pliki, poniżej {{ MAX_FILE_SIZE }} MB, które będą używane jako kontekst w lekcjach",
           "includeFiles_many": "Dołącz maksymalnie {{ count }} plików, poniżej {{ MAX_FILE_SIZE }} MB, które będą używane jako kontekst w lekcjach",
-          "includeFiles_other": "Dołącz maksymalnie {{ count }} plików, poniżej {{ MAX_FILE_SIZE }} MB, które będą używane jako kontekst w lekcjach"
+          "includeFiles_other": "Dołącz maksymalnie {{ count }} plików, poniżej {{ MAX_FILE_SIZE }} MB, które będą używane jako kontekst w lekcjach",
+          "allowRetries": "Zezwól na ponowne podejścia",
+          "showCorrectAnswers": "Pokaż poprawne odpowiedzi po ocenieniu",
+          "expectedAnswer": "Odpowiedź wzorcowa (ukryta przed uczestnikami)",
+          "expectedNumber": "Oczekiwana liczba"
         },
         "placeholder": {
           "title": "Podaj tytuł lekcji...",
@@ -2607,7 +2615,10 @@
             }
           },
           "betaTooltip": "Ta funkcjonalność jest udostępniana w wersji testowej. Może zawierać błędy lub działać w sposób nie w pełni poprawny i jest używana na własne ryzyko.",
-          "dragWord": "Przeciągnij słowo do zdania"
+          "dragWord": "Przeciągnij słowo do zdania",
+          "assignment": "Zadanie",
+          "assignmentLessonDescription": "Utwórz oceniane zadanie lub pracę domową do wykonania przez uczestników.",
+          "tasks": "Zadania"
         }
       },
       "validation": {
@@ -3124,6 +3135,19 @@
       "courseEnrollmentRequired": "Nie jesteś zapisany/a na ten kurs.",
       "quizRetakeUnavailable": "Nie można zresetować odpowiedzi z powodu limitu podejść lub okresu oczekiwania.",
       "quizResetFailed": "Nie udało się zresetować odpowiedzi quizu. Spróbuj ponownie."
+    },
+    "assignment": {
+      "loadError": "Nie udało się wczytać tego zadania.",
+      "submitted": "Odpowiedź przesłana.",
+      "submitError": "Nie udało się przesłać odpowiedzi.",
+      "status": "Status",
+      "grade": "Ocena",
+      "pgnPlaceholder": "Wklej tutaj swój opatrzony komentarzem PGN…",
+      "answerPlaceholder": "Twoja odpowiedź…",
+      "fileSubmissionFollowUp": "Przesyłanie plików do zadań nie jest jeszcze podłączone.",
+      "feedback": "Informacja zwrotna",
+      "resubmit": "Prześlij ponownie",
+      "submit": "Prześlij"
     }
   },
   "studentCourseView": {

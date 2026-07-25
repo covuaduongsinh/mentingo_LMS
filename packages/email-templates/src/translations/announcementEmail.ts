@@ -38,6 +38,11 @@ export const getAnnouncementEmailTranslations = (
       paragraphs: [content],
       buttonText: "Abrir notificaciones",
     },
+    vi: {
+      heading: title,
+      paragraphs: [content],
+      buttonText: "Mở thông báo",
+    },
   };
 
   return emailContent[language];

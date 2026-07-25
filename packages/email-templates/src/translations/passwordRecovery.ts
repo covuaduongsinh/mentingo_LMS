@@ -54,6 +54,14 @@ export const getPasswordRecoveryEmailTranslations = (
       ],
       buttonText: "RESTABLECER CONTRASEÑA",
     },
+    vi: {
+      heading: "Khôi phục mật khẩu",
+      paragraphs: [
+        `Chào ${name}, bạn đã yêu cầu đặt lại mật khẩu 🔑`,
+        "Bạn có thể đặt lại mật khẩu của mình bằng nút bên dưới.",
+      ],
+      buttonText: "ĐẶT LẠI MẬT KHẨU",
+    },
   };
 
   return emailContent[language];

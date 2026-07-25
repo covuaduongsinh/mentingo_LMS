@@ -111,6 +111,9 @@ import type {
   ChessPlayEndReason,
   ChessPlayOutcome,
   ChessTopic,
+  AssignmentGradingType,
+  AssignmentTaskType,
+  AssignmentSubmissionStatus,
   LiveTrainingMemberRole,
   LiveTrainingParticipantRole,
   LiveTrainingSettings,
@@ -2622,5 +2625,144 @@ export const chessPlaySessions = pgTable(
   (table) => ({
     ...withTenantIdIndex("chess_play_sessions")(table),
     userCreatedIdx: index("chess_play_sessions_user_created_idx").on(table.userId, table.createdAt),
+  }),
+);
+
+/**
+ * Assignment engine. Business behavior described in
+ * docs/specs/assignment-engine-business-spec.md (clean-room design notes in
+ * docs/research/learnhouse/ — no code or schema copied from any external source).
+ */
+
+export type AssignmentTaskContents = {
+  /** short_answer: the reference answer used for AI-judge comparison. */
+  expectedAnswer?: string;
+  /** number_answer: exact expected value and allowed +/- tolerance. */
+  expectedNumber?: number;
+  numberTolerance?: number;
+  /** chess_position_line / chess_pgn_analysis: starting position for the task. */
+  fen?: string;
+  /** chess_position_line: correct solution as UCI moves, graded like chess quiz questions. */
+  solutionMovesUci?: string[];
+  /** file_submission: upload constraints shown to the learner. */
+  allowedFileTypes?: string[];
+  maxFileSizeMb?: number;
+};
+
+export type AssignmentSubmissionContents = {
+  text?: string;
+  number?: number;
+  movesUci?: string[];
+  pgn?: string;
+  fileS3Key?: string;
+  fileName?: string;
+};
+
+export const assignments = pgTable(
+  "assignments",
+  {
+    ...id,
+    ...timestamps,
+    lessonId: uuid("lesson_id")
+      .references(() => lessons.id, { onDelete: "cascade" })
+      .notNull(),
+    title: jsonb("title").$type<LocalizedText>().default({}).notNull(),
+    description: jsonb("description").$type<LocalizedText>(),
+    dueDate: timestampWithTimezone({ name: "due_date" }),
+    gradingType: text("grading_type").$type<AssignmentGradingType>().notNull().default("numeric"),
+    autoGrading: boolean("auto_grading").notNull().default(true),
+    showCorrectAnswers: boolean("show_correct_answers").notNull().default(false),
+    allowRetries: boolean("allow_retries").notNull().default(true),
+    maxRetries: integer("max_retries").notNull().default(0),
+    passThresholdPercentage: integer("pass_threshold_percentage"),
+    antiCopyPaste: boolean("anti_copy_paste").notNull().default(false),
+    published: boolean("published").notNull().default(false),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("assignments")(table),
+    lessonUniqueIdx: uniqueIndex("assignments_lesson_id_unique_idx").on(table.lessonId),
+  }),
+);
+
+export const assignmentTasks = pgTable(
+  "assignment_tasks",
+  {
+    ...id,
+    ...timestamps,
+    assignmentId: uuid("assignment_id")
+      .references(() => assignments.id, { onDelete: "cascade" })
+      .notNull(),
+    title: jsonb("title").$type<LocalizedText>().default({}).notNull(),
+    description: jsonb("description").$type<LocalizedText>(),
+    hint: jsonb("hint").$type<LocalizedText>(),
+    taskType: text("task_type").$type<AssignmentTaskType>().notNull(),
+    contents: jsonb("contents").$type<AssignmentTaskContents>().default({}).notNull(),
+    referenceFileS3Key: varchar("reference_file_s3_key", { length: 500 }),
+    maxGradeValue: integer("max_grade_value").notNull().default(100),
+    displayOrder: integer("display_order").notNull().default(0),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("assignment_tasks")(table),
+    assignmentDisplayOrderIdx: index("assignment_tasks_assignment_display_order_idx").on(
+      table.assignmentId,
+      table.displayOrder,
+    ),
+  }),
+);
+
+export const assignmentTaskSubmissions = pgTable(
+  "assignment_task_submissions",
+  {
+    ...id,
+    ...timestamps,
+    taskId: uuid("task_id")
+      .references(() => assignmentTasks.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    submission: jsonb("submission").$type<AssignmentSubmissionContents>().default({}).notNull(),
+    grade: integer("grade"),
+    feedback: text("feedback"),
+    manuallyGraded: boolean("manually_graded").notNull().default(false),
+    gradedByUserId: uuid("graded_by_user_id").references(() => users.id, { onDelete: "set null" }),
+    gradedAt: timestampWithTimezone({ name: "graded_at" }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("assignment_task_submissions")(table),
+    taskUserUniqueIdx: uniqueIndex("assignment_task_submissions_task_user_unique_idx").on(
+      table.taskId,
+      table.userId,
+    ),
+  }),
+);
+
+export const assignmentUserSubmissions = pgTable(
+  "assignment_user_submissions",
+  {
+    ...id,
+    ...timestamps,
+    assignmentId: uuid("assignment_id")
+      .references(() => assignments.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    status: text("status").$type<AssignmentSubmissionStatus>().notNull().default("not_submitted"),
+    grade: integer("grade"),
+    overallFeedback: text("overall_feedback"),
+    attemptNumber: integer("attempt_number").notNull().default(0),
+    submittedAt: timestampWithTimezone({ name: "submitted_at" }),
+    gradedAt: timestampWithTimezone({ name: "graded_at" }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("assignment_user_submissions")(table),
+    assignmentUserUniqueIdx: uniqueIndex(
+      "assignment_user_submissions_assignment_user_unique_idx",
+    ).on(table.assignmentId, table.userId),
   }),
 );

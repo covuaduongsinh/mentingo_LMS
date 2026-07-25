@@ -1,4 +1,4 @@
-import { PackageOpen, Users } from "lucide-react";
+import { ClipboardList, PackageOpen, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { useGlobalSettings } from "~/api/queries/useGlobalSettings";
@@ -73,6 +73,13 @@ const lessonTypes: readonly LessonTypeConfig[] = [
     title: "adminCourseView.curriculum.lesson.other.liveTraining",
     description: "adminCourseView.curriculum.lesson.other.liveTrainingLessonDescription",
   },
+  {
+    contentType: ContentTypes.ASSIGNMENT_FORM,
+    handle: LESSON_TYPE_OPTION_HANDLES.ASSIGNMENT,
+    lucideIcon: ClipboardList,
+    title: "adminCourseView.curriculum.lesson.other.assignment",
+    description: "adminCourseView.curriculum.lesson.other.assignmentLessonDescription",
+  },
 ];
 
 const SelectLessonType = ({ setContentTypeToDisplay }: SelectLessonTypeProps) => {
@@ -121,7 +128,8 @@ const SelectLessonType = ({ setContentTypeToDisplay }: SelectLessonTypeProps) =>
                   <hgroup className="space-y-3">
                     <div className="flex flex-wrap items-center gap-x-2">
                       <h3 className="h6 text-neutral-950">{t(title)}</h3>
-                      {contentType === ContentTypes.AI_MENTOR_FORM && (
+                      {(contentType === ContentTypes.AI_MENTOR_FORM ||
+                        contentType === ContentTypes.ASSIGNMENT_FORM) && (
                         <Tooltip>
                           <TooltipTrigger>
                             <Badge variant="secondary" className="uppercase">

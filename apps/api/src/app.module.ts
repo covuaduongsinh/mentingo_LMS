@@ -20,6 +20,7 @@ import { AiModule } from "./ai/ai.module";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { AnnouncementsModule } from "./announcements/announcements.module";
 import { ArticlesModule } from "./articles/articles.module";
+import { AssignmentsModule } from "./assignments/assignments.module";
 import { AudioModule } from "./audio/audio.module";
 import { AuthModule } from "./auth/auth.module";
 import { GoogleStrategy } from "./auth/strategy/google.strategy";
@@ -169,6 +170,7 @@ import type { RedisClient } from "src/redis";
     ScormModule,
     CertificatesModule,
     ChessModule,
+    AssignmentsModule,
     AnnouncementsModule,
     IngestionModule,
     IntegrationModule,

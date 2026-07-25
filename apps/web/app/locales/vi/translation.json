@@ -210,7 +210,8 @@
       "ai_mentor": "Cố vấn AI",
       "embed": "Nhúng",
       "scorm": "SCORM",
-      "live_training": "Đào tạo trực tiếp"
+      "live_training": "Đào tạo trực tiếp",
+      "assignment": "Bài tập"
     },
     "error": {
       "somethingWentWrong": "Rất tiếc! Đã có lỗi xảy ra."
@@ -2067,7 +2068,8 @@
         "optionUpdateFailed": "Cập nhật lựa chọn bài kiểm tra thất bại.",
         "optionInsertFailed": "Thêm lựa chọn bài kiểm tra thất bại.",
         "embedCreateFailed": "Tạo bài học nhúng thất bại.",
-        "signedUrlDownloadFailed": "Tải tệp từ URL đã ký thất bại."
+        "signedUrlDownloadFailed": "Tải tệp từ URL đã ký thất bại.",
+        "assignmentCreateFailed": "Không thể tạo bài tập."
       }
     },
     "thinking": {
@@ -2258,7 +2260,8 @@
         "removeLiveTrainingLesson": "Bạn có chắc chắn muốn xóa bài học Đào tạo trực tiếp này khỏi chương không?",
         "removeChapter": "Bạn có chắc chắn muốn xóa chương này không?",
         "removeQuestion": "Bạn có chắc chắn muốn xóa câu hỏi không?",
-        "removeContent": "Bạn có chắc chắn muốn xóa nội dung không?"
+        "removeContent": "Bạn có chắc chắn muốn xóa nội dung không?",
+        "lessonCreated": "Đã tạo bài học."
       },
       "chapter": {
         "button": {
@@ -2299,7 +2302,8 @@
           "addResource": "Thêm tài nguyên",
           "removeResource": "Xóa tài nguyên",
           "uploadFiles": "Tải tệp lên",
-          "addLessonDisabledTooltip": "Để tạo bài học, bạn phải đang ở ngôn ngữ gốc."
+          "addLessonDisabledTooltip": "Để tạo bài học, bạn phải đang ở ngôn ngữ gốc.",
+          "addTask": "Thêm câu hỏi/nhiệm vụ"
         },
         "breadcrumbs": {
           "back": "Quay lại"
@@ -2419,7 +2423,11 @@
           "ttsPreset": "Cài đặt sẵn TTS",
           "customTTSReference": "Tham chiếu TTS tùy chỉnh",
           "includeFiles_one": "Đính kèm tối đa 1 tệp dưới {{ MAX_FILE_SIZE }} MB để sử dụng làm bối cảnh trong bài học",
-          "includeFiles_other": "Đính kèm tối đa {{ count }} tệp dưới {{ MAX_FILE_SIZE }} MB để sử dụng làm bối cảnh trong bài học"
+          "includeFiles_other": "Đính kèm tối đa {{ count }} tệp dưới {{ MAX_FILE_SIZE }} MB để sử dụng làm bối cảnh trong bài học",
+          "allowRetries": "Cho phép nộp lại",
+          "showCorrectAnswers": "Hiện đáp án đúng sau khi đã chấm",
+          "expectedAnswer": "Đáp án tham khảo (ẩn với học viên)",
+          "expectedNumber": "Giá trị số mong đợi"
         },
         "placeholder": {
           "title": "Nhập tiêu đề bài học...",
@@ -2538,7 +2546,10 @@
           },
           "betaTooltip": "Tính năng này đang ở phiên bản thử nghiệm. Nó có thể chứa lỗi hoặc không hoạt động hoàn toàn như dự kiến, sử dụng theo rủi ro của riêng bạn.",
           "dragWord": "Kéo từ vào câu",
-          "taskDescriptionTooltip": "Mô tả ngắn gọn những gì người tham gia nên làm trong cuộc trò chuyện với cố vấn AI."
+          "taskDescriptionTooltip": "Mô tả ngắn gọn những gì người tham gia nên làm trong cuộc trò chuyện với cố vấn AI.",
+          "assignment": "Bài tập",
+          "assignmentLessonDescription": "Tạo một nhiệm vụ có chấm điểm hoặc bài tập về nhà để học viên hoàn thành.",
+          "tasks": "Câu hỏi/nhiệm vụ"
         }
       }
     },
@@ -3046,6 +3057,19 @@
       "courseEnrollmentRequired": "Bạn chưa đăng ký khóa học này.",
       "quizRetakeUnavailable": "Không thể đặt lại câu trả lời bài kiểm tra do giới hạn số lần thử hoặc thời gian khóa.",
       "quizResetFailed": "Đặt lại câu trả lời bài kiểm tra thất bại. Vui lòng thử lại."
+    },
+    "assignment": {
+      "loadError": "Không thể tải bài tập này.",
+      "submitted": "Đã nộp câu trả lời.",
+      "submitError": "Không thể nộp câu trả lời của bạn.",
+      "status": "Trạng thái",
+      "grade": "Điểm",
+      "pgnPlaceholder": "Dán PGN có chú giải của bạn vào đây…",
+      "answerPlaceholder": "Câu trả lời của bạn…",
+      "fileSubmissionFollowUp": "Tải file cho bài tập chưa được kết nối.",
+      "feedback": "Nhận xét",
+      "resubmit": "Nộp lại",
+      "submit": "Nộp bài"
     }
   },
   "studentCourseView": {

@@ -51,6 +51,14 @@ export const getCreatePasswordReminderEmailTranslations = (language: SupportedLa
       ],
       buttonText: "CREAR CONTRASEÑA",
     },
+    vi: {
+      heading: "Nhắc nhở",
+      paragraphs: [
+        "Đây là lời nhắc thân thiện rằng tài khoản của bạn chưa được thiết lập đầy đủ. 🔒",
+        "Để hoàn tất thiết lập tài khoản, vui lòng tạo mật khẩu bằng cách nhấn vào nút bên dưới. Nếu bạn đã tạo mật khẩu rồi, hãy bỏ qua lời nhắc này.",
+      ],
+      buttonText: "TẠO MẬT KHẨU",
+    },
   };
 
   return emailContent[language];

@@ -52,7 +52,8 @@
       "ai_mentor": "AI mentorius",
       "embed": "Įterpti",
       "scorm": "SCORM",
-      "live_training": "Tiesioginiai mokymai"
+      "live_training": "Tiesioginiai mokymai",
+      "assignment": "Užduotis"
     },
     "error": {
       "somethingWentWrong": "Oi! Kažkas nutiko."
@@ -1848,7 +1849,8 @@
         "optionUpdateFailed": "Nepavyko atnaujinti testo parinkties.",
         "optionInsertFailed": "Nepavyko pridėti testo parinkties.",
         "embedCreateFailed": "Nepavyko sukurti įdėjimo pamokos.",
-        "signedUrlDownloadFailed": "Nepavyko atsisiųsti failo iš pasirašyto URL."
+        "signedUrlDownloadFailed": "Nepavyko atsisiųsti failo iš pasirašyto URL.",
+        "assignmentCreateFailed": "Nepavyko sukurti užduoties."
       }
     },
     "thinking": {
@@ -2039,7 +2041,8 @@
         "removeLiveTrainingLesson": "Ar tikrai norite ištrinti šią Tiesioginiai mokymai pamoką iš skyriaus?",
         "removeChapter": "Ar tikrai norite ištrinti šį skyrių?",
         "removeQuestion": "Ar tikrai norite ištrinti klausimą?",
-        "removeContent": "Ar tikrai norite ištrinti turinį?"
+        "removeContent": "Ar tikrai norite ištrinti turinį?",
+        "lessonCreated": "Pamoka sukurta."
       },
       "chapter": {
         "button": {
@@ -2080,7 +2083,8 @@
           "addResource": "Pridėti išteklių",
           "removeResource": "Pašalinti išteklius",
           "uploadFiles": "Įkelti failus",
-          "addLessonDisabledTooltip": "Norėdami sukurti pamoką, turite kalbėti pagrindine kalba."
+          "addLessonDisabledTooltip": "Norėdami sukurti pamoką, turite kalbėti pagrindine kalba.",
+          "addTask": "Pridėti užduotį"
         },
         "breadcrumbs": {
           "back": "Atgal"
@@ -2200,7 +2204,11 @@
           "ttsPreset": "Iš anksto nustatytas TTS",
           "customTTSReference": "Pasirinktinė TTS nuoroda",
           "includeFiles_one": "Pridėkite iki 1 failo žemiau {{ MAX_FILE_SIZE }} MB, kad būtų naudojamas kaip kontekstas pamokose",
-          "includeFiles_other": "Pridėkite iki {{ count }} failų, mažesnių nei {{ MAX_FILE_SIZE }} MB, kad galėtumėte naudoti kaip kontekstą pamokose"
+          "includeFiles_other": "Pridėkite iki {{ count }} failų, mažesnių nei {{ MAX_FILE_SIZE }} MB, kad galėtumėte naudoti kaip kontekstą pamokose",
+          "allowRetries": "Leisti bandyti dar kartą",
+          "showCorrectAnswers": "Rodyti teisingus atsakymus po įvertinimo",
+          "expectedAnswer": "Atsakymo pavyzdys (paslėptas nuo besimokančiųjų)",
+          "expectedNumber": "Laukiamas skaičius"
         },
         "placeholder": {
           "title": "Pateikite pamokos pavadinimą...",
@@ -2319,7 +2327,10 @@
           },
           "betaTooltip": "Ši funkcija pateikiama bandomojoje versijoje. Jame gali būti klaidų arba jis gali neveikti visiškai taip, kaip numatyta, ir naudojamas jūsų pačių rizika.",
           "dragWord": "Vilkite žodį į sakinį",
-          "taskDescriptionTooltip": "Trumpai apibūdinkite, ką dalyvis turėtų daryti pokalbio su AI mentoriumi metu."
+          "taskDescriptionTooltip": "Trumpai apibūdinkite, ką dalyvis turėtų daryti pokalbio su AI mentoriumi metu.",
+          "assignment": "Užduotis",
+          "assignmentLessonDescription": "Sukurkite vertinamą užduotį ar namų darbą, kurį turi atlikti besimokantieji.",
+          "tasks": "Užduotys"
         }
       }
     },
@@ -2825,6 +2836,19 @@
       "courseEnrollmentRequired": "Jūs nesate užregistruoti į šį kursą.",
       "quizRetakeUnavailable": "Viktorinos atsakymų negalima atstatyti dėl bandymų limito arba laukimo laikotarpio.",
       "quizResetFailed": "Nepavyko atstatyti viktorinos atsakymų. Bandykite dar kartą."
+    },
+    "assignment": {
+      "loadError": "Nepavyko įkelti šios užduoties.",
+      "submitted": "Atsakymas pateiktas.",
+      "submitError": "Nepavyko pateikti jūsų atsakymo.",
+      "status": "Būsena",
+      "grade": "Įvertinimas",
+      "pgnPlaceholder": "Čia įklijuokite savo komentuotą PGN…",
+      "answerPlaceholder": "Jūsų atsakymas…",
+      "fileSubmissionFollowUp": "Failų įkėlimas užduotims dar nesukonfigūruotas.",
+      "feedback": "Atsiliepimas",
+      "resubmit": "Pateikti iš naujo",
+      "submit": "Pateikti"
     }
   },
   "studentCourseView": {
