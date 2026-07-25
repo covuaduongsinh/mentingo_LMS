@@ -16,6 +16,7 @@ import { Type, type Static } from "@sinclair/typebox";
 import { type Request, Response } from "express";
 import { Validate } from "nestjs-typebox";
 
+import { TurnstileGuard } from "src/auth/guards/turnstile.guard";
 import { baseResponse, BaseResponse, nullResponse, type UUIDType } from "src/common";
 import { AllowPasswordChangeRequired } from "src/common/decorators/allow-password-change-required.decorator";
 import { Public } from "src/common/decorators/public.decorator";
@@ -81,6 +82,7 @@ export class AuthController {
   }
 
   @Public()
+  @UseGuards(TurnstileGuard)
   @Post("register")
   @Validate({
     request: [{ type: "body", schema: createAccountSchema }],
@@ -109,7 +111,7 @@ export class AuthController {
   }
 
   @Public()
-  @UseGuards(AuthGuard("local"))
+  @UseGuards(TurnstileGuard, AuthGuard("local"))
   @Post("login")
   @Validate({
     request: [{ type: "body", schema: loginSchema }],

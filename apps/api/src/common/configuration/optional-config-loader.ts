@@ -4,6 +4,7 @@ import awsConfig from "./aws";
 import googleConfig from "./google";
 import microsoftConfig from "./microsoft";
 import slackConfig from "./slack";
+import turnstileConfig from "./turnstile";
 
 const hasAwsConfig = hasRequiredEnvsConfig([
   "AWS_BUCKET_NAME",
@@ -30,11 +31,17 @@ const hasMicrosoftConfig = hasRequiredEnvsConfig([
   "MICROSOFT_OAUTH_ENABLED",
 ]);
 
+export const hasTurnstileConfig = hasRequiredEnvsConfig([
+  "TURNSTILE_SITE_KEY",
+  "TURNSTILE_SECRET_KEY",
+]);
+
 export const getOptionalConfigs = () => {
   return [
     ...(hasAwsConfig ? [awsConfig] : []),
     ...(hasGoogleConfig ? [googleConfig] : []),
     ...(hasSlackConfig ? [slackConfig] : []),
     ...(hasMicrosoftConfig ? [microsoftConfig] : []),
+    ...(hasTurnstileConfig ? [turnstileConfig] : []),
   ];
 };

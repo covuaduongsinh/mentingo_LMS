@@ -1976,6 +1976,9 @@ export class SettingsService {
         : JSON.parse(settings.loginPageFiles ?? "[]"),
       userEmailTriggers: settings.userEmailTriggers ?? DEFAULT_GLOBAL_SETTINGS.userEmailTriggers,
       ageLimit: settings.ageLimit ?? null,
+      maxFailedLoginAttempts:
+        settings.maxFailedLoginAttempts ?? DEFAULT_GLOBAL_SETTINGS.maxFailedLoginAttempts,
+      lockoutMinutes: settings.lockoutMinutes ?? DEFAULT_GLOBAL_SETTINGS.lockoutMinutes,
     };
   }
 

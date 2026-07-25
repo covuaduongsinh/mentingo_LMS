@@ -11,8 +11,10 @@ import { useLoginUser } from "~/api/mutations/useLoginUser";
 import { useGlobalSettingsSuspense } from "~/api/queries/useGlobalSettings";
 import useLoginPageFiles from "~/api/queries/useLoginPageFiles";
 import { useSSOEnabled } from "~/api/queries/useSSOEnabled";
+import { useTurnstileSiteKey } from "~/api/queries/useTurnstileSiteKey";
 import { FormCheckbox } from "~/components/Form/FormCheckbox";
 import { PlatformLogo } from "~/components/PlatformLogo";
+import { TurnstileWidget } from "~/components/TurnstileWidget";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
@@ -75,6 +77,8 @@ export default function LoginPage() {
   const { t } = useTranslation();
 
   const { data: ssoEnabled } = useSSOEnabled();
+  const { data: turnstileSiteKey } = useTurnstileSiteKey();
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const handlePreviewClick = (resource: LoginPageResource) => {
     setPreviewResource(resource);
@@ -130,7 +134,7 @@ export default function LoginPage() {
   const onSubmit = (data: LoginBody) => {
     if (isSSOEnforced && isAnyProviderEnabled) return;
 
-    loginUser({ data });
+    loginUser({ data: { ...data, turnstileToken: turnstileToken || undefined } });
   };
 
   if (magicLinkToken) {
@@ -217,7 +221,18 @@ export default function LoginPage() {
                 name="rememberMe"
                 label={t("loginView.other.rememberMe")}
               />
-              <Button type="submit" className="w-full" data-testid={LOGIN_PAGE_HANDLES.LOGIN}>
+              {turnstileSiteKey?.data.siteKey && (
+                <TurnstileWidget
+                  siteKey={turnstileSiteKey.data.siteKey}
+                  onVerify={setTurnstileToken}
+                />
+              )}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={Boolean(turnstileSiteKey?.data.siteKey) && !turnstileToken}
+                data-testid={LOGIN_PAGE_HANDLES.LOGIN}
+              >
                 {t("loginView.button.login")}
               </Button>
             </form>

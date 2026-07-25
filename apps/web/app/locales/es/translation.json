@@ -4549,6 +4549,7 @@
     "error": {
       "unauthenticated": "Usuario no autenticado",
       "invalidEmailOrPassword": "Correo electrónico o contraseña no válidos",
+      "captchaVerificationFailed": "Error al verificar el captcha. Inténtalo de nuevo.",
       "invalidRefreshToken": "Token de actualización no válido",
       "adminRoleRequired": "Se requiere rol de administrador",
       "missingPermission": "No tienes permiso para acceder a este recurso.",

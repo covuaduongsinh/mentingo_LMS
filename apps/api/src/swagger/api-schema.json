@@ -9744,6 +9744,23 @@
         }
       }
     },
+    "/api/env/frontend/turnstile": {
+      "get": {
+        "operationId": "EnvController_getTurnstileSiteKey",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTurnstileSiteKeyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/env/frontend/stripe": {
       "get": {
         "operationId": "EnvController_getStripeConfigured",
@@ -17769,6 +17786,9 @@
                 "type": "boolean"
               }
             }
+          },
+          "turnstileToken": {
+            "type": "string"
           }
         },
         "required": [
@@ -17816,6 +17836,19 @@
                   }
                 ]
               },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -17892,6 +17925,8 @@
               "lastName",
               "archived",
               "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -17918,6 +17953,9 @@
           },
           "rememberMe": {
             "type": "boolean"
+          },
+          "turnstileToken": {
+            "type": "string"
           }
         },
         "required": [
@@ -17962,6 +18000,19 @@
                   }
                 ]
               },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -18038,6 +18089,8 @@
               "lastName",
               "archived",
               "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -18084,6 +18137,19 @@
                 "type": "boolean"
               },
               "deletedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
                 "anyOf": [
                   {
                     "type": "string"
@@ -18575,6 +18641,8 @@
               "lastName",
               "archived",
               "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
               "profilePictureUrl",
               "roleSlugs",
               "permissions",
@@ -18740,6 +18808,19 @@
                   }
                 ]
               },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -18816,6 +18897,8 @@
               "lastName",
               "archived",
               "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -18995,6 +19078,19 @@
                   }
                 ]
               },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -19071,6 +19167,8 @@
               "lastName",
               "archived",
               "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -19299,6 +19397,14 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "maxFailedLoginAttempts": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "lockoutMinutes": {
+                "minimum": 1,
+                "type": "number"
               }
             },
             "required": [
@@ -19327,7 +19433,9 @@
               "articlesEnabled",
               "learningPathsEnabled",
               "ageLimit",
-              "loginPageFiles"
+              "loginPageFiles",
+              "maxFailedLoginAttempts",
+              "lockoutMinutes"
             ]
           }
         },
@@ -20217,6 +20325,14 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "maxFailedLoginAttempts": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "lockoutMinutes": {
+                "minimum": 1,
+                "type": "number"
               }
             },
             "required": [
@@ -20245,7 +20361,9 @@
               "articlesEnabled",
               "learningPathsEnabled",
               "ageLimit",
-              "loginPageFiles"
+              "loginPageFiles",
+              "maxFailedLoginAttempts",
+              "lockoutMinutes"
             ]
           }
         },
@@ -20469,6 +20587,14 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "maxFailedLoginAttempts": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "lockoutMinutes": {
+                "minimum": 1,
+                "type": "number"
               }
             },
             "required": [
@@ -20497,7 +20623,9 @@
               "articlesEnabled",
               "learningPathsEnabled",
               "ageLimit",
-              "loginPageFiles"
+              "loginPageFiles",
+              "maxFailedLoginAttempts",
+              "lockoutMinutes"
             ]
           }
         },
@@ -20721,6 +20849,14 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "maxFailedLoginAttempts": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "lockoutMinutes": {
+                "minimum": 1,
+                "type": "number"
               }
             },
             "required": [
@@ -20749,7 +20885,9 @@
               "articlesEnabled",
               "learningPathsEnabled",
               "ageLimit",
-              "loginPageFiles"
+              "loginPageFiles",
+              "maxFailedLoginAttempts",
+              "lockoutMinutes"
             ]
           }
         },
@@ -20973,6 +21111,14 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "maxFailedLoginAttempts": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "lockoutMinutes": {
+                "minimum": 1,
+                "type": "number"
               }
             },
             "required": [
@@ -21001,7 +21147,9 @@
               "articlesEnabled",
               "learningPathsEnabled",
               "ageLimit",
-              "loginPageFiles"
+              "loginPageFiles",
+              "maxFailedLoginAttempts",
+              "lockoutMinutes"
             ]
           }
         },
@@ -21225,6 +21373,14 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "maxFailedLoginAttempts": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "lockoutMinutes": {
+                "minimum": 1,
+                "type": "number"
               }
             },
             "required": [
@@ -21253,7 +21409,9 @@
               "articlesEnabled",
               "learningPathsEnabled",
               "ageLimit",
-              "loginPageFiles"
+              "loginPageFiles",
+              "maxFailedLoginAttempts",
+              "lockoutMinutes"
             ]
           }
         },
@@ -21477,6 +21635,14 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "maxFailedLoginAttempts": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "lockoutMinutes": {
+                "minimum": 1,
+                "type": "number"
               }
             },
             "required": [
@@ -21505,7 +21671,9 @@
               "articlesEnabled",
               "learningPathsEnabled",
               "ageLimit",
-              "loginPageFiles"
+              "loginPageFiles",
+              "maxFailedLoginAttempts",
+              "lockoutMinutes"
             ]
           }
         },
@@ -21741,6 +21909,14 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "maxFailedLoginAttempts": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "lockoutMinutes": {
+                "minimum": 1,
+                "type": "number"
               }
             },
             "required": [
@@ -21769,7 +21945,9 @@
               "articlesEnabled",
               "learningPathsEnabled",
               "ageLimit",
-              "loginPageFiles"
+              "loginPageFiles",
+              "maxFailedLoginAttempts",
+              "lockoutMinutes"
             ]
           }
         },
@@ -21993,6 +22171,14 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "maxFailedLoginAttempts": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "lockoutMinutes": {
+                "minimum": 1,
+                "type": "number"
               }
             },
             "required": [
@@ -22021,7 +22207,9 @@
               "articlesEnabled",
               "learningPathsEnabled",
               "ageLimit",
-              "loginPageFiles"
+              "loginPageFiles",
+              "maxFailedLoginAttempts",
+              "lockoutMinutes"
             ]
           }
         },
@@ -22416,6 +22604,14 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "maxFailedLoginAttempts": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "lockoutMinutes": {
+                "minimum": 1,
+                "type": "number"
               }
             },
             "required": [
@@ -22444,7 +22640,9 @@
               "articlesEnabled",
               "learningPathsEnabled",
               "ageLimit",
-              "loginPageFiles"
+              "loginPageFiles",
+              "maxFailedLoginAttempts",
+              "lockoutMinutes"
             ]
           }
         },
@@ -23654,6 +23852,19 @@
                         }
                       ]
                     },
+                    "failedLoginAttempts": {
+                      "type": "number"
+                    },
+                    "lockedUntil": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
                     "profilePictureUrl": {
                       "anyOf": [
                         {
@@ -23674,6 +23885,8 @@
                     "lastName",
                     "archived",
                     "deletedAt",
+                    "failedLoginAttempts",
+                    "lockedUntil",
                     "profilePictureUrl"
                   ]
                 },
@@ -23817,6 +24030,19 @@
                   }
                 ]
               },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -23862,6 +24088,8 @@
               "lastName",
               "archived",
               "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
               "profilePictureUrl",
               "roleSlugs",
               "groups"
@@ -24043,6 +24271,19 @@
                   }
                 ]
               },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -24063,6 +24304,8 @@
               "lastName",
               "archived",
               "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
               "profilePictureUrl"
             ]
           }
@@ -24187,6 +24430,19 @@
                   }
                 ]
               },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -24207,6 +24463,8 @@
               "lastName",
               "archived",
               "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
               "profilePictureUrl"
             ]
           }
@@ -24886,6 +25144,19 @@
                           }
                         ]
                       },
+                      "failedLoginAttempts": {
+                        "type": "number"
+                      },
+                      "lockedUntil": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -24906,6 +25177,8 @@
                       "lastName",
                       "archived",
                       "deletedAt",
+                      "failedLoginAttempts",
+                      "lockedUntil",
                       "profilePictureUrl"
                     ]
                   }
@@ -25083,6 +25356,19 @@
                         }
                       ]
                     },
+                    "failedLoginAttempts": {
+                      "type": "number"
+                    },
+                    "lockedUntil": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
                     "profilePictureUrl": {
                       "anyOf": [
                         {
@@ -25103,6 +25389,8 @@
                     "lastName",
                     "archived",
                     "deletedAt",
+                    "failedLoginAttempts",
+                    "lockedUntil",
                     "profilePictureUrl"
                   ]
                 }
@@ -25255,6 +25543,19 @@
                           }
                         ]
                       },
+                      "failedLoginAttempts": {
+                        "type": "number"
+                      },
+                      "lockedUntil": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -25275,6 +25576,8 @@
                       "lastName",
                       "archived",
                       "deletedAt",
+                      "failedLoginAttempts",
+                      "lockedUntil",
                       "profilePictureUrl"
                     ]
                   }
@@ -42552,6 +42855,32 @@
           "data"
         ]
       },
+      "GetTurnstileSiteKeyResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "siteKey": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "siteKey"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "GetStripeConfiguredResponse": {
         "type": "object",
         "properties": {
@@ -56891,6 +57220,19 @@
                           }
                         ]
                       },
+                      "failedLoginAttempts": {
+                        "type": "number"
+                      },
+                      "lockedUntil": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -56911,6 +57253,8 @@
                       "lastName",
                       "archived",
                       "deletedAt",
+                      "failedLoginAttempts",
+                      "lockedUntil",
                       "profilePictureUrl"
                     ]
                   }

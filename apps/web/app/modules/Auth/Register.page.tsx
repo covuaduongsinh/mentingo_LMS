@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "@remix-run/react";
 import { format, startOfDay, subYears } from "date-fns";
 import { enUS, pl } from "date-fns/locale";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -10,10 +10,12 @@ import { useRegisterUser } from "~/api/mutations/useRegisterUser";
 import { useGlobalSettings, useGlobalSettingsSuspense } from "~/api/queries/useGlobalSettings";
 import { useRegistrationForm } from "~/api/queries/useRegistrationForm";
 import { useSSOEnabled } from "~/api/queries/useSSOEnabled";
+import { useTurnstileSiteKey } from "~/api/queries/useTurnstileSiteKey";
 import { Icon } from "~/components/Icon";
 import PasswordValidationDisplay from "~/components/PasswordValidation/PasswordValidationDisplay";
 import { PlatformLogo } from "~/components/PlatformLogo";
 import Viewer from "~/components/RichText/Viever";
+import { TurnstileWidget } from "~/components/TurnstileWidget";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
@@ -52,6 +54,8 @@ export default function RegisterPage() {
   const { data: ssoEnabled } = useSSOEnabled();
   const { data: globalSettings } = useGlobalSettings();
   const { data: registrationForm } = useRegistrationForm(selectedLanguage);
+  const { data: turnstileSiteKey } = useTurnstileSiteKey();
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const isGoogleOAuthEnabled =
     (ssoEnabled?.data.google ?? import.meta.env.VITE_GOOGLE_OAUTH_ENABLED) === "true";
@@ -148,7 +152,7 @@ export default function RegisterPage() {
      * We need to remove birthday from register data because we don't process personal data
      */
     const { birthday: _birthday, ...registerData } = data;
-    registerUser({ data: registerData });
+    registerUser({ data: { ...registerData, turnstileToken: turnstileToken || undefined } });
   };
 
   const maxBirthdayDate = useMemo(() => {
@@ -347,10 +351,19 @@ export default function RegisterPage() {
                       </div>
                     ) : null}
 
+                    {turnstileSiteKey?.data.siteKey && (
+                      <TurnstileWidget
+                        siteKey={turnstileSiteKey.data.siteKey}
+                        onVerify={setTurnstileToken}
+                      />
+                    )}
+
                     <Button
                       type="submit"
                       className="w-full"
-                      disabled={!isValid}
+                      disabled={
+                        !isValid || (Boolean(turnstileSiteKey?.data.siteKey) && !turnstileToken)
+                      }
                       data-testid={REGISTER_PAGE_HANDLES.SUBMIT}
                     >
                       {t("registerView.button.createAccount")}

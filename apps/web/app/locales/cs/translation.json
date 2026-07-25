@@ -4606,6 +4606,7 @@
     "error": {
       "unauthenticated": "Uživatel není ověřen",
       "invalidEmailOrPassword": "Neplatný e-mail nebo heslo",
+      "captchaVerificationFailed": "Ověření captcha se nezdařilo. Zkuste to prosím znovu.",
       "invalidRefreshToken": "Neplatný obnovovací token",
       "adminRoleRequired": "Je vyžadována role správce",
       "missingPermission": "Nemáte oprávnění pro přístup k tomuto zdroji",

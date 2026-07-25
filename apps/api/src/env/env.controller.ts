@@ -19,6 +19,7 @@ import {
   isEnvSetupResponseSchema,
   isConfiguredResponseSchema,
   lumaConfiguredResponseSchema,
+  turnstileSiteKeyResponseSchema,
 } from "src/env/env.schema";
 import { EnvService } from "src/env/services/env.service";
 
@@ -58,6 +59,15 @@ export class EnvController {
     const stripePublishableKey = await this.envService.getStripePublishableKey();
 
     return new BaseResponse({ publishableKey: stripePublishableKey });
+  }
+
+  @Public()
+  @Get("frontend/turnstile")
+  @Validate({
+    response: baseResponse(turnstileSiteKeyResponseSchema),
+  })
+  getTurnstileSiteKey() {
+    return new BaseResponse({ siteKey: this.envService.getTurnstileSiteKey() });
   }
 
   @Public()

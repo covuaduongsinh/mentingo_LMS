@@ -112,6 +112,7 @@ export interface RegisterBody {
   password: string;
   language: "en" | "pl" | "de" | "lt" | "cs" | "es" | "vi";
   formAnswers?: object;
+  turnstileToken?: string;
 }
 
 export interface RegisterResponse {
@@ -124,6 +125,8 @@ export interface RegisterResponse {
     lastName: string;
     archived: boolean;
     deletedAt: string | null;
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -152,6 +155,7 @@ export interface LoginBody {
    */
   password: string;
   rememberMe?: boolean;
+  turnstileToken?: string;
 }
 
 export interface LoginResponse {
@@ -164,6 +168,8 @@ export interface LoginResponse {
     lastName: string;
     archived: boolean;
     deletedAt: string | null;
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -197,6 +203,8 @@ export interface CurrentUserResponse {
     lastName: string;
     archived: boolean;
     deletedAt: string | null;
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
     profilePictureUrl: string | null;
     roleSlugs: string[];
     permissions: (
@@ -351,6 +359,8 @@ export interface CreatePasswordResponse {
     lastName: string;
     archived: boolean;
     deletedAt: string | null;
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -413,6 +423,8 @@ export interface HandleMagicLinkResponse {
     lastName: string;
     archived: boolean;
     deletedAt: string | null;
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -478,6 +490,10 @@ export interface GetPublicGlobalSettingsResponse {
     learningPathsEnabled: boolean;
     ageLimit: 13 | 16 | null;
     loginPageFiles: string[];
+    /** @min 1 */
+    maxFailedLoginAttempts: number;
+    /** @min 1 */
+    lockoutMinutes: number;
   };
 }
 
@@ -629,6 +645,10 @@ export interface UpdateUnregisteredUserCoursesAccessibilityResponse {
     learningPathsEnabled: boolean;
     ageLimit: 13 | 16 | null;
     loginPageFiles: string[];
+    /** @min 1 */
+    maxFailedLoginAttempts: number;
+    /** @min 1 */
+    lockoutMinutes: number;
   };
 }
 
@@ -678,6 +698,10 @@ export interface UpdateEnforceSSOResponse {
     learningPathsEnabled: boolean;
     ageLimit: 13 | 16 | null;
     loginPageFiles: string[];
+    /** @min 1 */
+    maxFailedLoginAttempts: number;
+    /** @min 1 */
+    lockoutMinutes: number;
   };
 }
 
@@ -727,6 +751,10 @@ export interface UpdateModernCourseListEnabledResponse {
     learningPathsEnabled: boolean;
     ageLimit: 13 | 16 | null;
     loginPageFiles: string[];
+    /** @min 1 */
+    maxFailedLoginAttempts: number;
+    /** @min 1 */
+    lockoutMinutes: number;
   };
 }
 
@@ -776,6 +804,10 @@ export interface UpdateCourseDiscussionsEnabledResponse {
     learningPathsEnabled: boolean;
     ageLimit: 13 | 16 | null;
     loginPageFiles: string[];
+    /** @min 1 */
+    maxFailedLoginAttempts: number;
+    /** @min 1 */
+    lockoutMinutes: number;
   };
 }
 
@@ -825,6 +857,10 @@ export interface UpdateCalendarEnabledResponse {
     learningPathsEnabled: boolean;
     ageLimit: 13 | 16 | null;
     loginPageFiles: string[];
+    /** @min 1 */
+    maxFailedLoginAttempts: number;
+    /** @min 1 */
+    lockoutMinutes: number;
   };
 }
 
@@ -874,6 +910,10 @@ export interface UpdateLiveTrainingEnabledResponse {
     learningPathsEnabled: boolean;
     ageLimit: 13 | 16 | null;
     loginPageFiles: string[];
+    /** @min 1 */
+    maxFailedLoginAttempts: number;
+    /** @min 1 */
+    lockoutMinutes: number;
   };
 }
 
@@ -928,6 +968,10 @@ export interface UpdateLiveTrainingMaxParallelSessionsResponse {
     learningPathsEnabled: boolean;
     ageLimit: 13 | 16 | null;
     loginPageFiles: string[];
+    /** @min 1 */
+    maxFailedLoginAttempts: number;
+    /** @min 1 */
+    lockoutMinutes: number;
   };
 }
 
@@ -977,6 +1021,10 @@ export interface UpdateLearningPathsEnabledResponse {
     learningPathsEnabled: boolean;
     ageLimit: 13 | 16 | null;
     loginPageFiles: string[];
+    /** @min 1 */
+    maxFailedLoginAttempts: number;
+    /** @min 1 */
+    lockoutMinutes: number;
   };
 }
 
@@ -1057,6 +1105,10 @@ export interface UpdateColorSchemaResponse {
     learningPathsEnabled: boolean;
     ageLimit: 13 | 16 | null;
     loginPageFiles: string[];
+    /** @min 1 */
+    maxFailedLoginAttempts: number;
+    /** @min 1 */
+    lockoutMinutes: number;
   };
 }
 
@@ -1323,6 +1375,8 @@ export interface GetUsersResponse {
     lastName: string;
     archived: boolean;
     deletedAt: string | null;
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
     profilePictureUrl: string | null;
   } & {
     roleSlugs: string[];
@@ -1360,6 +1414,8 @@ export interface GetUserByIdResponse {
     lastName: string;
     archived: boolean;
     deletedAt: string | null;
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
     profilePictureUrl: string | null;
     roleSlugs: string[];
     groups: {
@@ -1404,6 +1460,8 @@ export interface UpdateUserResponse {
     lastName: string;
     archived: boolean;
     deletedAt: string | null;
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
     profilePictureUrl: string | null;
   };
 }
@@ -1444,6 +1502,8 @@ export interface AdminUpdateUserResponse {
     lastName: string;
     archived: boolean;
     deletedAt: string | null;
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
     profilePictureUrl: string | null;
   };
 }
@@ -1615,6 +1675,8 @@ export interface GetAllGroupsResponse {
       lastName: string;
       archived: boolean;
       deletedAt: string | null;
+      failedLoginAttempts: number;
+      lockedUntil: string | null;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -1645,6 +1707,8 @@ export interface GetGroupByIdResponse {
       lastName: string;
       archived: boolean;
       deletedAt: string | null;
+      failedLoginAttempts: number;
+      lockedUntil: string | null;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -1669,6 +1733,8 @@ export interface GetUserGroupsResponse {
       lastName: string;
       archived: boolean;
       deletedAt: string | null;
+      failedLoginAttempts: number;
+      lockedUntil: string | null;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -4831,6 +4897,12 @@ export interface GetStripePublishableKeyResponse {
   };
 }
 
+export interface GetTurnstileSiteKeyResponse {
+  data: {
+    siteKey: string | null;
+  };
+}
+
 export interface GetStripeConfiguredResponse {
   data: {
     enabled: boolean;
@@ -7741,6 +7813,8 @@ export interface GetGroupsResponse {
       lastName: string;
       archived: boolean;
       deletedAt: string | null;
+      failedLoginAttempts: number;
+      lockedUntil: string | null;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -13620,6 +13694,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     envControllerGetStripePublishableKey: (params: RequestParams = {}) =>
       this.request<GetStripePublishableKeyResponse, any>({
         path: `/api/env/stripe/publishable-key`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name EnvControllerGetTurnstileSiteKey
+     * @request GET:/api/env/frontend/turnstile
+     */
+    envControllerGetTurnstileSiteKey: (params: RequestParams = {}) =>
+      this.request<GetTurnstileSiteKeyResponse, any>({
+        path: `/api/env/frontend/turnstile`,
         method: "GET",
         format: "json",
         ...params,

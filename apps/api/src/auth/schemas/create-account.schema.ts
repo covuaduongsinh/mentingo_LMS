@@ -12,6 +12,8 @@ export const createAccountSchema = Type.Object({
   password: passwordSchema,
   language: Type.Enum(SUPPORTED_LANGUAGES),
   formAnswers: Type.Optional(Type.Record(UUIDSchema, Type.Boolean())),
+  /** Only required when the tenant has Cloudflare Turnstile configured — see TurnstileGuard. */
+  turnstileToken: Type.Optional(Type.String()),
 });
 
 export type CreateAccountBody = Static<typeof createAccountSchema>;

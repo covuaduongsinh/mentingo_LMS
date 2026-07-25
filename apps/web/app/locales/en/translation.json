@@ -4713,6 +4713,7 @@
     "error": {
       "unauthenticated": "User not authenticated",
       "invalidEmailOrPassword": "Invalid email or password",
+      "captchaVerificationFailed": "Captcha verification failed. Please try again.",
       "invalidRefreshToken": "Invalid refresh token",
       "adminRoleRequired": "Admin role required",
       "missingPermission": "You do not have permission to access this resource",

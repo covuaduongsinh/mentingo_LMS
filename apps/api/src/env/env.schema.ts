@@ -44,6 +44,10 @@ export const isConfiguredResponseSchema = Type.Object({
   enabled: Type.Boolean(),
 });
 
+export const turnstileSiteKeyResponseSchema = Type.Object({
+  siteKey: Type.Union([Type.String(), Type.Null()]),
+});
+
 export const lumaConfiguredResponseSchema = Type.Object({
   enabled: Type.Boolean(),
   courseGenerationEnabled: Type.Boolean(),

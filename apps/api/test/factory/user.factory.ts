@@ -142,6 +142,8 @@ export const createUserFactory = (db: DatabasePg) => {
       archived: false,
       avatarReference: null,
       deletedAt: null,
+      failedLoginAttempts: 0,
+      lockedUntil: null,
       tenantId: faker.string.uuid(),
     };
   });
