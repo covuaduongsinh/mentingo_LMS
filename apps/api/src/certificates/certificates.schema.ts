@@ -33,6 +33,14 @@ export const certificateShareLinkResponseSchema = Type.Object({
   linkedinShareUrl: Type.String(),
 });
 
+export const revokeCertificateShareLinkSchema = Type.Object({
+  certificateId: UUIDSchema,
+});
+
+export const revokeCertificateShareLinkResponseSchema = Type.Object({
+  success: Type.Boolean(),
+});
+
 export const resetCourseCertificatesSchema = Type.Object({
   scope: Type.Enum(CERTIFICATE_RESET_SCOPES),
   groupIds: Type.Optional(Type.Array(UUIDSchema)),

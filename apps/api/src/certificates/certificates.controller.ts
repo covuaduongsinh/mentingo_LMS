@@ -24,6 +24,8 @@ import {
   downloadCertificateSchema,
   resetCourseCertificatesResponseSchema,
   resetCourseCertificatesSchema,
+  revokeCertificateShareLinkResponseSchema,
+  revokeCertificateShareLinkSchema,
   singleCertificateSchema,
 } from "./certificates.schema";
 import { CertificatesService } from "./certificates.service";
@@ -32,6 +34,7 @@ import {
   CreateCertificateShareLinkBody,
   DownloadCertificateBody,
   ResetCourseCertificatesBody,
+  RevokeCertificateShareLinkBody,
 } from "./certificates.types";
 
 import type {
@@ -153,6 +156,23 @@ export class CertificatesController {
     );
   }
 
+  @Post("share-link/revoke")
+  @RequirePermission(PERMISSIONS.CERTIFICATE_SHARE)
+  @Validate({
+    request: [{ type: "body", schema: revokeCertificateShareLinkSchema }],
+    response: revokeCertificateShareLinkResponseSchema,
+  })
+  async revokeCertificateShareLink(
+    @Body() body: RevokeCertificateShareLinkBody,
+    @CurrentUser() currentUser: CurrentUserType,
+  ): Promise<{ success: boolean }> {
+    await this.certificatesService.revokeCertificateShareLink(
+      currentUser.userId,
+      body.certificateId,
+    );
+    return { success: true };
+  }
+
   @Post("course/:courseId/validity-impact")
   @RequirePermission(PERMISSIONS.COURSE_UPDATE, PERMISSIONS.COURSE_UPDATE_OWN)
   @Validate({
@@ -237,13 +257,19 @@ export class CertificatesController {
     return this.certificatesService.resetCourseCertificates(courseId, body, currentUser);
   }
 
+  // These two endpoints must only ever look a certificate up by the opaque
+  // `token` query param (see resolveCertificateIdFromShareToken) — never by
+  // the certificate's own id. The id has no per-share secret, so accepting
+  // it here would let anyone who learns a certificate's UUID look up the
+  // holder's full name, course, and dates indefinitely.
   @Public()
   @Get("share")
   async getCertificateSharePage(
-    @Query("certificateId") certificateId: UUIDType,
+    @Query("token") token: string,
     @Query("lang") language: SupportedLanguages,
     @Res() res: Response,
   ): Promise<void> {
+    const certificateId = await this.certificatesService.resolveCertificateIdFromShareToken(token);
     const html = await this.certificatesService.getPublicSharePage(certificateId, language);
 
     res.set({
@@ -257,10 +283,11 @@ export class CertificatesController {
   @Public()
   @Get("share-image")
   async getCertificateShareImage(
-    @Query("certificateId") certificateId: UUIDType,
+    @Query("token") token: string,
     @Query("lang") language: SupportedLanguages,
     @Res() res: Response,
   ): Promise<void> {
+    const certificateId = await this.certificatesService.resolveCertificateIdFromShareToken(token);
     const imageBuffer = await this.certificatesService.getPublicShareImage(certificateId, language);
 
     res.set({

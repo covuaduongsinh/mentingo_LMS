@@ -54,11 +54,11 @@ Phán quyết: **Port** (nên xây dựng lại theo tinh thần LearnHouse) · 
 
 ## Nhóm chứng chỉ / tin cậy
 
-| Tính năng LearnHouse                                 | mentingo | Phán quyết       | Ghi chú                                                                                  |
-| ---------------------------------------------------- | -------- | ---------------- | ---------------------------------------------------------------------------------------- |
-| Trang xác thực chứng chỉ công khai (verify qua UUID) | ❌       | Port — quick win | mentingo có cấp/thu hồi/PDF (puppeteer) nhưng không có trang verify không cần đăng nhập. |
-| Mã QR trên chứng chỉ                                 | ❌       | Port — quick win | Cùng đợt với trang verify.                                                               |
-| Cấp chứng chỉ theo learning path                     | ✅       | —                | mentingo có, LearnHouse không có khái niệm learning path.                                |
+| Tính năng LearnHouse               | mentingo | Phán quyết            | Ghi chú                                                                                                                                                                                                                                                                                                                        |
+| ---------------------------------- | -------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Trang xác thực chứng chỉ công khai | ◐        | Thích ứng — quick win | **Sửa lại (2026-07-25):** mentingo đã có sẵn `GET /api/certificates/share` (`@Public()`) — server-render HTML kèm OG/Twitter meta, ảnh PNG cache S3, LinkedIn, dịch 7 ngôn ngữ. Chỉ thiếu mã QR và khung "xác minh" (trang hiện đang `noindex,noarchive`). Xem `docs/specs/statistics-and-certificate-fixes-business-spec.md`. |
+| Mã QR trên chứng chỉ               | ❌       | Port — quick win      | Cùng đợt với trang verify.                                                                                                                                                                                                                                                                                                     |
+| Cấp chứng chỉ theo learning path   | ✅       | —                     | mentingo có, LearnHouse không có khái niệm learning path.                                                                                                                                                                                                                                                                      |
 
 ## Nhóm marketing / khám phá
 

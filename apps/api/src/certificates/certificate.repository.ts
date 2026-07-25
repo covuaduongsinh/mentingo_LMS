@@ -216,6 +216,7 @@ export class CertificateRepository {
         id: certificates.id,
         tenantId: certificates.tenantId,
         courseId: certificates.courseId,
+        shareToken: certificates.shareToken,
       })
       .from(certificates)
       .innerJoin(users, eq(users.id, certificates.userId))
@@ -229,6 +230,49 @@ export class CertificateRepository {
       );
 
     return certificate;
+  }
+
+  /**
+   * Resolves the untrusted public `token` query param on
+   * GET /api/certificates/share(-image) to an internal certificate id.
+   * This is the only lookup the public endpoints are allowed to use — never
+   * accept a raw certificate id from that route, since the id has no
+   * per-share secret and would let anyone who learns it look up the
+   * holder's name/course/dates indefinitely (see the `shareToken` column
+   * comment in the schema).
+   */
+  async findCertificateIdByShareToken(shareToken: string): Promise<{ id: string } | undefined> {
+    const [certificate] = await this.db
+      .select({ id: certificates.id })
+      .from(certificates)
+      .innerJoin(users, eq(users.id, certificates.userId))
+      .where(
+        and(
+          eq(certificates.shareToken, shareToken),
+          eq(certificates.status, CERTIFICATE_STATUSES.ACTIVE),
+          isNull(users.deletedAt),
+        ),
+      );
+
+    return certificate;
+  }
+
+  async setShareToken(certificateId: string, shareToken: string): Promise<void> {
+    await this.db
+      .update(certificates)
+      .set({ shareToken })
+      .where(eq(certificates.id, certificateId));
+  }
+
+  /** Scoped by (userId, certificateId) so a learner can only revoke their own share link. */
+  async clearShareToken(userId: string, certificateId: string): Promise<boolean> {
+    const updated = await this.db
+      .update(certificates)
+      .set({ shareToken: null })
+      .where(and(eq(certificates.id, certificateId), eq(certificates.userId, userId)))
+      .returning({ id: certificates.id });
+
+    return updated.length > 0;
   }
 
   async findOwnedCertificateByIdForRender(

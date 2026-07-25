@@ -19,7 +19,7 @@ The feature also gives course managers controlled ways to handle certificate val
 - Open certificate previews for completed courses and learning paths.
 - Switch certificate preview language between all supported platform languages.
 - Download certificate PDFs with generated filenames.
-- Share certificates externally through LinkedIn/public share links.
+- Share certificates externally through LinkedIn/public share links, keyed by a per-share token the certificate owner can revoke.
 - Configure whether a course issues certificates.
 - Set certificate validity rules for a course.
 - Show the impact of validity changes before applying them to active certificates.
@@ -37,6 +37,8 @@ For administrators, the reset and validity tools reduce operational risk. When a
 
 Learners access certificates from the profile certificate area. Each certificate can be previewed, rendered as a PDF, and shared when sharing is enabled. Certificate rendering is available in every supported platform language, including Spanish, even when the related course or learning path does not have a translation in that language; in that case Mentingo falls back to the base title. Public share endpoints serve external certificate pages and images, while protected certificate listing, rendering, and share-link creation remain permission-gated.
 
+Requesting a share link mints (or reuses, if one already exists) a random per-certificate token; the public share page and share image are looked up by that token only, never by the certificate's own id. The certificate owner can revoke the token, which immediately breaks the previously issued link — anyone still holding the old URL sees a 404. Regenerating a link after revocation mints a fresh token.
+
 Course certificate settings are managed from the admin course settings workflow. Administrators can enable certificate issuance, define validity, inspect how a validity change affects active certificates, and choose whether the change applies only to future certificates or also to existing active certificates.
 
 Certificate reset actions archive matching active certificates, reset the relevant learner progress, record certificate activity, and optionally send reset emails. Reset scope can target all certificate holders for the course, selected groups, or selected users with active certificates.
@@ -48,11 +50,12 @@ Certificate reset actions archive matching active certificates, reset the releva
 - API endpoints are implemented under `apps/api/src/certificates`.
 - Core permissions include `PERMISSIONS.CERTIFICATE_READ`, `PERMISSIONS.CERTIFICATE_RENDER`, and `PERMISSIONS.CERTIFICATE_SHARE`.
 - Course certificate validity and reset operations require `PERMISSIONS.COURSE_UPDATE` or `PERMISSIONS.COURSE_UPDATE_OWN`.
-- Public share endpoints intentionally allow external certificate page and image access for share workflows.
+- Public share endpoints intentionally allow external certificate page and image access for share workflows, but only through `certificates.share_token` (`GET /api/certificates/share(-image)?token=...`) — never the certificate's own id. This was fixed 2026-07-25: the public endpoints previously accepted `?certificateId=<uuid>`, so anyone who learned a certificate's id (a small, sequential-feeling UUID visible in several authenticated views) could look up the holder's full name, course, and dates indefinitely, with no way to revoke access. `POST /api/certificates/share-link/revoke` (requires `PERMISSIONS.CERTIFICATE_SHARE` + ownership) clears the token.
 - Certificate PDFs, previews, share pages, and share images use the shared supported-language list, so new platform languages become available to certificates through the same contract.
 
 ## Test Evidence
 
 - API E2E coverage verifies authenticated certificate listing, archived certificate exclusion, pagination and sorting, single certificate retrieval, PDF downloads, custom download filenames, validity-impact counts, bulk validity application, expiration handling, reset by all/users/groups, reset validation, reset options, reset-user search, authorization, and activity logging.
-- Frontend unit/source evidence covers profile certificate cards, previews, downloads, language toggles, LinkedIn sharing controls, certificate theme behavior, course certificate settings, validity-impact confirmation, and reset dialogs.
+- New (2026-07-25) API E2E coverage in "Certificate sharing" verifies: the share-link response never contains the certificate id, only an opaque token; repeated share-link requests reuse the same token; the public share page 404s for a raw certificate id and for an unknown token, and 200s for a valid token; revoke breaks a previously valid token; a non-owner cannot revoke another learner's share link.
+- Frontend unit/source evidence covers profile certificate cards, previews, downloads, language toggles, LinkedIn sharing controls, certificate theme behavior, course certificate settings, validity-impact confirmation, and reset dialogs. There is no frontend UI yet for revoking a share link (backend endpoint only) — see the statistics-and-certificate-fixes follow-up note.
 - I did not find a dedicated frontend E2E certificate spec in the current test tree.

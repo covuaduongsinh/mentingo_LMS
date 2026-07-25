@@ -22,6 +22,7 @@ import {
 } from "@repo/shared";
 import { addDays, addMonths, addYears, format } from "date-fns";
 import { escape } from "lodash";
+import { nanoid } from "nanoid";
 import puppeteer, { type Page, type Browser } from "puppeteer";
 import { match } from "ts-pattern";
 
@@ -404,13 +405,20 @@ export class CertificatesService implements OnModuleDestroy {
       throw new NotFoundException("studentCertificateView.informations.certificateNotFound");
     }
 
+    // Reuse the existing token if one was already issued, so re-opening the
+    // share dialog doesn't invalidate a link already posted elsewhere.
+    const shareToken = ownedCertificate.shareToken ?? nanoid(32);
+    if (!ownedCertificate.shareToken) {
+      await this.certificateRepository.setShareToken(certificateId, shareToken);
+    }
+
     const shareLanguage = this.normalizeLanguage(language);
     const publicCertificate = await this.getPublicShareCertificate(certificateId, shareLanguage);
 
     await this.getPublicShareImage(certificateId, shareLanguage);
 
     const shareUrl = this.buildTenantUrl(publicCertificate.tenantHost, "/api/certificates/share", {
-      certificateId,
+      token: shareToken,
       lang: shareLanguage,
     });
 
@@ -422,6 +430,36 @@ export class CertificatesService implements OnModuleDestroy {
       shareUrl,
       linkedinShareUrl: linkedinShareUrl.toString(),
     };
+  }
+
+  /** Breaks the previously issued public share link; a later share-link request mints a new token. */
+  async revokeCertificateShareLink(userId: UUIDType, certificateId: UUIDType): Promise<void> {
+    const cleared = await this.certificateRepository.clearShareToken(userId, certificateId);
+
+    if (!cleared) {
+      throw new NotFoundException("studentCertificateView.informations.certificateNotFound");
+    }
+  }
+
+  /**
+   * The only place the public /api/certificates/share(-image) endpoints are
+   * allowed to turn an untrusted request into an internal certificate id.
+   */
+  async resolveCertificateIdFromShareToken(shareToken: string | undefined): Promise<UUIDType> {
+    // Guard before querying: an empty/missing token (e.g. an old-style
+    // ?certificateId=<uuid> link with no ?token=) must 404 cleanly rather
+    // than pass undefined into the query builder.
+    if (!shareToken) {
+      throw new NotFoundException("studentCertificateView.informations.certificateNotFound");
+    }
+
+    const certificate = await this.certificateRepository.findCertificateIdByShareToken(shareToken);
+
+    if (!certificate) {
+      throw new NotFoundException("studentCertificateView.informations.certificateNotFound");
+    }
+
+    return certificate.id;
   }
 
   async getPublicSharePage(

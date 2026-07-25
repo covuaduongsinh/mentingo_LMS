@@ -189,13 +189,15 @@ export class StatisticsRepository {
   async getCourseStudentsStats(userId?: UUIDType) {
     return this.db
       .select({
-        month: sql<string>`${courseStudentsStats.year} || '-' || ${courseStudentsStats.month}+1`,
+        // Zero-padded "YYYY-MM" so it sorts correctly and formatCourseStudentStats
+        // can key on it without colliding across years (see statistics.service.ts).
+        month: sql<string>`${courseStudentsStats.year} || '-' || LPAD(${courseStudentsStats.month}::text, 2, '0')`,
         newStudentsCount: sql<number>`SUM(${courseStudentsStats.newStudentsCount})::INTEGER`,
       })
       .from(courseStudentsStats)
       .where(userId ? eq(courseStudentsStats.authorId, userId) : undefined)
       .groupBy(courseStudentsStats.month, courseStudentsStats.year)
-      .orderBy(desc(courseStudentsStats.month), desc(courseStudentsStats.year))
+      .orderBy(desc(courseStudentsStats.year), desc(courseStudentsStats.month))
       .limit(12);
   }
 
@@ -293,20 +295,51 @@ export class StatisticsRepository {
       .where(eq(coursesSummaryStats.courseId, courseId));
   }
 
-  async calculateCoursesStudentsStats(startDate: string, endDate: string) {
-    return this.db
+  /**
+   * Aggregates new-enrollment counts per course for one calendar month and
+   * upserts them into `course_students_stats`. Previously this only ran the
+   * SELECT and discarded the result — `course_students_stats` was never
+   * written, so the enrollment chart always read an empty table.
+   */
+  async calculateCoursesStudentsStats(
+    startDate: string,
+    endDate: string,
+    month: number,
+    year: number,
+  ) {
+    const rows = await this.db
       .select({
         courseId: studentCourses.courseId,
+        authorId: courses.authorId,
         newStudentsCount: sql<number>`COUNT(*)`,
       })
       .from(studentCourses)
+      .innerJoin(courses, eq(courses.id, studentCourses.courseId))
       .where(
         and(
           gte(studentCourses.createdAt, sql`${startDate}::TIMESTAMP`),
           lt(studentCourses.createdAt, sql`${endDate}::TIMESTAMP`),
         ),
       )
-      .groupBy(studentCourses.courseId);
+      .groupBy(studentCourses.courseId, courses.authorId);
+
+    if (rows.length === 0) return;
+
+    await this.db
+      .insert(courseStudentsStats)
+      .values(
+        rows.map((row) => ({
+          courseId: row.courseId,
+          authorId: row.authorId,
+          month,
+          year,
+          newStudentsCount: row.newStudentsCount,
+        })),
+      )
+      .onConflictDoUpdate({
+        target: [courseStudentsStats.courseId, courseStudentsStats.month, courseStudentsStats.year],
+        set: { newStudentsCount: sql`excluded.new_students_count` },
+      });
   }
 
   async getNextLessonForStudent(

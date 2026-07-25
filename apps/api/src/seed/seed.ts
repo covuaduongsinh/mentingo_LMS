@@ -316,7 +316,12 @@ function getLast12Months(): Array<{ month: number; year: number; formattedDate: 
   return Array.from({ length: 12 }, (_, index) => {
     const date = subMonths(today, index);
     return {
-      month: date.getMonth(),
+      // 1-indexed (1-12) to match StatisticsService#refreshCourseStudentsStats,
+      // which writes courseStudentsStats.month the same way — otherwise seeded
+      // and cron-written rows for the same calendar month never collide on
+      // the (courseId, month, year) unique constraint and the enrollment
+      // chart double-counts / mislabels that month.
+      month: date.getMonth() + 1,
       year: date.getFullYear(),
       formattedDate: format(date, "MMMM yyyy"),
     };

@@ -1595,4 +1595,149 @@ describe("CertificatesController (e2e)", () => {
       });
     });
   });
+
+  describe("Certificate sharing", () => {
+    const createStudentWithCertificate = async () => {
+      const admin = await userFactory
+        .withCredentials({ password })
+        .withAdminSettings(db)
+        .create({ role: SYSTEM_ROLE_SLUGS.ADMIN });
+      const student = await userFactory
+        .withCredentials({ password })
+        .withUserSettings(db)
+        .create({ role: SYSTEM_ROLE_SLUGS.STUDENT });
+      const cookies = await cookieFor(student, app);
+      const category = await categoryFactory.create();
+      const course = await courseFactory.create({
+        title: "Python Basics",
+        authorId: admin.id,
+        categoryId: category.id,
+        thumbnailS3Key: null,
+        hasCertificate: true,
+      });
+      const [certificate] = await db
+        .insert(certificates)
+        .values({ userId: student.id, courseId: course.id })
+        .returning();
+
+      return { student, cookies, certificate };
+    };
+
+    describe("POST /api/certificates/share-link", () => {
+      it("returns a share URL keyed by an opaque token, not the certificate id", async () => {
+        const { cookies, certificate } = await createStudentWithCertificate();
+
+        const response = await request(app.getHttpServer())
+          .post("/api/certificates/share-link")
+          .set("Cookie", cookies)
+          .send({ certificateId: certificate.id, language: "en" })
+          .expect(201);
+
+        const shareUrl = new URL(response.body.shareUrl);
+        expect(shareUrl.searchParams.get("token")).toEqual(expect.any(String));
+        expect(shareUrl.searchParams.get("token")).not.toBe(certificate.id);
+        // The vulnerability this fixes: the certificate's own id must never
+        // appear as the public lookup key.
+        expect(shareUrl.searchParams.has("certificateId")).toBe(false);
+
+        const [stored] = await db
+          .select({ shareToken: certificates.shareToken })
+          .from(certificates)
+          .where(eq(certificates.id, certificate.id));
+        expect(stored.shareToken).toBe(shareUrl.searchParams.get("token"));
+      });
+
+      it("reuses the existing token on a second call instead of invalidating the first link", async () => {
+        const { cookies, certificate } = await createStudentWithCertificate();
+
+        const first = await request(app.getHttpServer())
+          .post("/api/certificates/share-link")
+          .set("Cookie", cookies)
+          .send({ certificateId: certificate.id, language: "en" })
+          .expect(201);
+        const second = await request(app.getHttpServer())
+          .post("/api/certificates/share-link")
+          .set("Cookie", cookies)
+          .send({ certificateId: certificate.id, language: "en" })
+          .expect(201);
+
+        expect(new URL(second.body.shareUrl).searchParams.get("token")).toBe(
+          new URL(first.body.shareUrl).searchParams.get("token"),
+        );
+      });
+    });
+
+    describe("GET /api/certificates/share", () => {
+      it("returns 404 for a raw certificate id — the id alone must not resolve a share page", async () => {
+        const { certificate } = await createStudentWithCertificate();
+
+        await request(app.getHttpServer())
+          .get("/api/certificates/share")
+          .query({ certificateId: certificate.id, lang: "en" })
+          .expect(404);
+      });
+
+      it("returns 404 for an unknown token", async () => {
+        await request(app.getHttpServer())
+          .get("/api/certificates/share")
+          .query({ token: "not-a-real-token", lang: "en" })
+          .expect(404);
+      });
+
+      it("serves the share page for a valid token, anonymously", async () => {
+        const { cookies, certificate } = await createStudentWithCertificate();
+        const created = await request(app.getHttpServer())
+          .post("/api/certificates/share-link")
+          .set("Cookie", cookies)
+          .send({ certificateId: certificate.id, language: "en" })
+          .expect(201);
+        const token = new URL(created.body.shareUrl).searchParams.get("token")!;
+
+        const response = await request(app.getHttpServer())
+          .get("/api/certificates/share")
+          .query({ token, lang: "en" })
+          .expect(200);
+
+        expect(response.headers["content-type"]).toContain("text/html");
+      });
+    });
+
+    describe("POST /api/certificates/share-link/revoke", () => {
+      it("clears the token so the previously issued link stops working", async () => {
+        const { cookies, certificate } = await createStudentWithCertificate();
+        const created = await request(app.getHttpServer())
+          .post("/api/certificates/share-link")
+          .set("Cookie", cookies)
+          .send({ certificateId: certificate.id, language: "en" })
+          .expect(201);
+        const token = new URL(created.body.shareUrl).searchParams.get("token")!;
+
+        await request(app.getHttpServer())
+          .post("/api/certificates/share-link/revoke")
+          .set("Cookie", cookies)
+          .send({ certificateId: certificate.id })
+          .expect(201);
+
+        await request(app.getHttpServer())
+          .get("/api/certificates/share")
+          .query({ token, lang: "en" })
+          .expect(404);
+      });
+
+      it("returns 404 when a user tries to revoke another user's certificate", async () => {
+        const { certificate } = await createStudentWithCertificate();
+        const otherStudent = await userFactory
+          .withCredentials({ password })
+          .withUserSettings(db)
+          .create({ role: SYSTEM_ROLE_SLUGS.STUDENT });
+        const otherCookies = await cookieFor(otherStudent, app);
+
+        await request(app.getHttpServer())
+          .post("/api/certificates/share-link/revoke")
+          .set("Cookie", otherCookies)
+          .send({ certificateId: certificate.id })
+          .expect(404);
+      });
+    });
+  });
 });
