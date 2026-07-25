@@ -3,6 +3,27 @@ app.lms.localhost {
         to http://localhost:3000
     }
 
+    # robots.txt / sitemap.xml are generated per-tenant by the API (see
+    # apps/api/src/seo) but need to live at the site root, not under /api.
+    @seoFiles path /robots.txt /sitemap.xml
+    handle @seoFiles {
+        rewrite * /api/seo{uri}
+        reverse_proxy localhost:3000
+    }
+
+    # The SPA has no SSR, so social/search crawlers hitting a course page
+    # directly get a server-rendered OG/JSON-LD snapshot from the API instead
+    # (see docs/specs/seo-tier1-business-spec.md — "dynamic rendering").
+    @courseBot {
+        path /course/*
+        header_regexp User-Agent (?i)(bot|spider|crawl|facebookexternalhit|twitterbot|linkedinbot|slackbot|telegrambot|whatsapp|zalo|discordbot|embedly|quora|pinterest|vkshare)
+    }
+    handle @courseBot {
+        uri strip_prefix /course
+        rewrite * /api/seo/course-preview{uri}
+        reverse_proxy localhost:3000
+    }
+
     handle {
         reverse_proxy localhost:5173
     }
@@ -11,6 +32,22 @@ app.lms.localhost {
 *.lms.localhost {
     reverse_proxy /api/* {
         to http://localhost:3000
+    }
+
+    @seoFiles path /robots.txt /sitemap.xml
+    handle @seoFiles {
+        rewrite * /api/seo{uri}
+        reverse_proxy localhost:3000
+    }
+
+    @courseBot {
+        path /course/*
+        header_regexp User-Agent (?i)(bot|spider|crawl|facebookexternalhit|twitterbot|linkedinbot|slackbot|telegrambot|whatsapp|zalo|discordbot|embedly|quora|pinterest|vkshare)
+    }
+    handle @courseBot {
+        uri strip_prefix /course
+        rewrite * /api/seo/course-preview{uri}
+        reverse_proxy localhost:3000
     }
 
     handle {

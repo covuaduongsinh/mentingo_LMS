@@ -15,6 +15,27 @@ staging.covuahocduong.com {
 		reverse_proxy localhost:3000
 	}
 
+	# robots.txt/sitemap.xml sinh động theo tenant (apps/api/src/seo) — cần lộ
+	# ở gốc domain, không phải dưới /api.
+	@seoFiles path /robots.txt /sitemap.xml
+	handle @seoFiles {
+		rewrite * /api/seo{uri}
+		reverse_proxy localhost:3000
+	}
+
+	# SPA không có SSR — bot mạng xã hội/tìm kiếm vào thẳng trang khóa học sẽ
+	# được trả bản HTML có OG/JSON-LD dựng sẵn từ API thay vì bundle React rỗng
+	# thẻ meta (xem docs/specs/seo-tier1-business-spec.md, mục "dynamic rendering").
+	@courseBot {
+		path /course/*
+		header_regexp User-Agent (?i)(bot|spider|crawl|facebookexternalhit|twitterbot|linkedinbot|slackbot|telegrambot|whatsapp|zalo|discordbot|embedly|quora|pinterest|vkshare)
+	}
+	handle @courseBot {
+		uri strip_prefix /course
+		rewrite * /api/seo/course-preview{uri}
+		reverse_proxy localhost:3000
+	}
+
 	# (Tùy chọn) Expose MinIO công khai cho file/media nếu dùng presigned URL cho asset public.
 	# Bật kèm: mở ports minio trong compose + đặt S3_ENDPOINT/S3_PUBLIC_URL = https://staging.covuahocduong.com/files
 	# @files path /files/*

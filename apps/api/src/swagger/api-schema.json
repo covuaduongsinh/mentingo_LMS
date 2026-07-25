@@ -12503,6 +12503,48 @@
         }
       }
     },
+    "/api/seo/robots.txt": {
+      "get": {
+        "operationId": "SeoController_getRobotsTxt",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/seo/sitemap.xml": {
+      "get": {
+        "operationId": "SeoController_getSitemapXml",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/seo/course-preview/{idOrSlug}": {
+      "get": {
+        "operationId": "SeoController_getCoursePreview",
+        "parameters": [
+          {
+            "name": "idOrSlug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/chess/topics": {
       "get": {
         "operationId": "ChessController_getTopics",
