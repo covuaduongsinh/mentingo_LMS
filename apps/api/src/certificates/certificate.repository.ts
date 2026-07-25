@@ -306,48 +306,12 @@ export class CertificateRepository {
       .select({
         id: certificates.id,
         tenantId: certificates.tenantId,
+        tenantHost: tenants.host,
+        shareToken: certificates.shareToken,
         createdAt: certificates.createdAt,
         issuedAt: certificates.issuedAt,
         expiresAt: certificates.expiresAt,
         courseTitle: this.localizationService.getLocalizedSqlField(courses.title, language),
-        completionDate: certificates.issuedAt,
-        fullName: sql<string>`CONCAT(${users.firstName}, ' ', ${users.lastName})`,
-        certificateSignature: sql<string | null>`(${courses.settings} ->> 'certificateSignature')`,
-        certificateFontColor: sql<string | null>`(${courses.settings} ->> 'certificateFontColor')`,
-      })
-      .from(certificates)
-      .innerJoin(users, eq(users.id, certificates.userId))
-      .innerJoin(courses, eq(courses.id, certificates.courseId))
-      .leftJoin(
-        studentCourses,
-        and(
-          eq(studentCourses.studentId, certificates.userId),
-          eq(studentCourses.courseId, certificates.courseId),
-        ),
-      )
-      .where(
-        and(
-          eq(certificates.id, certificateId),
-          eq(certificates.userId, userId),
-          eq(certificates.status, CERTIFICATE_STATUSES.ACTIVE),
-          isNull(users.deletedAt),
-        ),
-      );
-
-    return certificate;
-  }
-
-  async findPublicShareCertificateById(certificateId: string, language: SupportedLanguages) {
-    const [certificate] = await this.dbAdmin
-      .select({
-        id: certificates.id,
-        tenantId: certificates.tenantId,
-        tenantHost: tenants.host,
-        tenantName: tenants.name,
-        courseId: certificates.courseId,
-        courseTitle: this.localizationService.getLocalizedSqlField(courses.title, language),
-        issuedAt: certificates.issuedAt,
-        expiresAt: certificates.expiresAt,
         completionDate: certificates.issuedAt,
         fullName: sql<string>`CONCAT(${users.firstName}, ' ', ${users.lastName})`,
         certificateSignature: sql<string | null>`(${courses.settings} ->> 'certificateSignature')`,
@@ -367,10 +331,53 @@ export class CertificateRepository {
       .where(
         and(
           eq(certificates.id, certificateId),
+          eq(certificates.userId, userId),
           eq(certificates.status, CERTIFICATE_STATUSES.ACTIVE),
           isNull(users.deletedAt),
         ),
       );
+
+    return certificate;
+  }
+
+  /**
+   * Backs the public verification page — deliberately does NOT filter to
+   * ACTIVE only. A verification page for a certificate that was later
+   * archived (expired, manually reset, or revoked after a regrade) must
+   * say so, not 404 as if the certificate never existed; the page decides
+   * what "archived" means to show based on `status`/`archiveReason`.
+   */
+  async findPublicShareCertificateById(certificateId: string, language: SupportedLanguages) {
+    const [certificate] = await this.dbAdmin
+      .select({
+        id: certificates.id,
+        tenantId: certificates.tenantId,
+        tenantHost: tenants.host,
+        tenantName: tenants.name,
+        courseId: certificates.courseId,
+        courseTitle: this.localizationService.getLocalizedSqlField(courses.title, language),
+        status: certificates.status,
+        archiveReason: certificates.archiveReason,
+        shareToken: certificates.shareToken,
+        issuedAt: certificates.issuedAt,
+        expiresAt: certificates.expiresAt,
+        completionDate: certificates.issuedAt,
+        fullName: sql<string>`CONCAT(${users.firstName}, ' ', ${users.lastName})`,
+        certificateSignature: sql<string | null>`(${courses.settings} ->> 'certificateSignature')`,
+        certificateFontColor: sql<string | null>`(${courses.settings} ->> 'certificateFontColor')`,
+      })
+      .from(certificates)
+      .innerJoin(users, eq(users.id, certificates.userId))
+      .innerJoin(courses, eq(courses.id, certificates.courseId))
+      .innerJoin(tenants, eq(tenants.id, certificates.tenantId))
+      .leftJoin(
+        studentCourses,
+        and(
+          eq(studentCourses.studentId, certificates.userId),
+          eq(studentCourses.courseId, certificates.courseId),
+        ),
+      )
+      .where(and(eq(certificates.id, certificateId), isNull(users.deletedAt)));
 
     return certificate;
   }

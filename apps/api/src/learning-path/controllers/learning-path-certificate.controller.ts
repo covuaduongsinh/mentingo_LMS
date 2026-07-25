@@ -108,13 +108,18 @@ export class LearningPathCertificateController {
     );
   }
 
+  // Same rule as the course-certificate endpoints: only ever resolve by the
+  // opaque `token` query param, never the certificate's own id — the id has
+  // no per-share secret (see the certificate-share IDOR fix).
   @Public()
   @Get("share")
   async getCertificateSharePage(
-    @Query("certificateId") certificateId: UUIDType,
+    @Query("token") token: string,
     @Query("lang") language: SupportedLanguages,
     @Res() res: Response,
   ): Promise<void> {
+    const certificateId =
+      await this.learningPathCertificateService.resolveCertificateIdFromShareToken(token);
     const html = await this.learningPathCertificateService.getPublicSharePage(
       certificateId,
       language,
@@ -131,10 +136,12 @@ export class LearningPathCertificateController {
   @Public()
   @Get("share-image")
   async getCertificateShareImage(
-    @Query("certificateId") certificateId: UUIDType,
+    @Query("token") token: string,
     @Query("lang") language: SupportedLanguages,
     @Res() res: Response,
   ): Promise<void> {
+    const certificateId =
+      await this.learningPathCertificateService.resolveCertificateIdFromShareToken(token);
     const imageBuffer = await this.learningPathCertificateService.getPublicShareImage(
       certificateId,
       language,

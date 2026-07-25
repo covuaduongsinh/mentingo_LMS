@@ -2433,9 +2433,18 @@ export const learningPathCertificates = pgTable(
       withTimezone: true,
       precision: 3,
     }),
+    // Same public-share-token pattern as `certificates.share_token` — the
+    // public verification endpoints must resolve by this token only, never
+    // by `id`, which has no per-share secret (see the certificate-share
+    // IDOR fix applied to the course-certificate flow).
+    shareToken: text("share_token"),
     tenantId,
   },
-  withTenantIdIndex("learning_path_certificates"),
+  withTenantIdIndex("learning_path_certificates", (table) => ({
+    shareTokenUniqueIdx: uniqueIndex("learning_path_certificates_share_token_unique_idx").on(
+      table.shareToken,
+    ),
+  })),
 );
 
 export const learningPathExports = pgTable(

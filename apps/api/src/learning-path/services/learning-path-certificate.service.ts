@@ -14,7 +14,9 @@ import {
 } from "@repo/shared";
 import { format } from "date-fns";
 import { escape } from "lodash";
+import { nanoid } from "nanoid";
 import puppeteer, { type Browser, type Page } from "puppeteer";
+import QRCode from "qrcode";
 
 import { FileService } from "src/file/file.service";
 import { IMAGE_QUALITY } from "src/file/image-variants/image-variant.constants";
@@ -150,6 +152,8 @@ export class LearningPathCertificateService {
       throw new NotFoundException("studentCertificateView.informations.certificateNotFound");
     }
 
+    const shareToken = await this.ensureShareToken(certificateId, ownedCertificate.shareToken);
+
     const shareLanguage = this.normalizeLanguage(language);
     const publicCertificate = await this.getPublicShareCertificate(certificateId, shareLanguage);
     await this.getPublicShareImage(certificateId, shareLanguage);
@@ -158,7 +162,7 @@ export class LearningPathCertificateService {
       publicCertificate.tenantHost,
       "/api/learning-path/certificates/share",
       {
-        certificateId,
+        token: shareToken,
         lang: shareLanguage,
       },
     );
@@ -191,7 +195,7 @@ export class LearningPathCertificateService {
     }
 
     const context = await this.buildShareRenderContext(certificateId, shareLanguage);
-    const imageBuffer = await this.renderPngFromHtml(this.buildShareImageDocument(context));
+    const imageBuffer = await this.renderPngFromHtml(await this.buildShareImageDocument(context));
 
     await this.s3Service.uploadFile(imageBuffer, imageKey, "image/png").catch((error) => {
       this.logger.warn(`Learning path certificate share image upload failed: ${error}`);
@@ -227,6 +231,14 @@ export class LearningPathCertificateService {
 
     const accentColor = certificate.certificateFontColor || imageSettings.primaryColor || "#1f2937";
 
+    const shareToken = await this.ensureShareToken(certificateId, certificate.shareToken);
+    const verificationUrl = this.buildTenantUrl(
+      certificate.tenantHost,
+      "/api/learning-path/certificates/share",
+      { token: shareToken, lang: shareLanguage },
+    );
+    const qrCodeDataUri = await this.buildVerificationQrCode(verificationUrl);
+
     const html = buildCertificateMarkup({
       studentName: certificate.fullName || "",
       courseName: certificate.pathTitle ?? "",
@@ -237,6 +249,8 @@ export class LearningPathCertificateService {
       lang: shareLanguage,
       isDownload: true,
       certificateKind: CERTIFICATE_KIND.LEARNING_PATH,
+      verificationUrl,
+      qrCodeDataUri,
       colorTheme: {
         titleColor: accentColor,
         certifyTextColor: accentColor,
@@ -280,12 +294,13 @@ export class LearningPathCertificateService {
     const shareLanguage = this.normalizeLanguage(language);
     const certificate = await this.getPublicShareCertificate(certificateId, shareLanguage);
     const settings = await this.settingsService.getGlobalSettingsByTenantId(certificate.tenantId);
+    const shareToken = await this.ensureShareToken(certificateId, certificate.shareToken);
 
     const shareUrl = this.buildTenantUrl(
       certificate.tenantHost,
       "/api/learning-path/certificates/share",
       {
-        certificateId,
+        token: shareToken,
         lang: shareLanguage,
       },
     );
@@ -294,7 +309,7 @@ export class LearningPathCertificateService {
       certificate.tenantHost,
       "/api/learning-path/certificates/share-image",
       {
-        certificateId,
+        token: shareToken,
         lang: shareLanguage,
       },
     );
@@ -342,7 +357,7 @@ export class LearningPathCertificateService {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>${content.pageTitle}</title>
         <meta name="description" content="${content.pageDescription}" />
-        <meta name="robots" content="noindex,noarchive" />
+        <meta name="robots" content="${content.isIndexable ? "index,follow" : "noindex,noarchive"}" />
         <link rel="canonical" href="${content.shareUrl}" />
         <meta property="og:title" content="${content.pageTitle}" />
         <meta property="og:description" content="${content.pageDescription}" />
@@ -384,10 +399,23 @@ export class LearningPathCertificateService {
             border: 1px solid rgba(148, 163, 184, 0.28);
             background: #fff;
           }
+          .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+          }
+          .status.valid { background: rgba(22, 163, 74, 0.12); color: #15803d; }
+          .status.revoked { background: rgba(220, 38, 38, 0.12); color: #b91c1c; }
         </style>
       </head>
       <body>
         <main class="card">
+          <span class="status ${content.isRevoked ? "revoked" : "valid"}">${content.statusLabel}</span>
           <img src="${content.embeddedImage}" alt="${content.courseTitle}" />
         </main>
       </body>
@@ -427,7 +455,20 @@ export class LearningPathCertificateService {
       },
     } as const satisfies Record<SupportedLanguages, { pageTitle: string; pageDescription: string }>;
 
+    const statusLabels = {
+      pl: { valid: "Zweryfikowany certyfikat", revoked: "Ten certyfikat nie jest już ważny" },
+      en: { valid: "Verified certificate", revoked: "This certificate is no longer valid" },
+      de: { valid: "Verifiziertes Zertifikat", revoked: "Dieses Zertifikat ist nicht mehr gültig" },
+      lt: { valid: "Patvirtintas sertifikatas", revoked: "Šis sertifikatas nebegalioja" },
+      cs: { valid: "Ověřený certifikát", revoked: "Tento certifikát již není platný" },
+      es: { valid: "Certificado verificado", revoked: "Este certificado ya no es válido" },
+      vi: { valid: "Chứng chỉ đã xác minh", revoked: "Chứng chỉ này không còn hiệu lực" },
+    } as const satisfies Record<SupportedLanguages, { valid: string; revoked: string }>;
+
     const localizedContent = translations[context.language as SupportedLanguages];
+    const isRevoked = context.certificate.status === "archived";
+    const statusLabel =
+      statusLabels[context.language as SupportedLanguages][isRevoked ? "revoked" : "valid"];
 
     return {
       pageTitle: escape(localizedContent.pageTitle),
@@ -438,16 +479,20 @@ export class LearningPathCertificateService {
       shareImageUrl: escape(context.shareImageUrl),
       embeddedImage: escape(embeddedImageSrc),
       primaryColor: escape(context.settings.primaryColor || "#3f58b6"),
+      statusLabel: escape(statusLabel),
+      isRevoked,
+      isIndexable: !isRevoked,
     };
   }
 
-  private buildShareImageDocument(context: any) {
-    return this.buildShareImageHtmlDocument(this.buildShareImageMarkup(context));
+  private async buildShareImageDocument(context: any): Promise<string> {
+    return this.buildShareImageHtmlDocument(await this.buildShareImageMarkup(context));
   }
 
-  private buildShareImageMarkup(context: any) {
+  private async buildShareImageMarkup(context: any): Promise<string> {
     const accentColor =
       context.certificate.certificateFontColor || context.settings.primaryColor || "#1f2937";
+    const qrCodeDataUri = await this.buildVerificationQrCode(context.shareUrl);
 
     return buildCertificateMarkup({
       studentName: context.certificate.fullName || "",
@@ -458,6 +503,8 @@ export class LearningPathCertificateService {
       backgroundImageUrl: null,
       lang: context.language,
       certificateKind: CERTIFICATE_KIND.LEARNING_PATH,
+      verificationUrl: context.shareUrl,
+      qrCodeDataUri,
       colorTheme: {
         titleColor: accentColor,
         certifyTextColor: accentColor,
@@ -602,6 +649,45 @@ export class LearningPathCertificateService {
     });
 
     return this.browserInitialization;
+  }
+
+  /** See CertificatesService#ensureShareToken — same reuse-or-mint pattern. */
+  private async ensureShareToken(
+    certificateId: UUIDType,
+    existingToken: string | null | undefined,
+  ): Promise<string> {
+    if (existingToken) return existingToken;
+
+    const shareToken = nanoid(32);
+    await this.learningPathRepository.setLearningPathCertificateShareToken(
+      certificateId,
+      shareToken,
+    );
+    return shareToken;
+  }
+
+  private async buildVerificationQrCode(verificationUrl: string): Promise<string> {
+    return QRCode.toDataURL(verificationUrl, { margin: 1, width: 240 });
+  }
+
+  /**
+   * The only place the public share(-image) endpoints are allowed to turn
+   * an untrusted request into an internal certificate id — see
+   * CertificatesService#resolveCertificateIdFromShareToken.
+   */
+  async resolveCertificateIdFromShareToken(shareToken: string | undefined): Promise<UUIDType> {
+    if (!shareToken) {
+      throw new NotFoundException("studentCertificateView.informations.certificateNotFound");
+    }
+
+    const certificate =
+      await this.learningPathRepository.findLearningPathCertificateIdByShareToken(shareToken);
+
+    if (!certificate) {
+      throw new NotFoundException("studentCertificateView.informations.certificateNotFound");
+    }
+
+    return certificate.id;
   }
 
   private buildTenantUrl(
