@@ -21,6 +21,7 @@ import { YouMayBeInterestedIn } from "~/modules/Courses/CourseView/YouMayBeInter
 import { LearningModeBanner } from "~/modules/Courses/Lesson/LearningModeBanner";
 import { useLanguageStore } from "~/modules/Dashboard/Settings/Language/LanguageStore";
 import { isSupportedLanguage } from "~/utils/browser-language";
+import { setPageTitle } from "~/utils/setPageTitle";
 
 import { COURSE_DISCUSSION_HANDLES } from "../../../../e2e/data/courses/handles";
 import { COURSE_STATISTICS_HANDLES } from "../../../../e2e/data/statistics/handles";
@@ -30,7 +31,10 @@ import { CourseAdminStatistics } from "./CourseAdminStatistics/CourseAdminStatis
 import CourseCertificate from "./CourseCertificate";
 import { CourseChatTab } from "./CourseChat/CourseChatTab";
 
+import type { MetaFunction } from "@remix-run/react";
 import type { SupportedLanguages } from "@repo/shared";
+
+export const meta: MetaFunction = ({ matches }) => setPageTitle(matches, "pages.courseView");
 
 const COURSE_VIEW_TAB_QUERY_VALUES = {
   CHAPTERS: "Chapters",

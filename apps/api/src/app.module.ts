@@ -73,6 +73,7 @@ import { ResourceLibraryModule } from "./resource-library/resource-library.modul
 import { S3Module } from "./s3/s3.module";
 import { ScormModule } from "./scorm/scorm.module";
 import { SentryInterceptor } from "./sentry/sentry.interceptor";
+import { SeoModule } from "./seo/seo.module";
 import { SettingsModule } from "./settings/settings.module";
 import { StatisticsModule } from "./statistics/statistics.module";
 import { DbModule } from "./storage/db/db.module";
@@ -168,6 +169,7 @@ import type { RedisClient } from "src/redis";
     AiModule,
     SettingsModule,
     ScormModule,
+    SeoModule,
     CertificatesModule,
     ChessModule,
     AssignmentsModule,
