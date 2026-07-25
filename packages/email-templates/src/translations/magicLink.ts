@@ -45,6 +45,13 @@ export const getMagicLinkEmailTranslations = (language: SupportedLanguages) => {
       ],
       buttonText: "ABRIR ENLACE DE INICIO DE SESIÓN",
     },
+    vi: {
+      heading: "Liên kết đăng nhập",
+      paragraphs: [
+        "Bạn đã nhận được liên kết đăng nhập vào tài khoản của mình. Nhấn vào nút bên dưới để mở liên kết.",
+      ],
+      buttonText: "MỞ LIÊN KẾT ĐĂNG NHẬP",
+    },
   };
 
   return emailContent[language];

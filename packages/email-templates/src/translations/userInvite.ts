@@ -54,6 +54,14 @@ export const getUserInviteEmailTranslations = (
       ],
       buttonText: "UNIRSE AHORA",
     },
+    vi: {
+      heading: "Bạn được mời tham gia",
+      paragraphs: [
+        "Xin chào 👋",
+        `Bạn đã được ${invitedByUserName} mời tham gia nền tảng học trực tuyến. Nhấn vào nút bên dưới để bắt đầu nâng cao kỹ năng của mình.`,
+      ],
+      buttonText: "THAM GIA NGAY",
+    },
   };
 
   return emailContent[language];

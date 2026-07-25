@@ -55,6 +55,14 @@ export const getUserFinishedChapterEmailTranslations = (
       ],
       buttonText: "SIGUIENTE CAPÍTULO",
     },
+    vi: {
+      heading: "Đã hoàn thành chương",
+      paragraphs: [
+        "Tiến độ đã được cập nhật 🧩",
+        `Bạn đã hoàn thành ${chapterName} trong ${courseName}. Tài liệu tiếp theo đã sẵn sàng.`,
+      ],
+      buttonText: "CHƯƠNG TIẾP THEO",
+    },
   };
 
   return emailContent[language];

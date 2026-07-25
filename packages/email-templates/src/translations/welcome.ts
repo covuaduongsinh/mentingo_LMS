@@ -51,6 +51,14 @@ export const getWelcomeEmailTranslations = (language: SupportedLanguages) => {
       ],
       buttonText: "VER CURSOS",
     },
+    vi: {
+      heading: "Chào mừng",
+      paragraphs: [
+        "Rất vui được đón bạn ở đây 🙂",
+        "Tài khoản của bạn đã được tạo thành công. Khám phá các khóa học hiện có.",
+      ],
+      buttonText: "XEM KHÓA HỌC",
+    },
   };
 
   return emailContent[language];

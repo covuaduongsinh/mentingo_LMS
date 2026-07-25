@@ -12,6 +12,7 @@ const getDaysLabel = (language: SupportedLanguages, daysBeforeDueDate: number) =
       lt: "netrukus",
       cs: "brzy",
       es: "pronto",
+      vi: "sắp tới",
     };
 
     return labels[language];
@@ -25,6 +26,7 @@ const getDaysLabel = (language: SupportedLanguages, daysBeforeDueDate: number) =
       lt: "rytoj",
       cs: "zítra",
       es: "mañana",
+      vi: "ngày mai",
     };
 
     return labels[language];
@@ -38,6 +40,7 @@ const getDaysLabel = (language: SupportedLanguages, daysBeforeDueDate: number) =
       lt: "šiandien",
       cs: "dnes",
       es: "hoy",
+      vi: "hôm nay",
     };
 
     return labels[language];
@@ -50,6 +53,7 @@ const getDaysLabel = (language: SupportedLanguages, daysBeforeDueDate: number) =
     lt: `po ${daysBeforeDueDate} dienų`,
     cs: `za ${daysBeforeDueDate} dní`,
     es: `en ${normalizedDaysBeforeDueDate} días`,
+    vi: `sau ${normalizedDaysBeforeDueDate} ngày`,
   };
 
   return labels[language];
@@ -93,6 +97,11 @@ export const getCourseDueDateReminderEmailTranslations = (
       heading: "Se acerca la fecha límite del curso",
       paragraphs: [`La fecha límite para completar el curso "${courseName}" es ${daysLabel}.`],
       buttonText: "ABRIR CURSO",
+    },
+    vi: {
+      heading: "Sắp đến hạn khóa học",
+      paragraphs: [`Hạn hoàn thành khóa học "${courseName}" là ${daysLabel}.`],
+      buttonText: "MỞ KHÓA HỌC",
     },
   };
 

@@ -24,6 +24,9 @@ export const getUserAssignedToCourseEmailTranslations = (
   const esMandatoryCourseParagraph = formatedCourseDueDate
     ? `Este curso es obligatorio y debe completarse antes del ${formatedCourseDueDate}.`
     : undefined;
+  const viMandatoryCourseParagraph = formatedCourseDueDate
+    ? `Khóa học này là bắt buộc và phải được hoàn thành trước ${formatedCourseDueDate}.`
+    : undefined;
 
   const emailContent: Record<SupportedLanguages, EmailContent> = {
     en: {
@@ -79,6 +82,15 @@ export const getUserAssignedToCourseEmailTranslations = (
         esMandatoryCourseParagraph,
       ].filter(Boolean) as string[],
       buttonText: "MIS CURSOS",
+    },
+    vi: {
+      heading: "Khóa học mới",
+      paragraphs: [
+        "Bạn đã được đăng ký 🎓",
+        `Bạn hiện đã có quyền truy cập vào ${courseName}. Khóa học đã có sẵn trong tài khoản của bạn.`,
+        viMandatoryCourseParagraph,
+      ].filter(Boolean) as string[],
+      buttonText: "KHÓA HỌC CỦA TÔI",
     },
   };
 

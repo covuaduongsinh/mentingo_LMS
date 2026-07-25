@@ -55,6 +55,14 @@ export const getCertificateExpirationWarningEmailTranslations = (
       ],
       buttonText: "ABRIR CURSO",
     },
+    vi: {
+      heading: "Chứng chỉ sắp hết hạn",
+      paragraphs: [
+        `Chứng chỉ của bạn cho khóa học ${courseName} sẽ hết hạn vào ${expiresAt}.`,
+        "Sau khi hết hạn, tiến độ khóa học của bạn sẽ bị đặt lại và bạn cần hoàn thành lại khóa học để nhận chứng chỉ mới.",
+      ],
+      buttonText: "MỞ KHÓA HỌC",
+    },
   };
 
   return emailContent[language];

@@ -94,6 +94,15 @@ export const getOverdueCoursesEmailTranslations = (
       dueDateLabel: "Fecha límite",
       studentsLabel: "Estudiantes",
     },
+    vi: {
+      heading: "Học viên có khóa học quá hạn",
+      intro: "Một số học viên chưa hoàn thành khóa học đúng hạn:",
+      buttonText: "XEM KHÓA HỌC",
+      courseLabel: "Khóa học",
+      groupLabel: "Nhóm",
+      dueDateLabel: "Hạn hoàn thành",
+      studentsLabel: "Học viên",
+    },
   };
 
   const selectedLabels = labels[language];

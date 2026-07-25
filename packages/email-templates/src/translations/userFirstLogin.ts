@@ -51,6 +51,14 @@ export const getUserFirstLoginEmailTranslations = (language: SupportedLanguages,
       ],
       buttonText: "MIS CURSOS",
     },
+    vi: {
+      heading: "Chào mừng",
+      paragraphs: [
+        "Rất vui được đón bạn ở đây 🙂",
+        `Lần đăng nhập đầu tiên của bạn đã thành công. ${name}, hãy xem các khóa học được gán cho bạn.`,
+      ],
+      buttonText: "KHÓA HỌC CỦA TÔI",
+    },
   };
 
   return emailContent[language];

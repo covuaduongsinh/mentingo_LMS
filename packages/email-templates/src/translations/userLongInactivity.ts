@@ -12,6 +12,7 @@ export const getUserLongInactivityEmailTranslations = (
     lt: courseName ? `kurse ${courseName}` : "platformoje",
     cs: courseName ? `v kurzu ${courseName}` : "na platformě",
     es: courseName ? `en ${courseName}` : "en la plataforma",
+    vi: courseName ? `trong ${courseName}` : "trên nền tảng",
   };
 
   const emailContent: Record<SupportedLanguages, EmailContent> = {
@@ -62,6 +63,14 @@ export const getUserLongInactivityEmailTranslations = (
         `Han pasado 30 días desde tu última actividad ${activityContext.es}. Retomarlo ahora te ayudará a terminar a tiempo.`,
       ],
       buttonText: "RETOMAR CURSO",
+    },
+    vi: {
+      heading: "Đã đến lúc tiếp tục khóa học",
+      paragraphs: [
+        "Tiếp tục học tập 📚",
+        `Đã 30 ngày kể từ lần hoạt động gần nhất của bạn ${activityContext.vi}. Tiếp tục ngay bây giờ sẽ giúp bạn hoàn thành đúng hạn.`,
+      ],
+      buttonText: "TIẾP TỤC KHÓA HỌC",
     },
   };
 

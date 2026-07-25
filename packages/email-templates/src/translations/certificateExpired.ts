@@ -71,6 +71,16 @@ export const getCertificateExpiredEmailTranslations = (
       ],
       buttonText: "ABRIR CURSO",
     },
+    vi: {
+      heading: isManualReset ? "Đã đặt lại chứng chỉ" : "Chứng chỉ đã hết hạn",
+      paragraphs: [
+        isManualReset
+          ? `Chứng chỉ của bạn cho khóa học ${courseName} đã được quản trị viên đặt lại.`
+          : `Chứng chỉ của bạn cho khóa học ${courseName} đã hết hạn.`,
+        "Chứng chỉ đã được lưu trữ và tiến độ khóa học của bạn đã bị đặt lại. Hãy hoàn thành lại khóa học để nhận chứng chỉ mới.",
+      ],
+      buttonText: "MỞ KHÓA HỌC",
+    },
   };
 
   return emailContent[language];

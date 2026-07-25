@@ -55,6 +55,14 @@ export const getUserFinishedCourseEmailTranslations = (
       ],
       buttonText: hasCertificate ? "DESCARGAR CERTIFICADO" : "CONTINUAR APRENDIENDO",
     },
+    vi: {
+      heading: "Khóa học đã hoàn thành",
+      paragraphs: [
+        "Chúc mừng! 🏁",
+        `Bạn đã hoàn thành ${courseName}. ${hasCertificate ? "Chứng chỉ của bạn đã sẵn sàng để tải xuống; hãy xem thêm các bước tiếp theo được đề xuất." : ""}`,
+      ],
+      buttonText: hasCertificate ? "TẢI CHỨNG CHỈ" : "TIẾP TỤC HỌC",
+    },
   };
 
   return emailContent[language];
