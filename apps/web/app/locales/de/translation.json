@@ -3634,7 +3634,100 @@
       },
       "assetLibrary": {
         "tooltip": "Asset-Bibliothek: fügt eine zuvor hochgeladene Datei ein"
+      },
+      "underline": {
+        "tooltip": "Unterstreichen: unterstreicht den ausgewählten Text"
+      },
+      "alignLeft": {
+        "tooltip": "Linksbündig ausrichten"
+      },
+      "alignCenter": {
+        "tooltip": "Zentrieren"
+      },
+      "alignRight": {
+        "tooltip": "Rechtsbündig ausrichten"
+      },
+      "insertBlock": {
+        "tooltip": "Block einfügen"
       }
+    },
+    "blockRegistry": {
+      "heading1": "Überschrift 1",
+      "heading2": "Überschrift 2",
+      "heading3": "Überschrift 3",
+      "bulletList": "Aufzählungsliste",
+      "orderedList": "Nummerierte Liste",
+      "taskList": "Checkliste",
+      "codeBlock": "Codeblock",
+      "image": "Bild",
+      "video": "Video",
+      "file": "Datei",
+      "callout": "Hinweisbox",
+      "flipcard": "Karteikarte",
+      "badge": "Abzeichen",
+      "buttonLink": "Button",
+      "webPreview": "Link-Vorschau",
+      "table": "Tabelle",
+      "group": {
+        "text": "Text",
+        "media": "Medien",
+        "interactive": "Interaktiv",
+        "table": "Tabelle"
+      }
+    },
+    "slashCommand": {
+      "noResults": "Keine passenden Blöcke gefunden"
+    },
+    "callout": {
+      "variant": {
+        "info": "Info",
+        "warning": "Warnung",
+        "tip": "Tipp",
+        "success": "Erfolg",
+        "danger": "Gefahr"
+      },
+      "ariaLabel": {
+        "remove": "Hinweisbox entfernen"
+      }
+    },
+    "flipcard": {
+      "front": "Vorderseite",
+      "back": "Rückseite",
+      "ariaLabel": {
+        "remove": "Karteikarte entfernen",
+        "flip": "Karte umdrehen"
+      }
+    },
+    "badge": {
+      "placeholder": "Beschriftung",
+      "ariaLabel": {
+        "text": "Abzeichentext"
+      },
+      "color": {
+        "gray": "Grau",
+        "blue": "Blau",
+        "green": "Grün",
+        "yellow": "Gelb",
+        "red": "Rot",
+        "purple": "Lila"
+      }
+    },
+    "buttonLink": {
+      "placeholder": {
+        "label": "Button"
+      },
+      "fieldLabel": "Button-Beschriftung",
+      "fieldUrl": "Link-URL",
+      "openInNewTab": "In neuem Tab öffnen",
+      "remove": "Entfernen",
+      "save": "Speichern"
+    },
+    "webPreview": {
+      "fieldUrl": "Link einfügen",
+      "add": "Hinzufügen",
+      "remove": "Link-Vorschau entfernen",
+      "changeUrl": "Link ändern",
+      "refresh": "Vorschau aktualisieren"
     }
   },
   "richText": {

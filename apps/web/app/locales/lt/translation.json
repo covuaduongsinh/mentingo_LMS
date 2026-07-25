@@ -3636,7 +3636,100 @@
       },
       "assetLibrary": {
         "tooltip": "Failų biblioteka: įterpti anksčiau įkeltą failą"
+      },
+      "underline": {
+        "tooltip": "Pabraukimas: pabraukia pažymėtą tekstą"
+      },
+      "alignLeft": {
+        "tooltip": "Lygiuoti kairėje"
+      },
+      "alignCenter": {
+        "tooltip": "Centruoti"
+      },
+      "alignRight": {
+        "tooltip": "Lygiuoti dešinėje"
+      },
+      "insertBlock": {
+        "tooltip": "Įterpti bloką"
       }
+    },
+    "blockRegistry": {
+      "heading1": "1 antraštė",
+      "heading2": "2 antraštė",
+      "heading3": "3 antraštė",
+      "bulletList": "Ženklelių sąrašas",
+      "orderedList": "Numeruotas sąrašas",
+      "taskList": "Užduočių sąrašas",
+      "codeBlock": "Kodo blokas",
+      "image": "Paveikslėlis",
+      "video": "Vaizdo įrašas",
+      "file": "Failas",
+      "callout": "Pastabos langelis",
+      "flipcard": "Atverčiama kortelė",
+      "badge": "Ženkliukas",
+      "buttonLink": "Mygtukas",
+      "webPreview": "Nuorodos peržiūra",
+      "table": "Lentelė",
+      "group": {
+        "text": "Tekstas",
+        "media": "Medija",
+        "interactive": "Interaktyvu",
+        "table": "Lentelė"
+      }
+    },
+    "slashCommand": {
+      "noResults": "Atitinkančių blokų nerasta"
+    },
+    "callout": {
+      "variant": {
+        "info": "Informacija",
+        "warning": "Įspėjimas",
+        "tip": "Patarimas",
+        "success": "Sėkmė",
+        "danger": "Pavojus"
+      },
+      "ariaLabel": {
+        "remove": "Pašalinti pastabos langelį"
+      }
+    },
+    "flipcard": {
+      "front": "Priekis",
+      "back": "Nugarėlė",
+      "ariaLabel": {
+        "remove": "Pašalinti kortelę",
+        "flip": "Apversti kortelę"
+      }
+    },
+    "badge": {
+      "placeholder": "Žymė",
+      "ariaLabel": {
+        "text": "Ženkliuko tekstas"
+      },
+      "color": {
+        "gray": "Pilka",
+        "blue": "Mėlyna",
+        "green": "Žalia",
+        "yellow": "Geltona",
+        "red": "Raudona",
+        "purple": "Violetinė"
+      }
+    },
+    "buttonLink": {
+      "placeholder": {
+        "label": "Mygtukas"
+      },
+      "fieldLabel": "Mygtuko tekstas",
+      "fieldUrl": "Nuorodos URL",
+      "openInNewTab": "Atidaryti naujame skirtuke",
+      "remove": "Pašalinti",
+      "save": "Išsaugoti"
+    },
+    "webPreview": {
+      "fieldUrl": "Įklijuokite nuorodą",
+      "add": "Pridėti",
+      "remove": "Pašalinti nuorodos peržiūrą",
+      "changeUrl": "Keisti nuorodą",
+      "refresh": "Atnaujinti peržiūrą"
     }
   },
   "richText": {

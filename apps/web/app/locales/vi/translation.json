@@ -3876,7 +3876,100 @@
       },
       "assetLibrary": {
         "tooltip": "Thư viện tài nguyên: chèn tệp đã tải lên trước đó"
+      },
+      "underline": {
+        "tooltip": "Gạch chân: gạch chân văn bản đã chọn"
+      },
+      "alignLeft": {
+        "tooltip": "Căn trái"
+      },
+      "alignCenter": {
+        "tooltip": "Căn giữa"
+      },
+      "alignRight": {
+        "tooltip": "Căn phải"
+      },
+      "insertBlock": {
+        "tooltip": "Chèn khối nội dung"
       }
+    },
+    "blockRegistry": {
+      "heading1": "Tiêu đề 1",
+      "heading2": "Tiêu đề 2",
+      "heading3": "Tiêu đề 3",
+      "bulletList": "Danh sách chấm",
+      "orderedList": "Danh sách số",
+      "taskList": "Danh sách công việc",
+      "codeBlock": "Khối mã",
+      "image": "Ảnh",
+      "video": "Video",
+      "file": "Tệp",
+      "callout": "Hộp chú thích",
+      "flipcard": "Thẻ lật",
+      "badge": "Huy hiệu",
+      "buttonLink": "Nút bấm",
+      "webPreview": "Xem trước liên kết",
+      "table": "Bảng",
+      "group": {
+        "text": "Văn bản",
+        "media": "Media",
+        "interactive": "Tương tác",
+        "table": "Bảng"
+      }
+    },
+    "slashCommand": {
+      "noResults": "Không tìm thấy khối phù hợp"
+    },
+    "callout": {
+      "variant": {
+        "info": "Thông tin",
+        "warning": "Cảnh báo",
+        "tip": "Mẹo",
+        "success": "Thành công",
+        "danger": "Nguy hiểm"
+      },
+      "ariaLabel": {
+        "remove": "Xóa hộp chú thích"
+      }
+    },
+    "flipcard": {
+      "front": "Mặt trước",
+      "back": "Mặt sau",
+      "ariaLabel": {
+        "remove": "Xóa thẻ lật",
+        "flip": "Lật thẻ"
+      }
+    },
+    "badge": {
+      "placeholder": "Nhãn",
+      "ariaLabel": {
+        "text": "Nội dung huy hiệu"
+      },
+      "color": {
+        "gray": "Xám",
+        "blue": "Xanh dương",
+        "green": "Xanh lá",
+        "yellow": "Vàng",
+        "red": "Đỏ",
+        "purple": "Tím"
+      }
+    },
+    "buttonLink": {
+      "placeholder": {
+        "label": "Nút bấm"
+      },
+      "fieldLabel": "Nhãn nút",
+      "fieldUrl": "URL liên kết",
+      "openInNewTab": "Mở ở tab mới",
+      "remove": "Xóa",
+      "save": "Lưu"
+    },
+    "webPreview": {
+      "fieldUrl": "Dán một liên kết",
+      "add": "Thêm",
+      "remove": "Xóa thẻ xem trước",
+      "changeUrl": "Đổi liên kết",
+      "refresh": "Làm mới xem trước"
     }
   },
   "richText": {

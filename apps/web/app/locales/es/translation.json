@@ -3712,7 +3712,100 @@
       },
       "assetLibrary": {
         "tooltip": "Biblioteca de activos: inserte un archivo cargado anteriormente"
+      },
+      "underline": {
+        "tooltip": "Subrayado: subraya el texto seleccionado"
+      },
+      "alignLeft": {
+        "tooltip": "Alinear a la izquierda"
+      },
+      "alignCenter": {
+        "tooltip": "Centrar"
+      },
+      "alignRight": {
+        "tooltip": "Alinear a la derecha"
+      },
+      "insertBlock": {
+        "tooltip": "Insertar bloque"
       }
+    },
+    "blockRegistry": {
+      "heading1": "Título 1",
+      "heading2": "Título 2",
+      "heading3": "Título 3",
+      "bulletList": "Lista con viñetas",
+      "orderedList": "Lista numerada",
+      "taskList": "Lista de tareas",
+      "codeBlock": "Bloque de código",
+      "image": "Imagen",
+      "video": "Vídeo",
+      "file": "Archivo",
+      "callout": "Cuadro de aviso",
+      "flipcard": "Tarjeta volteable",
+      "badge": "Insignia",
+      "buttonLink": "Botón",
+      "webPreview": "Vista previa de enlace",
+      "table": "Tabla",
+      "group": {
+        "text": "Texto",
+        "media": "Multimedia",
+        "interactive": "Interactivo",
+        "table": "Tabla"
+      }
+    },
+    "slashCommand": {
+      "noResults": "No se encontraron bloques"
+    },
+    "callout": {
+      "variant": {
+        "info": "Información",
+        "warning": "Advertencia",
+        "tip": "Consejo",
+        "success": "Éxito",
+        "danger": "Peligro"
+      },
+      "ariaLabel": {
+        "remove": "Eliminar cuadro de aviso"
+      }
+    },
+    "flipcard": {
+      "front": "Anverso",
+      "back": "Reverso",
+      "ariaLabel": {
+        "remove": "Eliminar tarjeta",
+        "flip": "Voltear tarjeta"
+      }
+    },
+    "badge": {
+      "placeholder": "Etiqueta",
+      "ariaLabel": {
+        "text": "Texto de la insignia"
+      },
+      "color": {
+        "gray": "Gris",
+        "blue": "Azul",
+        "green": "Verde",
+        "yellow": "Amarillo",
+        "red": "Rojo",
+        "purple": "Morado"
+      }
+    },
+    "buttonLink": {
+      "placeholder": {
+        "label": "Botón"
+      },
+      "fieldLabel": "Texto del botón",
+      "fieldUrl": "URL del enlace",
+      "openInNewTab": "Abrir en una pestaña nueva",
+      "remove": "Eliminar",
+      "save": "Guardar"
+    },
+    "webPreview": {
+      "fieldUrl": "Pega un enlace",
+      "add": "Añadir",
+      "remove": "Eliminar vista previa",
+      "changeUrl": "Cambiar enlace",
+      "refresh": "Actualizar vista previa"
     }
   },
   "richText": {

@@ -3636,7 +3636,100 @@
       },
       "assetLibrary": {
         "tooltip": "Knihovna souborů: vloží dříve nahraný soubor"
+      },
+      "underline": {
+        "tooltip": "Podtržení: podtrhne vybraný text"
+      },
+      "alignLeft": {
+        "tooltip": "Zarovnat vlevo"
+      },
+      "alignCenter": {
+        "tooltip": "Zarovnat na střed"
+      },
+      "alignRight": {
+        "tooltip": "Zarovnat vpravo"
+      },
+      "insertBlock": {
+        "tooltip": "Vložit blok"
       }
+    },
+    "blockRegistry": {
+      "heading1": "Nadpis 1",
+      "heading2": "Nadpis 2",
+      "heading3": "Nadpis 3",
+      "bulletList": "Odrážkový seznam",
+      "orderedList": "Číslovaný seznam",
+      "taskList": "Seznam úkolů",
+      "codeBlock": "Blok kódu",
+      "image": "Obrázek",
+      "video": "Video",
+      "file": "Soubor",
+      "callout": "Rámeček s poznámkou",
+      "flipcard": "Kartička",
+      "badge": "Odznak",
+      "buttonLink": "Tlačítko",
+      "webPreview": "Náhled odkazu",
+      "table": "Tabulka",
+      "group": {
+        "text": "Text",
+        "media": "Média",
+        "interactive": "Interaktivní",
+        "table": "Tabulka"
+      }
+    },
+    "slashCommand": {
+      "noResults": "Nenalezeny žádné odpovídající bloky"
+    },
+    "callout": {
+      "variant": {
+        "info": "Informace",
+        "warning": "Upozornění",
+        "tip": "Tip",
+        "success": "Úspěch",
+        "danger": "Nebezpečí"
+      },
+      "ariaLabel": {
+        "remove": "Odstranit rámeček"
+      }
+    },
+    "flipcard": {
+      "front": "Přední strana",
+      "back": "Zadní strana",
+      "ariaLabel": {
+        "remove": "Odstranit kartičku",
+        "flip": "Otočit kartičku"
+      }
+    },
+    "badge": {
+      "placeholder": "Popisek",
+      "ariaLabel": {
+        "text": "Text odznaku"
+      },
+      "color": {
+        "gray": "Šedá",
+        "blue": "Modrá",
+        "green": "Zelená",
+        "yellow": "Žlutá",
+        "red": "Červená",
+        "purple": "Fialová"
+      }
+    },
+    "buttonLink": {
+      "placeholder": {
+        "label": "Tlačítko"
+      },
+      "fieldLabel": "Text tlačítka",
+      "fieldUrl": "URL odkazu",
+      "openInNewTab": "Otevřít na nové kartě",
+      "remove": "Odstranit",
+      "save": "Uložit"
+    },
+    "webPreview": {
+      "fieldUrl": "Vložte odkaz",
+      "add": "Přidat",
+      "remove": "Odstranit náhled odkazu",
+      "changeUrl": "Změnit odkaz",
+      "refresh": "Obnovit náhled"
     }
   },
   "richText": {

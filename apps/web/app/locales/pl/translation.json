@@ -3979,7 +3979,100 @@
       },
       "assetLibrary": {
         "tooltip": "Biblioteka zasobów: wstaw wcześniej przesłany plik"
+      },
+      "underline": {
+        "tooltip": "Podkreślenie: podkreśla zaznaczony tekst"
+      },
+      "alignLeft": {
+        "tooltip": "Wyrównaj do lewej"
+      },
+      "alignCenter": {
+        "tooltip": "Wyśrodkuj"
+      },
+      "alignRight": {
+        "tooltip": "Wyrównaj do prawej"
+      },
+      "insertBlock": {
+        "tooltip": "Wstaw blok"
       }
+    },
+    "blockRegistry": {
+      "heading1": "Nagłówek 1",
+      "heading2": "Nagłówek 2",
+      "heading3": "Nagłówek 3",
+      "bulletList": "Lista punktowana",
+      "orderedList": "Lista numerowana",
+      "taskList": "Lista zadań",
+      "codeBlock": "Blok kodu",
+      "image": "Obraz",
+      "video": "Wideo",
+      "file": "Plik",
+      "callout": "Ramka z podpowiedzią",
+      "flipcard": "Fiszka",
+      "badge": "Odznaka",
+      "buttonLink": "Przycisk",
+      "webPreview": "Podgląd linku",
+      "table": "Tabela",
+      "group": {
+        "text": "Tekst",
+        "media": "Media",
+        "interactive": "Interaktywne",
+        "table": "Tabela"
+      }
+    },
+    "slashCommand": {
+      "noResults": "Nie znaleziono pasujących bloków"
+    },
+    "callout": {
+      "variant": {
+        "info": "Informacja",
+        "warning": "Ostrzeżenie",
+        "tip": "Wskazówka",
+        "success": "Sukces",
+        "danger": "Niebezpieczeństwo"
+      },
+      "ariaLabel": {
+        "remove": "Usuń ramkę"
+      }
+    },
+    "flipcard": {
+      "front": "Przód",
+      "back": "Tył",
+      "ariaLabel": {
+        "remove": "Usuń fiszkę",
+        "flip": "Odwróć fiszkę"
+      }
+    },
+    "badge": {
+      "placeholder": "Etykieta",
+      "ariaLabel": {
+        "text": "Treść odznaki"
+      },
+      "color": {
+        "gray": "Szary",
+        "blue": "Niebieski",
+        "green": "Zielony",
+        "yellow": "Żółty",
+        "red": "Czerwony",
+        "purple": "Fioletowy"
+      }
+    },
+    "buttonLink": {
+      "placeholder": {
+        "label": "Przycisk"
+      },
+      "fieldLabel": "Etykieta przycisku",
+      "fieldUrl": "Adres URL linku",
+      "openInNewTab": "Otwórz w nowej karcie",
+      "remove": "Usuń",
+      "save": "Zapisz"
+    },
+    "webPreview": {
+      "fieldUrl": "Wklej link",
+      "add": "Dodaj",
+      "remove": "Usuń podgląd linku",
+      "changeUrl": "Zmień link",
+      "refresh": "Odśwież podgląd"
     }
   },
   "richText": {

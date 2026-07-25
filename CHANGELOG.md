@@ -1,3 +1,34 @@
+<a name="rich-text-blocks-slash-commands"></a>
+
+## [Rich text blocks & slash commands] - 26.07.2026
+
+### Features:
+
+- add 5 new rich-text blocks — callout, flipcard, badge, button, and web-preview (with a new `GET /api/link-preview` endpoint, SSRF-guarded) — to the course/article/news/QA editor
+- add a `/` slash-command menu and a toolbar quick-insert button, both reading from one shared block registry
+- add underline and text-align (left/center/right) to the rich text toolbar
+
+<a name="chess-covuahocduong"></a>
+
+## [Chess — Cờ Vua Học Đường] - 25.07.2026
+
+Fork covuaduongsinh/mentingo_LMS · [PR #1](https://github.com/covuaduongsinh/mentingo_LMS/pull/1)
+
+### Features:
+
+- add chess play-vs-engine sessions with clock, resign and move-by-move history (`chess_play_sessions`, RLS-protected)
+- add Vietnamese (`vi`) as a supported language with a full translation and VN flag
+- rebrand the chess tenant with the Dương Sinh navy identity (`#2B3990`) and logo assets
+
+### Chores:
+
+- migrate all chess web hooks off the hand-rolled `chess-api.ts` onto the generated swagger client
+- add E2E fixtures/factories/flows/specs for chess practice, play-vs-engine and the admin exercise bank
+
+### Bug Fixes:
+
+- route all zustand persist stores through a crash-safe storage to stop intermittent `storage.setItem is not a function` failures under jsdom teardown
+
 <a name="v4.15.0"></a>
 
 ## [v4.15.0] - 14.07.2026
