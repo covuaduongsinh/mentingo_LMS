@@ -24,6 +24,7 @@ import { addDays, addMonths, addYears, format } from "date-fns";
 import { escape } from "lodash";
 import { nanoid } from "nanoid";
 import puppeteer, { type Page, type Browser } from "puppeteer";
+import QRCode from "qrcode";
 import { match } from "ts-pattern";
 
 import { ActivityLogsService } from "src/activity-logs/activity-logs.service";
@@ -429,12 +430,7 @@ export class CertificatesService implements OnModuleDestroy {
       throw new NotFoundException("studentCertificateView.informations.certificateNotFound");
     }
 
-    // Reuse the existing token if one was already issued, so re-opening the
-    // share dialog doesn't invalidate a link already posted elsewhere.
-    const shareToken = ownedCertificate.shareToken ?? nanoid(32);
-    if (!ownedCertificate.shareToken) {
-      await this.certificateRepository.setShareToken(certificateId, shareToken);
-    }
+    const shareToken = await this.ensureShareToken(certificateId, ownedCertificate.shareToken);
 
     const shareLanguage = this.normalizeLanguage(language);
     const publicCertificate = await this.getPublicShareCertificate(certificateId, shareLanguage);
@@ -513,7 +509,7 @@ export class CertificatesService implements OnModuleDestroy {
     }
 
     const context = await this.buildShareRenderContext(certificateId, shareLanguage);
-    const imageBuffer = await this.renderPngFromHtml(this.buildShareImageDocument(context));
+    const imageBuffer = await this.renderPngFromHtml(await this.buildShareImageDocument(context));
 
     await this.s3Service.uploadFile(imageBuffer, imageKey, "image/png").catch((error) => {
       this.logger.warn(`Certificate share image upload failed: ${error}`);
@@ -581,6 +577,13 @@ export class CertificatesService implements OnModuleDestroy {
     const certificateDate =
       certificate.issuedAt || certificate.completionDate || certificate.createdAt;
 
+    const shareToken = await this.ensureShareToken(certificateId, certificate.shareToken);
+    const verificationUrl = this.buildTenantUrl(certificate.tenantHost, "/api/certificates/share", {
+      token: shareToken,
+      lang: shareLanguage,
+    });
+    const qrCodeDataUri = await this.buildVerificationQrCode(verificationUrl);
+
     const html = buildCertificateMarkup({
       studentName: certificate.fullName || "",
       courseName: certificate.courseTitle || "",
@@ -591,6 +594,8 @@ export class CertificatesService implements OnModuleDestroy {
       backgroundImageUrl,
       lang: shareLanguage,
       isDownload: true,
+      verificationUrl,
+      qrCodeDataUri,
       colorTheme: {
         titleColor: accentColor,
         certifyTextColor: accentColor,
@@ -704,8 +709,14 @@ export class CertificatesService implements OnModuleDestroy {
     const certificate = await this.getPublicShareCertificate(certificateId, shareLanguage);
     const settings = await this.settingsService.getGlobalSettingsByTenantId(certificate.tenantId);
 
+    // Public metadata (og:url, og:image, canonical) must reference the
+    // token-based URLs — the endpoints only accept ?token=, not
+    // ?certificateId= (see the certificate-share IDOR fix) — otherwise a
+    // crawler following og:url/og:image gets a 404.
+    const shareToken = await this.ensureShareToken(certificateId, certificate.shareToken);
+
     const shareUrl = this.buildTenantUrl(certificate.tenantHost, "/api/certificates/share", {
-      certificateId,
+      token: shareToken,
       lang: shareLanguage,
     });
 
@@ -713,7 +724,7 @@ export class CertificatesService implements OnModuleDestroy {
       certificate.tenantHost,
       "/api/certificates/share-image",
       {
-        certificateId,
+        token: shareToken,
         lang: shareLanguage,
       },
     );
@@ -761,7 +772,7 @@ export class CertificatesService implements OnModuleDestroy {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>${content.pageTitle}</title>
         <meta name="description" content="${content.pageDescription}" />
-        <meta name="robots" content="noindex,noarchive" />
+        <meta name="robots" content="${content.isIndexable ? "index,follow" : "noindex,noarchive"}" />
         <link rel="canonical" href="${content.shareUrl}" />
         ${content.faviconUrl ? `<link rel="icon" href="${content.faviconUrl}" />` : ""}
         ${content.faviconUrl ? `<link rel="apple-touch-icon" href="${content.faviconUrl}" />` : ""}
@@ -822,11 +833,33 @@ export class CertificatesService implements OnModuleDestroy {
             background: ${content.primaryColor};
             font-weight: 600;
           }
+          .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+          }
+          .status.valid { background: rgba(22, 163, 74, 0.12); color: #15803d; }
+          .status.expired { background: rgba(217, 119, 6, 0.12); color: #b45309; }
+          .status.revoked { background: rgba(220, 38, 38, 0.12); color: #b91c1c; }
+          .issued {
+            margin: 10px 2px 0;
+            font-size: 13px;
+            color: #64748b;
+          }
         </style>
       </head>
       <body>
         <main class="card">
+          <span class="status ${content.isRevoked ? "revoked" : content.isExpired ? "expired" : "valid"}">
+            ${content.statusLabel}
+          </span>
           <img src="${content.embeddedImage}" alt="${content.courseTitle}" />
+          <p class="issued">${content.issuedLabel}: ${content.formattedIssuedDate}</p>
           <div class="actions">
             <a class="link" href="${content.homeUrl}">${content.openLabel}</a>
           </div>
@@ -841,43 +874,95 @@ export class CertificatesService implements OnModuleDestroy {
         openLabel: "Otwórz platformę",
         pageTitle: `Certyfikat ukończenia kursu "${context.certificate.courseTitle}"`,
         pageDescription: `${context.certificate.fullName} ukończył/a kurs "${context.certificate.courseTitle}" i otrzymał/a certyfikat.`,
+        verifiedLabel: "Zweryfikowany certyfikat",
+        expiredLabel: "Ten certyfikat wygasł",
+        revokedLabel: "Ten certyfikat nie jest już ważny",
+        issuedLabel: "Wydano",
       },
       en: {
         openLabel: "Open platform",
         pageTitle: `Course completion certificate for "${context.certificate.courseTitle}"`,
         pageDescription: `${context.certificate.fullName} completed "${context.certificate.courseTitle}" and earned a certificate.`,
+        verifiedLabel: "Verified certificate",
+        expiredLabel: "This certificate has expired",
+        revokedLabel: "This certificate is no longer valid",
+        issuedLabel: "Issued",
       },
       de: {
         openLabel: "Plattform öffnen",
         pageTitle: `Kursabschlusszertifikat für "${context.certificate.courseTitle}"`,
         pageDescription: `${context.certificate.fullName} hat "${context.certificate.courseTitle}" abgeschlossen und ein Zertifikat erhalten.`,
+        verifiedLabel: "Verifiziertes Zertifikat",
+        expiredLabel: "Dieses Zertifikat ist abgelaufen",
+        revokedLabel: "Dieses Zertifikat ist nicht mehr gültig",
+        issuedLabel: "Ausgestellt am",
       },
       lt: {
         openLabel: "Atidaryti platformą",
         pageTitle: `Kurso baigimo sertifikatas už "${context.certificate.courseTitle}"`,
         pageDescription: `${context.certificate.fullName} baigė "${context.certificate.courseTitle}" ir gavo sertifikatą.`,
+        verifiedLabel: "Patvirtintas sertifikatas",
+        expiredLabel: "Šio sertifikato galiojimas baigėsi",
+        revokedLabel: "Šis sertifikatas nebegalioja",
+        issuedLabel: "Išduota",
       },
       cs: {
         openLabel: "Otevřít platformu",
         pageTitle: `Certifikát o dokončení kurzu "${context.certificate.courseTitle}"`,
         pageDescription: `${context.certificate.fullName} dokončil/a "${context.certificate.courseTitle}" a získal/a certifikát.`,
+        verifiedLabel: "Ověřený certifikát",
+        expiredLabel: "Platnost tohoto certifikátu vypršela",
+        revokedLabel: "Tento certifikát již není platný",
+        issuedLabel: "Vydáno",
       },
       es: {
         openLabel: "Abrir plataforma",
         pageTitle: `Certificado de finalización del curso "${context.certificate.courseTitle}"`,
         pageDescription: `${context.certificate.fullName} completó "${context.certificate.courseTitle}" y obtuvo un certificado.`,
+        verifiedLabel: "Certificado verificado",
+        expiredLabel: "Este certificado ha caducado",
+        revokedLabel: "Este certificado ya no es válido",
+        issuedLabel: "Emitido",
       },
       vi: {
         openLabel: "Mở nền tảng",
         pageTitle: `Chứng chỉ hoàn thành khóa học "${context.certificate.courseTitle}"`,
         pageDescription: `${context.certificate.fullName} đã hoàn thành "${context.certificate.courseTitle}" và nhận được chứng chỉ.`,
+        verifiedLabel: "Chứng chỉ đã xác minh",
+        expiredLabel: "Chứng chỉ này đã hết hạn",
+        revokedLabel: "Chứng chỉ này không còn hiệu lực",
+        issuedLabel: "Ngày cấp",
       },
     } as const satisfies Record<
       SupportedLanguages,
-      { openLabel: string; pageTitle: string; pageDescription: string }
+      {
+        openLabel: string;
+        pageTitle: string;
+        pageDescription: string;
+        verifiedLabel: string;
+        expiredLabel: string;
+        revokedLabel: string;
+        issuedLabel: string;
+      }
     >;
 
     const localizedContent = translations[context.language];
+
+    // Search engines / social crawlers get told the truth for a revoked or
+    // expired certificate too, rather than either indexing a stale "valid"
+    // page or 404ing as if the certificate never existed.
+    const isRevoked =
+      context.certificate.status === "archived" && context.certificate.archiveReason !== "expired";
+    const isExpired =
+      (context.certificate.status === "archived" &&
+        context.certificate.archiveReason === "expired") ||
+      (context.certificate.expiresAt != null &&
+        new Date(context.certificate.expiresAt) < new Date());
+    const statusLabel = isRevoked
+      ? localizedContent.revokedLabel
+      : isExpired
+        ? localizedContent.expiredLabel
+        : localizedContent.verifiedLabel;
 
     return {
       pageTitle: escape(localizedContent.pageTitle),
@@ -899,16 +984,23 @@ export class CertificatesService implements OnModuleDestroy {
       primaryColor: escape(context.settings.primaryColor || "#3f58b6"),
       contrastColor: escape(context.settings.contrastColor || "#ffffff"),
       embeddedImage: escape(embeddedImageSrc),
+      statusLabel: escape(statusLabel),
+      isRevoked,
+      isExpired,
+      isIndexable: !isRevoked && !isExpired,
+      issuedLabel: escape(localizedContent.issuedLabel),
+      formattedIssuedDate: escape(context.formattedDate),
     };
   }
 
-  private buildShareImageDocument(context: ShareRenderContext): string {
-    return this.buildShareImageHtmlDocument(this.buildShareImageMarkup(context));
+  private async buildShareImageDocument(context: ShareRenderContext): Promise<string> {
+    return this.buildShareImageHtmlDocument(await this.buildShareImageMarkup(context));
   }
 
-  private buildShareImageMarkup(context: ShareRenderContext): string {
+  private async buildShareImageMarkup(context: ShareRenderContext): Promise<string> {
     const accentColor =
       context.certificate.certificateFontColor || context.settings.primaryColor || "#1f2937";
+    const qrCodeDataUri = await this.buildVerificationQrCode(context.shareUrl);
 
     return buildCertificateMarkup({
       studentName: context.certificate.fullName || "",
@@ -919,6 +1011,8 @@ export class CertificatesService implements OnModuleDestroy {
       signatureImageUrl: context.certificateSignatureUrl,
       backgroundImageUrl: context.settings.certificateBackgroundImage,
       lang: context.language,
+      verificationUrl: context.shareUrl,
+      qrCodeDataUri,
       colorTheme: {
         titleColor: accentColor,
         certifyTextColor: accentColor,
@@ -962,6 +1056,29 @@ export class CertificatesService implements OnModuleDestroy {
         ${html}
       </body>
     </html>`;
+  }
+
+  /**
+   * Reuses an existing share token if one was already issued (so re-opening
+   * the share dialog or re-downloading the PDF doesn't invalidate a link
+   * already posted elsewhere), otherwise mints one. Every certificate is
+   * verifiable via QR from the moment it's issued/downloaded — sharing to
+   * LinkedIn is a separate, later action on the same token.
+   */
+  private async ensureShareToken(
+    certificateId: UUIDType,
+    existingToken: string | null | undefined,
+  ): Promise<string> {
+    if (existingToken) return existingToken;
+
+    const shareToken = nanoid(32);
+    await this.certificateRepository.setShareToken(certificateId, shareToken);
+    return shareToken;
+  }
+
+  /** Renders a QR pointing at the public verification page, as a data URI ready to embed in an <img>. */
+  private async buildVerificationQrCode(verificationUrl: string): Promise<string> {
+    return QRCode.toDataURL(verificationUrl, { margin: 1, width: 240 });
   }
 
   private buildTenantUrl(

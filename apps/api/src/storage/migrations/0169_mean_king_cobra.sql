@@ -1,0 +1,2 @@
+ALTER TABLE "learning_path_certificates" ADD COLUMN "share_token" text;--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "learning_path_certificates_share_token_unique_idx" ON "learning_path_certificates" USING btree ("share_token");

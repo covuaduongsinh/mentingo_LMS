@@ -1871,6 +1871,7 @@ export class LearningPathRepository {
     const [certificate] = await dbInstance
       .select({
         ...getTableColumns(learningPathCertificates),
+        tenantHost: tenants.host,
         fullName: sql<string>`CONCAT(${users.firstName}, ' ', ${users.lastName})`,
         pathTitle: this.localizationService.getLocalizedSqlField(
           learningPaths.title,
@@ -1887,6 +1888,7 @@ export class LearningPathRepository {
       .from(learningPathCertificates)
       .innerJoin(users, eq(users.id, learningPathCertificates.userId))
       .innerJoin(learningPaths, eq(learningPaths.id, learningPathCertificates.learningPathId))
+      .innerJoin(tenants, eq(tenants.id, learningPathCertificates.tenantId))
       .where(
         and(
           eq(learningPathCertificates.id, certificateId),
@@ -1929,6 +1931,38 @@ export class LearningPathRepository {
       .limit(1);
 
     return certificate;
+  }
+
+  /**
+   * The only lookup the public learning-path certificate share endpoints
+   * are allowed to use — resolving by the certificate's own id (as the old
+   * code did) is an IDOR, matching the course-certificate fix. Does not
+   * filter to ACTIVE only, so a revoked/expired certificate's verification
+   * page can say so instead of 404ing as if it never existed.
+   */
+  async findLearningPathCertificateIdByShareToken(
+    shareToken: string,
+    dbInstance: DatabasePg = this.db,
+  ): Promise<{ id: UUIDType } | undefined> {
+    const [certificate] = await dbInstance
+      .select({ id: learningPathCertificates.id })
+      .from(learningPathCertificates)
+      .innerJoin(users, eq(users.id, learningPathCertificates.userId))
+      .where(and(eq(learningPathCertificates.shareToken, shareToken), isNull(users.deletedAt)))
+      .limit(1);
+
+    return certificate;
+  }
+
+  async setLearningPathCertificateShareToken(
+    certificateId: UUIDType,
+    shareToken: string,
+    dbInstance: DatabasePg = this.db,
+  ): Promise<void> {
+    await dbInstance
+      .update(learningPathCertificates)
+      .set({ shareToken })
+      .where(eq(learningPathCertificates.id, certificateId));
   }
 
   async createLearningPathCertificate(
