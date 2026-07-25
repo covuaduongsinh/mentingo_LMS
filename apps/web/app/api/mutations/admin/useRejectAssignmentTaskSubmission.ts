@@ -9,23 +9,14 @@ import { queryClient } from "~/api/queryClient";
 import { getTranslatedApiErrorMessage } from "~/api/utils/getTranslatedApiErrorMessage";
 import { useToast } from "~/components/ui/use-toast";
 
-import type { GradeTaskSubmissionBody } from "~/api/generated-api";
-
-type GradeAssignmentTaskSubmissionOptions = {
-  taskSubmissionId: string;
-  data: GradeTaskSubmissionBody;
-};
-
-export function useGradeAssignmentTaskSubmission() {
+export function useRejectAssignmentTaskSubmission() {
   const { toast } = useToast();
   const { t } = useTranslation();
 
   return useMutation({
-    mutationFn: async ({ taskSubmissionId, data }: GradeAssignmentTaskSubmissionOptions) => {
-      const response = await ApiClient.api.assignmentsControllerGradeTaskSubmission(
-        taskSubmissionId,
-        data,
-      );
+    mutationFn: async (taskSubmissionId: string) => {
+      const response =
+        await ApiClient.api.assignmentsControllerRejectTaskSubmission(taskSubmissionId);
       return response.data.data;
     },
     onSuccess: async () => {
@@ -33,8 +24,8 @@ export function useGradeAssignmentTaskSubmission() {
       await queryClient.invalidateQueries({ queryKey: ASSIGNMENT_SUBMISSIONS_QUERY_KEY });
       await queryClient.invalidateQueries({ queryKey: ASSIGNMENT_SUMMARY_QUERY_KEY });
       toast({
-        description: t("adminCourseView.assignmentGrading.toast.graded", {
-          defaultValue: "Grade saved",
+        description: t("adminCourseView.assignmentGrading.toast.rejected", {
+          defaultValue: "Submission rejected",
         }),
       });
     },
@@ -44,8 +35,8 @@ export function useGradeAssignmentTaskSubmission() {
         description: getTranslatedApiErrorMessage(
           error,
           t,
-          t("adminCourseView.assignmentGrading.toast.gradeFailed", {
-            defaultValue: "Could not save grade",
+          t("adminCourseView.assignmentGrading.toast.rejectFailed", {
+            defaultValue: "Could not reject submission",
           }),
         ),
       });

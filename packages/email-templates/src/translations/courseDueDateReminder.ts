@@ -1,7 +1,7 @@
 import { SupportedLanguages } from "@repo/shared";
 import { EmailContent } from "types";
 
-const getDaysLabel = (language: SupportedLanguages, daysBeforeDueDate: number) => {
+export const getDaysLabel = (language: SupportedLanguages, daysBeforeDueDate: number) => {
   const normalizedDaysBeforeDueDate = Number(daysBeforeDueDate);
 
   if (Number.isNaN(normalizedDaysBeforeDueDate)) {

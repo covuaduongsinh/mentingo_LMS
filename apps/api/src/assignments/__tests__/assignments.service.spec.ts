@@ -89,6 +89,8 @@ describe("AssignmentsService", () => {
       createLessonRow: jest.fn(),
       createAssignment: jest.fn(),
       createTask: jest.fn(),
+      resetTaskSubmission: jest.fn(),
+      listUserSubmissionsForAssignment: jest.fn(),
     } as unknown as jest.Mocked<AssignmentsRepository>;
 
     aiGrader = {
@@ -329,6 +331,141 @@ describe("AssignmentsService", () => {
       expect(result.status).toBe(ASSIGNMENT_SUBMISSION_STATUS.GRADED);
       expect(result.grade).toBe(100);
       expect(outbox.publish).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("rejectTaskSubmission", () => {
+    it("resets the task submission and recomputes the aggregate without touching attemptNumber", async () => {
+      repo.resetTaskSubmission.mockResolvedValue({
+        id: "sub-1",
+        taskId: TASK_ID,
+        userId: USER_ID,
+        submission: {},
+        grade: null,
+        feedback: null,
+        manuallyGraded: false,
+        gradedByUserId: null,
+        gradedAt: null,
+        createdAt: "2026-01-01T00:00:00.000Z",
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      });
+      repo.getTaskById.mockResolvedValue(buildTask());
+      repo.getAssignmentById.mockResolvedValue(buildAssignment());
+      repo.getUserSubmission.mockResolvedValue({
+        id: "agg-1",
+        assignmentId: ASSIGNMENT_ID,
+        userId: USER_ID,
+        status: ASSIGNMENT_SUBMISSION_STATUS.SUBMITTED,
+        grade: null,
+        overallFeedback: null,
+        attemptNumber: 2,
+        submittedAt: "2026-01-01T00:00:00.000Z",
+        gradedAt: null,
+        createdAt: "2026-01-01T00:00:00.000Z",
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      });
+      repo.listTasksByAssignmentId.mockResolvedValue([buildTask()]);
+      repo.listTaskSubmissionsForUser.mockResolvedValue([]);
+      repo.upsertUserSubmission.mockImplementation(async (_assignmentId, _userId, data) => ({
+        id: "agg-1",
+        assignmentId: ASSIGNMENT_ID,
+        userId: USER_ID,
+        createdAt: "2026-01-01T00:00:00.000Z",
+        updatedAt: "2026-01-01T00:00:00.000Z",
+        ...data,
+      }));
+
+      await service.rejectTaskSubmission("sub-1");
+
+      expect(repo.resetTaskSubmission).toHaveBeenCalledWith("sub-1");
+      // Reset submission means no task has a grade anymore -> aggregate goes
+      // back to not_submitted, and the attempt number carries over (2), it
+      // is never bumped by a rejection.
+      expect(repo.upsertUserSubmission).toHaveBeenCalledWith(
+        ASSIGNMENT_ID,
+        USER_ID,
+        expect.objectContaining({
+          status: ASSIGNMENT_SUBMISSION_STATUS.NOT_SUBMITTED,
+          attemptNumber: 2,
+        }),
+      );
+    });
+  });
+
+  describe("getAssignmentSummary", () => {
+    it("computes status counts, average grade, and pass rate from graded submissions only", async () => {
+      repo.getAssignmentById.mockResolvedValue(buildAssignment({ passThresholdPercentage: 60 }));
+      repo.listUserSubmissionsForAssignment.mockResolvedValue([
+        {
+          id: "a1",
+          assignmentId: ASSIGNMENT_ID,
+          userId: "u1",
+          status: ASSIGNMENT_SUBMISSION_STATUS.GRADED,
+          grade: 80,
+          overallFeedback: null,
+          attemptNumber: 1,
+          submittedAt: null,
+          gradedAt: null,
+          createdAt: "",
+          updatedAt: "",
+          userEmail: "a@example.com",
+          userFirstName: "A",
+          userLastName: "A",
+        },
+        {
+          id: "a2",
+          assignmentId: ASSIGNMENT_ID,
+          userId: "u2",
+          status: ASSIGNMENT_SUBMISSION_STATUS.GRADED,
+          grade: 40,
+          overallFeedback: null,
+          attemptNumber: 1,
+          submittedAt: null,
+          gradedAt: null,
+          createdAt: "",
+          updatedAt: "",
+          userEmail: "b@example.com",
+          userFirstName: "B",
+          userLastName: "B",
+        },
+        {
+          id: "a3",
+          assignmentId: ASSIGNMENT_ID,
+          userId: "u3",
+          status: ASSIGNMENT_SUBMISSION_STATUS.NOT_SUBMITTED,
+          grade: null,
+          overallFeedback: null,
+          attemptNumber: 0,
+          submittedAt: null,
+          gradedAt: null,
+          createdAt: "",
+          updatedAt: "",
+          userEmail: "c@example.com",
+          userFirstName: "C",
+          userLastName: "C",
+        },
+      ]);
+
+      const summary = await service.getAssignmentSummary(ASSIGNMENT_ID);
+
+      expect(summary.totalLearners).toBe(3);
+      expect(summary.statusCounts.graded).toBe(2);
+      expect(summary.statusCounts.not_submitted).toBe(1);
+      // average of 80 and 40 == 60
+      expect(summary.averageGrade).toBe(60);
+      // only the 80 submission clears the 60 threshold -> 1 of 2 graded == 50%
+      expect(summary.passRate).toBe(50);
+    });
+
+    it("returns null average/pass rate when nothing has been graded yet", async () => {
+      repo.getAssignmentById.mockResolvedValue(buildAssignment());
+      repo.listUserSubmissionsForAssignment.mockResolvedValue([]);
+
+      const summary = await service.getAssignmentSummary(ASSIGNMENT_ID);
+
+      expect(summary.totalLearners).toBe(0);
+      expect(summary.averageGrade).toBeNull();
+      expect(summary.passRate).toBeNull();
     });
   });
 });

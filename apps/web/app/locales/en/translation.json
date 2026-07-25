@@ -2430,6 +2430,10 @@
           "includeFiles_other": "Attach up to {{ count }} files below {{ MAX_FILE_SIZE }} MB to be used as context in lessons",
           "allowRetries": "Allow retries",
           "showCorrectAnswers": "Show correct answers once graded",
+          "antiCopyPaste": "Disable pasting into text answers",
+          "hint": "Hint (optional)",
+          "attachReferenceFile": "Attach reference file (shown once graded)",
+          "referenceFileAttached": "File attached",
           "expectedAnswer": "Reference answer (hidden from learners)",
           "expectedNumber": "Expected number",
           "chessFen": "Starting FEN (optional)",
@@ -2797,9 +2801,37 @@
       "saveGrade": "Save grade",
       "downloadFile": "Download file",
       "noFile": "No file submitted.",
+      "reject": "Reject",
+      "searchPlaceholder": "Search by name or email",
+      "toggleSortDirection": "Toggle sort direction",
+      "statusFilter": {
+        "all": "All statuses",
+        "not_submitted": "Not submitted",
+        "submitted": "Submitted",
+        "graded": "Graded",
+        "late": "Late"
+      },
+      "sortField": {
+        "name": "Sort by name",
+        "status": "Sort by status",
+        "grade": "Sort by grade"
+      },
+      "quickGrade": {
+        "full": "Full",
+        "half": "Half",
+        "zero": "Zero"
+      },
+      "summary": {
+        "totalLearners": "Learners",
+        "averageGrade": "Average grade",
+        "passRate": "Pass rate",
+        "graded": "Graded"
+      },
       "toast": {
         "graded": "Grade saved",
-        "gradeFailed": "Could not save grade"
+        "gradeFailed": "Could not save grade",
+        "rejected": "Submission rejected",
+        "rejectFailed": "Could not reject submission"
       }
     }
   },
@@ -3136,7 +3168,11 @@
       "submit": "Submit",
       "fileUploadError": "Could not upload the file.",
       "chooseFile": "Choose file",
-      "maxFileSize": "Max {{size}} MB"
+      "maxFileSize": "Max {{size}} MB",
+      "showHint": "Show hint",
+      "hideHint": "Hide hint",
+      "downloadReferenceFile": "Download reference file",
+      "pasteDisabled": "Pasting is disabled for this assignment"
     }
   },
   "studentCourseView": {

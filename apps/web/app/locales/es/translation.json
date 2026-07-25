@@ -2270,6 +2270,10 @@
           "includeFiles_other": "Adjunte hasta archivos {{ count }} debajo de {{ MAX_FILE_SIZE }} MB para usarlos como contexto en las lecciones",
           "allowRetries": "Permitir reintentos",
           "showCorrectAnswers": "Mostrar respuestas correctas una vez calificado",
+          "antiCopyPaste": "Deshabilitar pegar en respuestas de texto",
+          "hint": "Pista (opcional)",
+          "attachReferenceFile": "Adjuntar archivo de referencia (visible tras calificar)",
+          "referenceFileAttached": "Archivo adjunto",
           "expectedAnswer": "Respuesta de referencia (oculta para los alumnos)",
           "expectedNumber": "Número esperado",
           "chessFen": "FEN inicial (opcional)",
@@ -2637,9 +2641,37 @@
       "saveGrade": "Guardar calificación",
       "downloadFile": "Descargar archivo",
       "noFile": "No se ha entregado ningún archivo.",
+      "reject": "Rechazar",
+      "searchPlaceholder": "Buscar por nombre o correo",
+      "toggleSortDirection": "Cambiar dirección de orden",
+      "statusFilter": {
+        "all": "Todos los estados",
+        "not_submitted": "No entregado",
+        "submitted": "Entregado",
+        "graded": "Calificado",
+        "late": "Tardío"
+      },
+      "sortField": {
+        "name": "Ordenar por nombre",
+        "status": "Ordenar por estado",
+        "grade": "Ordenar por calificación"
+      },
+      "quickGrade": {
+        "full": "Completo",
+        "half": "Mitad",
+        "zero": "Cero"
+      },
+      "summary": {
+        "totalLearners": "Alumnos",
+        "averageGrade": "Calificación media",
+        "passRate": "Tasa de aprobación",
+        "graded": "Calificado"
+      },
       "toast": {
         "graded": "Calificación guardada",
-        "gradeFailed": "No se pudo guardar la calificación"
+        "gradeFailed": "No se pudo guardar la calificación",
+        "rejected": "Entrega rechazada",
+        "rejectFailed": "No se pudo rechazar la entrega"
       }
     }
   },
@@ -2974,7 +3006,11 @@
       "submit": "Enviar",
       "fileUploadError": "No se pudo subir el archivo.",
       "chooseFile": "Elegir archivo",
-      "maxFileSize": "Máx. {{size}} MB"
+      "maxFileSize": "Máx. {{size}} MB",
+      "showHint": "Mostrar pista",
+      "hideHint": "Ocultar pista",
+      "downloadReferenceFile": "Descargar archivo de referencia",
+      "pasteDisabled": "Pegar está deshabilitado para esta tarea"
     }
   },
   "studentCourseView": {

@@ -154,6 +154,15 @@ export const EMAIL_SUBJECTS_TRANSLATIONS = {
     es: "Se acerca la fecha límite del curso - {{courseName}}",
     vi: "Sắp đến hạn khóa học - {{courseName}}",
   },
+  assignmentDueDateReminderEmail: {
+    en: "Assignment deadline approaching - {{assignmentName}}",
+    pl: "Zbliża się termin zadania - {{assignmentName}}",
+    de: "Aufgabenfrist naht - {{assignmentName}}",
+    lt: "Artėja užduoties terminas - {{assignmentName}}",
+    cs: "Termín úkolu se blíží - {{assignmentName}}",
+    es: "Se acerca la fecha límite de la tarea - {{assignmentName}}",
+    vi: "Sắp đến hạn nộp bài tập - {{assignmentName}}",
+  },
   magicLinkEmail: {
     en: "Login link",
     pl: "Link do logowania",

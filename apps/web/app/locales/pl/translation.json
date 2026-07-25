@@ -2497,6 +2497,10 @@
           "includeFiles_other": "Dołącz maksymalnie {{ count }} plików, poniżej {{ MAX_FILE_SIZE }} MB, które będą używane jako kontekst w lekcjach",
           "allowRetries": "Zezwól na ponowne podejścia",
           "showCorrectAnswers": "Pokaż poprawne odpowiedzi po ocenieniu",
+          "antiCopyPaste": "Wyłącz wklejanie w odpowiedziach tekstowych",
+          "hint": "Podpowiedź (opcjonalnie)",
+          "attachReferenceFile": "Załącz plik referencyjny (widoczny po ocenieniu)",
+          "referenceFileAttached": "Plik załączony",
           "expectedAnswer": "Odpowiedź wzorcowa (ukryta przed uczestnikami)",
           "expectedNumber": "Oczekiwana liczba",
           "chessFen": "Początkowy FEN (opcjonalnie)",
@@ -2872,9 +2876,37 @@
       "saveGrade": "Zapisz ocenę",
       "downloadFile": "Pobierz plik",
       "noFile": "Nie przesłano pliku.",
+      "reject": "Odrzuć",
+      "searchPlaceholder": "Szukaj po imieniu lub e-mailu",
+      "toggleSortDirection": "Zmień kierunek sortowania",
+      "statusFilter": {
+        "all": "Wszystkie statusy",
+        "not_submitted": "Nieprzesłane",
+        "submitted": "Przesłane",
+        "graded": "Ocenione",
+        "late": "Spóźnione"
+      },
+      "sortField": {
+        "name": "Sortuj wg imienia",
+        "status": "Sortuj wg statusu",
+        "grade": "Sortuj wg oceny"
+      },
+      "quickGrade": {
+        "full": "Pełna",
+        "half": "Połowa",
+        "zero": "Zero"
+      },
+      "summary": {
+        "totalLearners": "Uczestnicy",
+        "averageGrade": "Średnia ocena",
+        "passRate": "Wskaźnik zaliczeń",
+        "graded": "Ocenione"
+      },
       "toast": {
         "graded": "Ocena zapisana",
-        "gradeFailed": "Nie udało się zapisać oceny"
+        "gradeFailed": "Nie udało się zapisać oceny",
+        "rejected": "Zgłoszenie odrzucone",
+        "rejectFailed": "Nie udało się odrzucić zgłoszenia"
       }
     }
   },
@@ -3212,7 +3244,11 @@
       "submit": "Prześlij",
       "fileUploadError": "Nie udało się przesłać pliku.",
       "chooseFile": "Wybierz plik",
-      "maxFileSize": "Maks. {{size}} MB"
+      "maxFileSize": "Maks. {{size}} MB",
+      "showHint": "Pokaż podpowiedź",
+      "hideHint": "Ukryj podpowiedź",
+      "downloadReferenceFile": "Pobierz plik referencyjny",
+      "pasteDisabled": "Wklejanie jest wyłączone dla tego zadania"
     }
   },
   "studentCourseView": {

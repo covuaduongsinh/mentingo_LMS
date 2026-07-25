@@ -1,6 +1,7 @@
 import { Link, useParams } from "@remix-run/react";
 import { ASSIGNMENT_TASK_TYPE } from "@repo/shared";
-import { useEffect, useState } from "react";
+import { Paperclip, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAddAssignmentTask } from "~/api/mutations/admin/useAddAssignmentTask";
@@ -9,6 +10,7 @@ import { useDeleteAssignmentTask } from "~/api/mutations/admin/useDeleteAssignme
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
 import { useUpdateAssignment } from "~/api/mutations/admin/useUpdateAssignment";
 import { useUpdateAssignmentTask } from "~/api/mutations/admin/useUpdateAssignmentTask";
+import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useAssignmentForAuthor } from "~/api/queries/admin/useAssignmentForAuthor";
 import { courseQueryOptions } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
@@ -43,6 +45,7 @@ type DraftTask = {
   id?: string;
   taskType: AssignmentTaskType;
   title: string;
+  hint?: string;
   expectedAnswer?: string;
   expectedNumber?: number;
   fen?: string;
@@ -50,6 +53,9 @@ type DraftTask = {
   allowedFileTypes?: string;
   maxFileSizeMb?: number;
   maxGradeValue: number;
+  /** Answer-key attachment — see the "Reference file" business rule (only shown to a graded learner). Cleared on removal by setting to null. */
+  referenceFileS3Key?: string | null;
+  referenceFileName?: string;
 };
 
 const TASK_TYPES: AssignmentTaskType[] = [
@@ -71,6 +77,8 @@ const taskToDraft = (task: {
   id: string;
   taskType: string;
   title: object;
+  hint?: object | null;
+  referenceFileS3Key?: string | null;
   maxGradeValue: number;
   contents: {
     expectedAnswer?: string;
@@ -84,6 +92,8 @@ const taskToDraft = (task: {
   id: task.id,
   taskType: task.taskType as AssignmentTaskType,
   title: Object.values(task.title as Record<string, string>)[0] ?? "",
+  hint: task.hint ? (Object.values(task.hint as Record<string, string>)[0] ?? "") : undefined,
+  referenceFileS3Key: task.referenceFileS3Key ?? undefined,
   expectedAnswer: task.contents.expectedAnswer,
   expectedNumber: task.contents.expectedNumber,
   fen: task.contents.fen,
@@ -134,11 +144,13 @@ export const AssignmentLessonForm = ({
   const { mutateAsync: updateTask } = useUpdateAssignmentTask();
   const { mutateAsync: deleteTask } = useDeleteAssignmentTask();
   const { mutateAsync: deleteLesson } = useDeleteLesson();
+  const { mutateAsync: uploadFile, isPending: isUploadingReferenceFile } = useUploadFile();
 
   const [title, setTitle] = useState(lessonToEdit?.title ?? "");
   const [description, setDescription] = useState("");
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
   const [allowRetries, setAllowRetries] = useState(true);
+  const [antiCopyPaste, setAntiCopyPaste] = useState(false);
   const [tasks, setTasks] = useState<DraftTask[]>([emptyTask()]);
   const [originalTaskIds, setOriginalTaskIds] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -155,6 +167,7 @@ export const AssignmentLessonForm = ({
     );
     setShowCorrectAnswers(existingAssignment.showCorrectAnswers);
     setAllowRetries(existingAssignment.allowRetries);
+    setAntiCopyPaste(existingAssignment.antiCopyPaste);
     setTasks(existingAssignment.tasks.map(taskToDraft));
     setOriginalTaskIds(existingAssignment.tasks.map((task) => task.id));
   }, [existingAssignment]);
@@ -166,6 +179,24 @@ export const AssignmentLessonForm = ({
   const addTaskDraft = () => setTasks((previous) => [...previous, emptyTask()]);
   const removeTaskDraft = (index: number) =>
     setTasks((previous) => previous.filter((_, i) => i !== index));
+
+  const referenceFileInputRefs = useRef<Record<number, HTMLInputElement | null>>({});
+
+  const handleReferenceFileSelected = async (index: number, file: File | undefined) => {
+    if (!file) return;
+    try {
+      const uploaded = await uploadFile({ file, resource: "file" });
+      updateTaskDraft(index, {
+        referenceFileS3Key: uploaded.fileKey,
+        referenceFileName: file.name,
+      });
+    } catch {
+      toast({
+        title: t("adminCourseView.errors.lesson.assignmentCreateFailed"),
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleSubmit = async () => {
     if (!chapterToEdit || !courseId || !title.trim()) return;
@@ -181,9 +212,12 @@ export const AssignmentLessonForm = ({
           description: description || undefined,
           showCorrectAnswers,
           allowRetries,
+          antiCopyPaste,
           published: true,
           tasks: validTasks.map((task) => ({
             title: { [language]: task.title },
+            hint: task.hint?.trim() ? { [language]: task.hint.trim() } : null,
+            referenceFileS3Key: task.referenceFileS3Key ?? null,
             taskType: task.taskType,
             maxGradeValue: task.maxGradeValue,
             contents: draftToContents(task),
@@ -197,6 +231,7 @@ export const AssignmentLessonForm = ({
             description: description ? { [language]: description } : null,
             showCorrectAnswers,
             allowRetries,
+            antiCopyPaste,
           },
         });
 
@@ -208,6 +243,8 @@ export const AssignmentLessonForm = ({
         for (const task of validTasks) {
           const body: AddTaskBody | UpdateTaskBody = {
             title: { [language]: task.title },
+            hint: task.hint?.trim() ? { [language]: task.hint.trim() } : null,
+            referenceFileS3Key: task.referenceFileS3Key ?? null,
             taskType: task.taskType,
             maxGradeValue: task.maxGradeValue,
             contents: draftToContents(task),
@@ -305,6 +342,13 @@ export const AssignmentLessonForm = ({
           />
           <Label>{t("adminCourseView.curriculum.lesson.field.showCorrectAnswers")}</Label>
         </div>
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={antiCopyPaste}
+            onCheckedChange={(checked) => setAntiCopyPaste(checked === true)}
+          />
+          <Label>{t("adminCourseView.curriculum.lesson.field.antiCopyPaste")}</Label>
+        </div>
 
         <div className="space-y-4">
           <Label>{t("adminCourseView.curriculum.lesson.other.tasks")}</Label>
@@ -335,6 +379,55 @@ export const AssignmentLessonForm = ({
                 value={task.title}
                 onChange={(event) => updateTaskDraft(index, { title: event.target.value })}
               />
+              <Textarea
+                placeholder={t("adminCourseView.curriculum.lesson.field.hint", {
+                  defaultValue: "Hint (optional)",
+                })}
+                value={task.hint ?? ""}
+                onChange={(event) => updateTaskDraft(index, { hint: event.target.value })}
+              />
+              <div className="flex items-center gap-2">
+                <input
+                  ref={(element) => {
+                    referenceFileInputRefs.current[index] = element;
+                  }}
+                  type="file"
+                  className="hidden"
+                  onChange={(event) => handleReferenceFileSelected(index, event.target.files?.[0])}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={isUploadingReferenceFile}
+                  onClick={() => referenceFileInputRefs.current[index]?.click()}
+                >
+                  <Paperclip className="mr-1.5 size-3.5" aria-hidden />
+                  {t("adminCourseView.curriculum.lesson.field.attachReferenceFile", {
+                    defaultValue: "Attach reference file (shown once graded)",
+                  })}
+                </Button>
+                {task.referenceFileS3Key && (
+                  <span className="body-sm inline-flex items-center gap-1 text-neutral-600">
+                    {task.referenceFileName ??
+                      t("adminCourseView.curriculum.lesson.field.referenceFileAttached", {
+                        defaultValue: "File attached",
+                      })}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateTaskDraft(index, {
+                          referenceFileS3Key: null,
+                          referenceFileName: undefined,
+                        })
+                      }
+                      aria-label={t("common.button.delete")}
+                    >
+                      <X className="size-3.5" aria-hidden />
+                    </button>
+                  </span>
+                )}
+              </div>
               {task.taskType === ASSIGNMENT_TASK_TYPE.SHORT_ANSWER && (
                 <Textarea
                   placeholder={t("adminCourseView.curriculum.lesson.field.expectedAnswer")}

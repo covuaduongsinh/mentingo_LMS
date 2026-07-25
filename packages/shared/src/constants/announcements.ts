@@ -9,6 +9,7 @@ export const ANNOUNCEMENT_SOURCE_TYPES = {
   MANUAL: "manual",
   LIVE_TRAINING: "live_training",
   COURSE_DUE_DATE_REMINDER: "course_due_date_reminder",
+  ASSIGNMENT_DUE_DATE_REMINDER: "assignment_due_date_reminder",
 } as const;
 
 export type AnnouncementSourceType =

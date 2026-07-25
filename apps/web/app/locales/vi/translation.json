@@ -2430,6 +2430,10 @@
           "includeFiles_other": "Đính kèm tối đa {{ count }} tệp dưới {{ MAX_FILE_SIZE }} MB để sử dụng làm bối cảnh trong bài học",
           "allowRetries": "Cho phép nộp lại",
           "showCorrectAnswers": "Hiện đáp án đúng sau khi đã chấm",
+          "antiCopyPaste": "Tắt dán vào ô trả lời văn bản",
+          "hint": "Gợi ý (tùy chọn)",
+          "attachReferenceFile": "Đính kèm tệp tham khảo (hiện sau khi chấm)",
+          "referenceFileAttached": "Đã đính kèm tệp",
           "expectedAnswer": "Đáp án tham khảo (ẩn với học viên)",
           "expectedNumber": "Giá trị số mong đợi",
           "chessFen": "FEN bắt đầu (tùy chọn)",
@@ -2797,9 +2801,37 @@
       "saveGrade": "Lưu điểm",
       "downloadFile": "Tải file xuống",
       "noFile": "Chưa nộp file.",
+      "reject": "Từ chối",
+      "searchPlaceholder": "Tìm theo tên hoặc email",
+      "toggleSortDirection": "Đổi chiều sắp xếp",
+      "statusFilter": {
+        "all": "Tất cả trạng thái",
+        "not_submitted": "Chưa nộp",
+        "submitted": "Đã nộp",
+        "graded": "Đã chấm",
+        "late": "Nộp muộn"
+      },
+      "sortField": {
+        "name": "Sắp xếp theo tên",
+        "status": "Sắp xếp theo trạng thái",
+        "grade": "Sắp xếp theo điểm"
+      },
+      "quickGrade": {
+        "full": "Trọn điểm",
+        "half": "Nửa điểm",
+        "zero": "0 điểm"
+      },
+      "summary": {
+        "totalLearners": "Học viên",
+        "averageGrade": "Điểm trung bình",
+        "passRate": "Tỉ lệ đạt",
+        "graded": "Đã chấm"
+      },
       "toast": {
         "graded": "Đã lưu điểm",
-        "gradeFailed": "Không thể lưu điểm"
+        "gradeFailed": "Không thể lưu điểm",
+        "rejected": "Đã từ chối bài nộp",
+        "rejectFailed": "Không thể từ chối bài nộp"
       }
     }
   },
@@ -3136,7 +3168,11 @@
       "submit": "Nộp bài",
       "fileUploadError": "Không thể tải file lên.",
       "chooseFile": "Chọn file",
-      "maxFileSize": "Tối đa {{size}} MB"
+      "maxFileSize": "Tối đa {{size}} MB",
+      "showHint": "Hiện gợi ý",
+      "hideHint": "Ẩn gợi ý",
+      "downloadReferenceFile": "Tải tệp tham khảo",
+      "pasteDisabled": "Dán bị tắt cho bài tập này"
     }
   },
   "studentCourseView": {

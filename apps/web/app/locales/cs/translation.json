@@ -2209,6 +2209,10 @@
           "includeFiles_other": "Připojte až {{ count }} soubory menší než {{ MAX_FILE_SIZE }} MB, které budou použity jako kontext v lekcích",
           "allowRetries": "Povolit opakované pokusy",
           "showCorrectAnswers": "Zobrazit správné odpovědi po ohodnocení",
+          "antiCopyPaste": "Zakázat vkládání do textových odpovědí",
+          "hint": "Nápověda (volitelné)",
+          "attachReferenceFile": "Připojit referenční soubor (zobrazí se po ohodnocení)",
+          "referenceFileAttached": "Soubor připojen",
           "expectedAnswer": "Referenční odpověď (skrytá před studenty)",
           "expectedNumber": "Očekávané číslo",
           "chessFen": "Počáteční FEN (volitelné)",
@@ -2576,9 +2580,37 @@
       "saveGrade": "Uložit známku",
       "downloadFile": "Stáhnout soubor",
       "noFile": "Nebyl odevzdán žádný soubor.",
+      "reject": "Odmítnout",
+      "searchPlaceholder": "Hledat podle jména nebo e-mailu",
+      "toggleSortDirection": "Přepnout směr řazení",
+      "statusFilter": {
+        "all": "Všechny stavy",
+        "not_submitted": "Neodevzdáno",
+        "submitted": "Odevzdáno",
+        "graded": "Ohodnoceno",
+        "late": "Pozdě"
+      },
+      "sortField": {
+        "name": "Řadit podle jména",
+        "status": "Řadit podle stavu",
+        "grade": "Řadit podle známky"
+      },
+      "quickGrade": {
+        "full": "Plný",
+        "half": "Poloviční",
+        "zero": "Nula"
+      },
+      "summary": {
+        "totalLearners": "Studenti",
+        "averageGrade": "Průměrná známka",
+        "passRate": "Míra úspěšnosti",
+        "graded": "Ohodnoceno"
+      },
       "toast": {
         "graded": "Známka uložena",
-        "gradeFailed": "Známku se nepodařilo uložit"
+        "gradeFailed": "Známku se nepodařilo uložit",
+        "rejected": "Odevzdání odmítnuto",
+        "rejectFailed": "Odevzdání se nepodařilo odmítnout"
       }
     }
   },
@@ -2913,7 +2945,11 @@
       "submit": "Odeslat",
       "fileUploadError": "Soubor se nepodařilo nahrát.",
       "chooseFile": "Vybrat soubor",
-      "maxFileSize": "Max. {{size}} MB"
+      "maxFileSize": "Max. {{size}} MB",
+      "showHint": "Zobrazit nápovědu",
+      "hideHint": "Skrýt nápovědu",
+      "downloadReferenceFile": "Stáhnout referenční soubor",
+      "pasteDisabled": "Vkládání je pro tento úkol zakázáno"
     }
   },
   "studentCourseView": {
