@@ -2482,6 +2482,41 @@
       },
       "groupFilter": {
         "placeholder": "Všechny skupiny"
+      },
+      "deepAnalytics": {
+        "title": "Pokročilá analytika",
+        "lessonFunnel": {
+          "title": "Trychtýř dokončení lekcí",
+          "subtitle": "Míra dokončení pro každou lekci v tomto kurzu",
+          "enrolledLabel": "Zapsáno",
+          "completedLabel": "Dokončeno",
+          "noData": "Zatím žádné lekce k zobrazení"
+        },
+        "chapterDropoff": {
+          "title": "Odpad mezi kapitolami",
+          "subtitle": "Kolik studentů odpadne mezi kapitolami",
+          "completionLabel": "Míra dokončení",
+          "dropoffLabel": "Míra odpadu",
+          "noData": "Zatím žádné kapitoly k zobrazení"
+        },
+        "completionVelocity": {
+          "title": "Rychlost dokončení",
+          "subtitle": "Jak dlouho studentům trvá dokončit kurz",
+          "averageDays": "Průměrný počet dní do dokončení",
+          "medianDays": "Medián počtu dní do dokončení",
+          "distributionLabel": "Studenti",
+          "bucketDaysSuffix": "dní",
+          "noData": "Kurz zatím nikdo nedokončil"
+        },
+        "topLearners": {
+          "title": "Nejaktivnější studenti",
+          "subtitle": "Nejvíce zapojení studenti podle doby studia",
+          "rank": "#",
+          "student": "Student",
+          "totalTime": "Strávený čas",
+          "completedLessons": "Dokončené lekce",
+          "noData": "Zatím nebyl zaznamenán žádný čas studia"
+        }
       }
     },
     "createLanguage": {

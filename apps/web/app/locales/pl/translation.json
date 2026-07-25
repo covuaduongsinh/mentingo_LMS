@@ -2778,6 +2778,41 @@
       },
       "groupFilter": {
         "placeholder": "Wszystkie grupy"
+      },
+      "deepAnalytics": {
+        "title": "Zaawansowana analityka",
+        "lessonFunnel": {
+          "title": "Lejek ukończenia lekcji",
+          "subtitle": "Wskaźnik ukończenia dla każdej lekcji w tym kursie",
+          "enrolledLabel": "Zapisani",
+          "completedLabel": "Ukończyli",
+          "noData": "Brak lekcji do wyświetlenia"
+        },
+        "chapterDropoff": {
+          "title": "Odpływ według rozdziałów",
+          "subtitle": "Liczba studentów rezygnujących między rozdziałami",
+          "completionLabel": "Wskaźnik ukończenia",
+          "dropoffLabel": "Wskaźnik odpływu",
+          "noData": "Brak rozdziałów do wyświetlenia"
+        },
+        "completionVelocity": {
+          "title": "Tempo ukończenia",
+          "subtitle": "Czas potrzebny studentom na ukończenie kursu",
+          "averageDays": "Średnia liczba dni do ukończenia",
+          "medianDays": "Mediana dni do ukończenia",
+          "distributionLabel": "Studenci",
+          "bucketDaysSuffix": "dni",
+          "noData": "Nikt jeszcze nie ukończył kursu"
+        },
+        "topLearners": {
+          "title": "Najlepsi kursanci",
+          "subtitle": "Najbardziej zaangażowani studenci według czasu nauki",
+          "rank": "#",
+          "student": "Student",
+          "totalTime": "Czas nauki",
+          "completedLessons": "Ukończone lekcje",
+          "noData": "Brak zarejestrowanego czasu nauki"
+        }
       }
     },
     "createLanguage": {

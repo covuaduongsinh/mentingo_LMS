@@ -2543,6 +2543,41 @@
       },
       "groupFilter": {
         "placeholder": "Todos los grupos"
+      },
+      "deepAnalytics": {
+        "title": "Analítica avanzada",
+        "lessonFunnel": {
+          "title": "Embudo de finalización de lecciones",
+          "subtitle": "Tasa de finalización de cada lección de este curso",
+          "enrolledLabel": "Inscritos",
+          "completedLabel": "Completado",
+          "noData": "Aún no hay lecciones que mostrar"
+        },
+        "chapterDropoff": {
+          "title": "Abandono por capítulo",
+          "subtitle": "Cuántos estudiantes abandonan entre capítulos",
+          "completionLabel": "Tasa de finalización",
+          "dropoffLabel": "Tasa de abandono",
+          "noData": "Aún no hay capítulos que mostrar"
+        },
+        "completionVelocity": {
+          "title": "Velocidad de finalización",
+          "subtitle": "Cuánto tardan los estudiantes en terminar el curso",
+          "averageDays": "Días promedio para completar",
+          "medianDays": "Días medianos para completar",
+          "distributionLabel": "Estudiantes",
+          "bucketDaysSuffix": "días",
+          "noData": "Todavía nadie ha completado el curso"
+        },
+        "topLearners": {
+          "title": "Mejores estudiantes",
+          "subtitle": "Estudiantes más comprometidos según el tiempo de aprendizaje",
+          "rank": "#",
+          "student": "Estudiante",
+          "totalTime": "Tiempo dedicado",
+          "completedLessons": "Lecciones completadas",
+          "noData": "Aún no se ha registrado tiempo de aprendizaje"
+        }
       }
     },
     "createLanguage": {

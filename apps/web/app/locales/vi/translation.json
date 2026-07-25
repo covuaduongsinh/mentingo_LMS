@@ -2701,6 +2701,41 @@
       },
       "groupFilter": {
         "placeholder": "Tất cả nhóm"
+      },
+      "deepAnalytics": {
+        "title": "Phân tích chuyên sâu",
+        "lessonFunnel": {
+          "title": "Phễu hoàn thành theo bài học",
+          "subtitle": "Tỷ lệ hoàn thành của từng bài học trong khóa",
+          "enrolledLabel": "Đã ghi danh",
+          "completedLabel": "Đã hoàn thành",
+          "noData": "Chưa có bài học để hiển thị"
+        },
+        "chapterDropoff": {
+          "title": "Tỷ lệ rơi rụng theo chương",
+          "subtitle": "Số học viên rơi rụng giữa các chương",
+          "completionLabel": "Tỷ lệ hoàn thành",
+          "dropoffLabel": "Tỷ lệ rơi rụng",
+          "noData": "Chưa có chương để hiển thị"
+        },
+        "completionVelocity": {
+          "title": "Tốc độ hoàn thành",
+          "subtitle": "Thời gian học viên cần để hoàn thành khóa học",
+          "averageDays": "Số ngày trung bình để hoàn thành",
+          "medianDays": "Số ngày trung vị để hoàn thành",
+          "distributionLabel": "Học viên",
+          "bucketDaysSuffix": "ngày",
+          "noData": "Chưa có ai hoàn thành khóa học"
+        },
+        "topLearners": {
+          "title": "Học viên tích cực nhất",
+          "subtitle": "Học viên gắn bó nhất theo thời gian học",
+          "rank": "#",
+          "student": "Học viên",
+          "totalTime": "Thời gian học",
+          "completedLessons": "Số bài đã hoàn thành",
+          "noData": "Chưa ghi nhận thời gian học"
+        }
       }
     },
     "createLanguage": {

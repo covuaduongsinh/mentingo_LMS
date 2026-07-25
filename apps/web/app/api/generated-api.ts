@@ -8495,6 +8495,56 @@ export interface GenerateArticlePreviewResponse {
   };
 }
 
+export interface GetLessonCompletionFunnelResponse {
+  data: {
+    /** @format uuid */
+    lessonId: string;
+    /** @format uuid */
+    chapterId: string;
+    lessonTitle: string;
+    chapterOrder: number | null;
+    lessonOrder: number | null;
+    enrolledCount: number;
+    completedCount: number;
+    completionPercentage: number;
+  }[];
+}
+
+export interface GetChapterDropoffResponse {
+  data: {
+    /** @format uuid */
+    chapterId: string;
+    chapterTitle: string;
+    chapterOrder: number | null;
+    enrolledCount: number;
+    completedCount: number;
+    completionPercentage: number;
+    dropoffPercentage: number;
+  }[];
+}
+
+export interface GetCompletionVelocityResponse {
+  data: {
+    completedCount: number;
+    averageDays: number;
+    medianDays: number;
+    distribution: {
+      bucket: string;
+      count: number;
+    }[];
+  };
+}
+
+export interface GetTopLearnersResponse {
+  data: {
+    /** @format uuid */
+    studentId: string;
+    studentName: string;
+    totalSeconds: number;
+    completedLessonCount: number;
+  }[];
+}
+
 export interface GetEventsResponse {
   data: {
     events: {
@@ -14583,7 +14633,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     learningPathCertificateControllerGetCertificateSharePage: (
       query: {
-        certificateId: string;
+        token: string;
         lang: string;
       },
       params: RequestParams = {},
@@ -14603,7 +14653,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     learningPathCertificateControllerGetCertificateShareImage: (
       query: {
-        certificateId: string;
+        token: string;
         lang: string;
       },
       params: RequestParams = {},
@@ -16760,6 +16810,68 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/analytics/active-users`,
         method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CourseAnalyticsControllerGetLessonCompletionFunnel
+     * @request GET:/api/analytics/courses/{courseId}/lesson-completion-funnel
+     */
+    courseAnalyticsControllerGetLessonCompletionFunnel: (
+      courseId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<GetLessonCompletionFunnelResponse, any>({
+        path: `/api/analytics/courses/${courseId}/lesson-completion-funnel`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CourseAnalyticsControllerGetChapterDropoff
+     * @request GET:/api/analytics/courses/{courseId}/chapter-dropoff
+     */
+    courseAnalyticsControllerGetChapterDropoff: (courseId: string, params: RequestParams = {}) =>
+      this.request<GetChapterDropoffResponse, any>({
+        path: `/api/analytics/courses/${courseId}/chapter-dropoff`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CourseAnalyticsControllerGetCompletionVelocity
+     * @request GET:/api/analytics/courses/{courseId}/completion-velocity
+     */
+    courseAnalyticsControllerGetCompletionVelocity: (
+      courseId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<GetCompletionVelocityResponse, any>({
+        path: `/api/analytics/courses/${courseId}/completion-velocity`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CourseAnalyticsControllerGetTopLearners
+     * @request GET:/api/analytics/courses/{courseId}/top-learners
+     */
+    courseAnalyticsControllerGetTopLearners: (courseId: string, params: RequestParams = {}) =>
+      this.request<GetTopLearnersResponse, any>({
+        path: `/api/analytics/courses/${courseId}/top-learners`,
+        method: "GET",
+        format: "json",
         ...params,
       }),
 

@@ -2482,6 +2482,41 @@
       },
       "groupFilter": {
         "placeholder": "Alle Gruppen"
+      },
+      "deepAnalytics": {
+        "title": "Erweiterte Analysen",
+        "lessonFunnel": {
+          "title": "Lektionsabschluss-Trichter",
+          "subtitle": "Abschlussquote für jede Lektion in diesem Kurs",
+          "enrolledLabel": "Eingeschrieben",
+          "completedLabel": "Abgeschlossen",
+          "noData": "Noch keine Lektionen vorhanden"
+        },
+        "chapterDropoff": {
+          "title": "Kapitelabbruch",
+          "subtitle": "Wie viele Studierende zwischen den Kapiteln abbrechen",
+          "completionLabel": "Abschlussquote",
+          "dropoffLabel": "Abbruchquote",
+          "noData": "Noch keine Kapitel vorhanden"
+        },
+        "completionVelocity": {
+          "title": "Abschlussgeschwindigkeit",
+          "subtitle": "Wie lange Studierende zum Abschluss des Kurses benötigen",
+          "averageDays": "Durchschnittliche Tage bis zum Abschluss",
+          "medianDays": "Median der Tage bis zum Abschluss",
+          "distributionLabel": "Studierende",
+          "bucketDaysSuffix": "Tage",
+          "noData": "Noch niemand hat den Kurs abgeschlossen"
+        },
+        "topLearners": {
+          "title": "Top-Lernende",
+          "subtitle": "Engagierteste Studierende nach Lernzeit",
+          "rank": "#",
+          "student": "Student",
+          "totalTime": "Lernzeit",
+          "completedLessons": "Abgeschlossene Lektionen",
+          "noData": "Noch keine Lernzeit erfasst"
+        }
       }
     },
     "createLanguage": {
