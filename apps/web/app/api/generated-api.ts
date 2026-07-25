@@ -5839,6 +5839,15 @@ export interface SearchResponse {
   };
 }
 
+export interface GetLinkPreviewResponse {
+  data: {
+    title: string | null;
+    description: string | null;
+    imageUrl: string | null;
+    domain: string;
+  };
+}
+
 export type InitScormImportBody =
   | {
       action: "create-course";
@@ -14690,6 +14699,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name LinkPreviewControllerGetLinkPreview
+     * @request GET:/api/link-preview
+     */
+    linkPreviewControllerGetLinkPreview: (
+      query?: {
+        /** @minLength 1 */
+        url?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetLinkPreviewResponse, any>({
+        path: `/api/link-preview`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name ReportControllerDownloadSummaryReport
      * @request GET:/api/report/summary
      */
@@ -14953,6 +14983,45 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     scormControllerStreamScormContent: (packageId: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/scorm/content/${packageId}/*`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name SeoControllerGetRobotsTxt
+     * @request GET:/api/seo/robots.txt
+     */
+    seoControllerGetRobotsTxt: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/seo/robots.txt`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name SeoControllerGetSitemapXml
+     * @request GET:/api/seo/sitemap.xml
+     */
+    seoControllerGetSitemapXml: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/seo/sitemap.xml`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name SeoControllerGetCoursePreview
+     * @request GET:/api/seo/course-preview/{idOrSlug}
+     */
+    seoControllerGetCoursePreview: (idOrSlug: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/seo/course-preview/${idOrSlug}`,
         method: "GET",
         ...params,
       }),

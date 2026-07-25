@@ -8,13 +8,19 @@ import { TableHeader } from "@tiptap/extension-table-header";
 import { TableRow } from "@tiptap/extension-table-row";
 import { TaskItem } from "@tiptap/extension-task-item";
 import { TaskList } from "@tiptap/extension-task-list";
+import { TextAlign } from "@tiptap/extension-text-align";
+import { Underline } from "@tiptap/extension-underline";
 import { StarterKit } from "@tiptap/starter-kit";
 
 import i18n from "i18n";
+import { BadgeEditor, BadgeViewer } from "~/components/RichText/extensions/badge";
+import { ButtonLinkEditor, ButtonLinkViewer } from "~/components/RichText/extensions/buttonLink";
+import { CalloutEditor, CalloutViewer } from "~/components/RichText/extensions/callout";
 import {
   DownloadableFileEmbedEditor,
   DownloadableFileEmbedViewer,
 } from "~/components/RichText/extensions/downloadableFile";
+import { FlipcardEditor, FlipcardViewer } from "~/components/RichText/extensions/flipcard";
 import { Iframe } from "~/components/RichText/extensions/iframe";
 import { ImageEmbedEditor, ImageEmbedViewer } from "~/components/RichText/extensions/image";
 import {
@@ -29,7 +35,9 @@ import {
   PresentationEmbedEditor,
   PresentationEmbedViewer,
 } from "~/components/RichText/extensions/presentation";
+import { SlashCommand } from "~/components/RichText/extensions/slashCommand";
 import { VideoEmbedEditor, VideoEmbedViewer } from "~/components/RichText/extensions/video";
+import { WebPreviewEditor, WebPreviewViewer } from "~/components/RichText/extensions/webPreview";
 
 import type { RichTextResourceNodeOptions } from "./extensions/utils/resourceNode";
 
@@ -90,6 +98,10 @@ const basePlugins = [
       target: "_blank",
     },
   }),
+  Underline,
+  TextAlign.configure({
+    types: ["heading", "paragraph"],
+  }),
   Iframe,
 ];
 
@@ -122,6 +134,12 @@ export const getContentEditorPlugins = (options?: RichTextResourceNodeOptions) =
   PdfPreviewEmbedEditor.configure(options),
   PresentationEmbedEditor.configure(options),
   VideoEmbedEditor.configure(options),
+  CalloutEditor,
+  FlipcardEditor,
+  BadgeEditor,
+  ButtonLinkEditor,
+  WebPreviewEditor.configure(options),
+  SlashCommand,
 ];
 
 export const contentEditorPlugins = getContentEditorPlugins();
@@ -137,4 +155,9 @@ export const contentViewerPlugins = [
   PdfPreviewEmbedViewer,
   PresentationEmbedViewer,
   VideoEmbedViewer,
+  CalloutViewer,
+  FlipcardViewer,
+  BadgeViewer,
+  ButtonLinkViewer,
+  WebPreviewViewer,
 ];

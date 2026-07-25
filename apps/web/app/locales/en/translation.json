@@ -3876,7 +3876,100 @@
       },
       "assetLibrary": {
         "tooltip": "Assets library: insert a previously uploaded file"
+      },
+      "underline": {
+        "tooltip": "Underline: underlines selected text"
+      },
+      "alignLeft": {
+        "tooltip": "Align left"
+      },
+      "alignCenter": {
+        "tooltip": "Align center"
+      },
+      "alignRight": {
+        "tooltip": "Align right"
+      },
+      "insertBlock": {
+        "tooltip": "Insert a block"
       }
+    },
+    "blockRegistry": {
+      "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "bulletList": "Bullet list",
+      "orderedList": "Numbered list",
+      "taskList": "Checklist",
+      "codeBlock": "Code block",
+      "image": "Image",
+      "video": "Video",
+      "file": "File",
+      "callout": "Callout",
+      "flipcard": "Flipcard",
+      "badge": "Badge",
+      "buttonLink": "Button",
+      "webPreview": "Web preview",
+      "table": "Table",
+      "group": {
+        "text": "Text",
+        "media": "Media",
+        "interactive": "Interactive",
+        "table": "Table"
+      }
+    },
+    "slashCommand": {
+      "noResults": "No matching blocks"
+    },
+    "callout": {
+      "variant": {
+        "info": "Info",
+        "warning": "Warning",
+        "tip": "Tip",
+        "success": "Success",
+        "danger": "Danger"
+      },
+      "ariaLabel": {
+        "remove": "Remove callout"
+      }
+    },
+    "flipcard": {
+      "front": "Front",
+      "back": "Back",
+      "ariaLabel": {
+        "remove": "Remove flipcard",
+        "flip": "Flip card"
+      }
+    },
+    "badge": {
+      "placeholder": "Label",
+      "ariaLabel": {
+        "text": "Badge text"
+      },
+      "color": {
+        "gray": "Gray",
+        "blue": "Blue",
+        "green": "Green",
+        "yellow": "Yellow",
+        "red": "Red",
+        "purple": "Purple"
+      }
+    },
+    "buttonLink": {
+      "placeholder": {
+        "label": "Button"
+      },
+      "fieldLabel": "Button label",
+      "fieldUrl": "Link URL",
+      "openInNewTab": "Open in a new tab",
+      "remove": "Remove",
+      "save": "Save"
+    },
+    "webPreview": {
+      "fieldUrl": "Paste a link",
+      "add": "Add",
+      "remove": "Remove link preview",
+      "changeUrl": "Change link",
+      "refresh": "Refresh preview"
     }
   },
   "richText": {

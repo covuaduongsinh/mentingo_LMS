@@ -12,11 +12,17 @@ import {
   CheckSquare,
   Link2,
   FilePlus,
+  Underline as UnderlineIcon,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Plus,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "~/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { ToggleGroup, Toolbar } from "~/components/ui/toolbar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { cn } from "~/lib/utils";
@@ -24,6 +30,9 @@ import { cn } from "~/lib/utils";
 import { RICH_TEXT_HANDLES } from "../../../../e2e/data/common/handles";
 import { AssetLibraryDialog, type AssetLibraryConfig } from "../components/AssetLibraryDialog";
 import { InsertLinkDialog } from "../components/InsertLinkDialog";
+import { SlashCommandMenu } from "../components/SlashCommandMenu";
+import { setSlashCommandAssetLibraryHandler } from "../extensions/slashCommand";
+import { BLOCK_REGISTRY, type BlockRegistryItem } from "../extensions/utils/blockRegistry";
 
 import { FormatType } from "./FormatType";
 import { TableMenu } from "./TableMenu";
@@ -92,6 +101,7 @@ const EditorToolbar = ({
 
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
   const [isAssetLibraryOpen, setIsAssetLibraryOpen] = useState(false);
+  const [isInsertMenuOpen, setIsInsertMenuOpen] = useState(false);
 
   const handleToggle = (action: () => void) => (event: React.MouseEvent) => {
     event.preventDefault();
@@ -109,6 +119,25 @@ const EditorToolbar = ({
   const handleAssetLibraryToggle = handleToggle(() => {
     setIsAssetLibraryOpen(true);
   });
+
+  const handleInsertItem = (item: BlockRegistryItem) => {
+    setIsInsertMenuOpen(false);
+    item.run({
+      editor,
+      openAssetLibrary: assetLibrary ? () => setIsAssetLibraryOpen(true) : undefined,
+    });
+  };
+
+  // The `/` slash command reuses this same Asset Library dialog for its
+  // media entries — register (or clear) the opener whenever this toolbar's
+  // asset-library availability changes, so both entry points stay in sync.
+  useEffect(() => {
+    setSlashCommandAssetLibraryHandler(
+      editor,
+      assetLibrary ? () => setIsAssetLibraryOpen(true) : undefined,
+    );
+    return () => setSlashCommandAssetLibraryHandler(editor, undefined);
+  }, [editor, assetLibrary]);
 
   return (
     <Toolbar
@@ -141,10 +170,37 @@ const EditorToolbar = ({
               onClick={handleToggle(() => editor.chain().focus().toggleStrike().run())}
             />
             <ToolbarIconButton
+              icon={UnderlineIcon}
+              tooltip={t("richTextEditor.toolbar.underline.tooltip")}
+              isActive={editor.isActive("underline")}
+              onClick={handleToggle(() => editor.chain().focus().toggleUnderline().run())}
+            />
+            <ToolbarIconButton
               icon={Link2}
               tooltip={t("richTextEditor.toolbar.link.tooltip")}
               isActive={editor.isActive("link")}
               onClick={handleLink}
+            />
+          </ToolbarSection>
+
+          <ToolbarSection>
+            <ToolbarIconButton
+              icon={AlignLeft}
+              tooltip={t("richTextEditor.toolbar.alignLeft.tooltip")}
+              isActive={editor.isActive({ textAlign: "left" })}
+              onClick={handleToggle(() => editor.chain().focus().setTextAlign("left").run())}
+            />
+            <ToolbarIconButton
+              icon={AlignCenter}
+              tooltip={t("richTextEditor.toolbar.alignCenter.tooltip")}
+              isActive={editor.isActive({ textAlign: "center" })}
+              onClick={handleToggle(() => editor.chain().focus().setTextAlign("center").run())}
+            />
+            <ToolbarIconButton
+              icon={AlignRight}
+              tooltip={t("richTextEditor.toolbar.alignRight.tooltip")}
+              isActive={editor.isActive({ textAlign: "right" })}
+              onClick={handleToggle(() => editor.chain().focus().setTextAlign("right").run())}
             />
           </ToolbarSection>
 
@@ -192,6 +248,31 @@ const EditorToolbar = ({
           {showTableControls && (
             <ToolbarSection>
               <TableMenu editor={editor} />
+            </ToolbarSection>
+          )}
+
+          {showTableControls && (
+            <ToolbarSection>
+              <Popover open={isInsertMenuOpen} onOpenChange={setIsInsertMenuOpen}>
+                <PopoverTrigger asChild>
+                  <div>
+                    <ToolbarIconButton
+                      icon={Plus}
+                      tooltip={t("richTextEditor.toolbar.insertBlock.tooltip")}
+                      isActive={isInsertMenuOpen}
+                      onClick={handleToggle(() => setIsInsertMenuOpen((prev) => !prev))}
+                    />
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent align="start" className="w-auto p-0">
+                  <SlashCommandMenu
+                    items={BLOCK_REGISTRY.filter(
+                      (item) => !item.requiresAssetLibrary || assetLibrary,
+                    )}
+                    command={handleInsertItem}
+                  />
+                </PopoverContent>
+              </Popover>
             </ToolbarSection>
           )}
 

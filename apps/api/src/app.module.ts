@@ -59,6 +59,7 @@ import { IngestionModule } from "./ingestion/ingestion.module";
 import { IntegrationModule } from "./integration/integration.module";
 import { LessonModule } from "./lesson/lesson.module";
 import { LessonVideoProgressModule } from "./lesson-video-progress/lesson-video-progress.module";
+import { LinkPreviewModule } from "./link-preview/link-preview.module";
 import { LiveTrainingModule } from "./live-training/live-training.module";
 import { LocalizationModule } from "./localization/localization.module";
 import { LumaModule } from "./luma/luma.module";
@@ -152,6 +153,7 @@ import type { RedisClient } from "src/redis";
     GlobalSearchModule,
     LessonModule,
     LessonVideoProgressModule,
+    LinkPreviewModule,
     QuestionsModule,
     StudentLessonProgressModule,
     FileModule,

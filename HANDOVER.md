@@ -7,6 +7,22 @@
 
 ---
 
+## -1. Cập nhật mới nhất (2026-07-26) — Đợt "còn thiếu so với LearnHouse" (Đợt 1: editor blocks + slash-command)
+
+Sau khi khảo sát lại **toàn bộ** LearnHouse (backend `apps/api` ~30 router/53 bảng, frontend `apps/web`/`apps/collab`/`apps/cli`/`apps/e2e`, trừ `ee/`) và đối chiếu kỹ với mã nguồn mentingo hiện tại, đã cập nhật lại `docs/research/learnhouse/03-feature-matrix.md` + `05-roadmap.md` với danh sách 10 đợt còn lại (kế hoạch chi tiết đã duyệt, lưu tại `C:\Users\duongsinh\.claude\plans\sau-khi-kh-o-s-t-cozy-wave.md` phía máy dev). **Đã triển khai xong Đợt 1**:
+
+- 5 block editor mới cho TipTap (`apps/web/app/components/RichText/extensions/{callout,flipcard,badge,buttonLink,webPreview}.tsx`): hộp chú thích 5 biến thể, thẻ lật 2 mặt, huy hiệu inline, nút CTA, thẻ xem trước liên kết.
+- Menu gõ `/` (slash-command, `@tiptap/suggestion`) + nút "+" trên toolbar — cả hai đọc từ một registry dùng chung (`extensions/utils/blockRegistry.ts`).
+- Toolbar thêm gạch chân + căn trái/giữa/phải (`@tiptap/extension-underline`, `@tiptap/extension-text-align`).
+- Endpoint mới `GET /api/link-preview` (`apps/api/src/link-preview/`), có SSRF guard 2 lớp (chặn IP nội bộ trước khi phân giải DNS **và** kiểm tra lại IP thực sự đã kết nối, chống DNS rebinding), cache Redis 24h, dùng cho block web-preview.
+- Business spec đầy đủ: `docs/specs/rich-text-blocks-business-spec.md` (viết clean-room trước khi code, theo đúng `00-cleanroom-policy.md`).
+- Test: 26 Vitest (round-trip attrs của 5 block + tính toàn vẹn registry) + 20 Jest (ssrf-guard, extract-html-meta, link-preview.service). Toàn bộ suite hiện có (228 Vitest web, 315 Jest API — chạy bằng **Node 22**, xem mục rủi ro Node 25 phía dưới) đều xanh, không hồi quy.
+- Nhánh: `feat/editor-blocks-slash-commands` — **chưa commit/push/tạo PR**, đang ở working tree.
+
+**Việc cần làm tiếp:** commit + push + tạo PR cho Đợt 1, rồi tiếp tục Đợt 2 (hoàn thiện Assignment engine: task quiz/form, hint, autosave, anti-copy-paste, trang chấm nâng cấp, E2E) theo đúng `docs/research/learnhouse/05-roadmap.md`.
+
+---
+
 ## 0. Cập nhật mới nhất (2026-07-26) — LMS-core: Assignment / Chứng chỉ / Analytics / SEO (PR1–PR5)
 
 Khảo sát LearnHouse (clean-room, xem `docs/research/learnhouse/`) → lên kế hoạch → triển khai tuần tự 5 PR, mỗi PR tự động verify (tsc + eslint sạch, full test suite) rồi commit/push/tạo PR/merge vào `main` không dừng lại hỏi giữa chừng (theo yêu cầu tự động hóa của user). Cả 5 PR đã merge, không còn PR nào đang mở.
