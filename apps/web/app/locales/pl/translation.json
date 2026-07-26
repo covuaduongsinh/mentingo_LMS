@@ -4800,6 +4800,54 @@
       "missingTenantIdHeader": "Brak nagłówka X-Tenant-Id"
     }
   },
+  "webhooks": {
+    "title": "Webhooki",
+    "description": "Wysyłaj żądanie HTTP do własnego endpointu za każdym razem, gdy wystąpi zdarzenie edukacyjne (zapis, ukończenie, certyfikat...).",
+    "loading": "Ładowanie endpointów webhook...",
+    "empty": "Brak endpointów webhook.",
+    "active": "Aktywny",
+    "inactive": "Nieaktywny",
+    "createdAt": "Utworzono",
+    "successRate": "Wskaźnik sukcesu (ostatnie 50)",
+    "ping": "Wyślij test",
+    "viewDeliveries": "Zobacz log",
+    "activate": "Aktywuj",
+    "deactivate": "Dezaktywuj",
+    "rotateSecret": "Zmień sekret",
+    "delete": "Usuń",
+    "newEndpoint": "Nowy endpoint",
+    "copy": "Kopiuj sekret",
+    "generated": {
+      "title": "Skopiuj ten sekret teraz. Nie zostanie ponownie wyświetlony."
+    },
+    "form": {
+      "title": "Nowy endpoint webhook",
+      "description": "Każda dostawa jest podpisana sekretem HMAC-SHA256 w nagłówku X-Webhook-Signature.",
+      "urlLabel": "URL endpointu",
+      "eventsLabel": "Zdarzenia do wysyłania",
+      "submit": "Utwórz endpoint"
+    },
+    "deliveries": {
+      "title": "Log dostaw",
+      "description": "50 ostatnich prób dostawy dla tego endpointu, łącznie z ponowieniami.",
+      "loading": "Ładowanie logu dostaw...",
+      "empty": "Brak dostaw.",
+      "attempt_one": "próba {{count}}",
+      "attempt_few": "próba {{count}}",
+      "attempt_other": "próba {{count}}",
+      "noResponse": "brak odpowiedzi"
+    },
+    "toast": {
+      "pingSuccess": "Test dostawy zakończony sukcesem (status {{statusCode}})",
+      "pingFailure": "Test dostawy nieudany: {{error}}",
+      "copySuccess": "Sekret webhooka skopiowany",
+      "copyError": "Nie udało się skopiować sekretu webhooka",
+      "endpointDeletedSuccessfully": "Endpoint webhook usunięty pomyślnie"
+    },
+    "error": {
+      "endpointNotFound": "Nie znaleziono endpointu webhook"
+    }
+  },
   "masterCourse": {
     "error": {
       "sourceCourseNotFound": "Nie znaleziono kursu źródłowego",

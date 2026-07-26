@@ -6276,6 +6276,105 @@ export interface GetLinkPreviewResponse {
   };
 }
 
+export interface ListEndpointsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    url: string;
+    eventsSubscribed: string[];
+    active: boolean;
+    successRate: number | null;
+    /** @format date-time */
+    createdAt: string;
+  }[];
+}
+
+export interface CreateEndpointBody {
+  /**
+   * @minLength 1
+   * @maxLength 2048
+   */
+  url: string;
+  /** @minItems 1 */
+  events: (
+    | "enrollment.created"
+    | "course.completed"
+    | "lesson.completed"
+    | "assignment.submitted"
+    | "assignment.graded"
+    | "certificate.issued"
+  )[];
+}
+
+export interface CreateEndpointResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    secret: string;
+  };
+}
+
+export interface UpdateEndpointBody {
+  /**
+   * @minLength 1
+   * @maxLength 2048
+   */
+  url?: string;
+  /** @minItems 1 */
+  events?: (
+    | "enrollment.created"
+    | "course.completed"
+    | "lesson.completed"
+    | "assignment.submitted"
+    | "assignment.graded"
+    | "certificate.issued"
+  )[];
+  active?: boolean;
+}
+
+export interface UpdateEndpointResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+  };
+}
+
+export interface RotateSecretResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    secret: string;
+  };
+}
+
+export interface PingEndpointResponse {
+  data: {
+    success: boolean;
+    statusCode: number | null;
+    errorMessage: string | null;
+  };
+}
+
+export interface DeleteEndpointResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface ListDeliveriesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    eventType: string;
+    statusCode: number | null;
+    success: boolean;
+    attemptCount: number;
+    errorMessage: string | null;
+    /** @format date-time */
+    createdAt: string;
+  }[];
+}
+
 export type InitScormImportBody =
   | {
       action: "create-course";
@@ -15676,6 +15775,112 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/report/summary`,
         method: "GET",
         query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name WebhooksControllerListEndpoints
+     * @request GET:/api/webhooks/endpoints
+     */
+    webhooksControllerListEndpoints: (params: RequestParams = {}) =>
+      this.request<ListEndpointsResponse, any>({
+        path: `/api/webhooks/endpoints`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name WebhooksControllerCreateEndpoint
+     * @request POST:/api/webhooks/endpoints
+     */
+    webhooksControllerCreateEndpoint: (data: CreateEndpointBody, params: RequestParams = {}) =>
+      this.request<CreateEndpointResponse, any>({
+        path: `/api/webhooks/endpoints`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name WebhooksControllerUpdateEndpoint
+     * @request PATCH:/api/webhooks/endpoints/{id}
+     */
+    webhooksControllerUpdateEndpoint: (
+      id: string,
+      data: UpdateEndpointBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateEndpointResponse, any>({
+        path: `/api/webhooks/endpoints/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name WebhooksControllerDeleteEndpoint
+     * @request DELETE:/api/webhooks/endpoints/{id}
+     */
+    webhooksControllerDeleteEndpoint: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteEndpointResponse, any>({
+        path: `/api/webhooks/endpoints/${id}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name WebhooksControllerRotateSecret
+     * @request POST:/api/webhooks/endpoints/{id}/rotate-secret
+     */
+    webhooksControllerRotateSecret: (id: string, params: RequestParams = {}) =>
+      this.request<RotateSecretResponse, any>({
+        path: `/api/webhooks/endpoints/${id}/rotate-secret`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name WebhooksControllerPingEndpoint
+     * @request POST:/api/webhooks/endpoints/{id}/ping
+     */
+    webhooksControllerPingEndpoint: (id: string, params: RequestParams = {}) =>
+      this.request<PingEndpointResponse, any>({
+        path: `/api/webhooks/endpoints/${id}/ping`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name WebhooksControllerListDeliveries
+     * @request GET:/api/webhooks/endpoints/{id}/deliveries
+     */
+    webhooksControllerListDeliveries: (id: string, params: RequestParams = {}) =>
+      this.request<ListDeliveriesResponse, any>({
+        path: `/api/webhooks/endpoints/${id}/deliveries`,
+        method: "GET",
+        format: "json",
         ...params,
       }),
 

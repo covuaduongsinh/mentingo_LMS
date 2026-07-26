@@ -12750,6 +12750,191 @@
         }
       }
     },
+    "/api/webhooks/endpoints": {
+      "get": {
+        "operationId": "WebhooksController_listEndpoints",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListEndpointsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "WebhooksController_createEndpoint",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEndpointBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateEndpointResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/webhooks/endpoints/{id}": {
+      "patch": {
+        "operationId": "WebhooksController_updateEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEndpointBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateEndpointResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "WebhooksController_deleteEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteEndpointResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/webhooks/endpoints/{id}/rotate-secret": {
+      "post": {
+        "operationId": "WebhooksController_rotateSecret",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RotateSecretResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/webhooks/endpoints/{id}/ping": {
+      "post": {
+        "operationId": "WebhooksController_pingEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PingEndpointResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/webhooks/endpoints/{id}/deliveries": {
+      "get": {
+        "operationId": "WebhooksController_listDeliveries",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListDeliveriesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/scorm/import/init": {
       "post": {
         "operationId": "ScormController_initScormImport",
@@ -50497,6 +50682,341 @@
               "imageUrl",
               "domain"
             ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListEndpointsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "eventsSubscribed": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "active": {
+                  "type": "boolean"
+                },
+                "successRate": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "url",
+                "eventsSubscribed",
+                "active",
+                "successRate",
+                "createdAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateEndpointBody": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "minLength": 1,
+            "maxLength": 2048,
+            "type": "string"
+          },
+          "events": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "const": "enrollment.created",
+                  "type": "string"
+                },
+                {
+                  "const": "course.completed",
+                  "type": "string"
+                },
+                {
+                  "const": "lesson.completed",
+                  "type": "string"
+                },
+                {
+                  "const": "assignment.submitted",
+                  "type": "string"
+                },
+                {
+                  "const": "assignment.graded",
+                  "type": "string"
+                },
+                {
+                  "const": "certificate.issued",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "url",
+          "events"
+        ]
+      },
+      "CreateEndpointResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "secret": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "secret"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateEndpointBody": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "minLength": 1,
+            "maxLength": 2048,
+            "type": "string"
+          },
+          "events": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "const": "enrollment.created",
+                  "type": "string"
+                },
+                {
+                  "const": "course.completed",
+                  "type": "string"
+                },
+                {
+                  "const": "lesson.completed",
+                  "type": "string"
+                },
+                {
+                  "const": "assignment.submitted",
+                  "type": "string"
+                },
+                {
+                  "const": "assignment.graded",
+                  "type": "string"
+                },
+                {
+                  "const": "certificate.issued",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateEndpointResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RotateSecretResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "secret": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "secret"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "PingEndpointResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "success": {
+                "type": "boolean"
+              },
+              "statusCode": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "errorMessage": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "success",
+              "statusCode",
+              "errorMessage"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "DeleteEndpointResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListDeliveriesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "eventType": {
+                  "type": "string"
+                },
+                "statusCode": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "success": {
+                  "type": "boolean"
+                },
+                "attemptCount": {
+                  "type": "number"
+                },
+                "errorMessage": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "eventType",
+                "statusCode",
+                "success",
+                "attemptCount",
+                "errorMessage",
+                "createdAt"
+              ]
+            }
           }
         },
         "required": [

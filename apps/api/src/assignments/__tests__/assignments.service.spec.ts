@@ -330,7 +330,8 @@ describe("AssignmentsService", () => {
       );
       expect(result.status).toBe(ASSIGNMENT_SUBMISSION_STATUS.GRADED);
       expect(result.grade).toBe(100);
-      expect(outbox.publish).toHaveBeenCalledTimes(1);
+      // AssignmentSubmittedEvent (submission itself) + AssignmentGradedEvent (auto-grading reached GRADED).
+      expect(outbox.publish).toHaveBeenCalledTimes(2);
     });
   });
 

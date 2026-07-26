@@ -4918,6 +4918,53 @@
       "missingTenantIdHeader": "Missing X-Tenant-Id header"
     }
   },
+  "webhooks": {
+    "title": "Webhooks",
+    "description": "Send an HTTP request to your own endpoint whenever a learning event happens (enrollment, completion, certificate...).",
+    "loading": "Loading webhook endpoints...",
+    "empty": "No webhook endpoints yet.",
+    "active": "Active",
+    "inactive": "Inactive",
+    "createdAt": "Created",
+    "successRate": "Success rate (last 50)",
+    "ping": "Send test",
+    "viewDeliveries": "View log",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "rotateSecret": "Rotate secret",
+    "delete": "Delete",
+    "newEndpoint": "New endpoint",
+    "copy": "Copy secret",
+    "generated": {
+      "title": "Copy this secret now. It will not be shown again."
+    },
+    "form": {
+      "title": "New webhook endpoint",
+      "description": "Deliveries are signed with an HMAC-SHA256 secret via the X-Webhook-Signature header.",
+      "urlLabel": "Endpoint URL",
+      "eventsLabel": "Events to send",
+      "submit": "Create endpoint"
+    },
+    "deliveries": {
+      "title": "Delivery log",
+      "description": "The 50 most recent delivery attempts for this endpoint, including retries.",
+      "loading": "Loading delivery log...",
+      "empty": "No deliveries yet.",
+      "attempt_one": "attempt {{count}}",
+      "attempt_other": "attempt {{count}}",
+      "noResponse": "no response"
+    },
+    "toast": {
+      "pingSuccess": "Test delivery succeeded (status {{statusCode}})",
+      "pingFailure": "Test delivery failed: {{error}}",
+      "copySuccess": "Webhook secret copied",
+      "copyError": "Failed to copy webhook secret",
+      "endpointDeletedSuccessfully": "Webhook endpoint deleted successfully"
+    },
+    "error": {
+      "endpointNotFound": "Webhook endpoint not found"
+    }
+  },
   "masterCourse": {
     "error": {
       "sourceCourseNotFound": "Source course not found",

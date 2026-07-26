@@ -4813,6 +4813,54 @@
       "missingTenantIdHeader": "Trūksta X-Tenant-Id antraštės"
     }
   },
+  "webhooks": {
+    "title": "Webhookai",
+    "description": "Siųsti HTTP užklausą į jūsų nurodytą endpoint kiekvieną kartą, kai įvyksta mokymosi įvykis (registracija, baigimas, pažymėjimas...).",
+    "loading": "Kraunami webhook endpoint'ai...",
+    "empty": "Kol kas nėra webhook endpoint'ų.",
+    "active": "Aktyvus",
+    "inactive": "Neaktyvus",
+    "createdAt": "Sukurta",
+    "successRate": "Sėkmės rodiklis (paskutiniai 50)",
+    "ping": "Siųsti bandomąjį",
+    "viewDeliveries": "Žiūrėti žurnalą",
+    "activate": "Aktyvuoti",
+    "deactivate": "Deaktyvuoti",
+    "rotateSecret": "Atnaujinti paslaptį",
+    "delete": "Ištrinti",
+    "newEndpoint": "Naujas endpoint",
+    "copy": "Kopijuoti paslaptį",
+    "generated": {
+      "title": "Nukopijuokite šią paslaptį dabar. Ji nebus rodoma dar kartą."
+    },
+    "form": {
+      "title": "Naujas webhook endpoint",
+      "description": "Kiekvienas siuntimas pasirašomas HMAC-SHA256 paslaptimi per X-Webhook-Signature antraštę.",
+      "urlLabel": "Endpoint URL",
+      "eventsLabel": "Įvykiai, kuriuos siųsti",
+      "submit": "Sukurti endpoint"
+    },
+    "deliveries": {
+      "title": "Siuntimų žurnalas",
+      "description": "50 paskutinių šio endpoint siuntimo bandymų, įskaitant pakartojimus.",
+      "loading": "Kraunamas siuntimų žurnalas...",
+      "empty": "Kol kas nėra siuntimų.",
+      "attempt_one": "{{count}} bandymas",
+      "attempt_few": "{{count}} bandymai",
+      "attempt_other": "{{count}} bandymų",
+      "noResponse": "nėra atsakymo"
+    },
+    "toast": {
+      "pingSuccess": "Bandomasis siuntimas sėkmingas (būsena {{statusCode}})",
+      "pingFailure": "Bandomasis siuntimas nepavyko: {{error}}",
+      "copySuccess": "Webhook paslaptis nukopijuota",
+      "copyError": "Nepavyko nukopijuoti webhook paslapties",
+      "endpointDeletedSuccessfully": "Webhook endpoint sėkmingai ištrintas"
+    },
+    "error": {
+      "endpointNotFound": "Webhook endpoint nerastas"
+    }
+  },
   "luma": {
     "errors": {
       "invalidBlankAnswerId": "Sugeneruotame teste yra neteisingas tuščio atsakymo ID. Bandykite generuoti kursą dar kartą."

@@ -2915,3 +2915,44 @@ export const assignmentUserSubmissions = pgTable(
     ).on(table.assignmentId, table.userId),
   }),
 );
+
+export const webhookEndpoints = pgTable(
+  "webhook_endpoints",
+  {
+    ...id,
+    ...timestamps,
+    url: varchar("url", { length: 2048 }).notNull(),
+    eventsSubscribed: jsonb("events_subscribed").$type<string[]>().notNull().default([]),
+    active: boolean("active").notNull().default(true),
+    secretCiphertext: text("secret_ciphertext").notNull(),
+    secretIv: text("secret_iv").notNull(),
+    secretTag: text("secret_tag").notNull(),
+    secretDekIv: text("secret_dek_iv").notNull(),
+    secretEncryptedDek: text("secret_encrypted_dek").notNull(),
+    secretDekTag: text("secret_dek_tag").notNull(),
+    tenantId,
+  },
+  withTenantIdIndex("webhook_endpoints"),
+);
+
+export const webhookDeliveries = pgTable(
+  "webhook_deliveries",
+  {
+    ...id,
+    ...timestamps,
+    webhookEndpointId: uuid("webhook_endpoint_id")
+      .references(() => webhookEndpoints.id, { onDelete: "cascade" })
+      .notNull(),
+    eventType: varchar("event_type", { length: 100 }).notNull(),
+    statusCode: integer("status_code"),
+    success: boolean("success").notNull(),
+    attemptCount: integer("attempt_count").notNull().default(1),
+    errorMessage: text("error_message"),
+    tenantId,
+  },
+  withTenantIdIndex("webhook_deliveries", (table) => ({
+    webhookEndpointIdIdx: index("webhook_deliveries_webhook_endpoint_id_idx").on(
+      table.webhookEndpointId,
+    ),
+  })),
+);

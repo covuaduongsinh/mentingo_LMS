@@ -4754,6 +4754,53 @@
       "missingTenantIdHeader": "Falta el encabezado X-Tenant-Id"
     }
   },
+  "webhooks": {
+    "title": "Webhooks",
+    "description": "Envía una solicitud HTTP a tu propio endpoint cada vez que ocurre un evento de aprendizaje (inscripción, finalización, certificado...).",
+    "loading": "Cargando endpoints de webhook...",
+    "empty": "Aún no hay endpoints de webhook.",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "createdAt": "Creado",
+    "successRate": "Tasa de éxito (últimos 50)",
+    "ping": "Enviar prueba",
+    "viewDeliveries": "Ver registro",
+    "activate": "Activar",
+    "deactivate": "Desactivar",
+    "rotateSecret": "Rotar secreto",
+    "delete": "Eliminar",
+    "newEndpoint": "Nuevo endpoint",
+    "copy": "Copiar secreto",
+    "generated": {
+      "title": "Copia este secreto ahora. No se volverá a mostrar."
+    },
+    "form": {
+      "title": "Nuevo endpoint de webhook",
+      "description": "Cada entrega se firma con un secreto HMAC-SHA256 mediante el encabezado X-Webhook-Signature.",
+      "urlLabel": "URL del endpoint",
+      "eventsLabel": "Eventos a enviar",
+      "submit": "Crear endpoint"
+    },
+    "deliveries": {
+      "title": "Registro de entregas",
+      "description": "Las 50 entregas más recientes de este endpoint, incluyendo reintentos.",
+      "loading": "Cargando registro de entregas...",
+      "empty": "Aún no hay entregas.",
+      "attempt_one": "intento {{count}}",
+      "attempt_other": "intento {{count}}",
+      "noResponse": "sin respuesta"
+    },
+    "toast": {
+      "pingSuccess": "Entrega de prueba exitosa (estado {{statusCode}})",
+      "pingFailure": "Entrega de prueba fallida: {{error}}",
+      "copySuccess": "Secreto del webhook copiado",
+      "copyError": "No se pudo copiar el secreto del webhook",
+      "endpointDeletedSuccessfully": "Endpoint de webhook eliminado correctamente"
+    },
+    "error": {
+      "endpointNotFound": "Endpoint de webhook no encontrado"
+    }
+  },
   "masterCourse": {
     "error": {
       "sourceCourseNotFound": "Curso fuente no encontrado",

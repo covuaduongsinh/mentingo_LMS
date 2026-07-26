@@ -87,6 +87,7 @@ import { SuperAdminModule } from "./super-admin/super-admin.module";
 import { SupportModeModule } from "./support-mode/support-mode.module";
 import { TestConfigModule } from "./test-config/test-config.module";
 import { UserModule } from "./user/user.module";
+import { WebhooksModule } from "./webhooks/webhooks.module";
 
 import type { RedisClient } from "src/redis";
 
@@ -167,6 +168,7 @@ import type { RedisClient } from "src/redis";
     StatisticsModule,
     ReportModule,
     ResourceLibraryModule,
+    WebhooksModule,
     CacheModule,
     RedisClientsModule,
     QueueModule,
