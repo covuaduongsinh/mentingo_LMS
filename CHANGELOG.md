@@ -1,3 +1,16 @@
+<a name="interactive-chess-board"></a>
+
+## [Interactive chess board] - 26.07.2026
+
+### Features:
+
+- add right-click drawing on the chess board: arrows and highlighted squares, with 4 colors selectable via modifier keys (green default, shift=red, ctrl/cmd=blue, alt=yellow); draw the same shape again to erase it
+- add standard move-annotation symbols (!, ?, !!, ??, !?, ?!) attachable to any move
+- replace the flat move list on the analysis board with a branching move tree: playing a different move at an earlier point creates a variation instead of overwriting history; promote any variation to the mainline or delete it, and copy the position out as standard PGN movetext (variations in parentheses)
+- add a free-form board editor (`/chess/editor`): place/remove any piece, set the side to move, castling rights, and en passant target, load/copy FEN, and send the resulting position straight to the analysis board
+- keyboard navigation (arrow keys, Home/End) and a flip-board control on the analysis page
+- entirely client-side — no new database tables, API endpoints, or permissions; reuses the existing `ChessBoard`/`chess.js` (MIT) foundation
+
 <a name="collaborative-chess-analysis-board"></a>
 
 ## [Collaborative chess analysis board] - 26.07.2026

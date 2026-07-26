@@ -23,7 +23,8 @@
       "games": "Ngân hàng ván đấu",
       "adminBanks": "Ngân hàng cờ vua",
       "play": "Chơi với máy",
-      "analysis": "Phân tích"
+      "analysis": "Phân tích",
+      "editor": "Dựng thế cờ"
     },
     "engine": {
       "errorBestMove": "Máy không thể đi nước tiếp theo",
@@ -97,6 +98,8 @@
       "bestMove": "Nước đi tốt nhất",
       "eval": "Đánh giá",
       "createRoom": "Tạo phòng phân tích cộng tác",
+      "flipBoard": "Lật bàn cờ",
+      "copyPgn": "Sao chép PGN",
       "errors": {
         "sessionNotFound": "Không tìm thấy phòng phân tích",
         "tenantMismatch": "Bạn không thể truy cập phòng phân tích này",
@@ -125,6 +128,48 @@
       },
       "error": {
         "notFound": "Không tìm thấy phòng phân tích"
+      }
+    },
+    "tree": {
+      "empty": "Đi một nước để bắt đầu cây biến.",
+      "setGlyph": "Đánh giá nước đi",
+      "promote": "Nâng thành đường chính",
+      "delete": "Xóa biến"
+    },
+    "glyphs": {
+      "none": "—",
+      "good": "Nước hay",
+      "mistake": "Nước dở",
+      "brilliant": "Nước rất hay",
+      "blunder": "Nước rất dở",
+      "interesting": "Nước đáng chú ý",
+      "dubious": "Nước đáng ngờ"
+    },
+    "editor": {
+      "title": "Dựng thế cờ",
+      "subtitle": "Dựng bất kỳ thế cờ nào rồi gửi sang bàn phân tích.",
+      "standardPosition": "Vị trí chuẩn",
+      "clearBoard": "Xóa bàn",
+      "flipBoard": "Lật bàn cờ",
+      "palette": "Quân cờ",
+      "erase": "Xóa quân",
+      "turn": "Bên đi tiếp",
+      "white": "Trắng",
+      "black": "Đen",
+      "castling": "Quyền nhập thành",
+      "castlingWhiteKingside": "Trắng nhập thành cánh vua",
+      "castlingWhiteQueenside": "Trắng nhập thành cánh hậu",
+      "castlingBlackKingside": "Đen nhập thành cánh vua",
+      "castlingBlackQueenside": "Đen nhập thành cánh hậu",
+      "enPassant": "Ô bắt tốt qua đường",
+      "none": "Không có",
+      "loadFen": "Tải FEN",
+      "copyFen": "Sao chép FEN",
+      "copied": "Đã sao chép!",
+      "openInAnalysis": "Mở trong trang phân tích",
+      "errors": {
+        "unparseable": "Không đọc được chuỗi FEN",
+        "invalidPosition": "Vị trí không hợp lệ"
       }
     },
     "admin": {
@@ -4300,6 +4345,7 @@
   },
   "pages": {
     "chessAnalysisRoom": "Phòng phân tích cờ",
+    "chessEditor": "Dựng thế cờ",
     "dashboard": "Bảng điều khiển",
     "settings": "Cài đặt",
     "providerInformation": "Thông tin nhà cung cấp",

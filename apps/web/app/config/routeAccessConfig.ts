@@ -189,6 +189,9 @@ export const routeAccessConfig = createRouteConfig({
   "chess/analysis": {
     anyOf: [PERMISSIONS.CHESS_EXERCISE_READ, PERMISSIONS.CHESS_GAME_READ],
   },
+  "chess/editor": {
+    anyOf: [PERMISSIONS.CHESS_EXERCISE_READ, PERMISSIONS.CHESS_GAME_READ],
+  },
   "super-admin/*": {
     allOf: [PERMISSIONS.TENANT_MANAGE],
   },
