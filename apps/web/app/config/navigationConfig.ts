@@ -125,6 +125,14 @@ export const getNavigationConfig = (
             anyOf: [PERMISSIONS.CHESS_EXERCISE_READ, PERMISSIONS.CHESS_GAME_READ],
           },
         },
+        {
+          label: t("chess.nav.editor", { defaultValue: "Board editor" }),
+          path: "chess/editor",
+          iconName: "Edit",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_EXERCISE_READ, PERMISSIONS.CHESS_GAME_READ],
+          },
+        },
       ],
     },
     ...(isAnyContentFeatureEnabled

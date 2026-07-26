@@ -1,25 +1,26 @@
 import { Chess, type Square } from "chess.js";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { cn } from "~/lib/utils";
 
+import { BoardShapesOverlay } from "./BoardShapesOverlay";
 import { ChessPiece, type ChessPieceType } from "./pieces/ChessPiece";
+import { buildShapeFromDrag, resolveShapeColorFromModifiers, toggleShape } from "./shapes";
+import { FILES, RANKS, squareName } from "./squareGeometry";
 
-const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
-const RANKS = [8, 7, 6, 5, 4, 3, 2, 1] as const;
+import type { BoardShape } from "./shapes";
 
 export type ChessBoardProps = {
   fen: string;
   interactive?: boolean;
   orientation?: "white" | "black";
-  onMove?: (uci: string, fenAfter: string) => void;
+  onMove?: (uci: string, fenAfter: string, san: string) => void;
   className?: string;
   size?: number;
+  /** Right-click-drawn arrows/circles. Omit both this and `onShapesChange` to disable drawing. */
+  shapes?: BoardShape[];
+  onShapesChange?: (shapes: BoardShape[]) => void;
 };
-
-function squareName(fileIndex: number, rankIndex: number): Square {
-  return `${FILES[fileIndex]}${RANKS[rankIndex]}` as Square;
-}
 
 /**
  * MIT-friendly React chess board (no Chessground/jQuery).
@@ -32,9 +33,13 @@ export function ChessBoard({
   onMove,
   className,
   size = 360,
+  shapes,
+  onShapesChange,
 }: ChessBoardProps) {
   const [selected, setSelected] = useState<Square | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const dragStartSquareRef = useRef<Square | null>(null);
+  const shapesEnabled = shapes !== undefined && onShapesChange !== undefined;
 
   const game = useMemo(() => {
     try {
@@ -100,7 +105,7 @@ export function ChessBoard({
           return;
         }
         const uci = `${result.from}${result.to}${result.promotion ?? ""}`;
-        onMove?.(uci, game.fen());
+        onMove?.(uci, game.fen(), result.san);
         setSelected(null);
       } catch {
         setError("Illegal move");
@@ -110,13 +115,38 @@ export function ChessBoard({
     [game, interactive, onMove, selected],
   );
 
+  const handleSquareMouseDown = useCallback(
+    (square: Square, event: React.MouseEvent) => {
+      if (!shapesEnabled || event.button !== 2) return;
+      dragStartSquareRef.current = square;
+    },
+    [shapesEnabled],
+  );
+
+  const handleSquareMouseUp = useCallback(
+    (square: Square, event: React.MouseEvent) => {
+      if (!shapesEnabled || event.button !== 2) return;
+      const from = dragStartSquareRef.current;
+      dragStartSquareRef.current = null;
+      if (!from || !shapes || !onShapesChange) return;
+      const color = resolveShapeColorFromModifiers(event);
+      const candidate = buildShapeFromDrag(from, square, color);
+      onShapesChange(toggleShape(shapes, candidate));
+    },
+    [onShapesChange, shapes, shapesEnabled],
+  );
+
   return (
     <div className={cn("inline-flex flex-col gap-2", className)}>
       <div
-        className="grid grid-cols-8 overflow-hidden rounded-md border border-neutral-400/60 shadow-md"
+        className="relative grid grid-cols-8 overflow-hidden rounded-md border border-neutral-400/60 shadow-md"
         style={{ width: size, height: size }}
         role="grid"
         aria-label="Chess board"
+        tabIndex={-1}
+        onContextMenu={(event) => {
+          if (shapesEnabled) event.preventDefault();
+        }}
       >
         {displayRanks.map((rank, rankOffset) =>
           displayFiles.map((file, fileOffset) => {
@@ -133,8 +163,11 @@ export function ChessBoard({
                 key={square}
                 type="button"
                 role="gridcell"
-                disabled={!interactive}
+                aria-disabled={!interactive}
+                tabIndex={interactive ? 0 : -1}
                 onClick={() => handleSquareClick(square)}
+                onMouseDown={(event) => handleSquareMouseDown(square, event)}
+                onMouseUp={(event) => handleSquareMouseUp(square, event)}
                 data-testid={`chess-square-${square}`}
                 data-square={square}
                 className={cn(
@@ -179,6 +212,9 @@ export function ChessBoard({
             );
           }),
         )}
+        {shapesEnabled ? (
+          <BoardShapesOverlay shapes={shapes ?? []} size={size} orientation={orientation} />
+        ) : null}
       </div>
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
     </div>

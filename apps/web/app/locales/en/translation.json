@@ -23,7 +23,8 @@
       "games": "Game bank",
       "adminBanks": "Chess banks",
       "play": "Play engine",
-      "analysis": "Analysis"
+      "analysis": "Analysis",
+      "editor": "Board editor"
     },
     "engine": {
       "errorBestMove": "Engine could not move",
@@ -97,6 +98,8 @@
       "bestMove": "Best move",
       "eval": "Eval",
       "createRoom": "Start collaborative room",
+      "flipBoard": "Flip board",
+      "copyPgn": "Copy PGN",
       "errors": {
         "sessionNotFound": "Analysis room not found",
         "tenantMismatch": "You cannot access this analysis room",
@@ -125,6 +128,48 @@
       },
       "error": {
         "notFound": "Analysis room not found"
+      }
+    },
+    "tree": {
+      "empty": "Play a move to start the tree.",
+      "setGlyph": "Annotate move",
+      "promote": "Promote to mainline",
+      "delete": "Delete variation"
+    },
+    "glyphs": {
+      "none": "—",
+      "good": "Good move",
+      "mistake": "Mistake",
+      "brilliant": "Brilliant move",
+      "blunder": "Blunder",
+      "interesting": "Interesting move",
+      "dubious": "Dubious move"
+    },
+    "editor": {
+      "title": "Board editor",
+      "subtitle": "Set up any position, then send it to the analysis board.",
+      "standardPosition": "Standard position",
+      "clearBoard": "Clear board",
+      "flipBoard": "Flip board",
+      "palette": "Pieces",
+      "erase": "Erase",
+      "turn": "Side to move",
+      "white": "White",
+      "black": "Black",
+      "castling": "Castling rights",
+      "castlingWhiteKingside": "White O-O",
+      "castlingWhiteQueenside": "White O-O-O",
+      "castlingBlackKingside": "Black O-O",
+      "castlingBlackQueenside": "Black O-O-O",
+      "enPassant": "En passant target",
+      "none": "None",
+      "loadFen": "Load FEN",
+      "copyFen": "Copy FEN",
+      "copied": "Copied!",
+      "openInAnalysis": "Open in analysis",
+      "errors": {
+        "unparseable": "Could not parse FEN",
+        "invalidPosition": "Invalid position"
       }
     },
     "admin": {
@@ -4300,6 +4345,7 @@
   },
   "pages": {
     "chessAnalysisRoom": "Chess Analysis Room",
+    "chessEditor": "Chess Board Editor",
     "dashboard": "Dashboard",
     "settings": "Settings",
     "providerInformation": "Provider Information",
