@@ -296,6 +296,8 @@ export interface CurrentUserResponse {
       | "community.post.create"
       | "community.post.manage_own"
       | "community.moderate"
+      | "community.message.send"
+      | "community.social.manage"
       | "report.read"
       | "statistics.read_self"
       | "statistics.read"
@@ -7627,6 +7629,110 @@ export interface VoteBody {
   targetId: string;
 }
 
+export interface ListConversationsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    otherUser: {
+      /** @format uuid */
+      userId: string;
+      firstName: string;
+      lastName: string;
+      avatarUrl: string | null;
+    };
+    lastMessagePreview: string | null;
+    lastMessageAt: string;
+    unreadCount: number;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+  appliedFilters?: object;
+}
+
+export interface GetConversationMessagesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    conversationId: string;
+    /** @format uuid */
+    senderId: string;
+    content: string;
+    readAt: string | null;
+    createdAt: string;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+  appliedFilters?: object;
+}
+
+export interface SendMessageBody {
+  /** @format uuid */
+  recipientUserId: string;
+  /**
+   * @minLength 1
+   * @maxLength 2000
+   */
+  content: string;
+}
+
+export interface SendMessageResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    conversationId: string;
+    /** @format uuid */
+    senderId: string;
+    content: string;
+    readAt: string | null;
+    createdAt: string;
+  };
+}
+
+export interface ListMessageableUsersResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl: string | null;
+  }[];
+}
+
+export interface GetRelationshipResponse {
+  data: {
+    isFollowing: boolean;
+    isFollowedBy: boolean;
+    isBlocking: boolean;
+    isBlockedBy: boolean;
+  };
+}
+
+export interface ListTrainersResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    username: string | null;
+    firstName: string;
+    lastName: string;
+    bio: string | null;
+    avatarUrl: string | null;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+  appliedFilters?: object;
+}
+
 export interface GetLearningPathsResponse {
   data: ({
     /** @format uuid */
@@ -9873,6 +9979,8 @@ export interface UpdateSettingsBody {
 
 export interface GetPublicProfileResponse {
   data: {
+    /** @format uuid */
+    userId: string;
     username: string;
     firstName: string;
     lastName: string;
@@ -17580,6 +17688,185 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: data,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerListConversations
+     * @request GET:/api/community/conversations
+     */
+    communityControllerListConversations: (
+      query?: {
+        /** @min 1 */
+        page?: number;
+        /** @min 1 */
+        perPage?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ListConversationsResponse, any>({
+        path: `/api/community/conversations`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerGetConversationMessages
+     * @request GET:/api/community/conversations/{id}/messages
+     */
+    communityControllerGetConversationMessages: (
+      id: string,
+      query?: {
+        /** @min 1 */
+        page?: number;
+        /** @min 1 */
+        perPage?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetConversationMessagesResponse, any>({
+        path: `/api/community/conversations/${id}/messages`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerMarkConversationRead
+     * @request POST:/api/community/conversations/{id}/read
+     */
+    communityControllerMarkConversationRead: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/community/conversations/${id}/read`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerSendMessage
+     * @request POST:/api/community/messages
+     */
+    communityControllerSendMessage: (data: SendMessageBody, params: RequestParams = {}) =>
+      this.request<SendMessageResponse, any>({
+        path: `/api/community/messages`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerListMessageableUsers
+     * @request GET:/api/community/messageable-users
+     */
+    communityControllerListMessageableUsers: (params: RequestParams = {}) =>
+      this.request<ListMessageableUsersResponse, any>({
+        path: `/api/community/messageable-users`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerFollowUser
+     * @request POST:/api/community/users/{userId}/follow
+     */
+    communityControllerFollowUser: (userId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/community/users/${userId}/follow`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerUnfollowUser
+     * @request DELETE:/api/community/users/{userId}/follow
+     */
+    communityControllerUnfollowUser: (userId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/community/users/${userId}/follow`,
+        method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerBlockUser
+     * @request POST:/api/community/users/{userId}/block
+     */
+    communityControllerBlockUser: (userId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/community/users/${userId}/block`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerUnblockUser
+     * @request DELETE:/api/community/users/{userId}/block
+     */
+    communityControllerUnblockUser: (userId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/community/users/${userId}/block`,
+        method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerGetRelationship
+     * @request GET:/api/community/users/{userId}/relationship
+     */
+    communityControllerGetRelationship: (userId: string, params: RequestParams = {}) =>
+      this.request<GetRelationshipResponse, any>({
+        path: `/api/community/users/${userId}/relationship`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerListTrainers
+     * @request GET:/api/community/trainers
+     */
+    communityControllerListTrainers: (
+      query?: {
+        /** @min 1 */
+        page?: number;
+        /** @min 1 */
+        perPage?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ListTrainersResponse, any>({
+        path: `/api/community/trainers`,
+        method: "GET",
+        query: query,
+        format: "json",
         ...params,
       }),
 

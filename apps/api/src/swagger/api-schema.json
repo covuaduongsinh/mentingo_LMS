@@ -13573,6 +13573,295 @@
         }
       }
     },
+    "/api/community/conversations": {
+      "get": {
+        "operationId": "CommunityController_listConversations",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListConversationsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/community/conversations/{id}/messages": {
+      "get": {
+        "operationId": "CommunityController_getConversationMessages",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetConversationMessagesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/community/conversations/{id}/read": {
+      "post": {
+        "operationId": "CommunityController_markConversationRead",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/community/messages": {
+      "post": {
+        "operationId": "CommunityController_sendMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/community/messageable-users": {
+      "get": {
+        "operationId": "CommunityController_listMessageableUsers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListMessageableUsersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/community/users/{userId}/follow": {
+      "post": {
+        "operationId": "CommunityController_followUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "CommunityController_unfollowUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/community/users/{userId}/block": {
+      "post": {
+        "operationId": "CommunityController_blockUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "CommunityController_unblockUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/community/users/{userId}/relationship": {
+      "get": {
+        "operationId": "CommunityController_getRelationship",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRelationshipResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/community/trainers": {
+      "get": {
+        "operationId": "CommunityController_listTrainers",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTrainersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/learning-path": {
       "get": {
         "operationId": "LearningPathController_getLearningPaths",
@@ -21353,6 +21642,14 @@
                         },
                         {
                           "const": "community.moderate",
+                          "type": "string"
+                        },
+                        {
+                          "const": "community.message.send",
+                          "type": "string"
+                        },
+                        {
+                          "const": "community.social.manage",
                           "type": "string"
                         },
                         {
@@ -58690,6 +58987,414 @@
           "targetId"
         ]
       },
+      "ListConversationsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "otherUser": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "firstName": {
+                      "type": "string"
+                    },
+                    "lastName": {
+                      "type": "string"
+                    },
+                    "avatarUrl": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "firstName",
+                    "lastName",
+                    "avatarUrl"
+                  ]
+                },
+                "lastMessagePreview": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastMessageAt": {
+                  "type": "string"
+                },
+                "unreadCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "otherUser",
+                "lastMessagePreview",
+                "lastMessageAt",
+                "unreadCount"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "GetConversationMessagesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "conversationId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "senderId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "readAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "conversationId",
+                "senderId",
+                "content",
+                "readAt",
+                "createdAt"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "SendMessageBody": {
+        "type": "object",
+        "properties": {
+          "recipientUserId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "content": {
+            "minLength": 1,
+            "maxLength": 2000,
+            "type": "string"
+          }
+        },
+        "required": [
+          "recipientUserId",
+          "content"
+        ]
+      },
+      "SendMessageResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "conversationId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "senderId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "readAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "conversationId",
+              "senderId",
+              "content",
+              "readAt",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListMessageableUsersResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "avatarUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "userId",
+                "firstName",
+                "lastName",
+                "avatarUrl"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetRelationshipResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "isFollowing": {
+                "type": "boolean"
+              },
+              "isFollowedBy": {
+                "type": "boolean"
+              },
+              "isBlocking": {
+                "type": "boolean"
+              },
+              "isBlockedBy": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "isFollowing",
+              "isFollowedBy",
+              "isBlocking",
+              "isBlockedBy"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListTrainersResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "username": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "bio": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "avatarUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "userId",
+                "username",
+                "firstName",
+                "lastName",
+                "bio",
+                "avatarUrl"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
       "GetLearningPathsResponse": {
         "type": "object",
         "properties": {
@@ -69353,6 +70058,10 @@
           "data": {
             "type": "object",
             "properties": {
+              "userId": {
+                "format": "uuid",
+                "type": "string"
+              },
               "username": {
                 "type": "string"
               },
@@ -69384,6 +70093,7 @@
               }
             },
             "required": [
+              "userId",
               "username",
               "firstName",
               "lastName",

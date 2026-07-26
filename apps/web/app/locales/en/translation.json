@@ -1742,7 +1742,29 @@
       "postLocked": "This post is locked.",
       "blockedWordDetected": "Your post contains a word that isn't allowed here.",
       "maxPostsPerDayReached": "You've reached the daily post limit. Please try again tomorrow.",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "cannotMessageSelf": "You can't message yourself.",
+      "cannotFollowSelf": "You can't follow yourself.",
+      "cannotBlockSelf": "You can't block yourself.",
+      "userBlocked": "You can't message this user.",
+      "kidModeNotClassmates": "Managed accounts can only contact classmates.",
+      "notAConversationParticipant": "You're not part of this conversation.",
+      "messageSendFailed": "Could not send message"
+    },
+    "messages": {
+      "title": "Messages",
+      "conversations": "Conversations",
+      "noConversations": "No conversations yet.",
+      "startNew": "Start a new conversation",
+      "noContacts": "No suggested contacts yet.",
+      "selectPrompt": "Select a conversation or a contact to start chatting.",
+      "placeholder": "Write a message…",
+      "send": "Send"
+    },
+    "trainers": {
+      "title": "Trainer directory",
+      "subtitle": "Coaches with a public profile in your school/club.",
+      "empty": "No public trainer profiles yet."
     }
   },
   "publicProfileView": {
@@ -1762,7 +1784,17 @@
       "usernamePlaceholder": "your-username",
       "bio": "Bio",
       "enablePublicProfile": "Make my profile publicly visible"
-    }
+    },
+    "actions": {
+      "follow": "Follow",
+      "unfollow": "Unfollow",
+      "message": "Message",
+      "block": "Block",
+      "unblock": "Unblock",
+      "send": "Send"
+    },
+    "messagePlaceholder": "Write a message…",
+    "messageSent": "Message sent"
   },
   "adminStatisticsView": {
     "header": "Welcome back,",
@@ -4684,6 +4716,8 @@
     "chessMatchPlay": "Chess Match",
     "chessMatchInsight": "Game Analysis",
     "chessInsightDashboard": "Insight & Tutor",
+    "communityMessages": "Messages",
+    "communityTrainers": "Trainer Directory",
     "chessClassManagement": "Chess Class Management",
     "chessClassLogin": "Class Code Login",
     "chessTournamentCreate": "Create Chess Tournament",

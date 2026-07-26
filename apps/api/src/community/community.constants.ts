@@ -25,3 +25,11 @@ export const COMMUNITY_SORT_OPTIONS = {
 
 export type CommunitySortOption =
   (typeof COMMUNITY_SORT_OPTIONS)[keyof typeof COMMUNITY_SORT_OPTIONS];
+
+export const COMMUNITY_RELATIONSHIP_TYPES = {
+  FOLLOW: "follow",
+  BLOCK: "block",
+} as const;
+
+export type CommunityRelationshipType =
+  (typeof COMMUNITY_RELATIONSHIP_TYPES)[keyof typeof COMMUNITY_RELATIONSHIP_TYPES];

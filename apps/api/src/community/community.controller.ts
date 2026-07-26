@@ -36,12 +36,26 @@ import {
   updateCommunityPostBodySchema,
 } from "src/community/schemas/community.schema";
 
+import { CommunitySocialService } from "./community-social.service";
 import { CommunityService } from "./community.service";
+import {
+  communityConversationListSchema,
+  communityMessageableUserListSchema,
+  communityMessageListSchema,
+  communityMessageSchema,
+  communityRelationshipStatusSchema,
+  communityTrainerListSchema,
+  sendCommunityMessageBodySchema,
+  type SendCommunityMessageBody,
+} from "./schemas/community-social.schema";
 
 @UseGuards(PermissionsGuard)
 @Controller("community")
 export class CommunityController {
-  constructor(private readonly communityService: CommunityService) {}
+  constructor(
+    private readonly communityService: CommunityService,
+    private readonly communitySocialService: CommunitySocialService,
+  ) {}
 
   @Get("posts")
   @RequirePermission(PERMISSIONS.COMMUNITY_READ)
@@ -204,5 +218,163 @@ export class CommunityController {
     @CurrentUser() currentUser: CurrentUserType,
   ) {
     return this.communityService.vote(data.targetType, data.targetId, currentUser);
+  }
+
+  @Get("conversations")
+  @RequirePermission(PERMISSIONS.COMMUNITY_MESSAGE_SEND)
+  @Validate({
+    request: [
+      { type: "query", name: "page", schema: Type.Optional(Type.Number({ minimum: 1 })) },
+      { type: "query", name: "perPage", schema: Type.Optional(Type.Number({ minimum: 1 })) },
+    ],
+    response: communityConversationListSchema,
+  })
+  async listConversations(
+    @Query("page") page: number | undefined,
+    @Query("perPage") perPage: number | undefined,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    return this.communitySocialService.listConversations(
+      currentUser.userId,
+      page ?? 1,
+      perPage ?? 20,
+    );
+  }
+
+  @Get("conversations/:id/messages")
+  @RequirePermission(PERMISSIONS.COMMUNITY_MESSAGE_SEND)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "query", name: "page", schema: Type.Optional(Type.Number({ minimum: 1 })) },
+      { type: "query", name: "perPage", schema: Type.Optional(Type.Number({ minimum: 1 })) },
+    ],
+    response: communityMessageListSchema,
+  })
+  async getConversationMessages(
+    @Param("id") id: UUIDType,
+    @Query("page") page: number | undefined,
+    @Query("perPage") perPage: number | undefined,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    return this.communitySocialService.getMessages(
+      currentUser.userId,
+      id,
+      page ?? 1,
+      perPage ?? 50,
+    );
+  }
+
+  @Post("conversations/:id/read")
+  @RequirePermission(PERMISSIONS.COMMUNITY_MESSAGE_SEND)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+  })
+  async markConversationRead(
+    @Param("id") id: UUIDType,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    await this.communitySocialService.markRead(currentUser.userId, id);
+  }
+
+  @Post("messages")
+  @RequirePermission(PERMISSIONS.COMMUNITY_MESSAGE_SEND)
+  @Validate({
+    request: [{ type: "body", schema: sendCommunityMessageBodySchema }],
+    response: baseResponse(communityMessageSchema),
+  })
+  async sendMessage(
+    @Body() data: SendCommunityMessageBody,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    return new BaseResponse(
+      await this.communitySocialService.sendMessage(
+        currentUser,
+        data.recipientUserId,
+        data.content,
+      ),
+    );
+  }
+
+  @Get("messageable-users")
+  @RequirePermission(PERMISSIONS.COMMUNITY_MESSAGE_SEND)
+  @Validate({
+    response: baseResponse(communityMessageableUserListSchema),
+  })
+  async listMessageableUsers(@CurrentUser() currentUser: CurrentUserType) {
+    return new BaseResponse(await this.communitySocialService.listMessageableUsers(currentUser));
+  }
+
+  @Post("users/:userId/follow")
+  @RequirePermission(PERMISSIONS.COMMUNITY_SOCIAL_MANAGE)
+  @Validate({
+    request: [{ type: "param", name: "userId", schema: UUIDSchema }],
+  })
+  async followUser(@Param("userId") userId: UUIDType, @CurrentUser() currentUser: CurrentUserType) {
+    await this.communitySocialService.follow(currentUser, userId);
+  }
+
+  @Delete("users/:userId/follow")
+  @RequirePermission(PERMISSIONS.COMMUNITY_SOCIAL_MANAGE)
+  @Validate({
+    request: [{ type: "param", name: "userId", schema: UUIDSchema }],
+  })
+  async unfollowUser(
+    @Param("userId") userId: UUIDType,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    await this.communitySocialService.unfollow(currentUser, userId);
+  }
+
+  @Post("users/:userId/block")
+  @RequirePermission(PERMISSIONS.COMMUNITY_SOCIAL_MANAGE)
+  @Validate({
+    request: [{ type: "param", name: "userId", schema: UUIDSchema }],
+  })
+  async blockUser(@Param("userId") userId: UUIDType, @CurrentUser() currentUser: CurrentUserType) {
+    await this.communitySocialService.block(currentUser, userId);
+  }
+
+  @Delete("users/:userId/block")
+  @RequirePermission(PERMISSIONS.COMMUNITY_SOCIAL_MANAGE)
+  @Validate({
+    request: [{ type: "param", name: "userId", schema: UUIDSchema }],
+  })
+  async unblockUser(
+    @Param("userId") userId: UUIDType,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    await this.communitySocialService.unblock(currentUser, userId);
+  }
+
+  @Get("users/:userId/relationship")
+  @RequirePermission(PERMISSIONS.COMMUNITY_SOCIAL_MANAGE)
+  @Validate({
+    request: [{ type: "param", name: "userId", schema: UUIDSchema }],
+    response: baseResponse(communityRelationshipStatusSchema),
+  })
+  async getRelationship(
+    @Param("userId") userId: UUIDType,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    return new BaseResponse(
+      await this.communitySocialService.getRelationshipStatus(currentUser.userId, userId),
+    );
+  }
+
+  @Get("trainers")
+  @RequirePermission(PERMISSIONS.COMMUNITY_READ)
+  @Validate({
+    request: [
+      { type: "query", name: "page", schema: Type.Optional(Type.Number({ minimum: 1 })) },
+      { type: "query", name: "perPage", schema: Type.Optional(Type.Number({ minimum: 1 })) },
+    ],
+    response: communityTrainerListSchema,
+  })
+  async listTrainers(
+    @Query("page") page: number | undefined,
+    @Query("perPage") perPage: number | undefined,
+  ) {
+    return this.communitySocialService.listTrainers(page ?? 1, perPage ?? 20);
   }
 }

@@ -78,6 +78,8 @@ export const routes: (
           });
           route("profile/:id", "modules/Profile/Profile.page.tsx");
           route("community", "modules/Community/Community.page.tsx");
+          route("community/messages", "modules/Community/CommunityMessages.page.tsx");
+          route("community/trainers", "modules/Community/CommunityTrainers.page.tsx");
           route("community/:postId", "modules/Community/CommunityPostDetail.page.tsx");
         });
         route("course/:courseId/lesson", "modules/Courses/Lesson/Lesson.layout.tsx", () => {
