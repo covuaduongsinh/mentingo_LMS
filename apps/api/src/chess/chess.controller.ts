@@ -17,6 +17,7 @@ import { CurrentUserType } from "src/common/types/current-user.type";
 import { QUEUE_NAMES, QueueService } from "src/queue";
 
 import { ChessAnalysisService } from "./chess-analysis.service";
+import { ChessInsightService } from "./chess-insight.service";
 import { ChessMatchService } from "./chess-match.service";
 import { ChessPuzzleService } from "./chess-puzzle.service";
 import { ChessStudyService } from "./chess-study.service";
@@ -27,6 +28,10 @@ import {
   chessAnalysisSessionSchema,
   type CreateChessAnalysisSessionBody,
 } from "./schemas/chess-analysis.schema";
+import {
+  chessInsightReportResponseSchema,
+  chessMatchInsightReportResponseSchema,
+} from "./schemas/chess-insight.schema";
 import {
   chessMatchSchema,
   chessSeekSchema,
@@ -110,6 +115,7 @@ export class ChessController {
     private readonly chessStudyService: ChessStudyService,
     private readonly chessPuzzleService: ChessPuzzleService,
     private readonly chessMatchService: ChessMatchService,
+    private readonly chessInsightService: ChessInsightService,
     private readonly queueService: QueueService,
   ) {}
 
@@ -732,5 +738,53 @@ export class ChessController {
   })
   async getMatch(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
     return new BaseResponse(await this.chessMatchService.getMatchState(user, id));
+  }
+
+  @Get("insight/report")
+  @RequirePermission(PERMISSIONS.CHESS_INSIGHT_READ)
+  @Validate({
+    response: baseResponse(chessInsightReportResponseSchema),
+  })
+  async getOwnInsightReport(@CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessInsightService.getReport(user, user.userId));
+  }
+
+  @Get("insight/users/:userId/report")
+  @RequirePermission(PERMISSIONS.CHESS_INSIGHT_READ)
+  @Validate({
+    request: [{ type: "param", name: "userId", schema: UUIDSchema }],
+    response: baseResponse(chessInsightReportResponseSchema),
+  })
+  async getUserInsightReport(
+    @Param("userId") userId: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.chessInsightService.getReport(user, userId));
+  }
+
+  @Get("insight/matches/:id/report")
+  @RequirePermission(PERMISSIONS.CHESS_MATCH_WATCH)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(chessMatchInsightReportResponseSchema),
+  })
+  async getMatchInsightReport(@Param("id") id: UUIDType) {
+    return new BaseResponse(await this.chessInsightService.getMatchReport(id));
+  }
+
+  @Post("insight/matches/:id/analyze")
+  @RequirePermission(PERMISSIONS.CHESS_INSIGHT_READ_ALL)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(Type.Object({ jobId: Type.String() })),
+  })
+  async requestMatchInsightAnalysis(
+    @Param("id") id: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    const job = await this.queueService
+      .getQueue(QUEUE_NAMES.CHESS_MATCH_INSIGHT_ANALYSIS)
+      .add("analyze-match", { tenantId: user.tenantId, matchId: id });
+    return new BaseResponse({ jobId: job.id ?? "" });
   }
 }

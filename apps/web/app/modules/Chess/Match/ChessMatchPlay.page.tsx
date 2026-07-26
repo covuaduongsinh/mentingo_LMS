@@ -1,4 +1,4 @@
-import { useParams } from "@remix-run/react";
+import { Link, useParams } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -164,6 +164,14 @@ export default function ChessMatchPlayPage() {
             <div className="rounded-md border border-neutral-200 bg-neutral-50 p-3 text-sm font-medium">
               {resultLabel}
             </div>
+          ) : null}
+
+          {isEnded ? (
+            <Button asChild variant="outline">
+              <Link to={`/chess/matches/${id}/insight`}>
+                {t("chess.match.viewInsight", { defaultValue: "View game analysis" })}
+              </Link>
+            </Button>
           ) : null}
 
           {role && role !== "viewer" && !isEnded ? (

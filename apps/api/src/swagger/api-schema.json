@@ -11951,6 +11951,104 @@
         }
       }
     },
+    "/api/chess/insight/report": {
+      "get": {
+        "operationId": "ChessController_getOwnInsightReport",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOwnInsightReportResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/insight/users/{userId}/report": {
+      "get": {
+        "operationId": "ChessController_getUserInsightReport",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserInsightReportResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/insight/matches/{id}/report": {
+      "get": {
+        "operationId": "ChessController_getMatchInsightReport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMatchInsightReportResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/insight/matches/{id}/analyze": {
+      "post": {
+        "operationId": "ChessController_requestMatchInsightAnalysis",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestMatchInsightAnalysisResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/chess/engine/status": {
       "get": {
         "operationId": "ChessEngineController_getStatus",
@@ -21371,6 +21469,14 @@
                         },
                         {
                           "const": "chess.learn.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.insight.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.insight.read_all",
                           "type": "string"
                         },
                         {
@@ -54272,6 +54378,904 @@
               "blackTimeRemainingMs",
               "drawOfferedByUserId",
               "moves"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetOwnInsightReportResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "hasData": {
+                "type": "boolean"
+              },
+              "overallAvgAccuracy": {
+                "type": "number"
+              },
+              "tenantAverageAccuracy": {
+                "type": "number"
+              },
+              "byPhase": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "phase": {
+                      "anyOf": [
+                        {
+                          "const": "opening",
+                          "type": "string"
+                        },
+                        {
+                          "const": "middlegame",
+                          "type": "string"
+                        },
+                        {
+                          "const": "endgame",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "moveCount": {
+                      "type": "number"
+                    },
+                    "avgAccuracy": {
+                      "type": "number"
+                    },
+                    "avgCentipawnLoss": {
+                      "type": "number"
+                    },
+                    "avgThinkTimeMs": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "phase",
+                    "moveCount",
+                    "avgAccuracy",
+                    "avgCentipawnLoss",
+                    "avgThinkTimeMs"
+                  ]
+                }
+              },
+              "byPieceType": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "pieceType": {
+                      "anyOf": [
+                        {
+                          "const": "pawn",
+                          "type": "string"
+                        },
+                        {
+                          "const": "knight",
+                          "type": "string"
+                        },
+                        {
+                          "const": "bishop",
+                          "type": "string"
+                        },
+                        {
+                          "const": "rook",
+                          "type": "string"
+                        },
+                        {
+                          "const": "queen",
+                          "type": "string"
+                        },
+                        {
+                          "const": "king",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "moveCount": {
+                      "type": "number"
+                    },
+                    "avgAccuracy": {
+                      "type": "number"
+                    },
+                    "avgCentipawnLoss": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "pieceType",
+                    "moveCount",
+                    "avgAccuracy",
+                    "avgCentipawnLoss"
+                  ]
+                }
+              },
+              "byOpening": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "openingKey": {
+                      "type": "string"
+                    },
+                    "gameCount": {
+                      "type": "number"
+                    },
+                    "avgAccuracy": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "openingKey",
+                    "gameCount",
+                    "avgAccuracy"
+                  ]
+                }
+              },
+              "weakPhases": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "strongPhases": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "weakPieceTypes": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "pawn",
+                      "type": "string"
+                    },
+                    {
+                      "const": "knight",
+                      "type": "string"
+                    },
+                    {
+                      "const": "bishop",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rook",
+                      "type": "string"
+                    },
+                    {
+                      "const": "queen",
+                      "type": "string"
+                    },
+                    {
+                      "const": "king",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "strongPieceTypes": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "pawn",
+                      "type": "string"
+                    },
+                    {
+                      "const": "knight",
+                      "type": "string"
+                    },
+                    {
+                      "const": "bishop",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rook",
+                      "type": "string"
+                    },
+                    {
+                      "const": "queen",
+                      "type": "string"
+                    },
+                    {
+                      "const": "king",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "weakOpenings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "strongOpenings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "timeManagement": {
+                "type": "object",
+                "properties": {
+                  "avgThinkTimeMsByPhase": {
+                    "type": "object",
+                    "properties": {
+                      "opening": {
+                        "type": "number"
+                      },
+                      "middlegame": {
+                        "type": "number"
+                      },
+                      "endgame": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "opening",
+                      "middlegame",
+                      "endgame"
+                    ]
+                  },
+                  "totalLossCount": {
+                    "type": "number"
+                  },
+                  "timeoutLossCount": {
+                    "type": "number"
+                  },
+                  "needsTimeManagementFocus": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "avgThinkTimeMsByPhase",
+                  "totalLossCount",
+                  "timeoutLossCount",
+                  "needsTimeManagementFocus"
+                ]
+              },
+              "recovery": {
+                "type": "object",
+                "properties": {
+                  "timesBehind": {
+                    "type": "number"
+                  },
+                  "recoveredCount": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "timesBehind",
+                  "recoveredCount"
+                ]
+              },
+              "conversion": {
+                "type": "object",
+                "properties": {
+                  "timesAhead": {
+                    "type": "number"
+                  },
+                  "failedToConvertCount": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "timesAhead",
+                  "failedToConvertCount"
+                ]
+              }
+            },
+            "required": [
+              "hasData",
+              "overallAvgAccuracy",
+              "tenantAverageAccuracy",
+              "byPhase",
+              "byPieceType",
+              "byOpening",
+              "weakPhases",
+              "strongPhases",
+              "weakPieceTypes",
+              "strongPieceTypes",
+              "weakOpenings",
+              "strongOpenings",
+              "timeManagement",
+              "recovery",
+              "conversion"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetUserInsightReportResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "hasData": {
+                "type": "boolean"
+              },
+              "overallAvgAccuracy": {
+                "type": "number"
+              },
+              "tenantAverageAccuracy": {
+                "type": "number"
+              },
+              "byPhase": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "phase": {
+                      "anyOf": [
+                        {
+                          "const": "opening",
+                          "type": "string"
+                        },
+                        {
+                          "const": "middlegame",
+                          "type": "string"
+                        },
+                        {
+                          "const": "endgame",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "moveCount": {
+                      "type": "number"
+                    },
+                    "avgAccuracy": {
+                      "type": "number"
+                    },
+                    "avgCentipawnLoss": {
+                      "type": "number"
+                    },
+                    "avgThinkTimeMs": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "phase",
+                    "moveCount",
+                    "avgAccuracy",
+                    "avgCentipawnLoss",
+                    "avgThinkTimeMs"
+                  ]
+                }
+              },
+              "byPieceType": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "pieceType": {
+                      "anyOf": [
+                        {
+                          "const": "pawn",
+                          "type": "string"
+                        },
+                        {
+                          "const": "knight",
+                          "type": "string"
+                        },
+                        {
+                          "const": "bishop",
+                          "type": "string"
+                        },
+                        {
+                          "const": "rook",
+                          "type": "string"
+                        },
+                        {
+                          "const": "queen",
+                          "type": "string"
+                        },
+                        {
+                          "const": "king",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "moveCount": {
+                      "type": "number"
+                    },
+                    "avgAccuracy": {
+                      "type": "number"
+                    },
+                    "avgCentipawnLoss": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "pieceType",
+                    "moveCount",
+                    "avgAccuracy",
+                    "avgCentipawnLoss"
+                  ]
+                }
+              },
+              "byOpening": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "openingKey": {
+                      "type": "string"
+                    },
+                    "gameCount": {
+                      "type": "number"
+                    },
+                    "avgAccuracy": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "openingKey",
+                    "gameCount",
+                    "avgAccuracy"
+                  ]
+                }
+              },
+              "weakPhases": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "strongPhases": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "weakPieceTypes": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "pawn",
+                      "type": "string"
+                    },
+                    {
+                      "const": "knight",
+                      "type": "string"
+                    },
+                    {
+                      "const": "bishop",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rook",
+                      "type": "string"
+                    },
+                    {
+                      "const": "queen",
+                      "type": "string"
+                    },
+                    {
+                      "const": "king",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "strongPieceTypes": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "pawn",
+                      "type": "string"
+                    },
+                    {
+                      "const": "knight",
+                      "type": "string"
+                    },
+                    {
+                      "const": "bishop",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rook",
+                      "type": "string"
+                    },
+                    {
+                      "const": "queen",
+                      "type": "string"
+                    },
+                    {
+                      "const": "king",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "weakOpenings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "strongOpenings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "timeManagement": {
+                "type": "object",
+                "properties": {
+                  "avgThinkTimeMsByPhase": {
+                    "type": "object",
+                    "properties": {
+                      "opening": {
+                        "type": "number"
+                      },
+                      "middlegame": {
+                        "type": "number"
+                      },
+                      "endgame": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "opening",
+                      "middlegame",
+                      "endgame"
+                    ]
+                  },
+                  "totalLossCount": {
+                    "type": "number"
+                  },
+                  "timeoutLossCount": {
+                    "type": "number"
+                  },
+                  "needsTimeManagementFocus": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "avgThinkTimeMsByPhase",
+                  "totalLossCount",
+                  "timeoutLossCount",
+                  "needsTimeManagementFocus"
+                ]
+              },
+              "recovery": {
+                "type": "object",
+                "properties": {
+                  "timesBehind": {
+                    "type": "number"
+                  },
+                  "recoveredCount": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "timesBehind",
+                  "recoveredCount"
+                ]
+              },
+              "conversion": {
+                "type": "object",
+                "properties": {
+                  "timesAhead": {
+                    "type": "number"
+                  },
+                  "failedToConvertCount": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "timesAhead",
+                  "failedToConvertCount"
+                ]
+              }
+            },
+            "required": [
+              "hasData",
+              "overallAvgAccuracy",
+              "tenantAverageAccuracy",
+              "byPhase",
+              "byPieceType",
+              "byOpening",
+              "weakPhases",
+              "strongPhases",
+              "weakPieceTypes",
+              "strongPieceTypes",
+              "weakOpenings",
+              "strongOpenings",
+              "timeManagement",
+              "recovery",
+              "conversion"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetMatchInsightReportResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "matchId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "moves": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "matchId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "ply": {
+                      "type": "number"
+                    },
+                    "phase": {
+                      "anyOf": [
+                        {
+                          "const": "opening",
+                          "type": "string"
+                        },
+                        {
+                          "const": "middlegame",
+                          "type": "string"
+                        },
+                        {
+                          "const": "endgame",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "pieceType": {
+                      "anyOf": [
+                        {
+                          "const": "pawn",
+                          "type": "string"
+                        },
+                        {
+                          "const": "knight",
+                          "type": "string"
+                        },
+                        {
+                          "const": "bishop",
+                          "type": "string"
+                        },
+                        {
+                          "const": "rook",
+                          "type": "string"
+                        },
+                        {
+                          "const": "queen",
+                          "type": "string"
+                        },
+                        {
+                          "const": "king",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "openingKey": {
+                      "type": "string"
+                    },
+                    "evaluationCpBefore": {
+                      "type": "number"
+                    },
+                    "evaluationCpAfter": {
+                      "type": "number"
+                    },
+                    "centipawnLoss": {
+                      "type": "number"
+                    },
+                    "accuracy": {
+                      "type": "number"
+                    },
+                    "moveQuality": {
+                      "anyOf": [
+                        {
+                          "const": "best",
+                          "type": "string"
+                        },
+                        {
+                          "const": "good",
+                          "type": "string"
+                        },
+                        {
+                          "const": "inaccuracy",
+                          "type": "string"
+                        },
+                        {
+                          "const": "mistake",
+                          "type": "string"
+                        },
+                        {
+                          "const": "blunder",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "thinkTimeMs": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "matchId",
+                    "userId",
+                    "ply",
+                    "phase",
+                    "pieceType",
+                    "openingKey",
+                    "evaluationCpBefore",
+                    "evaluationCpAfter",
+                    "centipawnLoss",
+                    "accuracy",
+                    "moveQuality",
+                    "thinkTimeMs"
+                  ]
+                }
+              },
+              "white": {
+                "type": "object",
+                "properties": {
+                  "moveCount": {
+                    "type": "number"
+                  },
+                  "avgAccuracy": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "blunders": {
+                    "type": "number"
+                  },
+                  "mistakes": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "moveCount",
+                  "avgAccuracy",
+                  "blunders",
+                  "mistakes"
+                ]
+              },
+              "black": {
+                "type": "object",
+                "properties": {
+                  "moveCount": {
+                    "type": "number"
+                  },
+                  "avgAccuracy": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "blunders": {
+                    "type": "number"
+                  },
+                  "mistakes": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "moveCount",
+                  "avgAccuracy",
+                  "blunders",
+                  "mistakes"
+                ]
+              }
+            },
+            "required": [
+              "matchId",
+              "moves",
+              "white",
+              "black"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RequestMatchInsightAnalysisResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "jobId": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "jobId"
             ]
           }
         },

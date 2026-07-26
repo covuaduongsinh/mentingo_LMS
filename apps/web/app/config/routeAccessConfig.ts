@@ -216,6 +216,12 @@ export const routeAccessConfig = createRouteConfig({
   "chess/matches/:id": {
     anyOf: [PERMISSIONS.CHESS_MATCH_PLAY, PERMISSIONS.CHESS_MATCH_WATCH],
   },
+  "chess/matches/:id/insight": {
+    anyOf: [PERMISSIONS.CHESS_MATCH_PLAY, PERMISSIONS.CHESS_MATCH_WATCH],
+  },
+  "chess/insight": {
+    anyOf: [PERMISSIONS.CHESS_INSIGHT_READ],
+  },
   "chess/tournaments/:id": {
     anyOf: [PERMISSIONS.CHESS_TOURNAMENT_READ],
   },

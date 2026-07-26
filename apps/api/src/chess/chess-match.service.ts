@@ -27,6 +27,8 @@ import type { UUIDType } from "src/common";
 import type { CurrentUserType } from "src/common/types/current-user.type";
 
 const SEEK_EXPIRY_MS = 5 * 60 * 1000;
+/** Skip Insight analysis for near-empty games (e.g. immediate abandonment). */
+const MIN_MOVES_FOR_INSIGHT_ANALYSIS = 2;
 
 function timeControlBaseMs(timeControlId: string): number {
   const control = CHESS_MATCH_TIME_CONTROL_LIST.find((entry) => entry.id === timeControlId);
@@ -347,6 +349,13 @@ export class ChessMatchService {
 
     if (match.rated) {
       await this.updateRatingsForMatch(match, result);
+    }
+
+    const moveCount = await this.repository.getMoveCount(matchId);
+    if (moveCount >= MIN_MOVES_FOR_INSIGHT_ANALYSIS) {
+      await this.queueService
+        .getQueue(QUEUE_NAMES.CHESS_MATCH_INSIGHT_ANALYSIS)
+        .add("analyze-match", { tenantId: match.tenantId, matchId });
     }
 
     return {

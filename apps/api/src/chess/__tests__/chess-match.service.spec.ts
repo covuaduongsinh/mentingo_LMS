@@ -101,6 +101,7 @@ describe("ChessMatchService", () => {
       repository,
       puzzleRepository,
       queue,
+      queueService,
     };
   };
 
@@ -249,6 +250,26 @@ describe("ChessMatchService", () => {
       await expect(service.resign(buildUser(OTHER_ID), MATCH_ID)).rejects.toThrow(
         ForbiddenException,
       );
+    });
+
+    it("queues Insight analysis when the game had enough moves", async () => {
+      const { service, queueService } = buildService({
+        getMoveCount: jest.fn().mockResolvedValue(10),
+      });
+
+      await service.resign(buildUser(WHITE_ID), MATCH_ID);
+
+      expect(queueService.getQueue).toHaveBeenCalledWith("chess-match-insight-analysis");
+    });
+
+    it("does not queue Insight analysis for a near-empty game", async () => {
+      const { service, queueService } = buildService({
+        getMoveCount: jest.fn().mockResolvedValue(1),
+      });
+
+      await service.resign(buildUser(WHITE_ID), MATCH_ID);
+
+      expect(queueService.getQueue).not.toHaveBeenCalledWith("chess-match-insight-analysis");
     });
 
     it("updates both players' ratings for a rated match", async () => {
