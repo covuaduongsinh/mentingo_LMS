@@ -587,6 +587,78 @@ export const communityVotes = pgTable(
   })),
 );
 
+/** Canonically ordered pair (userAId < userBId as text) so a 1-1 DM thread is never duplicated. */
+export const communityConversations = pgTable(
+  "community_conversations",
+  {
+    ...id,
+    ...timestamps,
+    userAId: uuid("user_a_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    userBId: uuid("user_b_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    lastMessageAt: timestamp("last_message_at", { withTimezone: true }).notNull().defaultNow(),
+    tenantId,
+  },
+  withTenantIdIndex("community_conversations", (table) => ({
+    pairUniqueIdx: uniqueIndex("community_conversations_pair_unique_idx").on(
+      table.userAId,
+      table.userBId,
+    ),
+    userAIdx: index("community_conversations_user_a_id_idx").on(table.userAId),
+    userBIdx: index("community_conversations_user_b_id_idx").on(table.userBId),
+  })),
+);
+
+export const communityMessages = pgTable(
+  "community_messages",
+  {
+    ...id,
+    ...timestamps,
+    conversationId: uuid("conversation_id")
+      .references(() => communityConversations.id, { onDelete: "cascade" })
+      .notNull(),
+    senderId: uuid("sender_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    content: text("content").notNull(),
+    readAt: timestamp("read_at", { withTimezone: true }),
+    tenantId,
+  },
+  withTenantIdIndex("community_messages", (table) => ({
+    conversationIdx: index("community_messages_conversation_id_idx").on(table.conversationId),
+  })),
+);
+
+/** `relationshipType` is a plain varchar ('follow' | 'block'), matching the existing
+ * community_posts.label / community_votes.target_type convention (no `$type<>` branding). */
+export const communityUserRelationships = pgTable(
+  "community_user_relationships",
+  {
+    ...id,
+    ...timestamps,
+    actorUserId: uuid("actor_user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    targetUserId: uuid("target_user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    relationshipType: varchar("relationship_type", { length: 10 }).notNull(),
+    tenantId,
+  },
+  withTenantIdIndex("community_user_relationships", (table) => ({
+    uniqueIdx: uniqueIndex("community_user_relationships_unique_idx").on(
+      table.actorUserId,
+      table.targetUserId,
+      table.relationshipType,
+    ),
+    actorIdx: index("community_user_relationships_actor_id_idx").on(table.actorUserId),
+    targetIdx: index("community_user_relationships_target_id_idx").on(table.targetUserId),
+  })),
+);
+
 export const calendarEvents = pgTable(
   "calendar_events",
   {

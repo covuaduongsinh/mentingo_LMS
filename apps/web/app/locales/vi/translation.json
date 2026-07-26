@@ -1742,7 +1742,29 @@
       "postLocked": "Bài đăng này đã bị khóa.",
       "blockedWordDetected": "Bài đăng của bạn chứa từ ngữ không được phép.",
       "maxPostsPerDayReached": "Bạn đã đạt hạn mức đăng bài trong ngày. Vui lòng thử lại vào ngày mai.",
-      "generic": "Đã xảy ra lỗi. Vui lòng thử lại."
+      "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
+      "cannotMessageSelf": "Bạn không thể tự nhắn tin cho chính mình.",
+      "cannotFollowSelf": "Bạn không thể tự theo dõi chính mình.",
+      "cannotBlockSelf": "Bạn không thể tự chặn chính mình.",
+      "userBlocked": "Bạn không thể nhắn tin cho người này.",
+      "kidModeNotClassmates": "Tài khoản do giáo viên quản lý chỉ liên hệ được với bạn cùng lớp.",
+      "notAConversationParticipant": "Bạn không thuộc hội thoại này.",
+      "messageSendFailed": "Không thể gửi tin nhắn"
+    },
+    "messages": {
+      "title": "Tin nhắn",
+      "conversations": "Hội thoại",
+      "noConversations": "Chưa có hội thoại nào.",
+      "startNew": "Bắt đầu hội thoại mới",
+      "noContacts": "Chưa có gợi ý liên hệ nào.",
+      "selectPrompt": "Chọn một hội thoại hoặc một liên hệ để bắt đầu trò chuyện.",
+      "placeholder": "Nhập tin nhắn…",
+      "send": "Gửi"
+    },
+    "trainers": {
+      "title": "Danh bạ HLV",
+      "subtitle": "Các HLV đã bật hồ sơ công khai trong trường/CLB của bạn.",
+      "empty": "Chưa có hồ sơ HLV công khai nào."
     }
   },
   "publicProfileView": {
@@ -1762,7 +1784,17 @@
       "usernamePlaceholder": "ten-nguoi-dung",
       "bio": "Giới thiệu",
       "enablePublicProfile": "Công khai hồ sơ của tôi"
-    }
+    },
+    "actions": {
+      "follow": "Theo dõi",
+      "unfollow": "Bỏ theo dõi",
+      "message": "Nhắn tin",
+      "block": "Chặn",
+      "unblock": "Bỏ chặn",
+      "send": "Gửi"
+    },
+    "messagePlaceholder": "Nhập tin nhắn…",
+    "messageSent": "Đã gửi tin nhắn"
   },
   "adminStatisticsView": {
     "header": "Chào mừng trở lại,",
@@ -4682,6 +4714,8 @@
     "chessMatchPlay": "Ván đấu cờ vua",
     "chessMatchInsight": "Phân tích ván đấu",
     "chessInsightDashboard": "Phân tích điểm mạnh-yếu",
+    "communityMessages": "Tin nhắn",
+    "communityTrainers": "Danh bạ HLV",
     "chessClassManagement": "Quản lý lớp cờ",
     "chessClassLogin": "Đăng nhập bằng mã lớp",
     "chessTournamentCreate": "Tạo giải đấu cờ",

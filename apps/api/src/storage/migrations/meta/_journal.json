@@ -1380,6 +1380,20 @@
       "when": 1785094386285,
       "tag": "0196_enable_chess_game_insights_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 197,
+      "version": "7",
+      "when": 1785099894418,
+      "tag": "0197_add_community_social",
+      "breakpoints": true
+    },
+    {
+      "idx": 198,
+      "version": "7",
+      "when": 1785099894419,
+      "tag": "0198_enable_community_social_rls",
+      "breakpoints": true
     }
   ]
 }

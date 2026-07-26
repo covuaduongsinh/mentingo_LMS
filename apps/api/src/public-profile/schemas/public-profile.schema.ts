@@ -1,8 +1,11 @@
 import { Type } from "@sinclair/typebox";
 
+import { UUIDSchema } from "src/common";
+
 import type { Static } from "@sinclair/typebox";
 
 export const publicProfileSchema = Type.Object({
+  userId: UUIDSchema,
   username: Type.String(),
   firstName: Type.String(),
   lastName: Type.String(),

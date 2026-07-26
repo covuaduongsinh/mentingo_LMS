@@ -59,6 +59,7 @@ describe("PublicProfileService", () => {
       const result = await service.getPublicProfile("ada");
 
       expect(result).toEqual({
+        userId: USER_ID,
         username: "ada",
         firstName: "Ada",
         lastName: "Lovelace",

@@ -181,6 +181,22 @@ export const getNavigationConfig = (
             anyOf: [PERMISSIONS.CHESS_INSIGHT_READ],
           },
         },
+        {
+          label: t("communityView.messages.title", { defaultValue: "Messages" }),
+          path: "community/messages",
+          iconName: "Quiz",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.COMMUNITY_MESSAGE_SEND],
+          },
+        },
+        {
+          label: t("communityView.trainers.title", { defaultValue: "Trainer directory" }),
+          path: "community/trainers",
+          iconName: "Course",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.COMMUNITY_READ],
+          },
+        },
       ],
     },
     ...(isAnyContentFeatureEnabled

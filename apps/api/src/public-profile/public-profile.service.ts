@@ -30,6 +30,7 @@ export class PublicProfileService {
       : null;
 
     return {
+      userId: profile.userId,
       username: profile.username as string,
       firstName: profile.firstName,
       lastName: profile.lastName,
