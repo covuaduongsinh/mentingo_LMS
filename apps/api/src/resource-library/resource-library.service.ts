@@ -17,10 +17,14 @@ import {
 
 import type {
   AssetLibraryAsset,
+  CreateFolderBody,
   LinkAssetBody,
+  MoveAssetResponse,
+  ResourceFolder,
   ResourceLibraryAssetType,
   RichTextAssetEntityType,
   UnlinkAssetBody,
+  UpdateFolderBody,
   UploadAssetBody,
 } from "./schemas/resource-library.schema";
 import type { Pagination, UUIDType } from "src/common";
@@ -40,6 +44,7 @@ export class ResourceLibraryService {
     search?: string;
     type?: ResourceLibraryAssetType;
     language?: SupportedLanguages;
+    folderId?: string;
   }): Promise<{
     data: AssetLibraryAsset[];
     pagination: Pagination;
@@ -53,6 +58,7 @@ export class ResourceLibraryService {
       search: params.search,
       type: params.type,
       language: params.language,
+      folderId: params.folderId,
     });
 
     return {
@@ -214,6 +220,92 @@ export class ResourceLibraryService {
         ([, localizedContent]) => localizedContent,
       ),
     });
+  }
+
+  async listFolders(parentFolderId?: UUIDType | null): Promise<ResourceFolder[]> {
+    if (parentFolderId) await this.assertFolderExists(parentFolderId);
+
+    const rows = await this.resourceLibraryRepository.listFolders(parentFolderId ?? null);
+
+    return Promise.all(
+      rows.map(async (folder) => ({
+        id: folder.id,
+        name: folder.name,
+        parentFolderId: folder.parentFolderId,
+        color: folder.color as ResourceFolder["color"],
+        coverResourceId: folder.coverResourceId,
+        coverResourceUrl: folder.coverReference
+          ? await this.fileService.getFileUrl(folder.coverReference)
+          : null,
+        displayOrder: folder.displayOrder,
+        childFolderCount: folder.childFolderCount,
+        assetCount: folder.assetCount,
+        createdAt: folder.createdAt,
+      })),
+    );
+  }
+
+  async createFolder(body: CreateFolderBody) {
+    if (body.parentFolderId) await this.assertFolderExists(body.parentFolderId);
+    if (body.coverResourceId) await this.assertAssetExists(body.coverResourceId);
+
+    return this.resourceLibraryRepository.createFolder(body);
+  }
+
+  async updateFolder(id: UUIDType, body: UpdateFolderBody) {
+    await this.assertFolderExists(id);
+
+    if (body.coverResourceId) await this.assertAssetExists(body.coverResourceId);
+
+    if (body.parentFolderId !== undefined && body.parentFolderId !== null) {
+      if (body.parentFolderId === id) {
+        throw new BadRequestException("resourceLibrary.error.folderCycleDetected");
+      }
+
+      await this.assertFolderExists(body.parentFolderId);
+
+      const ancestorChain = await this.resourceLibraryRepository.getFolderAncestorChain(
+        body.parentFolderId,
+      );
+
+      if (ancestorChain.includes(id)) {
+        throw new BadRequestException("resourceLibrary.error.folderCycleDetected");
+      }
+    }
+
+    await this.resourceLibraryRepository.updateFolder(id, body);
+
+    return { id };
+  }
+
+  async deleteFolder(id: UUIDType) {
+    await this.assertFolderExists(id);
+
+    const isEmpty = await this.resourceLibraryRepository.isFolderEmpty(id);
+
+    if (!isEmpty) {
+      throw new BadRequestException("resourceLibrary.error.folderNotEmpty");
+    }
+
+    await this.resourceLibraryRepository.deleteFolder(id);
+
+    return { message: "resourceLibrary.toast.folderDeletedSuccessfully" };
+  }
+
+  async moveAsset(resourceId: UUIDType, folderId: UUIDType | null): Promise<MoveAssetResponse> {
+    await this.assertAssetExists(resourceId);
+
+    if (folderId) await this.assertFolderExists(folderId);
+
+    await this.resourceLibraryRepository.moveAsset(resourceId, folderId);
+
+    return { resourceId, folderId };
+  }
+
+  private async assertFolderExists(folderId: UUIDType) {
+    const exists = await this.resourceLibraryRepository.folderExists(folderId);
+
+    if (!exists) throw new NotFoundException("resourceLibrary.error.folderNotFound");
   }
 
   private async assertAssetExists(resourceId: UUIDType) {

@@ -134,12 +134,16 @@
   },
   "resourceLibrary": {
     "toast": {
-      "assetDeletedSuccessfully": "Ressource erfolgreich gelöscht"
+      "assetDeletedSuccessfully": "Ressource erfolgreich gelöscht",
+      "folderDeletedSuccessfully": "Ordner erfolgreich gelöscht"
     },
     "error": {
       "fileRequired": "Datei ist erforderlich",
       "assetNotFound": "Ressource nicht gefunden",
-      "entityNotFound": "Entität nicht gefunden"
+      "entityNotFound": "Entität nicht gefunden",
+      "folderNotFound": "Ordner nicht gefunden",
+      "folderCycleDetected": "Ein Ordner kann nicht in sich selbst oder einen seiner Unterordner verschoben werden",
+      "folderNotEmpty": "Nur leere Ordner können gelöscht werden. Verschieben oder entfernen Sie zuerst den Inhalt."
     }
   },
   "adminCourseDuplication": {
@@ -3983,7 +3987,30 @@
         "noUsages": "No usages were found."
       },
       "usageCount_one": "{{count}} usage",
-      "usageCount_other": "{{count}} usages"
+      "usageCount_other": "{{count}} usages",
+      "folder": {
+        "root": "Bibliothek",
+        "new": "Neuer Ordner",
+        "nameLabel": "Ordnername",
+        "namePlaceholder": "z. B. Bilder Kapitel 1",
+        "colorLabel": "Farbe",
+        "create": "Ordner erstellen",
+        "actions": "Ordneraktionen",
+        "delete": "Ordner löschen",
+        "moveTo": "Verschieben nach...",
+        "itemCount_one": "{{count}} Element",
+        "itemCount_other": "{{count}} Elemente",
+        "colors": {
+          "neutral": "Neutral",
+          "red": "Rot",
+          "orange": "Orange",
+          "yellow": "Gelb",
+          "green": "Grün",
+          "blue": "Blau",
+          "purple": "Lila",
+          "pink": "Pink"
+        }
+      }
     }
   },
   "pages": {

@@ -5,12 +5,15 @@ import { useTranslation } from "react-i18next";
 
 import { useInitVideoUpload } from "~/api/mutations/admin/useInitVideoUpload";
 import { useDeleteResourceLibraryAsset } from "~/api/mutations/useDeleteResourceLibraryAsset";
+import { useDeleteResourceLibraryFolder } from "~/api/mutations/useDeleteResourceLibraryFolder";
+import { useMoveResourceLibraryAsset } from "~/api/mutations/useMoveResourceLibraryAsset";
 import { useUploadResourceLibraryAsset } from "~/api/mutations/useUploadResourceLibraryAsset";
 import {
   RESOURCE_LIBRARY_ASSETS_QUERY_KEY,
   useResourceLibraryAssets,
 } from "~/api/queries/useResourceLibraryAssets";
 import { useResourceLibraryAssetUsages } from "~/api/queries/useResourceLibraryAssetUsages";
+import { useResourceLibraryFolders } from "~/api/queries/useResourceLibraryFolders";
 import { queryClient } from "~/api/queryClient";
 import { getTranslatedApiErrorMessage } from "~/api/utils/getTranslatedApiErrorMessage";
 import { Pagination } from "~/components/Pagination/Pagination";
@@ -39,11 +42,16 @@ import {
   richTextResourceTypeNeedsDisplayMode,
 } from "./assetLibrary.utils";
 import { AssetLibraryAssetList } from "./AssetLibraryAssetList";
+import { AssetLibraryBreadcrumb } from "./AssetLibraryBreadcrumb";
 import { AssetLibraryDeleteConfirmation } from "./AssetLibraryDeleteConfirmation";
+import { AssetLibraryFolderGrid } from "./AssetLibraryFolderGrid";
+import { AssetLibraryNewFolderPopover } from "./AssetLibraryNewFolderPopover";
 
+import type { AssetLibraryFolderPathEntry } from "./AssetLibraryBreadcrumb";
 import type { SupportedLanguages } from "@repo/shared";
 import type { Editor } from "@tiptap/react";
 import type { ResourceLibraryAsset } from "~/api/queries/useResourceLibraryAssets";
+import type { ResourceLibraryFolder } from "~/api/queries/useResourceLibraryFolders";
 import type { RichTextResourceDisplayMode } from "~/components/RichText/utils/richTextResource.types";
 import type { RichTextResourceLibraryEntityType } from "~/types/resourceLibrary";
 
@@ -77,10 +85,12 @@ export const AssetLibraryDialog = ({
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [assetToDelete, setAssetToDelete] = useState<ResourceLibraryAsset | null>(null);
+  const [folderPath, setFolderPath] = useState<AssetLibraryFolderPathEntry[]>([]);
   const debouncedSearch = useDebounce(search, 300);
   const { askForDisplayMode, dialog: uploadDisplayModeDialog } = useUploadDisplayModeDialog();
 
   const { entityId, contextId, entityType, language } = config;
+  const currentFolderId = folderPath.length ? folderPath[folderPath.length - 1].id : null;
 
   const { data: assetsResponse, isLoading: isLoadingAssets } = useResourceLibraryAssets(
     {
@@ -88,9 +98,14 @@ export const AssetLibraryDialog = ({
       perPage: PER_PAGE,
       search: debouncedSearch || undefined,
       language,
+      folderId: debouncedSearch ? undefined : (currentFolderId ?? "root"),
     },
     { enabled: open && !assetToDelete },
   );
+
+  const { data: foldersResponse } = useResourceLibraryFolders(currentFolderId ?? undefined, {
+    enabled: open && !assetToDelete && !debouncedSearch,
+  });
 
   const { data: usagesResponse, isLoading: isLoadingUsages } = useResourceLibraryAssetUsages(
     { id: assetToDelete?.id, language },
@@ -101,12 +116,15 @@ export const AssetLibraryDialog = ({
   const { getSessionForFile, uploadVideo, isUploading: isUploadingVideo } = useTusVideoUpload();
   const { mutateAsync: uploadAsset, isPending: isUploadingAsset } = useUploadResourceLibraryAsset();
   const { mutateAsync: deleteAsset, isPending: isDeletingAsset } = useDeleteResourceLibraryAsset();
+  const { mutateAsync: deleteFolder } = useDeleteResourceLibraryFolder();
+  const { mutateAsync: moveAsset } = useMoveResourceLibraryAsset();
 
   const hasEntity = Boolean(entityId);
   const canUseLibrary = Boolean(entityId || contextId);
   const canUploadToLibrary = canUseLibrary;
   const canInsertAsset = canUseLibrary;
   const assets = assetsResponse?.data ?? [];
+  const folders = foldersResponse?.data ?? [];
   const usages = usagesResponse?.data ?? [];
   const totalAssets = assetsResponse?.pagination.totalItems ?? 0;
   const isUploadingToLibrary = isUploadingAsset || isInitializingVideoUpload || isUploadingVideo;
@@ -114,13 +132,37 @@ export const AssetLibraryDialog = ({
   const isMutating =
     isUploadingAsset || isDeletingAsset || isInitializingVideoUpload || isUploadingVideo;
 
+  const moveTargets = [
+    ...(currentFolderId ? [{ id: null, name: t("richText.assetLibrary.folder.root") }] : []),
+    ...folders.map((folder) => ({ id: folder.id, name: folder.name })),
+  ];
+
   const resetDialog = (nextOpen: boolean) => {
     if (!nextOpen) {
       setAssetToDelete(null);
       setSearch("");
       setPage(1);
+      setFolderPath([]);
     }
     onOpenChange(nextOpen);
+  };
+
+  const handleOpenFolder = (folder: ResourceLibraryFolder) => {
+    setFolderPath((path) => [...path, { id: folder.id, name: folder.name }]);
+    setPage(1);
+  };
+
+  const handleNavigateBreadcrumb = (depth: number) => {
+    setFolderPath((path) => path.slice(0, depth));
+    setPage(1);
+  };
+
+  const handleDeleteFolder = async (folder: ResourceLibraryFolder) => {
+    await deleteFolder(folder.id);
+  };
+
+  const handleMoveAsset = async (asset: ResourceLibraryAsset, folderId: string | null) => {
+    await moveAsset({ id: asset.id, folderId });
   };
 
   const getDisplayMode = async (
@@ -292,6 +334,10 @@ export const AssetLibraryDialog = ({
                   accept={acceptedFileTypes.join(",")}
                   onChange={(event) => void handleUpload(event)}
                 />
+                <AssetLibraryNewFolderPopover
+                  parentFolderId={currentFolderId}
+                  disabled={!canUploadToLibrary}
+                />
                 <Button
                   data-testid={RICH_TEXT_HANDLES.ASSET_LIBRARY_UPLOAD_BUTTON}
                   type="button"
@@ -307,14 +353,29 @@ export const AssetLibraryDialog = ({
                     : t("richText.assetLibrary.upload")}
                 </Button>
               </div>
+              {!debouncedSearch && (
+                <>
+                  <AssetLibraryBreadcrumb path={folderPath} onNavigate={handleNavigateBreadcrumb} />
+                  <AssetLibraryFolderGrid
+                    folders={folders}
+                    isMutating={isMutating}
+                    onOpenFolder={handleOpenFolder}
+                    onDeleteFolder={(folder) => void handleDeleteFolder(folder)}
+                  />
+                </>
+              )}
               <AssetLibraryAssetList
                 assets={assets}
                 isLoading={isLoadingAssets}
                 canInsert={canInsertAsset}
                 canDelete={hasEntity}
                 isMutating={isMutating}
+                moveTargets={moveTargets}
                 onInsert={(asset) => void handleInsert(asset)}
                 onDelete={setAssetToDelete}
+                onMove={
+                  hasEntity ? (asset, folderId) => void handleMoveAsset(asset, folderId) : undefined
+                }
               />
               <Pagination
                 className="px-0"

@@ -134,12 +134,16 @@
   },
   "resourceLibrary": {
     "toast": {
-      "assetDeletedSuccessfully": "Išteklius sėkmingai ištrintas"
+      "assetDeletedSuccessfully": "Išteklius sėkmingai ištrintas",
+      "folderDeletedSuccessfully": "Aplankas sėkmingai ištrintas"
     },
     "error": {
       "fileRequired": "Failas yra būtinas",
       "assetNotFound": "Išteklius nerastas",
-      "entityNotFound": "Subjektas nerastas"
+      "entityNotFound": "Subjektas nerastas",
+      "folderNotFound": "Aplankas nerastas",
+      "folderCycleDetected": "Aplanko negalima perkelti į patį save ar į vieną iš jo poaplankių",
+      "folderNotEmpty": "Galima trinti tik tuščius aplankus. Pirmiausia perkelkite arba pašalinkite jo turinį."
     }
   },
   "adminCourseDuplication": {
@@ -3986,7 +3990,31 @@
       },
       "usageCount_one": "{{count}} panaudojimas",
       "usageCount_few": "{{count}} panaudojimai",
-      "usageCount_other": "{{count}} panaudojimų"
+      "usageCount_other": "{{count}} panaudojimų",
+      "folder": {
+        "root": "Biblioteka",
+        "new": "Naujas aplankas",
+        "nameLabel": "Aplanko pavadinimas",
+        "namePlaceholder": "pvz., 1 skyriaus paveikslėliai",
+        "colorLabel": "Spalva",
+        "create": "Sukurti aplanką",
+        "actions": "Aplanko veiksmai",
+        "delete": "Ištrinti aplanką",
+        "moveTo": "Perkelti į...",
+        "itemCount_one": "{{count}} elementas",
+        "itemCount_few": "{{count}} elementai",
+        "itemCount_other": "{{count}} elementų",
+        "colors": {
+          "neutral": "Neutrali",
+          "red": "Raudona",
+          "orange": "Oranžinė",
+          "yellow": "Geltona",
+          "green": "Žalia",
+          "blue": "Mėlyna",
+          "purple": "Violetinė",
+          "pink": "Rožinė"
+        }
+      }
     }
   },
   "pages": {

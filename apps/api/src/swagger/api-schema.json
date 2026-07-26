@@ -8351,6 +8351,14 @@
                 }
               ]
             }
+          },
+          {
+            "name": "folderId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -8359,6 +8367,157 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetAssetsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/resource-library/folders": {
+      "get": {
+        "operationId": "ResourceLibraryController_listFolders",
+        "parameters": [
+          {
+            "name": "parentFolderId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListFoldersResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "ResourceLibraryController_createFolder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFolderBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateFolderResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/resource-library/folders/{id}": {
+      "patch": {
+        "operationId": "ResourceLibraryController_updateFolder",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFolderBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateFolderResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "ResourceLibraryController_deleteFolder",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteFolderResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/resource-library/assets/{id}/move": {
+      "patch": {
+        "operationId": "ResourceLibraryController_moveAsset",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveAssetBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveAssetResponse"
                 }
               }
             }
@@ -39960,6 +40119,17 @@
                     }
                   ]
                 },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "createdAt": {
                   "format": "date-time",
                   "type": "string"
@@ -39978,6 +40148,7 @@
                 "originalFilename",
                 "reference",
                 "uploadedBy",
+                "folderId",
                 "createdAt",
                 "usageCount"
               ]
@@ -40012,6 +40183,374 @@
         "required": [
           "data",
           "pagination"
+        ]
+      },
+      "ListFoldersResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "parentFolderId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "color": {
+                  "anyOf": [
+                    {
+                      "const": "neutral",
+                      "type": "string"
+                    },
+                    {
+                      "const": "red",
+                      "type": "string"
+                    },
+                    {
+                      "const": "orange",
+                      "type": "string"
+                    },
+                    {
+                      "const": "yellow",
+                      "type": "string"
+                    },
+                    {
+                      "const": "green",
+                      "type": "string"
+                    },
+                    {
+                      "const": "blue",
+                      "type": "string"
+                    },
+                    {
+                      "const": "purple",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pink",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "coverResourceId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "coverResourceUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "displayOrder": {
+                  "type": "number"
+                },
+                "childFolderCount": {
+                  "type": "number"
+                },
+                "assetCount": {
+                  "type": "number"
+                },
+                "createdAt": {
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "parentFolderId",
+                "color",
+                "coverResourceId",
+                "coverResourceUrl",
+                "displayOrder",
+                "childFolderCount",
+                "assetCount",
+                "createdAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateFolderBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "maxLength": 255,
+            "type": "string"
+          },
+          "parentFolderId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "color": {
+            "anyOf": [
+              {
+                "const": "neutral",
+                "type": "string"
+              },
+              {
+                "const": "red",
+                "type": "string"
+              },
+              {
+                "const": "orange",
+                "type": "string"
+              },
+              {
+                "const": "yellow",
+                "type": "string"
+              },
+              {
+                "const": "green",
+                "type": "string"
+              },
+              {
+                "const": "blue",
+                "type": "string"
+              },
+              {
+                "const": "purple",
+                "type": "string"
+              },
+              {
+                "const": "pink",
+                "type": "string"
+              }
+            ]
+          },
+          "coverResourceId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateFolderResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateFolderBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "maxLength": 255,
+            "type": "string"
+          },
+          "parentFolderId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "color": {
+            "anyOf": [
+              {
+                "const": "neutral",
+                "type": "string"
+              },
+              {
+                "const": "red",
+                "type": "string"
+              },
+              {
+                "const": "orange",
+                "type": "string"
+              },
+              {
+                "const": "yellow",
+                "type": "string"
+              },
+              {
+                "const": "green",
+                "type": "string"
+              },
+              {
+                "const": "blue",
+                "type": "string"
+              },
+              {
+                "const": "purple",
+                "type": "string"
+              },
+              {
+                "const": "pink",
+                "type": "string"
+              }
+            ]
+          },
+          "coverResourceId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "displayOrder": {
+            "type": "number"
+          }
+        }
+      },
+      "UpdateFolderResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "DeleteFolderResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "MoveAssetBody": {
+        "type": "object",
+        "properties": {
+          "folderId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "folderId"
+        ]
+      },
+      "MoveAssetResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "resourceId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "folderId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "resourceId",
+              "folderId"
+            ]
+          }
+        },
+        "required": [
+          "data"
         ]
       },
       "GetAssetUsagesResponse": {

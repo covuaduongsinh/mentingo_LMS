@@ -4317,6 +4317,7 @@ export interface GetAssetsResponse {
     reference: string;
     videoProvider?: "self" | "youtube" | "vimeo" | "bunny" | "unknown";
     uploadedBy: string | null;
+    folderId: string | null;
     /** @format date-time */
     createdAt: string;
     usageCount: number;
@@ -4327,6 +4328,78 @@ export interface GetAssetsResponse {
     perPage: number;
   };
   appliedFilters?: object;
+}
+
+export interface ListFoldersResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    parentFolderId: string | null;
+    color: "neutral" | "red" | "orange" | "yellow" | "green" | "blue" | "purple" | "pink";
+    coverResourceId: string | null;
+    coverResourceUrl: string | null;
+    displayOrder: number;
+    childFolderCount: number;
+    assetCount: number;
+    /** @format date-time */
+    createdAt: string;
+  }[];
+}
+
+export interface CreateFolderBody {
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  name: string;
+  parentFolderId?: string | null;
+  color?: "neutral" | "red" | "orange" | "yellow" | "green" | "blue" | "purple" | "pink";
+  coverResourceId?: string | null;
+}
+
+export interface CreateFolderResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+  };
+}
+
+export interface UpdateFolderBody {
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  name?: string;
+  parentFolderId?: string | null;
+  color?: "neutral" | "red" | "orange" | "yellow" | "green" | "blue" | "purple" | "pink";
+  coverResourceId?: string | null;
+  displayOrder?: number;
+}
+
+export interface UpdateFolderResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+  };
+}
+
+export interface DeleteFolderResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface MoveAssetBody {
+  folderId: string | null;
+}
+
+export interface MoveAssetResponse {
+  data: {
+    /** @format uuid */
+    resourceId: string;
+    folderId: string | null;
+  };
 }
 
 export interface GetAssetUsagesResponse {
@@ -13522,6 +13595,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         type?: "image" | "video" | "pdf" | "presentation" | "document" | "other";
         /** @default "en" */
         language?: "en" | "pl" | "de" | "lt" | "cs" | "es" | "vi";
+        folderId?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -13529,6 +13603,97 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/resource-library/assets`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ResourceLibraryControllerListFolders
+     * @request GET:/api/resource-library/folders
+     */
+    resourceLibraryControllerListFolders: (
+      query?: {
+        /** @format uuid */
+        parentFolderId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ListFoldersResponse, any>({
+        path: `/api/resource-library/folders`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ResourceLibraryControllerCreateFolder
+     * @request POST:/api/resource-library/folders
+     */
+    resourceLibraryControllerCreateFolder: (data: CreateFolderBody, params: RequestParams = {}) =>
+      this.request<CreateFolderResponse, any>({
+        path: `/api/resource-library/folders`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ResourceLibraryControllerUpdateFolder
+     * @request PATCH:/api/resource-library/folders/{id}
+     */
+    resourceLibraryControllerUpdateFolder: (
+      id: string,
+      data: UpdateFolderBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateFolderResponse, any>({
+        path: `/api/resource-library/folders/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ResourceLibraryControllerDeleteFolder
+     * @request DELETE:/api/resource-library/folders/{id}
+     */
+    resourceLibraryControllerDeleteFolder: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteFolderResponse, any>({
+        path: `/api/resource-library/folders/${id}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ResourceLibraryControllerMoveAsset
+     * @request PATCH:/api/resource-library/assets/{id}/move
+     */
+    resourceLibraryControllerMoveAsset: (
+      id: string,
+      data: MoveAssetBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<MoveAssetResponse, any>({
+        path: `/api/resource-library/assets/${id}/move`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),

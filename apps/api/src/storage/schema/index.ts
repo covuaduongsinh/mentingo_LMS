@@ -2003,6 +2003,27 @@ export const questionsAndAnswers = pgTable(
   withTenantIdIndex("questions_and_answers"),
 );
 
+export const resourceFolders = pgTable(
+  "resource_folders",
+  {
+    ...id,
+    ...timestamps,
+    name: varchar("name", { length: 255 }).notNull(),
+    parentFolderId: uuid("parent_folder_id").references((): AnyPgColumn => resourceFolders.id, {
+      onDelete: "set null",
+    }),
+    color: varchar("color", { length: 30 }).notNull().default("neutral"),
+    coverResourceId: uuid("cover_resource_id").references((): AnyPgColumn => resources.id, {
+      onDelete: "set null",
+    }),
+    displayOrder: integer("display_order").notNull().default(0),
+    tenantId,
+  },
+  withTenantIdIndex("resource_folders", (table) => ({
+    parentFolderIdIdx: index("resource_folders_parent_folder_id_idx").on(table.parentFolderId),
+  })),
+);
+
 export const resources = pgTable(
   "resources",
   {
@@ -2014,10 +2035,13 @@ export const resources = pgTable(
     contentType: varchar("content_type", { length: 100 }).notNull(),
     metadata: jsonb("metadata").$type<ResourceMetadata>().default({}),
     uploadedBy: uuid("uploaded_by_id").references(() => users.id, { onDelete: "set null" }),
+    folderId: uuid("folder_id").references(() => resourceFolders.id, { onDelete: "set null" }),
     archived,
     tenantId,
   },
-  withTenantIdIndex("resources"),
+  withTenantIdIndex("resources", (table) => ({
+    folderIdIdx: index("resources_folder_id_idx").on(table.folderId),
+  })),
 );
 
 export const resourceEntity = pgTable(

@@ -5,6 +5,7 @@ import {
   Get,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
   UploadedFile,
@@ -46,22 +47,34 @@ import { ResourceLibraryService } from "./resource-library.service";
 import {
   assetLibraryAssetSchema,
   assetLibraryUsageSchema,
+  createFolderBodySchema,
   deleteAssetResponseSchema,
+  deleteFolderResponseSchema,
   linkAssetBodySchema,
   linkAssetResponseSchema,
+  listFoldersResponseSchema,
+  moveAssetBodySchema,
+  moveAssetResponseSchema,
   resourceLibraryAssetTypeSchema,
   unlinkAssetBodySchema,
   unlinkAssetResponseSchema,
+  updateFolderBodySchema,
   uploadAssetBodySchema,
   uploadAssetResponseSchema,
   type AssetLibraryAsset,
   type AssetLibraryUsage,
+  type CreateFolderBody,
   type DeleteAssetResponse,
+  type DeleteFolderResponse,
   type LinkAssetBody,
   type LinkAssetResponse,
+  type MoveAssetBody,
+  type MoveAssetResponse,
+  type ResourceFolder,
   type ResourceLibraryAssetType,
   type UnlinkAssetBody,
   type UnlinkAssetResponse,
+  type UpdateFolderBody,
   type UploadAssetBody,
   type UploadAssetResponse,
 } from "./schemas/resource-library.schema";
@@ -79,6 +92,7 @@ export class ResourceLibraryController {
       { type: "query", name: "search", schema: Type.Optional(Type.String()) },
       { type: "query", name: "type", schema: Type.Optional(resourceLibraryAssetTypeSchema) },
       { type: "query", name: "language", schema: Type.Optional(supportedLanguagesSchema) },
+      { type: "query", name: "folderId", schema: Type.Optional(Type.String()) },
     ],
     response: paginatedResponse(Type.Array(assetLibraryAssetSchema)),
   })
@@ -88,6 +102,7 @@ export class ResourceLibraryController {
     @Query("search") search?: string,
     @Query("type") type?: ResourceLibraryAssetType,
     @Query("language") language?: SupportedLanguages,
+    @Query("folderId") folderId?: string,
   ): Promise<PaginatedResponse<AssetLibraryAsset[]>> {
     const result = await this.resourceLibraryService.getAssets({
       page,
@@ -95,9 +110,84 @@ export class ResourceLibraryController {
       search,
       type,
       language,
+      folderId,
     });
 
     return new PaginatedResponse(result);
+  }
+
+  @Get("folders")
+  @RequirePermission(...RESOURCE_LIBRARY_PERMISSIONS)
+  @Validate({
+    request: [{ type: "query", name: "parentFolderId", schema: Type.Optional(UUIDSchema) }],
+    response: baseResponse(listFoldersResponseSchema),
+  })
+  async listFolders(
+    @Query("parentFolderId") parentFolderId?: UUIDType,
+  ): Promise<BaseResponse<ResourceFolder[]>> {
+    const folders = await this.resourceLibraryService.listFolders(parentFolderId);
+
+    return new BaseResponse(folders);
+  }
+
+  @Post("folders")
+  @RequirePermission(...RESOURCE_LIBRARY_PERMISSIONS)
+  @Validate({
+    request: [{ type: "body", schema: createFolderBodySchema }],
+    response: baseResponse(Type.Object({ id: UUIDSchema })),
+  })
+  async createFolder(@Body() body: CreateFolderBody): Promise<BaseResponse<{ id: UUIDType }>> {
+    const folder = await this.resourceLibraryService.createFolder(body);
+
+    return new BaseResponse(folder);
+  }
+
+  @Patch("folders/:id")
+  @RequirePermission(...RESOURCE_LIBRARY_PERMISSIONS)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "body", schema: updateFolderBodySchema },
+    ],
+    response: baseResponse(Type.Object({ id: UUIDSchema })),
+  })
+  async updateFolder(
+    @Param("id") id: UUIDType,
+    @Body() body: UpdateFolderBody,
+  ): Promise<BaseResponse<{ id: UUIDType }>> {
+    const folder = await this.resourceLibraryService.updateFolder(id, body);
+
+    return new BaseResponse(folder);
+  }
+
+  @Delete("folders/:id")
+  @RequirePermission(...RESOURCE_LIBRARY_PERMISSIONS)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(deleteFolderResponseSchema),
+  })
+  async deleteFolder(@Param("id") id: UUIDType): Promise<BaseResponse<DeleteFolderResponse>> {
+    const result = await this.resourceLibraryService.deleteFolder(id);
+
+    return new BaseResponse(result);
+  }
+
+  @Patch("assets/:id/move")
+  @RequirePermission(...RESOURCE_LIBRARY_PERMISSIONS)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "body", schema: moveAssetBodySchema },
+    ],
+    response: baseResponse(moveAssetResponseSchema),
+  })
+  async moveAsset(
+    @Param("id") id: UUIDType,
+    @Body() body: MoveAssetBody,
+  ): Promise<BaseResponse<MoveAssetResponse>> {
+    const result = await this.resourceLibraryService.moveAsset(id, body.folderId);
+
+    return new BaseResponse(result);
   }
 
   @Get("assets/:id/usages")

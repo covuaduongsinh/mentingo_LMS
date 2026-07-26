@@ -45,3 +45,16 @@ export const RESOURCE_LIBRARY_PERMISSIONS = [
   PERMISSIONS.NEWS_MANAGE,
   PERMISSIONS.NEWS_MANAGE_OWN,
 ] as const;
+
+export const RESOURCE_FOLDER_COLORS = [
+  "neutral",
+  "red",
+  "orange",
+  "yellow",
+  "green",
+  "blue",
+  "purple",
+  "pink",
+] as const;
+
+export const RESOURCE_FOLDER_DEFAULT_COLOR = "neutral";

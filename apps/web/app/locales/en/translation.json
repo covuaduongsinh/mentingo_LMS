@@ -294,12 +294,16 @@
   },
   "resourceLibrary": {
     "toast": {
-      "assetDeletedSuccessfully": "Asset deleted successfully"
+      "assetDeletedSuccessfully": "Asset deleted successfully",
+      "folderDeletedSuccessfully": "Folder deleted successfully"
     },
     "error": {
       "fileRequired": "File is required",
       "assetNotFound": "Asset not found",
-      "entityNotFound": "Entity not found"
+      "entityNotFound": "Entity not found",
+      "folderNotFound": "Folder not found",
+      "folderCycleDetected": "A folder cannot be moved into itself or one of its own subfolders",
+      "folderNotEmpty": "Only empty folders can be deleted. Move or remove its contents first."
     }
   },
   "adminCourseDuplication": {
@@ -4225,7 +4229,30 @@
         "noUsages": "No usages were found."
       },
       "usageCount_one": "{{count}} usage",
-      "usageCount_other": "{{count}} usages"
+      "usageCount_other": "{{count}} usages",
+      "folder": {
+        "root": "Library",
+        "new": "New folder",
+        "nameLabel": "Folder name",
+        "namePlaceholder": "e.g. Chapter 1 images",
+        "colorLabel": "Color",
+        "create": "Create folder",
+        "actions": "Folder actions",
+        "delete": "Delete folder",
+        "moveTo": "Move to...",
+        "itemCount_one": "{{count}} item",
+        "itemCount_other": "{{count}} items",
+        "colors": {
+          "neutral": "Neutral",
+          "red": "Red",
+          "orange": "Orange",
+          "yellow": "Yellow",
+          "green": "Green",
+          "blue": "Blue",
+          "purple": "Purple",
+          "pink": "Pink"
+        }
+      }
     }
   },
   "pages": {

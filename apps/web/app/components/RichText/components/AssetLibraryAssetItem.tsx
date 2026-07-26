@@ -1,8 +1,14 @@
 import { formatDate } from "date-fns";
-import { Trash2 } from "lucide-react";
+import { FolderInput, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "~/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 
 import { RICH_TEXT_HANDLES } from "../../../../e2e/data/common/handles";
 
@@ -10,13 +16,17 @@ import { AssetTypeIcon, formatAssetSize, getAssetDisplayName } from "./assetLibr
 
 import type { ResourceLibraryAsset } from "~/api/queries/useResourceLibraryAssets";
 
+export type AssetLibraryMoveTarget = { id: string | null; name: string };
+
 type AssetLibraryAssetItemProps = {
   asset: ResourceLibraryAsset;
   canInsert: boolean;
   canDelete: boolean;
   isMutating: boolean;
+  moveTargets?: AssetLibraryMoveTarget[];
   onInsert: (asset: ResourceLibraryAsset) => void;
   onDelete: (asset: ResourceLibraryAsset) => void;
+  onMove?: (asset: ResourceLibraryAsset, folderId: string | null) => void;
 };
 
 export const AssetLibraryAssetItem = ({
@@ -24,8 +34,10 @@ export const AssetLibraryAssetItem = ({
   canInsert,
   canDelete,
   isMutating,
+  moveTargets,
   onInsert,
   onDelete,
+  onMove,
 }: AssetLibraryAssetItemProps) => {
   const { t } = useTranslation();
 
@@ -62,6 +74,31 @@ export const AssetLibraryAssetItem = ({
         >
           {t("richText.assetLibrary.insert")}
         </Button>
+        {onMove && moveTargets && moveTargets.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                disabled={!canDelete || isMutating}
+                aria-label={t("richText.assetLibrary.folder.moveTo")}
+              >
+                <FolderInput className="size-4" aria-hidden />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {moveTargets.map((target) => (
+                <DropdownMenuItem
+                  key={target.id ?? "root"}
+                  onClick={() => onMove(asset, target.id)}
+                >
+                  {target.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
         <Button
           data-testid={RICH_TEXT_HANDLES.assetLibraryDeleteButton(asset.id)}
           type="button"

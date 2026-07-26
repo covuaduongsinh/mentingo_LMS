@@ -135,12 +135,16 @@
   },
   "resourceLibrary": {
     "toast": {
-      "assetDeletedSuccessfully": "Zasób został pomyślnie usunięty"
+      "assetDeletedSuccessfully": "Zasób został pomyślnie usunięty",
+      "folderDeletedSuccessfully": "Folder został pomyślnie usunięty"
     },
     "error": {
       "fileRequired": "Plik jest wymagany",
       "assetNotFound": "Zasób nie został znaleziony",
-      "entityNotFound": "Nie znaleziono encji"
+      "entityNotFound": "Nie znaleziono encji",
+      "folderNotFound": "Nie znaleziono folderu",
+      "folderCycleDetected": "Nie można przenieść folderu do samego siebie ani do jego podfolderu",
+      "folderNotEmpty": "Można usuwać tylko puste foldery. Najpierw przenieś lub usuń jego zawartość."
     }
   },
   "adminCourseDuplication": {
@@ -4332,7 +4336,31 @@
         "noUsages": "No usages were found."
       },
       "usageCount_one": "{{count}} usage",
-      "usageCount_other": "{{count}} usages"
+      "usageCount_other": "{{count}} usages",
+      "folder": {
+        "root": "Biblioteka",
+        "new": "Nowy folder",
+        "nameLabel": "Nazwa folderu",
+        "namePlaceholder": "np. Obrazy rozdziału 1",
+        "colorLabel": "Kolor",
+        "create": "Utwórz folder",
+        "actions": "Akcje folderu",
+        "delete": "Usuń folder",
+        "moveTo": "Przenieś do...",
+        "itemCount_one": "{{count}} element",
+        "itemCount_few": "{{count}} elementy",
+        "itemCount_other": "{{count}} elementów",
+        "colors": {
+          "neutral": "Neutralny",
+          "red": "Czerwony",
+          "orange": "Pomarańczowy",
+          "yellow": "Żółty",
+          "green": "Zielony",
+          "blue": "Niebieski",
+          "purple": "Fioletowy",
+          "pink": "Różowy"
+        }
+      }
     }
   },
   "pages": {
