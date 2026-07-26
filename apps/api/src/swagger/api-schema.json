@@ -11728,6 +11728,129 @@
         }
       }
     },
+    "/api/chess/seeks": {
+      "get": {
+        "operationId": "ChessController_listSeeks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSeeksResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "ChessController_createSeek",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSeekBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSeekResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/seeks/{id}/cancel": {
+      "post": {
+        "operationId": "ChessController_cancelSeek",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelSeekResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/seeks/{id}/accept": {
+      "post": {
+        "operationId": "ChessController_acceptSeek",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptSeekResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/matches/{id}": {
+      "get": {
+        "operationId": "ChessController_getMatch",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMatchResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/chess/engine/status": {
       "get": {
         "operationId": "ChessEngineController_getStatus",
@@ -20517,6 +20640,14 @@
                     },
                     {
                       "const": "chess.puzzle.manage",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.match.play",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.match.watch",
                       "type": "string"
                     },
                     {
@@ -52309,6 +52440,447 @@
             },
             "required": [
               "jobId"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListSeeksResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "creatorUserId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "challengedUserId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "timeControlId": {
+                  "type": "string"
+                },
+                "colorPreference": {
+                  "type": "string"
+                },
+                "rated": {
+                  "type": "boolean"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "matchId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "creatorUserId",
+                "challengedUserId",
+                "timeControlId",
+                "colorPreference",
+                "rated",
+                "status",
+                "matchId",
+                "createdAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateSeekBody": {
+        "type": "object",
+        "properties": {
+          "challengedUserId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "timeControlId": {
+            "anyOf": [
+              {
+                "const": "1+0",
+                "type": "string"
+              },
+              {
+                "const": "5+0",
+                "type": "string"
+              },
+              {
+                "const": "10+0",
+                "type": "string"
+              },
+              {
+                "const": "15+10",
+                "type": "string"
+              }
+            ]
+          },
+          "colorPreference": {
+            "anyOf": [
+              {
+                "const": "white",
+                "type": "string"
+              },
+              {
+                "const": "black",
+                "type": "string"
+              },
+              {
+                "const": "random",
+                "type": "string"
+              }
+            ]
+          },
+          "rated": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "timeControlId"
+        ]
+      },
+      "CreateSeekResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "creatorUserId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "challengedUserId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "timeControlId": {
+                "type": "string"
+              },
+              "colorPreference": {
+                "type": "string"
+              },
+              "rated": {
+                "type": "boolean"
+              },
+              "status": {
+                "type": "string"
+              },
+              "matchId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "creatorUserId",
+              "challengedUserId",
+              "timeControlId",
+              "colorPreference",
+              "rated",
+              "status",
+              "matchId",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CancelSeekResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "success": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "success"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AcceptSeekResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "whiteUserId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "blackUserId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "timeControlId": {
+                "type": "string"
+              },
+              "rated": {
+                "type": "boolean"
+              },
+              "status": {
+                "type": "string"
+              },
+              "result": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "endReason": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "currentFen": {
+                "type": "string"
+              },
+              "whiteTimeRemainingMs": {
+                "type": "number"
+              },
+              "blackTimeRemainingMs": {
+                "type": "number"
+              },
+              "drawOfferedByUserId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "moves": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ply": {
+                      "type": "number"
+                    },
+                    "uci": {
+                      "type": "string"
+                    },
+                    "san": {
+                      "type": "string"
+                    },
+                    "fenAfter": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ply",
+                    "uci",
+                    "san",
+                    "fenAfter"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "whiteUserId",
+              "blackUserId",
+              "timeControlId",
+              "rated",
+              "status",
+              "result",
+              "endReason",
+              "currentFen",
+              "whiteTimeRemainingMs",
+              "blackTimeRemainingMs",
+              "drawOfferedByUserId",
+              "moves"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetMatchResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "whiteUserId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "blackUserId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "timeControlId": {
+                "type": "string"
+              },
+              "rated": {
+                "type": "boolean"
+              },
+              "status": {
+                "type": "string"
+              },
+              "result": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "endReason": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "currentFen": {
+                "type": "string"
+              },
+              "whiteTimeRemainingMs": {
+                "type": "number"
+              },
+              "blackTimeRemainingMs": {
+                "type": "number"
+              },
+              "drawOfferedByUserId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "moves": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ply": {
+                      "type": "number"
+                    },
+                    "uci": {
+                      "type": "string"
+                    },
+                    "san": {
+                      "type": "string"
+                    },
+                    "fenAfter": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ply",
+                    "uci",
+                    "san",
+                    "fenAfter"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "whiteUserId",
+              "blackUserId",
+              "timeControlId",
+              "rated",
+              "status",
+              "result",
+              "endReason",
+              "currentFen",
+              "whiteTimeRemainingMs",
+              "blackTimeRemainingMs",
+              "drawOfferedByUserId",
+              "moves"
             ]
           }
         },

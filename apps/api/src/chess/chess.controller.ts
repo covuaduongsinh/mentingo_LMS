@@ -17,6 +17,7 @@ import { CurrentUserType } from "src/common/types/current-user.type";
 import { QUEUE_NAMES, QueueService } from "src/queue";
 
 import { ChessAnalysisService } from "./chess-analysis.service";
+import { ChessMatchService } from "./chess-match.service";
 import { ChessPuzzleService } from "./chess-puzzle.service";
 import { ChessStudyService } from "./chess-study.service";
 import { ChessService } from "./chess.service";
@@ -26,6 +27,12 @@ import {
   chessAnalysisSessionSchema,
   type CreateChessAnalysisSessionBody,
 } from "./schemas/chess-analysis.schema";
+import {
+  chessMatchSchema,
+  chessSeekSchema,
+  createChessSeekBodySchema,
+  type CreateChessSeekBody,
+} from "./schemas/chess-match.schema";
 import {
   chessPuzzleDashboardResponseSchema,
   chessPuzzleSchema,
@@ -98,6 +105,7 @@ export class ChessController {
     private readonly chessAnalysisService: ChessAnalysisService,
     private readonly chessStudyService: ChessStudyService,
     private readonly chessPuzzleService: ChessPuzzleService,
+    private readonly chessMatchService: ChessMatchService,
     private readonly queueService: QueueService,
   ) {}
 
@@ -637,5 +645,56 @@ export class ChessController {
         maxCount: body.maxCount,
       });
     return new BaseResponse({ jobId: job.id ?? "" });
+  }
+
+  @Get("seeks")
+  @RequirePermission(PERMISSIONS.CHESS_MATCH_PLAY)
+  @Validate({
+    response: baseResponse(Type.Array(chessSeekSchema)),
+  })
+  async listSeeks(@CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessMatchService.listOpenSeeks(user));
+  }
+
+  @Post("seeks")
+  @RequirePermission(PERMISSIONS.CHESS_MATCH_PLAY)
+  @Validate({
+    request: [{ type: "body", schema: createChessSeekBodySchema }],
+    response: baseResponse(chessSeekSchema),
+  })
+  async createSeek(@Body() body: CreateChessSeekBody, @CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessMatchService.createSeek(user, body));
+  }
+
+  @Post("seeks/:id/cancel")
+  @RequirePermission(PERMISSIONS.CHESS_MATCH_PLAY)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(Type.Object({ success: Type.Boolean() })),
+  })
+  async cancelSeek(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
+    await this.chessMatchService.cancelSeek(user, id);
+    return new BaseResponse({ success: true });
+  }
+
+  @Post("seeks/:id/accept")
+  @RequirePermission(PERMISSIONS.CHESS_MATCH_PLAY)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(chessMatchSchema),
+  })
+  async acceptSeek(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
+    const match = await this.chessMatchService.acceptSeek(user, id);
+    return new BaseResponse({ ...match, moves: [] });
+  }
+
+  @Get("matches/:id")
+  @RequirePermission(PERMISSIONS.CHESS_MATCH_WATCH)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(chessMatchSchema),
+  })
+  async getMatch(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessMatchService.getMatchState(user, id));
   }
 }

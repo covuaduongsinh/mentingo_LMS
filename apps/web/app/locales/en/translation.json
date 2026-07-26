@@ -26,7 +26,8 @@
       "analysis": "Analysis",
       "editor": "Board editor",
       "studies": "Studies",
-      "puzzles": "Puzzles"
+      "puzzles": "Puzzles",
+      "lobby": "Play online"
     },
     "engine": {
       "errorBestMove": "Engine could not move",
@@ -292,6 +293,35 @@
       "attempts": "Attempts",
       "accuracy": "Accuracy"
     },
+    "lobby": {
+      "title": "Play online",
+      "subtitle": "Create a seek or accept someone else's to start a real-time match.",
+      "createSeek": "Create seek",
+      "timeControl": "Time",
+      "rated": "Rated",
+      "casual": "Casual",
+      "colorRandom": "Random",
+      "colorWhite": "White",
+      "colorBlack": "Black",
+      "empty": "No open seeks right now — create one!",
+      "cancel": "Cancel",
+      "accept": "Accept"
+    },
+    "match": {
+      "title": "Match",
+      "white": "White",
+      "black": "Black",
+      "resign": "Resign",
+      "offerDraw": "Offer draw",
+      "acceptDraw": "Accept draw",
+      "drawOfferedToast": "Your opponent offered a draw",
+      "resultDraw": "Draw",
+      "resultWin": "You won!",
+      "resultLoss": "You lost.",
+      "errors": {
+        "notFound": "Match not found"
+      }
+    },
     "toast": {
       "exerciseCreated": "Exercise created",
       "exerciseCreateFailed": "Could not create exercise",
@@ -327,7 +357,10 @@
       "memberRemoveFailed": "Could not remove member",
       "puzzleAttemptFailed": "Could not submit attempt",
       "puzzleImportQueued": "Import queued — puzzles will appear once the job finishes",
-      "puzzleImportFailed": "Could not queue the import"
+      "puzzleImportFailed": "Could not queue the import",
+      "seekCreateFailed": "Could not create the seek",
+      "seekCancelFailed": "Could not cancel the seek",
+      "seekAcceptFailed": "Could not accept the seek"
     }
   },
   "common": {
@@ -4445,6 +4478,8 @@
     "chessStudies": "Chess Studies",
     "chessPuzzlePractice": "Chess Puzzles",
     "chessPuzzleDashboard": "Chess Puzzle Progress",
+    "chessLobby": "Play Chess Online",
+    "chessMatchPlay": "Chess Match",
     "dashboard": "Dashboard",
     "settings": "Settings",
     "providerInformation": "Provider Information",

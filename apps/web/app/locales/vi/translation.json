@@ -26,7 +26,8 @@
       "analysis": "Phân tích",
       "editor": "Dựng thế cờ",
       "studies": "Bài giảng",
-      "puzzles": "Bài đố"
+      "puzzles": "Bài đố",
+      "lobby": "Chơi trực tuyến"
     },
     "engine": {
       "errorBestMove": "Máy không thể đi nước tiếp theo",
@@ -292,6 +293,35 @@
       "attempts": "Số lượt",
       "accuracy": "Tỉ lệ đúng"
     },
+    "lobby": {
+      "title": "Chơi trực tuyến",
+      "subtitle": "Tạo lời mời hoặc chấp nhận lời mời của người khác để bắt đầu ván đấu thời gian thực.",
+      "createSeek": "Tạo lời mời",
+      "timeControl": "Thời gian",
+      "rated": "Tính hệ số",
+      "casual": "Không tính hệ số",
+      "colorRandom": "Ngẫu nhiên",
+      "colorWhite": "Trắng",
+      "colorBlack": "Đen",
+      "empty": "Chưa có lời mời nào — hãy tạo một cái!",
+      "cancel": "Hủy",
+      "accept": "Chấp nhận"
+    },
+    "match": {
+      "title": "Ván đấu",
+      "white": "Trắng",
+      "black": "Đen",
+      "resign": "Đầu hàng",
+      "offerDraw": "Xin hòa",
+      "acceptDraw": "Chấp nhận hòa",
+      "drawOfferedToast": "Đối thủ đã xin hòa",
+      "resultDraw": "Hòa",
+      "resultWin": "Bạn đã thắng!",
+      "resultLoss": "Bạn đã thua.",
+      "errors": {
+        "notFound": "Không tìm thấy ván đấu"
+      }
+    },
     "toast": {
       "exerciseCreated": "Đã tạo bài tập",
       "exerciseCreateFailed": "Không thể tạo bài tập",
@@ -327,7 +357,10 @@
       "memberRemoveFailed": "Không thể xóa thành viên",
       "puzzleAttemptFailed": "Không thể gửi lượt giải",
       "puzzleImportQueued": "Đã xếp hàng nhập — bài đố sẽ xuất hiện khi job hoàn tất",
-      "puzzleImportFailed": "Không thể xếp hàng nhập"
+      "puzzleImportFailed": "Không thể xếp hàng nhập",
+      "seekCreateFailed": "Không thể tạo lời mời",
+      "seekCancelFailed": "Không thể hủy lời mời",
+      "seekAcceptFailed": "Không thể chấp nhận lời mời"
     }
   },
   "common": {
@@ -4443,6 +4476,8 @@
     "chessStudies": "Bài giảng cờ vua",
     "chessPuzzlePractice": "Bài đố cờ vua",
     "chessPuzzleDashboard": "Tiến độ bài đố cờ vua",
+    "chessLobby": "Chơi cờ trực tuyến",
+    "chessMatchPlay": "Ván đấu cờ vua",
     "chessAnalysisRoom": "Phòng phân tích cờ",
     "chessEditor": "Dựng thế cờ",
     "dashboard": "Bảng điều khiển",

@@ -142,6 +142,14 @@ export const getNavigationConfig = (
           },
         },
         {
+          label: t("chess.nav.lobby", { defaultValue: "Play online" }),
+          path: "chess/lobby",
+          iconName: "Course",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_MATCH_PLAY],
+          },
+        },
+        {
           label: t("chess.nav.editor", { defaultValue: "Board editor" }),
           path: "chess/editor",
           iconName: "Edit",

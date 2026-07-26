@@ -34,6 +34,9 @@ import {
   CHESS_STUDY_MEMBER_ROLES,
   CHESS_STUDY_CHAPTER_MODES,
   CHESS_RATING_CATEGORIES,
+  CHESS_COLOR_PREFERENCES,
+  CHESS_SEEK_STATUSES,
+  CHESS_MATCH_STATUSES,
 } from "@repo/shared";
 import { sql } from "drizzle-orm";
 import {
@@ -121,6 +124,11 @@ import type {
   ChessStudyChapterMode,
   ChessMotif,
   ChessRatingCategory,
+  ChessColorPreference,
+  ChessSeekStatus,
+  ChessMatchStatus,
+  ChessMatchResult,
+  ChessMatchEndReason,
   AssignmentGradingType,
   AssignmentTaskType,
   AssignmentSubmissionStatus,
@@ -3221,5 +3229,87 @@ export const chessRatingHistory = pgTable(
       table.userId,
       table.category,
     ),
+  }),
+);
+
+export const chessSeeks = pgTable(
+  "chess_seeks",
+  {
+    ...id,
+    ...timestamps,
+    creatorUserId: uuid("creator_user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    /** Null = an open seek anyone can accept; set = a direct challenge to one specific user. */
+    challengedUserId: uuid("challenged_user_id").references(() => users.id, {
+      onDelete: "cascade",
+    }),
+    timeControlId: varchar("time_control_id", { length: 20 }).notNull(),
+    colorPreference: text("color_preference")
+      .$type<ChessColorPreference>()
+      .notNull()
+      .default(CHESS_COLOR_PREFERENCES.RANDOM),
+    rated: boolean("rated").notNull().default(true),
+    status: text("status").$type<ChessSeekStatus>().notNull().default(CHESS_SEEK_STATUSES.PENDING),
+    matchId: uuid("match_id"),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_seeks")(table),
+    statusIdx: index("chess_seeks_status_idx").on(table.status),
+    challengedUserIdx: index("chess_seeks_challenged_user_id_idx").on(table.challengedUserId),
+  }),
+);
+
+export const chessMatches = pgTable(
+  "chess_matches",
+  {
+    ...id,
+    ...timestamps,
+    whiteUserId: uuid("white_user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    blackUserId: uuid("black_user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    timeControlId: varchar("time_control_id", { length: 20 }).notNull(),
+    rated: boolean("rated").notNull().default(true),
+    status: text("status").$type<ChessMatchStatus>().notNull().default(CHESS_MATCH_STATUSES.ACTIVE),
+    result: text("result").$type<ChessMatchResult>(),
+    endReason: text("end_reason").$type<ChessMatchEndReason>(),
+    currentFen: varchar("current_fen", { length: 100 })
+      .notNull()
+      .default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
+    whiteTimeRemainingMs: integer("white_time_remaining_ms").notNull(),
+    blackTimeRemainingMs: integer("black_time_remaining_ms").notNull(),
+    lastMoveAt: timestamp("last_move_at", { withTimezone: true }).notNull().defaultNow(),
+    drawOfferedByUserId: uuid("draw_offered_by_user_id"),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_matches")(table),
+    statusIdx: index("chess_matches_status_idx").on(table.status),
+    whiteUserIdx: index("chess_matches_white_user_id_idx").on(table.whiteUserId),
+    blackUserIdx: index("chess_matches_black_user_id_idx").on(table.blackUserId),
+  }),
+);
+
+export const chessMatchMoves = pgTable(
+  "chess_match_moves",
+  {
+    ...id,
+    ...timestamps,
+    matchId: uuid("match_id")
+      .references(() => chessMatches.id, { onDelete: "cascade" })
+      .notNull(),
+    ply: integer("ply").notNull(),
+    uci: varchar("uci", { length: 10 }).notNull(),
+    san: varchar("san", { length: 20 }).notNull(),
+    fenAfter: varchar("fen_after", { length: 100 }).notNull(),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_match_moves")(table),
+    matchIdx: index("chess_match_moves_match_id_idx").on(table.matchId),
   }),
 );

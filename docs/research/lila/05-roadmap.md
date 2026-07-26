@@ -11,8 +11,8 @@ Theo yêu cầu của người dùng, mỗi đợt tự động verify (tsc + es
 | **L0**  | #20 merged          | Tài liệu khảo sát clean-room `docs/research/lila/` (6 file, không code) |
 | **L1**  | #21 merged          | Nền bàn cờ tương tác: shapes, glyph, cây biến, board editor             |
 | **L2**  | #22 merged          | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
-| **L3**  | _(đang triển khai)_ | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
-| **L4**  |                     | Chơi trực tuyến người-với-người                                         |
+| **L3**  | #23 merged          | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
+| **L4**  | _(đang triển khai)_ | Chơi trực tuyến người-với-người                                         |
 | **L5**  |                     | Lớp học cờ: tài khoản do giáo viên quản lý                              |
 | **L6**  |                     | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
 | **L7**  |                     | Nhập môn: Learn/Coordinate/Practice                                     |
@@ -52,7 +52,7 @@ Bảng mới: `chess_studies`, `chess_study_chapters`, `chess_study_members` (+ 
 
 ## Đợt L3 — Glicko-2 + Ngân hàng Puzzle thích ứng
 
-> **Đã triển khai** — xem `docs/specs/chess-puzzle-rating-business-spec.md` (đặc tả đầy đủ + "Follow-up Work"). Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
+> **Đã merged (PR #23)** — xem `docs/specs/chess-puzzle-rating-business-spec.md` (đặc tả đầy đủ + "Follow-up Work"). Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
 
 Bảng mới: `chess_puzzles`, `chess_puzzle_attempts`, `chess_ratings`, `chess_rating_history` (+ migration RLS riêng, `0185`/`0186`).
 
@@ -69,16 +69,21 @@ Bảng mới: `chess_puzzles`, `chess_puzzle_attempts`, `chess_ratings`, `chess_
 
 ## Đợt L4 — Chơi trực tuyến người-với-người
 
-Bảng mới: `chess_matches`, `chess_match_moves`, `chess_challenges`, `chess_seeks`.
+> **Đã triển khai** — xem `docs/specs/chess-online-match-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
 
-> ⚠️ Bảng `chess_games` hiện tại là ngân hàng PGN dạy học, không phải ván đấu — ván đấu online dùng `chess_matches`.
+Bảng mới: `chess_seeks` (gộp cả seek mở và thách đấu đích danh, thay vì 2 bảng riêng), `chess_matches`, `chess_match_moves` (+ migration RLS riêng, `0187`/`0188`).
 
-- Mở rộng `WsGateway` (không tạo gateway riêng, theo đúng mẫu PR #19 — xem [04-subsystem-notes.md](./04-subsystem-notes.md) mục 8): đi nước, đồng hồ server-authoritative, đầu hàng, xin hòa, xin hoãn, thêm giờ, tái đấu.
-- Thách đấu 1-1 + sảnh seek mở.
-- Xem trực tiếp + chat ván (mẫu `course_chat`).
-- Ván tính rating → cập nhật Glicko-2 (mở rộng L3 sang thể loại thời gian: nhanh/chớp/tiêu chuẩn).
-- Chống gian lận cơ bản: chặn truy cập engine trong ván tính rating.
+> ⚠️ Bảng `chess_games` hiện tại là ngân hàng PGN dạy học, không phải ván đấu — ván đấu online dùng `chess_matches`, đúng như đã lường trước.
+
+- Mở rộng `WsGateway` hiện có (không tạo gateway riêng, đúng mẫu PR #19): đi nước (validate bằng `chess.js`), đồng hồ server-authoritative (tính lại theo thời gian trôi qua từ `lastMoveAt`, hết giờ phát hiện qua BullMQ delayed job đặt lại sau mỗi nước — không phải polling phía client), đầu hàng, xin hòa/chấp nhận hòa.
+- Một bảng `chess_seeks` duy nhất cho cả seek mở (`challengedUserId = null`) và thách đấu đích danh — đơn giản hóa so với kế hoạch gốc (2 bảng `chess_challenges`/`chess_seeks` riêng).
+- Xem trực tiếp (join phòng với vai trò viewer, không đi được nước).
+- Ván tính rating → cập nhật Glicko-2 hai chiều (tái dùng nguyên `updateRating` từ L3), mở rộng `chess_ratings.category` với `bullet`/`blitz`/`rapid` (suy ra tự động từ thời gian cơ bản của ván).
 - Permission: `chess.match.play`, `chess.match.watch`.
+
+**Lùi lại / chưa làm** (xem "Follow-up Work" trong spec): xin hoãn nước (takeback), chat trong ván đấu (mẫu `course_chat` sẵn sàng tái dùng sau), chống gian lận nâng cao (chặn truy cập engine), cờ thư (không giới hạn thời gian chặt).
+
+**Phát hiện kỹ thuật quan trọng khi triển khai**: `ChessMatchService`/mọi file trong `src/chess/` không được import bất kỳ thứ gì từ `src/statistics/` dưới dạng giá trị (bài học từ L3 — vòng lặp require() cấp file, xem `nestjs-file-level-circular-require-vs-module-cycle`). Khi service cần tự phát sự kiện realtime (không phải phản hồi trực tiếp một message WS tới, ví dụ khi job hết giờ kích hoạt), dùng `@Inject(REALTIME_PUBLISHER)` với type `RealtimePublisher` từ `src/websocket/realtime.publisher.ts` — file này không import gì cả nên an toàn tuyệt đối, đã được `course-chat.service.ts` dùng đúng cách này từ trước.
 
 ## Đợt L5 — Lớp học cờ: tài khoản do giáo viên quản lý
 

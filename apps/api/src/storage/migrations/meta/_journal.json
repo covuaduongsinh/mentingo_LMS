@@ -1310,6 +1310,20 @@
       "when": 1785063763705,
       "tag": "0186_enable_chess_puzzles_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 187,
+      "version": "7",
+      "when": 1785071237306,
+      "tag": "0187_add_chess_matches",
+      "breakpoints": true
+    },
+    {
+      "idx": 188,
+      "version": "7",
+      "when": 1785071237307,
+      "tag": "0188_enable_chess_matches_rls",
+      "breakpoints": true
     }
   ]
 }
