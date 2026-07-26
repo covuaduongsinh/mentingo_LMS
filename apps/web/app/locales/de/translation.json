@@ -80,6 +80,7 @@
       "private": "Privat",
       "publish": "Veröffentlichen",
       "uploadingImage": "Bild wird hochgeladen...",
+      "loading": "Wird geladen...",
       "copyUrl": "Die URL-Adresse wurde in die Zwischenablage kopiert",
       "dueDate": "Fälligkeitsdatum: {{date}}",
       "appVersion": "App-Version: {{version}}"
@@ -1834,8 +1835,10 @@
         "course": "Kurs nicht gefunden.",
         "category": "Kategorie nicht gefunden.",
         "chapter": "Kapitel nicht gefunden.",
-        "lesson": "Lektion nicht gefunden."
+        "lesson": "Lektion nicht gefunden.",
+        "lessonContentVersion": "Version nicht gefunden."
       },
+      "lessonContentConflict": "Diese Lektion wurde von jemand anderem aktualisiert, während Sie sie bearbeitet haben.",
       "create": {
         "courseFailed": "Kurs konnte nicht erstellt werden.",
         "stripeProductFailed": "Zahlungsprodukt für den Kurs konnte nicht erstellt werden."
@@ -2086,10 +2089,22 @@
           "removeResource": "Ressource entfernen",
           "uploadFiles": "Dateien hochladen",
           "addLessonDisabledTooltip": "Um eine Lektion zu erstellen, müssen Sie sich in der Basissprache befinden.",
-          "addTask": "Aufgabe hinzufügen"
+          "addTask": "Aufgabe hinzufügen",
+          "versionHistory": "Versionsverlauf"
         },
         "breadcrumbs": {
           "back": "Zurück"
+        },
+        "confirm": {
+          "restoreVersion": "Diese Version wiederherstellen? Ihr aktueller Inhalt wird vor dem Ersetzen im Verlauf gespeichert.",
+          "contentConflict": "Diese Lektion wurde von jemand anderem aktualisiert, während Sie sie bearbeitet haben. Trotzdem mit Ihren Änderungen überschreiben?"
+        },
+        "versionHistory": {
+          "title": "Versionsverlauf",
+          "versionLabel": "Version {{number}}",
+          "view": "Ansehen",
+          "restore": "Diese Version wiederherstellen",
+          "empty": "Noch keine früheren Versionen."
         },
         "settings": {
           "title": "Einstellungen",
@@ -2154,6 +2169,7 @@
           "lessonDeletedSuccessfully": "Lektion erfolgreich gelöscht",
           "lessonDeleteError": "Lektion konnte nicht gelöscht werden",
           "contentLessonUpdatedSuccessfully": "Inhalt der Lektion erfolgreich aktualisiert",
+          "contentVersionRestored": "Version erfolgreich wiederhergestellt",
           "fileLessonUpdatedSuccessfully": "Dateielement erfolgreich aktualisiert",
           "questionOptionsUpdatedSuccessfully": "Die Frageoptionen wurden erfolgreich aktualisiert",
           "embedLessonCreatedSuccessfully": "Einbettungslektion erfolgreich erstellt",

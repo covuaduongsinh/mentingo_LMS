@@ -453,6 +453,26 @@ export const lessons = pgTable(
   withTenantIdIndex("lessons"),
 );
 
+export const lessonContentVersions = pgTable(
+  "lesson_content_versions",
+  {
+    ...id,
+    ...timestamps,
+    lessonId: uuid("lesson_id")
+      .references(() => lessons.id, { onDelete: "cascade" })
+      .notNull(),
+    language: varchar("language", { length: 10 }).notNull(),
+    versionNumber: integer("version_number").notNull(),
+    title: text("title"),
+    description: text("description"),
+    createdBy: uuid("created_by").references(() => users.id, { onDelete: "set null" }),
+    tenantId,
+  },
+  withTenantIdIndex("lesson_content_versions", (table) => ({
+    lessonIdIdx: index("lesson_content_versions_lesson_id_idx").on(table.lessonId),
+  })),
+);
+
 export const calendarEvents = pgTable(
   "calendar_events",
   {

@@ -240,6 +240,7 @@
       "private": "Private",
       "publish": "Publish",
       "uploadingImage": "Uploading image...",
+      "loading": "Loading...",
       "copyUrl": "The URL address was copied to the clipboard",
       "dueDate": "Due date: {{date}}",
       "appVersion": "App Version: {{version}}"
@@ -2055,8 +2056,10 @@
         "course": "Course not found.",
         "category": "Category not found.",
         "chapter": "Chapter not found.",
-        "lesson": "Lesson not found."
+        "lesson": "Lesson not found.",
+        "lessonContentVersion": "Version not found."
       },
+      "lessonContentConflict": "This lesson was updated by someone else while you were editing.",
       "create": {
         "courseFailed": "Failed to create course.",
         "stripeProductFailed": "Failed to create course payment product."
@@ -2307,10 +2310,22 @@
           "removeResource": "Remove resource",
           "uploadFiles": "Upload files",
           "addLessonDisabledTooltip": "To create a lesson, you must be in the base language.",
-          "addTask": "Add task"
+          "addTask": "Add task",
+          "versionHistory": "Version history"
         },
         "breadcrumbs": {
           "back": "Back"
+        },
+        "confirm": {
+          "restoreVersion": "Restore this version? Your current content will be saved to history before being replaced.",
+          "contentConflict": "This lesson was updated by someone else while you were editing. Overwrite it with your changes anyway?"
+        },
+        "versionHistory": {
+          "title": "Version history",
+          "versionLabel": "Version {{number}}",
+          "view": "View",
+          "restore": "Restore this version",
+          "empty": "No previous versions yet."
         },
         "settings": {
           "title": "Settings",
@@ -2375,6 +2390,7 @@
           "lessonDeletedSuccessfully": "Lesson deleted successfully",
           "lessonDeleteError": "Failed to delete lesson",
           "contentLessonUpdatedSuccessfully": "Content lesson updated successfully",
+          "contentVersionRestored": "Version restored successfully",
           "fileLessonUpdatedSuccessfully": "File item updated successfully",
           "questionOptionsUpdatedSuccessfully": "Question options updated successfully",
           "embedLessonCreatedSuccessfully": "Embed lesson created successfully",

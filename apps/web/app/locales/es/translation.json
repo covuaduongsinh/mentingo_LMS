@@ -80,6 +80,7 @@
       "private": "Privado",
       "publish": "Publicar",
       "uploadingImage": "Subiendo imagen...",
+      "loading": "Cargando...",
       "copyUrl": "La URL se ha copiado al portapapeles",
       "dueDate": "Fecha límite: {{date}}",
       "appVersion": "Versión de la aplicación: {{version}}"
@@ -1895,8 +1896,10 @@
         "course": "Curso no encontrado.",
         "category": "Categoría no encontrada.",
         "chapter": "Capítulo no encontrado.",
-        "lesson": "Lección no encontrada."
+        "lesson": "Lección no encontrada.",
+        "lessonContentVersion": "Versión no encontrada."
       },
+      "lessonContentConflict": "Esta lección fue actualizada por otra persona mientras la editabas.",
       "create": {
         "courseFailed": "No se pudo crear el curso.",
         "stripeProductFailed": "No se pudo crear el producto de pago del curso."
@@ -2147,10 +2150,22 @@
           "removeResource": "Eliminar recurso",
           "uploadFiles": "Subir archivos",
           "addLessonDisabledTooltip": "Para crear una lección, debes estar en el idioma base.",
-          "addTask": "Añadir tarea"
+          "addTask": "Añadir tarea",
+          "versionHistory": "Historial de versiones"
         },
         "breadcrumbs": {
           "back": "Atrás"
+        },
+        "confirm": {
+          "restoreVersion": "¿Restaurar esta versión? Tu contenido actual se guardará en el historial antes de ser reemplazado.",
+          "contentConflict": "Esta lección fue actualizada por otra persona mientras la editabas. ¿Sobrescribirla de todos modos con tus cambios?"
+        },
+        "versionHistory": {
+          "title": "Historial de versiones",
+          "versionLabel": "Versión {{number}}",
+          "view": "Ver",
+          "restore": "Restaurar esta versión",
+          "empty": "Aún no hay versiones anteriores."
         },
         "settings": {
           "title": "Configuración",
@@ -2215,6 +2230,7 @@
           "lessonDeletedSuccessfully": "Lección eliminada exitosamente",
           "lessonDeleteError": "No se pudo eliminar la lección",
           "contentLessonUpdatedSuccessfully": "Lección de contenido actualizada con éxito",
+          "contentVersionRestored": "Versión restaurada con éxito",
           "fileLessonUpdatedSuccessfully": "Elemento de archivo actualizado correctamente",
           "questionOptionsUpdatedSuccessfully": "Opciones de preguntas actualizadas exitosamente",
           "embedLessonCreatedSuccessfully": "Insertar lección creada exitosamente",

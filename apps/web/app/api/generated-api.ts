@@ -3857,9 +3857,42 @@ export type BetaUpdateLessonBody = ({
 }) & {
   /** @default "en" */
   language: "en" | "pl" | "de" | "lt" | "cs" | "es" | "vi";
+  expectedUpdatedAt?: string;
+  forceOverwrite?: boolean;
 };
 
 export interface BetaUpdateLessonResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface GetLessonContentVersionsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    versionNumber: number;
+    createdAt: string;
+    createdByName: string | null;
+    excerpt: string;
+  }[];
+}
+
+export interface GetLessonContentVersionResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    lessonId: string;
+    language: string;
+    versionNumber: number;
+    title: string | null;
+    description: string | null;
+    createdAt: string;
+  };
+}
+
+export interface RestoreLessonContentVersionResponse {
   data: {
     message: string;
   };
@@ -12449,6 +12482,56 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         query: query,
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonControllerGetLessonContentVersions
+     * @request GET:/api/lesson/{lessonId}/content-versions
+     */
+    lessonControllerGetLessonContentVersions: (
+      lessonId: string,
+      query: {
+        /** @default "en" */
+        language: "en" | "pl" | "de" | "lt" | "cs" | "es" | "vi";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetLessonContentVersionsResponse, any>({
+        path: `/api/lesson/${lessonId}/content-versions`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonControllerGetLessonContentVersion
+     * @request GET:/api/lesson/content-versions/{versionId}
+     */
+    lessonControllerGetLessonContentVersion: (versionId: string, params: RequestParams = {}) =>
+      this.request<GetLessonContentVersionResponse, any>({
+        path: `/api/lesson/content-versions/${versionId}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonControllerRestoreLessonContentVersion
+     * @request POST:/api/lesson/content-versions/{versionId}/restore
+     */
+    lessonControllerRestoreLessonContentVersion: (versionId: string, params: RequestParams = {}) =>
+      this.request<RestoreLessonContentVersionResponse, any>({
+        path: `/api/lesson/content-versions/${versionId}/restore`,
+        method: "POST",
         format: "json",
         ...params,
       }),

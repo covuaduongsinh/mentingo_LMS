@@ -80,6 +80,7 @@
       "private": "Soukromé",
       "publish": "Publikovat",
       "uploadingImage": "Nahrávání obrázku...",
+      "loading": "Načítání...",
       "copyUrl": "Adresa URL byla zkopírována do schránky",
       "dueDate": "Termín: {{date}}",
       "appVersion": "Verze aplikace: {{version}}"
@@ -1834,8 +1835,10 @@
         "course": "Kurz nenalezen.",
         "category": "Kategorie nenalezena.",
         "chapter": "Kapitola nenalezena.",
-        "lesson": "Lekce nenalezena."
+        "lesson": "Lekce nenalezena.",
+        "lessonContentVersion": "Verze nenalezena."
       },
+      "lessonContentConflict": "Tuto lekci mezitím upravil někdo jiný.",
       "create": {
         "courseFailed": "Kurz se nepodařilo vytvořit.",
         "stripeProductFailed": "Platební produkt kurzu se nepodařilo vytvořit."
@@ -2086,10 +2089,22 @@
           "removeResource": "Odebrat zdroj",
           "uploadFiles": "Nahrát soubory",
           "addLessonDisabledTooltip": "Chcete-li vytvořit lekci, musíte být v základním jazyce.",
-          "addTask": "Přidat úkol"
+          "addTask": "Přidat úkol",
+          "versionHistory": "Historie verzí"
         },
         "breadcrumbs": {
           "back": "Zadní"
+        },
+        "confirm": {
+          "restoreVersion": "Obnovit tuto verzi? Váš současný obsah bude před nahrazením uložen do historie.",
+          "contentConflict": "Tuto lekci mezitím upravil někdo jiný. Přesto ji přepsat vašimi změnami?"
+        },
+        "versionHistory": {
+          "title": "Historie verzí",
+          "versionLabel": "Verze {{number}}",
+          "view": "Zobrazit",
+          "restore": "Obnovit tuto verzi",
+          "empty": "Zatím žádné předchozí verze."
         },
         "settings": {
           "title": "Nastavení",
@@ -2154,6 +2169,7 @@
           "lessonDeletedSuccessfully": "Lekce byla úspěšně odstraněna",
           "lessonDeleteError": "Lekci se nepodařilo odstranit",
           "contentLessonUpdatedSuccessfully": "Obsah lekce byl úspěšně aktualizován",
+          "contentVersionRestored": "Verze byla úspěšně obnovena",
           "fileLessonUpdatedSuccessfully": "Položka souboru byla úspěšně aktualizována",
           "questionOptionsUpdatedSuccessfully": "Možnosti otázky byly úspěšně aktualizovány",
           "embedLessonCreatedSuccessfully": "Vložení lekce bylo úspěšně vytvořeno",

@@ -73,6 +73,8 @@ import {
   UpdateEmbedLessonBody,
   enrolledLessonSchema,
   initializeLessonContextSchema,
+  lessonContentVersionListSchema,
+  lessonContentVersionDetailSchema,
 } from "./lesson.schema";
 import { AdminLessonService } from "./services/adminLesson.service";
 import { LessonService } from "./services/lesson.service";
@@ -358,6 +360,58 @@ export class LessonController {
   ): Promise<BaseResponse<{ message: string }>> {
     await this.adminLessonsService.updateLesson(id, data, currentUser);
     return new BaseResponse({ message: "Text block updated successfully" });
+  }
+
+  @Get(":lessonId/content-versions")
+  @RequirePermission(PERMISSIONS.COURSE_UPDATE, PERMISSIONS.COURSE_UPDATE_OWN)
+  @Validate({
+    request: [
+      { type: "param", name: "lessonId", schema: UUIDSchema },
+      { type: "query", name: "language", schema: supportedLanguagesSchema, required: true },
+    ],
+    response: baseResponse(lessonContentVersionListSchema),
+  })
+  async getLessonContentVersions(
+    @Param("lessonId") lessonId: UUIDType,
+    @Query("language") language: SupportedLanguages,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    const versions = await this.adminLessonsService.listLessonContentVersions(
+      lessonId,
+      language,
+      currentUser,
+    );
+    return new BaseResponse(versions);
+  }
+
+  @Get("content-versions/:versionId")
+  @RequirePermission(PERMISSIONS.COURSE_UPDATE, PERMISSIONS.COURSE_UPDATE_OWN)
+  @Validate({
+    request: [{ type: "param", name: "versionId", schema: UUIDSchema }],
+    response: baseResponse(lessonContentVersionDetailSchema),
+  })
+  async getLessonContentVersion(
+    @Param("versionId") versionId: UUIDType,
+    @CurrentUser() currentUser: CurrentUserType,
+  ) {
+    const version = await this.adminLessonsService.getLessonContentVersion(versionId, currentUser);
+    return new BaseResponse(version);
+  }
+
+  @Post("content-versions/:versionId/restore")
+  @RequirePermission(PERMISSIONS.COURSE_UPDATE, PERMISSIONS.COURSE_UPDATE_OWN)
+  @Validate({
+    request: [{ type: "param", name: "versionId", schema: UUIDSchema }],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async restoreLessonContentVersion(
+    @Param("versionId") versionId: UUIDType,
+    @CurrentUser() currentUser: CurrentUserType,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminLessonsService.restoreLessonContentVersion(versionId, currentUser);
+    return new BaseResponse({
+      message: "adminCourseView.curriculum.lesson.toast.contentVersionRestored",
+    });
   }
 
   @Delete()

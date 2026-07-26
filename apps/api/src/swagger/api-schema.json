@@ -6942,6 +6942,125 @@
         }
       }
     },
+    "/api/lesson/{lessonId}/content-versions": {
+      "get": {
+        "operationId": "LessonController_getLessonContentVersions",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "default": "en",
+              "anyOf": [
+                {
+                  "const": "en",
+                  "type": "string"
+                },
+                {
+                  "const": "pl",
+                  "type": "string"
+                },
+                {
+                  "const": "de",
+                  "type": "string"
+                },
+                {
+                  "const": "lt",
+                  "type": "string"
+                },
+                {
+                  "const": "cs",
+                  "type": "string"
+                },
+                {
+                  "const": "es",
+                  "type": "string"
+                },
+                {
+                  "const": "vi",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLessonContentVersionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lesson/content-versions/{versionId}": {
+      "get": {
+        "operationId": "LessonController_getLessonContentVersion",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLessonContentVersionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lesson/content-versions/{versionId}/restore": {
+      "post": {
+        "operationId": "LessonController_restoreLessonContentVersion",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestoreLessonContentVersionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lesson": {
       "delete": {
         "operationId": "LessonController_removeLesson",
@@ -37179,6 +37298,12 @@
                     "type": "string"
                   }
                 ]
+              },
+              "expectedUpdatedAt": {
+                "type": "string"
+              },
+              "forceOverwrite": {
+                "type": "boolean"
               }
             },
             "required": [
@@ -37188,6 +37313,130 @@
         ]
       },
       "BetaUpdateLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetLessonContentVersionsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "versionNumber": {
+                  "type": "number"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "createdByName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "excerpt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "versionNumber",
+                "createdAt",
+                "createdByName",
+                "excerpt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetLessonContentVersionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "lessonId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "language": {
+                "type": "string"
+              },
+              "versionNumber": {
+                "type": "number"
+              },
+              "title": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "lessonId",
+              "language",
+              "versionNumber",
+              "title",
+              "description",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RestoreLessonContentVersionResponse": {
         "type": "object",
         "properties": {
           "data": {

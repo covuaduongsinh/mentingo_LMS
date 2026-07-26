@@ -80,6 +80,7 @@
       "private": "Privatus",
       "publish": "Paskelbti",
       "uploadingImage": "Įkeliamas vaizdas...",
+      "loading": "Įkeliama...",
       "copyUrl": "URL adresas buvo nukopijuotas į mainų sritį",
       "dueDate": "Terminas: {{date}}",
       "appVersion": "Programos versija: {{version}}"
@@ -1834,8 +1835,10 @@
         "course": "Kursas nerastas.",
         "category": "Kategorija nerasta.",
         "chapter": "Skyrius nerastas.",
-        "lesson": "Pamoka nerasta."
+        "lesson": "Pamoka nerasta.",
+        "lessonContentVersion": "Versija nerasta."
       },
+      "lessonContentConflict": "Šią pamoką redagavimo metu atnaujino kažkas kitas.",
       "create": {
         "courseFailed": "Nepavyko sukurti kurso.",
         "stripeProductFailed": "Nepavyko sukurti kurso mokėjimo produkto."
@@ -2086,10 +2089,22 @@
           "removeResource": "Pašalinti išteklius",
           "uploadFiles": "Įkelti failus",
           "addLessonDisabledTooltip": "Norėdami sukurti pamoką, turite kalbėti pagrindine kalba.",
-          "addTask": "Pridėti užduotį"
+          "addTask": "Pridėti užduotį",
+          "versionHistory": "Versijų istorija"
         },
         "breadcrumbs": {
           "back": "Atgal"
+        },
+        "confirm": {
+          "restoreVersion": "Atkurti šią versiją? Jūsų dabartinis turinys bus išsaugotas istorijoje prieš jį pakeičiant.",
+          "contentConflict": "Šią pamoką redagavimo metu atnaujino kažkas kitas. Ar vis tiek perrašyti savo pakeitimais?"
+        },
+        "versionHistory": {
+          "title": "Versijų istorija",
+          "versionLabel": "Versija {{number}}",
+          "view": "Peržiūrėti",
+          "restore": "Atkurti šią versiją",
+          "empty": "Ankstesnių versijų dar nėra."
         },
         "settings": {
           "title": "Nustatymai",
@@ -2154,6 +2169,7 @@
           "lessonDeletedSuccessfully": "Pamoka sėkmingai ištrinta",
           "lessonDeleteError": "Nepavyko ištrinti pamokos",
           "contentLessonUpdatedSuccessfully": "Turinio pamoka sėkmingai atnaujinta",
+          "contentVersionRestored": "Versija sėkmingai atkurta",
           "fileLessonUpdatedSuccessfully": "Failo elementas sėkmingai atnaujintas",
           "questionOptionsUpdatedSuccessfully": "Klausimo parinktys sėkmingai atnaujintos",
           "embedLessonCreatedSuccessfully": "Įdėti pamoka sėkmingai sukurta",
