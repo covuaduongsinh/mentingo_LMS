@@ -17,7 +17,7 @@ Theo yêu cầu của người dùng, mỗi đợt tự động verify (tsc + es
 | **L6**  | #26 merged       | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
 | **L7**  | #27 merged       | Nhập môn: Learn/Coordinate/Practice                                     |
 | **L8**  | #28 merged       | Phân tích điểm mạnh-yếu (Insight/Tutor)                                 |
-| **L9**  | _(chưa bắt đầu)_ | Cộng đồng cờ: mở rộng community forum có sẵn                            |
+| **L9**  | #29 merged       | Cộng đồng cờ: mở rộng community forum có sẵn                            |
 | **L10** | _(chưa bắt đầu)_ | Tường thuật giải đấu (Broadcast/Relay)                                  |
 
 ## Đợt L0 — Tài liệu khảo sát clean-room _(Đã merged, PR #20)_
@@ -152,12 +152,19 @@ Bảng mới: `chess_game_insights` (mỗi ply một entry — làm phẳng, kh�
 
 ## Đợt L9 — Cộng đồng cờ
 
-- CLB tự phục vụ (khác `groups` do admin quản lý).
-- Tin nhắn riêng 1-1.
-- Follow/block, dòng hoạt động bạn bè.
-- Danh bạ HLV.
-- Kid mode xuyên suốt.
-- Mở rộng community forum đã có (PR #15), không viết lại.
+> **Đã merged (PR #29)** — xem `docs/specs/chess-community-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
+
+Bảng mới: `community_conversations`, `community_messages`, `community_user_relationships` (gộp follow+block vào một bảng có cột `relationshipType`, thay vì bảng riêng — RLS riêng, `0197`/`0198`).
+
+- **Tin nhắn riêng 1-1**: hội thoại chuẩn hoá theo cặp `userAId < userBId`, đẩy realtime tin nhắn mới qua phòng `user:<id>` sẵn có của `WsGateway` (không tạo gateway riêng — mọi kết nối WS đã tự động join phòng này lúc xác thực).
+- **Follow/block**: chặn tự huỷ theo dõi hai chiều; chặn không bị giới hạn kid mode (luôn cho phép tự bảo vệ).
+- **Danh bạ HLV**: join `permissionUserRoles`/`permissionRoles` (`slug = 'trainer'`) với `users.publicProfileEnabled = true` — tái dùng Public Profile (PR #15), không thêm bảng/quyền riêng.
+- **Kid mode** áp dụng cho đúng 2 tính năng mới (nhắn tin, theo dõi): managed account (L5) chỉ tương tác được với bạn cùng lớp (cùng `groups`) theo cả hai chiều — không mở rộng ra toàn hệ thống (diễn đàn/bình luận giữ nguyên).
+- Permission mới: `community.message.send`/`community.social.manage`; đồng thời bổ sung `community.read`/`post.create`/`post.manage_own` còn thiếu cho vai trò `trainer` (lỗ hổng sót từ Đợt 7 — trainer trước đó không có quyền cộng đồng nào).
+
+**Lùi lại / chưa làm** (xem "Follow-up Work" trong spec): CLB tự phục vụ (khác `groups` do admin quản lý — hệ thống thành viên song song đủ lớn để tách đợt riêng), dòng hoạt động bạn bè (activity feed), kid mode cho diễn đàn/bình luận, nhắn tin nhóm/thu hồi/sửa tin/báo đã xem UI, thông báo email khi có tin nhắn mới, ô tìm kiếm toàn bộ người dùng tenant (cố ý thu hẹp còn danh sách gợi ý: bạn cùng lớp/HLV/đang theo dõi/đã từng chat).
+
+**Phát hiện kỹ thuật quan trọng khi triển khai**: 2 bug thật chỉ lộ ra qua smoke test thủ công qua Caddy (test đơn vị mock repository nên không chạy SQL thật) — (1) alias cột raw SQL viết `snake_case` nhưng code TS truy cập `camelCase`, phải quote alias (`AS "otherUserId"`) vì `postgres.js` trả về key đúng y hệt alias đã viết; (2) `sql\`${col} = ANY(${jsArray})\``với drizzle-orm's`sql`tag không chuyển mảng JS thành Postgres array literal đúng cách, phải dùng`inArray()` (helper có sẵn của drizzle-orm) thay cho raw SQL khi cần so khớp một mảng giá trị.
 
 ## Đợt L10 — Tường thuật giải đấu (Broadcast)
 
