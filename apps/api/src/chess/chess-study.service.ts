@@ -9,12 +9,14 @@ import { CHESS_STUDY_MEMBER_ROLES, CHESS_STUDY_VISIBILITY, PERMISSIONS } from "@
 import { hasPermission } from "src/common/permissions/permission.utils";
 
 import { ChessStudyRepository, type ListChessStudiesParams } from "./chess-study.repository";
+import { evaluatePracticeGoal, replayPracticeMoves } from "./utils/practice-goal.utils";
 
 import type {
   AddChessStudyMemberBody,
   CreateChessStudyBody,
   CreateChessStudyChapterBody,
   ReorderChessStudyChaptersBody,
+  SubmitPracticeAttemptBody,
   UpdateChessStudyBody,
   UpdateChessStudyChapterBody,
 } from "./schemas/chess-study.schema";
@@ -188,5 +190,52 @@ export class ChessStudyService {
     const study = await this.getStudyOrThrow(studyId);
     this.assertCanManage(study, user);
     await this.repository.removeMember(studyId, userId);
+  }
+
+  async submitPracticeAttempt(
+    studyId: UUIDType,
+    chapterId: UUIDType,
+    body: SubmitPracticeAttemptBody,
+    user: CurrentUserType,
+  ) {
+    const study = await this.getStudyOrThrow(studyId);
+    await this.assertCanRead(study, user);
+
+    const chapter = await this.repository.getChapterById(chapterId);
+    if (!chapter || chapter.studyId !== studyId) {
+      throw new NotFoundException("chess.study.errors.chapterNotFound");
+    }
+    if (!chapter.practiceGoalType) {
+      throw new BadRequestException("chess.study.errors.notAPracticeChapter");
+    }
+
+    const replay = replayPracticeMoves(chapter.rootFen, body.movesUci);
+    if (!replay.legal) {
+      throw new BadRequestException("chess.study.errors.illegalMoveSequence");
+    }
+
+    const achievedGoal = evaluatePracticeGoal(
+      chapter.practiceGoalType,
+      chapter.practiceGoalTargetValue,
+      replay.finalFen,
+      replay.movesUsed,
+    );
+
+    await this.repository.insertPracticeAttempt({
+      chapterId,
+      userId: user.userId,
+      movesUsed: replay.movesUsed,
+      achievedGoal,
+    });
+
+    const bestMovesUsed = await this.repository.getBestMovesUsed(chapterId, user.userId);
+
+    return { achievedGoal, movesUsed: replay.movesUsed, bestMovesUsed };
+  }
+
+  async getContinueChapterId(studyId: UUIDType, user: CurrentUserType) {
+    const study = await this.getStudyOrThrow(studyId);
+    await this.assertCanRead(study, user);
+    return this.repository.findNextIncompletePracticeChapter(studyId, user.userId);
   }
 }

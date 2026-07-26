@@ -123,6 +123,7 @@ import type {
   ChessStudyVisibility,
   ChessStudyMemberRole,
   ChessStudyChapterMode,
+  ChessPracticeGoalType,
   ChessMotif,
   ChessRatingCategory,
   ChessColorPreference,
@@ -3105,6 +3106,10 @@ export const chessStudyChapters = pgTable(
       .default(CHESS_STUDY_CHAPTER_MODES.NORMAL),
     concealFromPly: integer("conceal_from_ply"),
     practiceGoal: text("practice_goal"),
+    // Structured grading for practiceGoal, added in L7 — practiceGoal itself stays as
+    // the free-text display label. Null on every pre-existing chapter (ungraded).
+    practiceGoalType: text("practice_goal_type").$type<ChessPracticeGoalType>(),
+    practiceGoalTargetValue: integer("practice_goal_target_value"),
     displayOrder: integer("display_order").notNull().default(0),
     tenantId,
   },
@@ -3426,5 +3431,46 @@ export const chessTournamentPairings = pgTable(
     ...withTenantIdIndex("chess_tournament_pairings")(table),
     tournamentIdx: index("chess_tournament_pairings_tournament_id_idx").on(table.tournamentId),
     roundIdx: index("chess_tournament_pairings_round_idx").on(table.round),
+  }),
+);
+
+export const chessLearnProgress = pgTable(
+  "chess_learn_progress",
+  {
+    ...id,
+    ...timestamps,
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    stageId: varchar("stage_id", { length: 100 }).notNull(),
+    levelId: varchar("level_id", { length: 100 }).notNull(),
+    completedAt: timestamp("completed_at", { withTimezone: true }).notNull().defaultNow(),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_learn_progress")(table),
+    unq: unique().on(table.userId, table.stageId, table.levelId),
+  }),
+);
+
+export const chessPracticeAttempts = pgTable(
+  "chess_practice_attempts",
+  {
+    ...id,
+    ...timestamps,
+    chapterId: uuid("chapter_id")
+      .references(() => chessStudyChapters.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    movesUsed: integer("moves_used").notNull(),
+    achievedGoal: boolean("achieved_goal").notNull(),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_practice_attempts")(table),
+    chapterIdx: index("chess_practice_attempts_chapter_id_idx").on(table.chapterId),
+    userIdx: index("chess_practice_attempts_user_id_idx").on(table.userId),
   }),
 );

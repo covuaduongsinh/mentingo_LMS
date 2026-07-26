@@ -211,6 +211,16 @@ export type ChessStudyChapterMode =
 
 export const CHESS_STUDY_CHAPTER_MODE_LIST = Object.values(CHESS_STUDY_CHAPTER_MODES);
 
+/** Structured goal grading for a `practice` chapter — see chess-learn-business-spec.md. */
+export const CHESS_PRACTICE_GOAL_TYPES = {
+  CHECKMATE_IN_N: "checkmate_in_n",
+  DRAW: "draw",
+  REACH_MATERIAL_ADVANTAGE: "reach_material_advantage",
+} as const;
+
+export type ChessPracticeGoalType =
+  (typeof CHESS_PRACTICE_GOAL_TYPES)[keyof typeof CHESS_PRACTICE_GOAL_TYPES];
+
 /**
  * Tactical-motif taxonomy for puzzles — a separate axis from CHESS_TOPICS (curriculum topics).
  * Standard chess terminology, not any one reference system's original wording.

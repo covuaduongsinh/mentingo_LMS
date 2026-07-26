@@ -14,8 +14,8 @@ Theo yêu cầu của người dùng, mỗi đợt tự động verify (tsc + es
 | **L3**  | #23 merged          | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
 | **L4**  | #24 merged          | Chơi trực tuyến người-với-người                                         |
 | **L5**  | #25 merged          | Lớp học cờ: tài khoản do giáo viên quản lý                              |
-| **L6**  | _(đang triển khai)_ | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
-| **L7**  |                     | Nhập môn: Learn/Coordinate/Practice                                     |
+| **L6**  | #26 merged          | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
+| **L7**  | _(đang triển khai)_ | Nhập môn: Learn/Coordinate/Practice                                     |
 | **L8**  |                     | Phân tích điểm mạnh-yếu (Insight/Tutor)                                 |
 | **L9**  |                     | Cộng đồng cờ: mở rộng community forum có sẵn                            |
 | **L10** |                     | Tường thuật giải đấu (Broadcast/Relay)                                  |
@@ -105,7 +105,7 @@ Xây trên `groups` sẵn có, không tạo mô hình lớp song song.
 
 ## Đợt L6 — Ghép cặp hàng loạt + Giải đấu nội bộ
 
-> **Đã triển khai** — xem `docs/specs/chess-tournament-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
+> **Đã merged (PR #26)** — xem `docs/specs/chess-tournament-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
 
 Bảng mới: `chess_tournaments`, `chess_tournament_players`, `chess_tournament_pairings` (+ migration RLS riêng, `0191`/`0192`) — **không có** `chess_bulk_pairings` riêng như kế hoạch gốc: ghép cặp hàng loạt tái dùng chung 3 bảng trên với `format = 'bulk_pairing'`, `roundCount = 1`, đơn giản hơn mà không mất khả năng truy vấn thống nhất.
 
@@ -122,10 +122,14 @@ Bảng mới: `chess_tournaments`, `chess_tournament_players`, `chess_tournament
 
 ## Đợt L7 — Nhập môn: Learn · Tọa độ · Practice
 
-- Learn: chuỗi bài nhập môn theo cấp, nội dung tự viết tiếng Việt, cấu trúc stage × level.
-- Luyện tọa độ: 2 chế độ × 2 màu.
-- Practice: chuỗi study có mục tiêu (dùng Study từ L2), ghi nhận số nước tối thiểu.
-- Gắn vào `learning_paths` sẵn có.
+> **Đã triển khai** — xem `docs/specs/chess-learn-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
+
+- Learn: 10 stage nội dung tự viết tiếng Việt (cấu trúc stage × level), mỗi stage 1-2 level đã kiểm tra tay kỹ (bàn cờ thưa, dễ xác minh) thay vì bộ nội dung lớn — có thể mở rộng thêm level sau. Bảng tiến độ mới `chess_learn_progress` (RLS riêng, `0193`/`0194`).
+- Luyện tọa độ: 2 chế độ (tìm ô theo tên / gọi tên ô) × 2 màu — hoàn toàn client-side, chưa lưu điểm cao nhất (xem "Follow-up Work" trong spec).
+- Practice: kích hoạt chấm điểm tự động cho trường `practiceGoal` đã có từ L2 (thêm 2 cột có cấu trúc `practiceGoalType`/`practiceGoalTargetValue`), chấm bằng cách phát lại nước đi server-side qua `chess.js`, ghi nhận số nước tối thiểu đã dùng. Bảng mới `chess_practice_attempts`.
+- **Chưa làm**: gắn vào `learning_paths` sẵn có, soạn nội dung Learn qua UI cho giáo viên, khóa stage tuần tự — xem "Follow-up Work" trong spec.
+
+**Phát hiện quan trọng khi triển khai**: nội dung Learn (kể cả đáp án `solutionUci`) là dữ liệu tĩnh trong `packages/shared` — package này dùng chung cho cả API lẫn web, nên **không được để frontend import trực tiếp mảng nội dung** (sẽ rò rỉ đáp án vào bundle trình duyệt); response `GET /chess-learn/stages` phải tự trả về danh sách level ID cần thiết để frontend điều hướng, không dựa vào import chung. Cũng gặp lại đúng lỗi trùng tên method controller đã ghi nhận từ L2 (`swagger-typescript-api` đặt tên DTO theo tên method, không theo class) — `submitAttempt` trùng giữa `ChessLearnController` và `ChessController` hiện có, phải đổi tên thành `submitLearnAttempt`.
 
 ## Đợt L8 — Phân tích điểm mạnh-yếu (Insight/Tutor)
 

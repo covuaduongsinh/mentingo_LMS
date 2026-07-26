@@ -157,6 +157,22 @@ export const getNavigationConfig = (
             anyOf: [PERMISSIONS.CHESS_EXERCISE_READ, PERMISSIONS.CHESS_GAME_READ],
           },
         },
+        {
+          label: t("chessLearn.nav.title", { defaultValue: "Learn chess" }),
+          path: "chess/learn",
+          iconName: "Quiz",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_LEARN_READ],
+          },
+        },
+        {
+          label: t("chessLearn.coordinate.title", { defaultValue: "Coordinate trainer" }),
+          path: "chess/coordinate-trainer",
+          iconName: "Quiz",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_LEARN_READ],
+          },
+        },
       ],
     },
     ...(isAnyContentFeatureEnabled

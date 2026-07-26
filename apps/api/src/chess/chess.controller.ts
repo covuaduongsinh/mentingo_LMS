@@ -48,18 +48,22 @@ import {
 } from "./schemas/chess-puzzle.schema";
 import {
   addChessStudyMemberBodySchema,
+  chessStudyContinueResponseSchema,
   createChessStudyBodySchema,
   createChessStudyChapterBodySchema,
   chessStudyChapterSchema,
   chessStudyDetailSchema,
   chessStudySchema,
+  practiceAttemptResultSchema,
   reorderChessStudyChaptersBodySchema,
+  submitPracticeAttemptBodySchema,
   updateChessStudyBodySchema,
   updateChessStudyChapterBodySchema,
   type AddChessStudyMemberBody,
   type CreateChessStudyBody,
   type CreateChessStudyChapterBody,
   type ReorderChessStudyChaptersBody,
+  type SubmitPracticeAttemptBody,
   type UpdateChessStudyBody,
   type UpdateChessStudyChapterBody,
 } from "./schemas/chess-study.schema";
@@ -525,6 +529,38 @@ export class ChessController {
   ) {
     await this.chessStudyService.reorderChapters(id, body, user);
     return new BaseResponse({ success: true });
+  }
+
+  @Post("studies/:id/chapters/:chapterId/practice-attempt")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "param", name: "chapterId", schema: UUIDSchema },
+      { type: "body", schema: submitPracticeAttemptBodySchema },
+    ],
+    response: baseResponse(practiceAttemptResultSchema),
+  })
+  async submitPracticeAttempt(
+    @Param("id") id: UUIDType,
+    @Param("chapterId") chapterId: UUIDType,
+    @Body() body: SubmitPracticeAttemptBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(
+      await this.chessStudyService.submitPracticeAttempt(id, chapterId, body, user),
+    );
+  }
+
+  @Get("studies/:id/continue")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(chessStudyContinueResponseSchema),
+  })
+  async getContinueChapter(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
+    const chapterId = await this.chessStudyService.getContinueChapterId(id, user);
+    return new BaseResponse({ chapterId });
   }
 
   @Post("studies/:id/members")

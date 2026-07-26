@@ -33,6 +33,7 @@ import { CategoryModule } from "./category/category.module";
 import { CertificatesModule } from "./certificates/certificates.module";
 import { ChessModule } from "./chess/chess.module";
 import { ChessClassModule } from "./chess-class/chess-class.module";
+import { ChessLearnModule } from "./chess-learn/chess-learn.module";
 import { ChessTournamentModule } from "./chess-tournament/chess-tournament.module";
 import bunnyConfig from "./common/configuration/bunny";
 import callbackUrlConfig from "./common/configuration/callbackUrl";
@@ -183,6 +184,7 @@ import type { RedisClient } from "src/redis";
     ChessModule,
     ChessClassModule,
     ChessTournamentModule,
+    ChessLearnModule,
     AssignmentsModule,
     AnnouncementsModule,
     IngestionModule,

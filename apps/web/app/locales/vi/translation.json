@@ -250,6 +250,21 @@
       "modeConceal": "Che nước",
       "practiceGoal": "Mục tiêu luyện tập",
       "practiceGoalPlaceholder": "Ví dụ: Chiếu hết trong 3 nước",
+      "practiceGoalType": "Chấm điểm tự động theo",
+      "practiceGoalTypeNone": "Không chấm điểm",
+      "practiceGoalTypeCheckmate": "Chiếu hết trong N nước",
+      "practiceGoalTypeDraw": "Đạt được hòa cờ",
+      "practiceGoalTypeMaterial": "Đạt chênh lệch giá trị quân",
+      "practiceGoalMaxMoves": "Số nước tối đa",
+      "practiceGoalMaterialThreshold": "Ngưỡng chênh lệch giá trị quân",
+      "practiceGoalLabel": "Mục tiêu: {{goal}}",
+      "practiceReset": "Chơi lại",
+      "practiceSubmit": "Nộp bài",
+      "practiceAchieved": "Đạt mục tiêu!",
+      "practiceNotAchieved": "Chưa đạt mục tiêu",
+      "practiceMovesUsed": "Số nước đã dùng: {{used}}",
+      "practiceBest": "Tốt nhất: {{best}}",
+      "practiceAttemptFailedToast": "Không thể gửi bài luyện tập",
       "concealFromPly": "Che nước từ ply",
       "commentForMove": "Bình luận cho nước hiện tại",
       "members": "Thành viên",
@@ -467,6 +482,40 @@
     },
     "errors": {
       "notFound": "Không tìm thấy giải đấu"
+    }
+  },
+  "chessLearn": {
+    "nav": {
+      "title": "Nhập môn cờ vua"
+    },
+    "stages": {
+      "title": "Nhập môn cờ vua",
+      "subtitle": "Học từng bước nhỏ một, theo đúng trình tự."
+    },
+    "level": {
+      "correct": "Chính xác! Làm tốt lắm.",
+      "incorrect": "Chưa đúng, thử lại nhé.",
+      "showHint": "Xem gợi ý",
+      "next": "Level tiếp theo",
+      "backToStages": "Quay lại danh sách"
+    },
+    "coordinate": {
+      "title": "Luyện tọa độ",
+      "modeFind": "Tìm ô theo tên",
+      "modeName": "Gọi tên ô",
+      "start": "Bắt đầu",
+      "time": "Thời gian: {{seconds}}s",
+      "score": "Điểm: {{score}}",
+      "whichSquare": "Ô được tô sáng tên là gì?",
+      "clickSquare": "Bấm vào ô {{square}}",
+      "submit": "Gửi",
+      "finalScore": "Hết giờ! Điểm của bạn: {{score}}"
+    },
+    "toast": {
+      "attemptFailed": "Không thể gửi bài làm"
+    },
+    "errors": {
+      "notFound": "Không tìm thấy bài học"
     }
   },
   "common": {
@@ -4602,6 +4651,9 @@
     "chessClassLogin": "Đăng nhập bằng mã lớp",
     "chessTournamentCreate": "Tạo giải đấu cờ",
     "chessTournamentDetail": "Giải đấu cờ",
+    "chessLearnStages": "Nhập môn cờ vua",
+    "chessLearnLevel": "Bài học",
+    "chessCoordinateTrainer": "Luyện tọa độ",
     "chessAnalysisRoom": "Phòng phân tích cờ",
     "chessEditor": "Dựng thế cờ",
     "dashboard": "Bảng điều khiển",

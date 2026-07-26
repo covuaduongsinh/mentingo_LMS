@@ -219,6 +219,15 @@ export const routeAccessConfig = createRouteConfig({
   "chess/tournaments/:id": {
     anyOf: [PERMISSIONS.CHESS_TOURNAMENT_READ],
   },
+  "chess/learn": {
+    anyOf: [PERMISSIONS.CHESS_LEARN_READ],
+  },
+  "chess/learn/:stageId/:levelId": {
+    anyOf: [PERMISSIONS.CHESS_LEARN_READ],
+  },
+  "chess/coordinate-trainer": {
+    anyOf: [PERMISSIONS.CHESS_LEARN_READ],
+  },
   "super-admin/*": {
     allOf: [PERMISSIONS.TENANT_MANAGE],
   },

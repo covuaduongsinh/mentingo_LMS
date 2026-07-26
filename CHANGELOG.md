@@ -1,3 +1,14 @@
+<a name="chess-learn"></a>
+
+## [Chess Learn, coordinate trainer & graded practice] - 27.07.2026
+
+### Features:
+
+- a guided "Learn chess" curriculum: 10 short stages covering the rules from scratch (how each piece moves, capturing, protecting pieces, check, checkmate, draw, castling, en passant, forks, and piece value), each with an interactive board puzzle and a hint
+- a coordinate trainer minigame: find a named square or name a highlighted one, from either side of the board, scored against a 30-second timer
+- chess study "practice" chapters can now be auto-graded: set a goal (checkmate within N moves, reach a draw, or reach a material advantage) and the server verifies the student's played moves and tracks their best (fewest) move count
+- new permission: `chess.learn.read`
+
 <a name="chess-tournaments"></a>
 
 ## [Chess tournaments & bulk pairing] - 26.07.2026
