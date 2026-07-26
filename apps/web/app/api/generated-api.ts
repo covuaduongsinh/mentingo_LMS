@@ -304,6 +304,8 @@ export interface CurrentUserResponse {
       | "chess.study.create"
       | "chess.study.manage"
       | "chess.study.manage_own"
+      | "chess.puzzle.read"
+      | "chess.puzzle.manage"
       | "assignment.read"
       | "assignment.manage"
       | "assignment.manage_own"
@@ -6231,6 +6233,324 @@ export interface AddMemberResponse {
 export interface RemoveMemberResponse {
   data: {
     success: boolean;
+  };
+}
+
+export interface GetNextPuzzleResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    fen: string;
+    rating: number;
+    ratingDeviation: number;
+    motifs: (
+      | "fork"
+      | "pin"
+      | "skewer"
+      | "discovered_attack"
+      | "double_check"
+      | "back_rank_mate"
+      | "smothered_mate"
+      | "deflection"
+      | "decoy"
+      | "clearance"
+      | "interference"
+      | "zwischenzug"
+      | "x_ray"
+      | "trapped_piece"
+      | "hanging_piece"
+      | "sacrifice"
+      | "attraction"
+      | "overloading"
+      | "zugzwang"
+      | "promotion"
+      | "underpromotion"
+      | "en_passant"
+      | "castling_tactic"
+      | "king_hunt"
+      | "mate_in_1"
+      | "mate_in_2"
+      | "mate_in_3_or_more"
+      | "endgame_tactic"
+      | "opening_trap"
+      | "quiet_move"
+    )[];
+    popularity: number | null;
+  } | null;
+}
+
+export interface GetDailyPuzzleResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    fen: string;
+    rating: number;
+    ratingDeviation: number;
+    motifs: (
+      | "fork"
+      | "pin"
+      | "skewer"
+      | "discovered_attack"
+      | "double_check"
+      | "back_rank_mate"
+      | "smothered_mate"
+      | "deflection"
+      | "decoy"
+      | "clearance"
+      | "interference"
+      | "zwischenzug"
+      | "x_ray"
+      | "trapped_piece"
+      | "hanging_piece"
+      | "sacrifice"
+      | "attraction"
+      | "overloading"
+      | "zugzwang"
+      | "promotion"
+      | "underpromotion"
+      | "en_passant"
+      | "castling_tactic"
+      | "king_hunt"
+      | "mate_in_1"
+      | "mate_in_2"
+      | "mate_in_3_or_more"
+      | "endgame_tactic"
+      | "opening_trap"
+      | "quiet_move"
+    )[];
+    popularity: number | null;
+  } | null;
+}
+
+export interface GetPuzzleMistakesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    fen: string;
+    rating: number;
+    ratingDeviation: number;
+    motifs: (
+      | "fork"
+      | "pin"
+      | "skewer"
+      | "discovered_attack"
+      | "double_check"
+      | "back_rank_mate"
+      | "smothered_mate"
+      | "deflection"
+      | "decoy"
+      | "clearance"
+      | "interference"
+      | "zwischenzug"
+      | "x_ray"
+      | "trapped_piece"
+      | "hanging_piece"
+      | "sacrifice"
+      | "attraction"
+      | "overloading"
+      | "zugzwang"
+      | "promotion"
+      | "underpromotion"
+      | "en_passant"
+      | "castling_tactic"
+      | "king_hunt"
+      | "mate_in_1"
+      | "mate_in_2"
+      | "mate_in_3_or_more"
+      | "endgame_tactic"
+      | "opening_trap"
+      | "quiet_move"
+    )[];
+    popularity: number | null;
+  }[];
+}
+
+export interface GetPuzzleDashboardResponse {
+  data: {
+    rating: {
+      category: string;
+      rating: number;
+      ratingDeviation: number;
+      volatility: number;
+      gamesPlayed: number;
+    };
+    ratingHistory: {
+      rating: number;
+      recordedAt: string;
+    }[];
+    themeStats: {
+      motif:
+        | "fork"
+        | "pin"
+        | "skewer"
+        | "discovered_attack"
+        | "double_check"
+        | "back_rank_mate"
+        | "smothered_mate"
+        | "deflection"
+        | "decoy"
+        | "clearance"
+        | "interference"
+        | "zwischenzug"
+        | "x_ray"
+        | "trapped_piece"
+        | "hanging_piece"
+        | "sacrifice"
+        | "attraction"
+        | "overloading"
+        | "zugzwang"
+        | "promotion"
+        | "underpromotion"
+        | "en_passant"
+        | "castling_tactic"
+        | "king_hunt"
+        | "mate_in_1"
+        | "mate_in_2"
+        | "mate_in_3_or_more"
+        | "endgame_tactic"
+        | "opening_trap"
+        | "quiet_move";
+      attempts: number;
+      correct: number;
+      accuracy: number;
+    }[];
+    weakMotifs: (
+      | "fork"
+      | "pin"
+      | "skewer"
+      | "discovered_attack"
+      | "double_check"
+      | "back_rank_mate"
+      | "smothered_mate"
+      | "deflection"
+      | "decoy"
+      | "clearance"
+      | "interference"
+      | "zwischenzug"
+      | "x_ray"
+      | "trapped_piece"
+      | "hanging_piece"
+      | "sacrifice"
+      | "attraction"
+      | "overloading"
+      | "zugzwang"
+      | "promotion"
+      | "underpromotion"
+      | "en_passant"
+      | "castling_tactic"
+      | "king_hunt"
+      | "mate_in_1"
+      | "mate_in_2"
+      | "mate_in_3_or_more"
+      | "endgame_tactic"
+      | "opening_trap"
+      | "quiet_move"
+    )[];
+    strongMotifs: (
+      | "fork"
+      | "pin"
+      | "skewer"
+      | "discovered_attack"
+      | "double_check"
+      | "back_rank_mate"
+      | "smothered_mate"
+      | "deflection"
+      | "decoy"
+      | "clearance"
+      | "interference"
+      | "zwischenzug"
+      | "x_ray"
+      | "trapped_piece"
+      | "hanging_piece"
+      | "sacrifice"
+      | "attraction"
+      | "overloading"
+      | "zugzwang"
+      | "promotion"
+      | "underpromotion"
+      | "en_passant"
+      | "castling_tactic"
+      | "king_hunt"
+      | "mate_in_1"
+      | "mate_in_2"
+      | "mate_in_3_or_more"
+      | "endgame_tactic"
+      | "opening_trap"
+      | "quiet_move"
+    )[];
+  };
+}
+
+export interface SubmitPuzzleAttemptBody {
+  /** @minItems 1 */
+  movesUci: string[];
+}
+
+export interface SubmitPuzzleAttemptResponse {
+  data: {
+    correct: boolean;
+    solutionUci: string[];
+    userRatingBefore: number;
+    userRatingAfter: number;
+    rating: {
+      category: string;
+      rating: number;
+      ratingDeviation: number;
+      volatility: number;
+      gamesPlayed: number;
+    };
+  };
+}
+
+export interface ImportPuzzlesBody {
+  /** @minLength 1 */
+  csv: string;
+  /** @min 0 */
+  minRating?: number;
+  /** @min 0 */
+  maxRating?: number;
+  motifs?: (
+    | "fork"
+    | "pin"
+    | "skewer"
+    | "discovered_attack"
+    | "double_check"
+    | "back_rank_mate"
+    | "smothered_mate"
+    | "deflection"
+    | "decoy"
+    | "clearance"
+    | "interference"
+    | "zwischenzug"
+    | "x_ray"
+    | "trapped_piece"
+    | "hanging_piece"
+    | "sacrifice"
+    | "attraction"
+    | "overloading"
+    | "zugzwang"
+    | "promotion"
+    | "underpromotion"
+    | "en_passant"
+    | "castling_tactic"
+    | "king_hunt"
+    | "mate_in_1"
+    | "mate_in_2"
+    | "mate_in_3_or_more"
+    | "endgame_tactic"
+    | "opening_trap"
+    | "quiet_move"
+  )[];
+  /**
+   * @min 1
+   * @max 200000
+   */
+  maxCount?: number;
+}
+
+export interface ImportPuzzlesResponse {
+  data: {
+    jobId: string;
   };
 }
 
@@ -15506,6 +15826,135 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<RemoveMemberResponse, any>({
         path: `/api/chess/studies/${id}/members/${userId}`,
         method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetNextPuzzle
+     * @request GET:/api/chess/puzzles/next
+     */
+    chessControllerGetNextPuzzle: (
+      query?: {
+        difficulty?: "EASIER" | "NORMAL" | "HARDER";
+        motif?:
+          | "fork"
+          | "pin"
+          | "skewer"
+          | "discovered_attack"
+          | "double_check"
+          | "back_rank_mate"
+          | "smothered_mate"
+          | "deflection"
+          | "decoy"
+          | "clearance"
+          | "interference"
+          | "zwischenzug"
+          | "x_ray"
+          | "trapped_piece"
+          | "hanging_piece"
+          | "sacrifice"
+          | "attraction"
+          | "overloading"
+          | "zugzwang"
+          | "promotion"
+          | "underpromotion"
+          | "en_passant"
+          | "castling_tactic"
+          | "king_hunt"
+          | "mate_in_1"
+          | "mate_in_2"
+          | "mate_in_3_or_more"
+          | "endgame_tactic"
+          | "opening_trap"
+          | "quiet_move";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetNextPuzzleResponse, any>({
+        path: `/api/chess/puzzles/next`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetDailyPuzzle
+     * @request GET:/api/chess/puzzles/daily
+     */
+    chessControllerGetDailyPuzzle: (params: RequestParams = {}) =>
+      this.request<GetDailyPuzzleResponse, any>({
+        path: `/api/chess/puzzles/daily`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetPuzzleMistakes
+     * @request GET:/api/chess/puzzles/mistakes
+     */
+    chessControllerGetPuzzleMistakes: (params: RequestParams = {}) =>
+      this.request<GetPuzzleMistakesResponse, any>({
+        path: `/api/chess/puzzles/mistakes`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetPuzzleDashboard
+     * @request GET:/api/chess/puzzles/dashboard
+     */
+    chessControllerGetPuzzleDashboard: (params: RequestParams = {}) =>
+      this.request<GetPuzzleDashboardResponse, any>({
+        path: `/api/chess/puzzles/dashboard`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerSubmitPuzzleAttempt
+     * @request POST:/api/chess/puzzles/{id}/attempts
+     */
+    chessControllerSubmitPuzzleAttempt: (
+      id: string,
+      data: SubmitPuzzleAttemptBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<SubmitPuzzleAttemptResponse, any>({
+        path: `/api/chess/puzzles/${id}/attempts`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerImportPuzzles
+     * @request POST:/api/chess/puzzles/import
+     */
+    chessControllerImportPuzzles: (data: ImportPuzzlesBody, params: RequestParams = {}) =>
+      this.request<ImportPuzzlesResponse, any>({
+        path: `/api/chess/puzzles/import`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),

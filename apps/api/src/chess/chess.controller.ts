@@ -14,8 +14,10 @@ import {
 import { RequirePermission } from "src/common/decorators/require-permission.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { CurrentUserType } from "src/common/types/current-user.type";
+import { QUEUE_NAMES, QueueService } from "src/queue";
 
 import { ChessAnalysisService } from "./chess-analysis.service";
+import { ChessPuzzleService } from "./chess-puzzle.service";
 import { ChessStudyService } from "./chess-study.service";
 import { ChessService } from "./chess.service";
 import {
@@ -24,6 +26,19 @@ import {
   chessAnalysisSessionSchema,
   type CreateChessAnalysisSessionBody,
 } from "./schemas/chess-analysis.schema";
+import {
+  chessPuzzleDashboardResponseSchema,
+  chessPuzzleSchema,
+  chessPuzzleDifficultySchema,
+  chessMotifSchema,
+  importChessPuzzlesBodySchema,
+  importChessPuzzlesResponseSchema,
+  submitChessPuzzleAttemptBodySchema,
+  submitChessPuzzleAttemptResponseSchema,
+  type ChessPuzzleDifficulty,
+  type ImportChessPuzzlesBody,
+  type SubmitChessPuzzleAttemptBody,
+} from "./schemas/chess-puzzle.schema";
 import {
   addChessStudyMemberBodySchema,
   createChessStudyBodySchema,
@@ -82,6 +97,8 @@ export class ChessController {
     private readonly chessService: ChessService,
     private readonly chessAnalysisService: ChessAnalysisService,
     private readonly chessStudyService: ChessStudyService,
+    private readonly chessPuzzleService: ChessPuzzleService,
+    private readonly queueService: QueueService,
   ) {}
 
   @Get("topics")
@@ -536,5 +553,89 @@ export class ChessController {
   ) {
     await this.chessStudyService.removeMember(id, userId, user);
     return new BaseResponse({ success: true });
+  }
+
+  @Get("puzzles/next")
+  @RequirePermission(PERMISSIONS.CHESS_PUZZLE_READ)
+  @Validate({
+    request: [
+      { type: "query", name: "difficulty", schema: Type.Optional(chessPuzzleDifficultySchema) },
+      { type: "query", name: "motif", schema: Type.Optional(chessMotifSchema) },
+    ],
+    response: baseResponse(Type.Union([chessPuzzleSchema, Type.Null()])),
+  })
+  async getNextPuzzle(
+    @Query("difficulty") difficulty: ChessPuzzleDifficulty | undefined,
+    @Query("motif")
+    motif: ImportChessPuzzlesBody["motifs"] extends (infer T)[] | undefined ? T : never,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    const puzzle = await this.chessPuzzleService.getNextPuzzle(user, difficulty ?? "NORMAL", motif);
+    return new BaseResponse(puzzle);
+  }
+
+  @Get("puzzles/daily")
+  @RequirePermission(PERMISSIONS.CHESS_PUZZLE_READ)
+  @Validate({
+    response: baseResponse(Type.Union([chessPuzzleSchema, Type.Null()])),
+  })
+  async getDailyPuzzle() {
+    const puzzle = await this.chessPuzzleService.getDailyPuzzle();
+    return new BaseResponse(puzzle);
+  }
+
+  @Get("puzzles/mistakes")
+  @RequirePermission(PERMISSIONS.CHESS_PUZZLE_READ)
+  @Validate({
+    response: baseResponse(Type.Array(chessPuzzleSchema)),
+  })
+  async getPuzzleMistakes(@CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessPuzzleService.getMistakes(user));
+  }
+
+  @Get("puzzles/dashboard")
+  @RequirePermission(PERMISSIONS.CHESS_PUZZLE_READ)
+  @Validate({
+    response: baseResponse(chessPuzzleDashboardResponseSchema),
+  })
+  async getPuzzleDashboard(@CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessPuzzleService.getDashboard(user));
+  }
+
+  @Post("puzzles/:id/attempts")
+  @RequirePermission(PERMISSIONS.CHESS_PUZZLE_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "body", schema: submitChessPuzzleAttemptBodySchema },
+    ],
+    response: baseResponse(submitChessPuzzleAttemptResponseSchema),
+  })
+  async submitPuzzleAttempt(
+    @Param("id") id: UUIDType,
+    @Body() body: SubmitChessPuzzleAttemptBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.chessPuzzleService.submitAttempt(user, id, body.movesUci));
+  }
+
+  @Post("puzzles/import")
+  @RequirePermission(PERMISSIONS.CHESS_PUZZLE_MANAGE)
+  @Validate({
+    request: [{ type: "body", schema: importChessPuzzlesBodySchema }],
+    response: baseResponse(importChessPuzzlesResponseSchema),
+  })
+  async importPuzzles(@Body() body: ImportChessPuzzlesBody, @CurrentUser() user: CurrentUserType) {
+    const job = await this.queueService
+      .getQueue(QUEUE_NAMES.CHESS_PUZZLE_IMPORT)
+      .add("import-puzzles", {
+        tenantId: user.tenantId,
+        csv: body.csv,
+        minRating: body.minRating,
+        maxRating: body.maxRating,
+        motifs: body.motifs,
+        maxCount: body.maxCount,
+      });
+    return new BaseResponse({ jobId: job.id ?? "" });
   }
 }

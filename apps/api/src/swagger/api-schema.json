@@ -11445,6 +11445,289 @@
         }
       }
     },
+    "/api/chess/puzzles/next": {
+      "get": {
+        "operationId": "ChessController_getNextPuzzle",
+        "parameters": [
+          {
+            "name": "difficulty",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "EASIER",
+                  "type": "string"
+                },
+                {
+                  "const": "NORMAL",
+                  "type": "string"
+                },
+                {
+                  "const": "HARDER",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "motif",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "fork",
+                  "type": "string"
+                },
+                {
+                  "const": "pin",
+                  "type": "string"
+                },
+                {
+                  "const": "skewer",
+                  "type": "string"
+                },
+                {
+                  "const": "discovered_attack",
+                  "type": "string"
+                },
+                {
+                  "const": "double_check",
+                  "type": "string"
+                },
+                {
+                  "const": "back_rank_mate",
+                  "type": "string"
+                },
+                {
+                  "const": "smothered_mate",
+                  "type": "string"
+                },
+                {
+                  "const": "deflection",
+                  "type": "string"
+                },
+                {
+                  "const": "decoy",
+                  "type": "string"
+                },
+                {
+                  "const": "clearance",
+                  "type": "string"
+                },
+                {
+                  "const": "interference",
+                  "type": "string"
+                },
+                {
+                  "const": "zwischenzug",
+                  "type": "string"
+                },
+                {
+                  "const": "x_ray",
+                  "type": "string"
+                },
+                {
+                  "const": "trapped_piece",
+                  "type": "string"
+                },
+                {
+                  "const": "hanging_piece",
+                  "type": "string"
+                },
+                {
+                  "const": "sacrifice",
+                  "type": "string"
+                },
+                {
+                  "const": "attraction",
+                  "type": "string"
+                },
+                {
+                  "const": "overloading",
+                  "type": "string"
+                },
+                {
+                  "const": "zugzwang",
+                  "type": "string"
+                },
+                {
+                  "const": "promotion",
+                  "type": "string"
+                },
+                {
+                  "const": "underpromotion",
+                  "type": "string"
+                },
+                {
+                  "const": "en_passant",
+                  "type": "string"
+                },
+                {
+                  "const": "castling_tactic",
+                  "type": "string"
+                },
+                {
+                  "const": "king_hunt",
+                  "type": "string"
+                },
+                {
+                  "const": "mate_in_1",
+                  "type": "string"
+                },
+                {
+                  "const": "mate_in_2",
+                  "type": "string"
+                },
+                {
+                  "const": "mate_in_3_or_more",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame_tactic",
+                  "type": "string"
+                },
+                {
+                  "const": "opening_trap",
+                  "type": "string"
+                },
+                {
+                  "const": "quiet_move",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNextPuzzleResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/puzzles/daily": {
+      "get": {
+        "operationId": "ChessController_getDailyPuzzle",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDailyPuzzleResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/puzzles/mistakes": {
+      "get": {
+        "operationId": "ChessController_getPuzzleMistakes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPuzzleMistakesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/puzzles/dashboard": {
+      "get": {
+        "operationId": "ChessController_getPuzzleDashboard",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPuzzleDashboardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/puzzles/{id}/attempts": {
+      "post": {
+        "operationId": "ChessController_submitPuzzleAttempt",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitPuzzleAttemptBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitPuzzleAttemptResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/puzzles/import": {
+      "post": {
+        "operationId": "ChessController_importPuzzles",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportPuzzlesBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportPuzzlesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/chess/engine/status": {
       "get": {
         "operationId": "ChessEngineController_getStatus",
@@ -20226,6 +20509,14 @@
                     },
                     {
                       "const": "chess.study.manage_own",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.puzzle.read",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.puzzle.manage",
                       "type": "string"
                     },
                     {
@@ -50774,6 +51065,1250 @@
             },
             "required": [
               "success"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetNextPuzzleResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "fen": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "ratingDeviation": {
+                    "type": "number"
+                  },
+                  "motifs": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "const": "fork",
+                          "type": "string"
+                        },
+                        {
+                          "const": "pin",
+                          "type": "string"
+                        },
+                        {
+                          "const": "skewer",
+                          "type": "string"
+                        },
+                        {
+                          "const": "discovered_attack",
+                          "type": "string"
+                        },
+                        {
+                          "const": "double_check",
+                          "type": "string"
+                        },
+                        {
+                          "const": "back_rank_mate",
+                          "type": "string"
+                        },
+                        {
+                          "const": "smothered_mate",
+                          "type": "string"
+                        },
+                        {
+                          "const": "deflection",
+                          "type": "string"
+                        },
+                        {
+                          "const": "decoy",
+                          "type": "string"
+                        },
+                        {
+                          "const": "clearance",
+                          "type": "string"
+                        },
+                        {
+                          "const": "interference",
+                          "type": "string"
+                        },
+                        {
+                          "const": "zwischenzug",
+                          "type": "string"
+                        },
+                        {
+                          "const": "x_ray",
+                          "type": "string"
+                        },
+                        {
+                          "const": "trapped_piece",
+                          "type": "string"
+                        },
+                        {
+                          "const": "hanging_piece",
+                          "type": "string"
+                        },
+                        {
+                          "const": "sacrifice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "attraction",
+                          "type": "string"
+                        },
+                        {
+                          "const": "overloading",
+                          "type": "string"
+                        },
+                        {
+                          "const": "zugzwang",
+                          "type": "string"
+                        },
+                        {
+                          "const": "promotion",
+                          "type": "string"
+                        },
+                        {
+                          "const": "underpromotion",
+                          "type": "string"
+                        },
+                        {
+                          "const": "en_passant",
+                          "type": "string"
+                        },
+                        {
+                          "const": "castling_tactic",
+                          "type": "string"
+                        },
+                        {
+                          "const": "king_hunt",
+                          "type": "string"
+                        },
+                        {
+                          "const": "mate_in_1",
+                          "type": "string"
+                        },
+                        {
+                          "const": "mate_in_2",
+                          "type": "string"
+                        },
+                        {
+                          "const": "mate_in_3_or_more",
+                          "type": "string"
+                        },
+                        {
+                          "const": "endgame_tactic",
+                          "type": "string"
+                        },
+                        {
+                          "const": "opening_trap",
+                          "type": "string"
+                        },
+                        {
+                          "const": "quiet_move",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "popularity": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "fen",
+                  "rating",
+                  "ratingDeviation",
+                  "motifs",
+                  "popularity"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetDailyPuzzleResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "fen": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "ratingDeviation": {
+                    "type": "number"
+                  },
+                  "motifs": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "const": "fork",
+                          "type": "string"
+                        },
+                        {
+                          "const": "pin",
+                          "type": "string"
+                        },
+                        {
+                          "const": "skewer",
+                          "type": "string"
+                        },
+                        {
+                          "const": "discovered_attack",
+                          "type": "string"
+                        },
+                        {
+                          "const": "double_check",
+                          "type": "string"
+                        },
+                        {
+                          "const": "back_rank_mate",
+                          "type": "string"
+                        },
+                        {
+                          "const": "smothered_mate",
+                          "type": "string"
+                        },
+                        {
+                          "const": "deflection",
+                          "type": "string"
+                        },
+                        {
+                          "const": "decoy",
+                          "type": "string"
+                        },
+                        {
+                          "const": "clearance",
+                          "type": "string"
+                        },
+                        {
+                          "const": "interference",
+                          "type": "string"
+                        },
+                        {
+                          "const": "zwischenzug",
+                          "type": "string"
+                        },
+                        {
+                          "const": "x_ray",
+                          "type": "string"
+                        },
+                        {
+                          "const": "trapped_piece",
+                          "type": "string"
+                        },
+                        {
+                          "const": "hanging_piece",
+                          "type": "string"
+                        },
+                        {
+                          "const": "sacrifice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "attraction",
+                          "type": "string"
+                        },
+                        {
+                          "const": "overloading",
+                          "type": "string"
+                        },
+                        {
+                          "const": "zugzwang",
+                          "type": "string"
+                        },
+                        {
+                          "const": "promotion",
+                          "type": "string"
+                        },
+                        {
+                          "const": "underpromotion",
+                          "type": "string"
+                        },
+                        {
+                          "const": "en_passant",
+                          "type": "string"
+                        },
+                        {
+                          "const": "castling_tactic",
+                          "type": "string"
+                        },
+                        {
+                          "const": "king_hunt",
+                          "type": "string"
+                        },
+                        {
+                          "const": "mate_in_1",
+                          "type": "string"
+                        },
+                        {
+                          "const": "mate_in_2",
+                          "type": "string"
+                        },
+                        {
+                          "const": "mate_in_3_or_more",
+                          "type": "string"
+                        },
+                        {
+                          "const": "endgame_tactic",
+                          "type": "string"
+                        },
+                        {
+                          "const": "opening_trap",
+                          "type": "string"
+                        },
+                        {
+                          "const": "quiet_move",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "popularity": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "fen",
+                  "rating",
+                  "ratingDeviation",
+                  "motifs",
+                  "popularity"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetPuzzleMistakesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "fen": {
+                  "type": "string"
+                },
+                "rating": {
+                  "type": "number"
+                },
+                "ratingDeviation": {
+                  "type": "number"
+                },
+                "motifs": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "const": "fork",
+                        "type": "string"
+                      },
+                      {
+                        "const": "pin",
+                        "type": "string"
+                      },
+                      {
+                        "const": "skewer",
+                        "type": "string"
+                      },
+                      {
+                        "const": "discovered_attack",
+                        "type": "string"
+                      },
+                      {
+                        "const": "double_check",
+                        "type": "string"
+                      },
+                      {
+                        "const": "back_rank_mate",
+                        "type": "string"
+                      },
+                      {
+                        "const": "smothered_mate",
+                        "type": "string"
+                      },
+                      {
+                        "const": "deflection",
+                        "type": "string"
+                      },
+                      {
+                        "const": "decoy",
+                        "type": "string"
+                      },
+                      {
+                        "const": "clearance",
+                        "type": "string"
+                      },
+                      {
+                        "const": "interference",
+                        "type": "string"
+                      },
+                      {
+                        "const": "zwischenzug",
+                        "type": "string"
+                      },
+                      {
+                        "const": "x_ray",
+                        "type": "string"
+                      },
+                      {
+                        "const": "trapped_piece",
+                        "type": "string"
+                      },
+                      {
+                        "const": "hanging_piece",
+                        "type": "string"
+                      },
+                      {
+                        "const": "sacrifice",
+                        "type": "string"
+                      },
+                      {
+                        "const": "attraction",
+                        "type": "string"
+                      },
+                      {
+                        "const": "overloading",
+                        "type": "string"
+                      },
+                      {
+                        "const": "zugzwang",
+                        "type": "string"
+                      },
+                      {
+                        "const": "promotion",
+                        "type": "string"
+                      },
+                      {
+                        "const": "underpromotion",
+                        "type": "string"
+                      },
+                      {
+                        "const": "en_passant",
+                        "type": "string"
+                      },
+                      {
+                        "const": "castling_tactic",
+                        "type": "string"
+                      },
+                      {
+                        "const": "king_hunt",
+                        "type": "string"
+                      },
+                      {
+                        "const": "mate_in_1",
+                        "type": "string"
+                      },
+                      {
+                        "const": "mate_in_2",
+                        "type": "string"
+                      },
+                      {
+                        "const": "mate_in_3_or_more",
+                        "type": "string"
+                      },
+                      {
+                        "const": "endgame_tactic",
+                        "type": "string"
+                      },
+                      {
+                        "const": "opening_trap",
+                        "type": "string"
+                      },
+                      {
+                        "const": "quiet_move",
+                        "type": "string"
+                      }
+                    ]
+                  }
+                },
+                "popularity": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "fen",
+                "rating",
+                "ratingDeviation",
+                "motifs",
+                "popularity"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetPuzzleDashboardResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "rating": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "ratingDeviation": {
+                    "type": "number"
+                  },
+                  "volatility": {
+                    "type": "number"
+                  },
+                  "gamesPlayed": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "category",
+                  "rating",
+                  "ratingDeviation",
+                  "volatility",
+                  "gamesPlayed"
+                ]
+              },
+              "ratingHistory": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "rating": {
+                      "type": "number"
+                    },
+                    "recordedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rating",
+                    "recordedAt"
+                  ]
+                }
+              },
+              "themeStats": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "motif": {
+                      "anyOf": [
+                        {
+                          "const": "fork",
+                          "type": "string"
+                        },
+                        {
+                          "const": "pin",
+                          "type": "string"
+                        },
+                        {
+                          "const": "skewer",
+                          "type": "string"
+                        },
+                        {
+                          "const": "discovered_attack",
+                          "type": "string"
+                        },
+                        {
+                          "const": "double_check",
+                          "type": "string"
+                        },
+                        {
+                          "const": "back_rank_mate",
+                          "type": "string"
+                        },
+                        {
+                          "const": "smothered_mate",
+                          "type": "string"
+                        },
+                        {
+                          "const": "deflection",
+                          "type": "string"
+                        },
+                        {
+                          "const": "decoy",
+                          "type": "string"
+                        },
+                        {
+                          "const": "clearance",
+                          "type": "string"
+                        },
+                        {
+                          "const": "interference",
+                          "type": "string"
+                        },
+                        {
+                          "const": "zwischenzug",
+                          "type": "string"
+                        },
+                        {
+                          "const": "x_ray",
+                          "type": "string"
+                        },
+                        {
+                          "const": "trapped_piece",
+                          "type": "string"
+                        },
+                        {
+                          "const": "hanging_piece",
+                          "type": "string"
+                        },
+                        {
+                          "const": "sacrifice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "attraction",
+                          "type": "string"
+                        },
+                        {
+                          "const": "overloading",
+                          "type": "string"
+                        },
+                        {
+                          "const": "zugzwang",
+                          "type": "string"
+                        },
+                        {
+                          "const": "promotion",
+                          "type": "string"
+                        },
+                        {
+                          "const": "underpromotion",
+                          "type": "string"
+                        },
+                        {
+                          "const": "en_passant",
+                          "type": "string"
+                        },
+                        {
+                          "const": "castling_tactic",
+                          "type": "string"
+                        },
+                        {
+                          "const": "king_hunt",
+                          "type": "string"
+                        },
+                        {
+                          "const": "mate_in_1",
+                          "type": "string"
+                        },
+                        {
+                          "const": "mate_in_2",
+                          "type": "string"
+                        },
+                        {
+                          "const": "mate_in_3_or_more",
+                          "type": "string"
+                        },
+                        {
+                          "const": "endgame_tactic",
+                          "type": "string"
+                        },
+                        {
+                          "const": "opening_trap",
+                          "type": "string"
+                        },
+                        {
+                          "const": "quiet_move",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "attempts": {
+                      "type": "number"
+                    },
+                    "correct": {
+                      "type": "number"
+                    },
+                    "accuracy": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "motif",
+                    "attempts",
+                    "correct",
+                    "accuracy"
+                  ]
+                }
+              },
+              "weakMotifs": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "fork",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pin",
+                      "type": "string"
+                    },
+                    {
+                      "const": "skewer",
+                      "type": "string"
+                    },
+                    {
+                      "const": "discovered_attack",
+                      "type": "string"
+                    },
+                    {
+                      "const": "double_check",
+                      "type": "string"
+                    },
+                    {
+                      "const": "back_rank_mate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "smothered_mate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "deflection",
+                      "type": "string"
+                    },
+                    {
+                      "const": "decoy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "clearance",
+                      "type": "string"
+                    },
+                    {
+                      "const": "interference",
+                      "type": "string"
+                    },
+                    {
+                      "const": "zwischenzug",
+                      "type": "string"
+                    },
+                    {
+                      "const": "x_ray",
+                      "type": "string"
+                    },
+                    {
+                      "const": "trapped_piece",
+                      "type": "string"
+                    },
+                    {
+                      "const": "hanging_piece",
+                      "type": "string"
+                    },
+                    {
+                      "const": "sacrifice",
+                      "type": "string"
+                    },
+                    {
+                      "const": "attraction",
+                      "type": "string"
+                    },
+                    {
+                      "const": "overloading",
+                      "type": "string"
+                    },
+                    {
+                      "const": "zugzwang",
+                      "type": "string"
+                    },
+                    {
+                      "const": "promotion",
+                      "type": "string"
+                    },
+                    {
+                      "const": "underpromotion",
+                      "type": "string"
+                    },
+                    {
+                      "const": "en_passant",
+                      "type": "string"
+                    },
+                    {
+                      "const": "castling_tactic",
+                      "type": "string"
+                    },
+                    {
+                      "const": "king_hunt",
+                      "type": "string"
+                    },
+                    {
+                      "const": "mate_in_1",
+                      "type": "string"
+                    },
+                    {
+                      "const": "mate_in_2",
+                      "type": "string"
+                    },
+                    {
+                      "const": "mate_in_3_or_more",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame_tactic",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening_trap",
+                      "type": "string"
+                    },
+                    {
+                      "const": "quiet_move",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "strongMotifs": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "fork",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pin",
+                      "type": "string"
+                    },
+                    {
+                      "const": "skewer",
+                      "type": "string"
+                    },
+                    {
+                      "const": "discovered_attack",
+                      "type": "string"
+                    },
+                    {
+                      "const": "double_check",
+                      "type": "string"
+                    },
+                    {
+                      "const": "back_rank_mate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "smothered_mate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "deflection",
+                      "type": "string"
+                    },
+                    {
+                      "const": "decoy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "clearance",
+                      "type": "string"
+                    },
+                    {
+                      "const": "interference",
+                      "type": "string"
+                    },
+                    {
+                      "const": "zwischenzug",
+                      "type": "string"
+                    },
+                    {
+                      "const": "x_ray",
+                      "type": "string"
+                    },
+                    {
+                      "const": "trapped_piece",
+                      "type": "string"
+                    },
+                    {
+                      "const": "hanging_piece",
+                      "type": "string"
+                    },
+                    {
+                      "const": "sacrifice",
+                      "type": "string"
+                    },
+                    {
+                      "const": "attraction",
+                      "type": "string"
+                    },
+                    {
+                      "const": "overloading",
+                      "type": "string"
+                    },
+                    {
+                      "const": "zugzwang",
+                      "type": "string"
+                    },
+                    {
+                      "const": "promotion",
+                      "type": "string"
+                    },
+                    {
+                      "const": "underpromotion",
+                      "type": "string"
+                    },
+                    {
+                      "const": "en_passant",
+                      "type": "string"
+                    },
+                    {
+                      "const": "castling_tactic",
+                      "type": "string"
+                    },
+                    {
+                      "const": "king_hunt",
+                      "type": "string"
+                    },
+                    {
+                      "const": "mate_in_1",
+                      "type": "string"
+                    },
+                    {
+                      "const": "mate_in_2",
+                      "type": "string"
+                    },
+                    {
+                      "const": "mate_in_3_or_more",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame_tactic",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening_trap",
+                      "type": "string"
+                    },
+                    {
+                      "const": "quiet_move",
+                      "type": "string"
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "rating",
+              "ratingHistory",
+              "themeStats",
+              "weakMotifs",
+              "strongMotifs"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SubmitPuzzleAttemptBody": {
+        "type": "object",
+        "properties": {
+          "movesUci": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "movesUci"
+        ]
+      },
+      "SubmitPuzzleAttemptResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "correct": {
+                "type": "boolean"
+              },
+              "solutionUci": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "userRatingBefore": {
+                "type": "number"
+              },
+              "userRatingAfter": {
+                "type": "number"
+              },
+              "rating": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "ratingDeviation": {
+                    "type": "number"
+                  },
+                  "volatility": {
+                    "type": "number"
+                  },
+                  "gamesPlayed": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "category",
+                  "rating",
+                  "ratingDeviation",
+                  "volatility",
+                  "gamesPlayed"
+                ]
+              }
+            },
+            "required": [
+              "correct",
+              "solutionUci",
+              "userRatingBefore",
+              "userRatingAfter",
+              "rating"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ImportPuzzlesBody": {
+        "type": "object",
+        "properties": {
+          "csv": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minRating": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "maxRating": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "motifs": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "const": "fork",
+                  "type": "string"
+                },
+                {
+                  "const": "pin",
+                  "type": "string"
+                },
+                {
+                  "const": "skewer",
+                  "type": "string"
+                },
+                {
+                  "const": "discovered_attack",
+                  "type": "string"
+                },
+                {
+                  "const": "double_check",
+                  "type": "string"
+                },
+                {
+                  "const": "back_rank_mate",
+                  "type": "string"
+                },
+                {
+                  "const": "smothered_mate",
+                  "type": "string"
+                },
+                {
+                  "const": "deflection",
+                  "type": "string"
+                },
+                {
+                  "const": "decoy",
+                  "type": "string"
+                },
+                {
+                  "const": "clearance",
+                  "type": "string"
+                },
+                {
+                  "const": "interference",
+                  "type": "string"
+                },
+                {
+                  "const": "zwischenzug",
+                  "type": "string"
+                },
+                {
+                  "const": "x_ray",
+                  "type": "string"
+                },
+                {
+                  "const": "trapped_piece",
+                  "type": "string"
+                },
+                {
+                  "const": "hanging_piece",
+                  "type": "string"
+                },
+                {
+                  "const": "sacrifice",
+                  "type": "string"
+                },
+                {
+                  "const": "attraction",
+                  "type": "string"
+                },
+                {
+                  "const": "overloading",
+                  "type": "string"
+                },
+                {
+                  "const": "zugzwang",
+                  "type": "string"
+                },
+                {
+                  "const": "promotion",
+                  "type": "string"
+                },
+                {
+                  "const": "underpromotion",
+                  "type": "string"
+                },
+                {
+                  "const": "en_passant",
+                  "type": "string"
+                },
+                {
+                  "const": "castling_tactic",
+                  "type": "string"
+                },
+                {
+                  "const": "king_hunt",
+                  "type": "string"
+                },
+                {
+                  "const": "mate_in_1",
+                  "type": "string"
+                },
+                {
+                  "const": "mate_in_2",
+                  "type": "string"
+                },
+                {
+                  "const": "mate_in_3_or_more",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame_tactic",
+                  "type": "string"
+                },
+                {
+                  "const": "opening_trap",
+                  "type": "string"
+                },
+                {
+                  "const": "quiet_move",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "maxCount": {
+            "minimum": 1,
+            "maximum": 200000,
+            "type": "number"
+          }
+        },
+        "required": [
+          "csv"
+        ]
+      },
+      "ImportPuzzlesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "jobId": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "jobId"
             ]
           }
         },

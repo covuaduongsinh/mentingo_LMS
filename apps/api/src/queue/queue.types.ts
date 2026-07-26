@@ -13,6 +13,7 @@ export const QUEUE_NAMES = {
   COURSE_DUPLICATION: "course-duplication",
   LUMA_COURSE_GENERATION_SYNC: "luma-course-generation-sync",
   WEBHOOK_DELIVERY: "webhook-delivery",
+  CHESS_PUZZLE_IMPORT: "chess-puzzle-import",
 } as const;
 
 export type QueueName = (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES];
@@ -80,4 +81,13 @@ export interface WebhookDeliveryJobData {
   webhookEndpointId: UUIDType;
   eventType: string;
   payload: Record<string, unknown>;
+}
+
+export interface ChessPuzzleImportJobData {
+  tenantId: UUIDType;
+  csv: string;
+  minRating?: number;
+  maxRating?: number;
+  motifs?: string[];
+  maxCount?: number;
 }

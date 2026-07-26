@@ -2,6 +2,9 @@ import { Module } from "@nestjs/common";
 
 import { ChessAnalysisRepository } from "./chess-analysis.repository";
 import { ChessAnalysisService } from "./chess-analysis.service";
+import { ChessPuzzleImportWorker } from "./chess-puzzle-import.worker";
+import { ChessPuzzleRepository } from "./chess-puzzle.repository";
+import { ChessPuzzleService } from "./chess-puzzle.service";
 import { ChessStudyRepository } from "./chess-study.repository";
 import { ChessStudyService } from "./chess-study.service";
 import { ChessController } from "./chess.controller";
@@ -20,7 +23,16 @@ import { ChessEngineService } from "./engine/engine.service";
     ChessAnalysisRepository,
     ChessStudyService,
     ChessStudyRepository,
+    ChessPuzzleService,
+    ChessPuzzleRepository,
+    ChessPuzzleImportWorker,
   ],
-  exports: [ChessService, ChessEngineService, ChessAnalysisService, ChessStudyService],
+  exports: [
+    ChessService,
+    ChessEngineService,
+    ChessAnalysisService,
+    ChessStudyService,
+    ChessPuzzleService,
+  ],
 })
 export class ChessModule {}

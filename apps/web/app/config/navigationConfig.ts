@@ -134,6 +134,14 @@ export const getNavigationConfig = (
           },
         },
         {
+          label: t("chess.nav.puzzles", { defaultValue: "Puzzles" }),
+          path: "chess/puzzles",
+          iconName: "Target",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_PUZZLE_READ],
+          },
+        },
+        {
           label: t("chess.nav.editor", { defaultValue: "Board editor" }),
           path: "chess/editor",
           iconName: "Edit",
