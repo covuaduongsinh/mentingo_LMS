@@ -95,7 +95,37 @@
       "loadFen": "Load FEN",
       "moves": "Moves (UCI)",
       "bestMove": "Best move",
-      "eval": "Eval"
+      "eval": "Eval",
+      "createRoom": "Start collaborative room",
+      "errors": {
+        "sessionNotFound": "Analysis room not found",
+        "tenantMismatch": "You cannot access this analysis room",
+        "sessionEnded": "This analysis room has ended",
+        "illegalMove": "Illegal move",
+        "invalidFen": "Invalid FEN position",
+        "hostOnly": "Only the room host can do this"
+      }
+    },
+    "analysisRoom": {
+      "title": "Analysis room",
+      "loading": "Loading room…",
+      "status": {
+        "active": "Active",
+        "ended": "Ended"
+      },
+      "role": {
+        "host": "Host",
+        "viewer": "Viewer"
+      },
+      "endButton": "End room",
+      "resetFenLabel": "Reset position (FEN)",
+      "resetFenButton": "Reset position",
+      "toast": {
+        "ended": "The host ended this room."
+      },
+      "error": {
+        "notFound": "Analysis room not found"
+      }
     },
     "admin": {
       "exercisesTitle": "Exercise bank",
@@ -4269,6 +4299,7 @@
     }
   },
   "pages": {
+    "chessAnalysisRoom": "Chess Analysis Room",
     "dashboard": "Dashboard",
     "settings": "Settings",
     "providerInformation": "Provider Information",

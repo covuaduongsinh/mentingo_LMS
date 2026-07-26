@@ -1,8 +1,10 @@
+import { useNavigate } from "@remix-run/react";
 import { Chess } from "chess.js";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useChessEngineAnalyze } from "~/api/mutations/useChessEngineAnalyze";
+import { useCreateChessAnalysisSession } from "~/api/mutations/useCreateChessAnalysisSession";
 import { useChessEngineStatus } from "~/api/queries/useChessEngineStatus";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Badge } from "~/components/ui/badge";
@@ -22,8 +24,10 @@ const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 export default function ChessAnalysisPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: engineStatus } = useChessEngineStatus();
   const { mutateAsync: analyze, isPending } = useChessEngineAnalyze();
+  const { mutateAsync: createRoom, isPending: isCreatingRoom } = useCreateChessAnalysisSession();
 
   const [fenInput, setFenInput] = useState(START_FEN);
   const [fen, setFen] = useState(START_FEN);
@@ -73,6 +77,11 @@ export default function ChessAnalysisPage() {
     setAnalysis(null);
   };
 
+  const handleCreateRoom = async () => {
+    const room = await createRoom({ fen });
+    navigate(`/chess/analysis-room/${room.id}`);
+  };
+
   const breadcrumbs = [
     {
       title: t("chess.nav.analysis", { defaultValue: "Analysis" }),
@@ -115,6 +124,14 @@ export default function ChessAnalysisPage() {
             </Button>
             <Button type="button" variant="outline" onClick={reset}>
               {t("chess.analysis.reset", { defaultValue: "Reset" })}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isCreatingRoom}
+              onClick={() => void handleCreateRoom()}
+            >
+              {t("chess.analysis.createRoom", { defaultValue: "Start collaborative room" })}
             </Button>
             {engineStatus ? (
               <Badge variant="outline">

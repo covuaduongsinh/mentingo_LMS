@@ -8,12 +8,18 @@ import {
 } from "@nestjs/websockets";
 import { Server } from "socket.io";
 
+import { ChessAnalysisService } from "src/chess/chess-analysis.service";
 import { WsJwtGuard } from "src/websocket/guards/ws-jwt.guard";
 import {
   AuthenticatedSocket,
+  ChessAnalysisEndPayload,
+  ChessAnalysisMovePayload,
+  ChessAnalysisResetFenPayload,
   HeartbeatPayload,
+  JoinChessAnalysisPayload,
   JoinLiveTrainingPayload,
   JoinLessonPayload,
+  LeaveChessAnalysisPayload,
   LeaveLiveTrainingPayload,
   LeaveLessonPayload,
 } from "src/websocket/websocket.types";
@@ -45,6 +51,8 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
   > = [];
 
   private disconnectHandlers: Array<(socket: AuthenticatedSocket) => Promise<void>> = [];
+
+  constructor(private readonly chessAnalysisService: ChessAnalysisService) {}
 
   afterInit() {
     this.logger.log("WebSocket Gateway initialized");
@@ -101,6 +109,87 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
     await client.leave(roomName);
 
     this.logger.debug(`User ${userId} left live training room: ${roomName}`);
+
+    return { success: true };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage("join:chess-analysis")
+  async handleJoinChessAnalysis(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: JoinChessAnalysisPayload,
+  ) {
+    const { sessionId } = payload;
+    const { role } = await this.chessAnalysisService.joinSession(sessionId, client.data.user);
+
+    const roomName = getChessAnalysisRoomName(sessionId);
+    await client.join(roomName);
+
+    this.logger.debug(`User ${client.data.user.userId} joined chess analysis room: ${roomName}`);
+
+    return { success: true, room: roomName, role };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage("leave:chess-analysis")
+  async handleLeaveChessAnalysis(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: LeaveChessAnalysisPayload,
+  ) {
+    const { sessionId } = payload;
+
+    await this.chessAnalysisService.leaveSession(sessionId, client.data.user);
+    await client.leave(getChessAnalysisRoomName(sessionId));
+
+    return { success: true };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage("chess-analysis:move")
+  async handleChessAnalysisMove(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: ChessAnalysisMovePayload,
+  ) {
+    const { sessionId, uciMove } = payload;
+    const result = await this.chessAnalysisService.applyMove(sessionId, client.data.user, uciMove);
+
+    this.emitToRoom(getChessAnalysisRoomName(sessionId), "chess-analysis:move", {
+      sessionId,
+      uciMove,
+      fen: result.fen,
+      moveList: result.moveList,
+    });
+
+    return { success: true, fen: result.fen };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage("chess-analysis:reset-fen")
+  async handleChessAnalysisResetFen(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: ChessAnalysisResetFenPayload,
+  ) {
+    const { sessionId, fen } = payload;
+    const result = await this.chessAnalysisService.resetFen(sessionId, client.data.user, fen);
+
+    this.emitToRoom(getChessAnalysisRoomName(sessionId), "chess-analysis:reset-fen", {
+      sessionId,
+      fen: result.fen,
+    });
+
+    return { success: true };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage("chess-analysis:end")
+  async handleChessAnalysisEnd(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: ChessAnalysisEndPayload,
+  ) {
+    const { sessionId } = payload;
+    await this.chessAnalysisService.endSession(sessionId, client.data.user);
+
+    this.emitToRoom(getChessAnalysisRoomName(sessionId), "chess-analysis:end", { sessionId });
 
     return { success: true };
   }
@@ -203,3 +292,5 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 
 export const getLiveTrainingRoomName = (liveTrainingId: string) =>
   `live-training:${liveTrainingId}`;
+
+export const getChessAnalysisRoomName = (sessionId: string) => `chess-analysis:${sessionId}`;

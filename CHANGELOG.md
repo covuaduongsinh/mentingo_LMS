@@ -1,3 +1,14 @@
+<a name="collaborative-chess-analysis-board"></a>
+
+## [Collaborative chess analysis board] - 26.07.2026
+
+### Features:
+
+- add a real-time collaborative chess analysis room: a host creates a room (optionally from an existing position), shares the link, and anyone with chess access can join and make moves together on a shared board
+- moves are validated server-side (not just trusted from the client) before being broadcast to everyone in the room
+- host-only controls: reset the board to a new FEN, end the room (read-only afterward)
+- reuses the existing WebSocket gateway, Redis fanout, and `ChessBoard` component — no new real-time infrastructure
+
 <a name="gdpr-user-data"></a>
 
 ## [GDPR data export & anonymize] - 26.07.2026

@@ -25,6 +25,28 @@ export interface LeaveLiveTrainingPayload {
   liveTrainingId: string;
 }
 
+export interface JoinChessAnalysisPayload {
+  sessionId: string;
+}
+
+export interface LeaveChessAnalysisPayload {
+  sessionId: string;
+}
+
+export interface ChessAnalysisMovePayload {
+  sessionId: string;
+  uciMove: string;
+}
+
+export interface ChessAnalysisResetFenPayload {
+  sessionId: string;
+  fen: string;
+}
+
+export interface ChessAnalysisEndPayload {
+  sessionId: string;
+}
+
 export interface WsUser {
   userId: string;
   email: string;
