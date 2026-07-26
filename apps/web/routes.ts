@@ -16,6 +16,7 @@ export const routes: (
       });
       route("tenant-inactive", "modules/Errors/TenantInactive.page.tsx");
       route("", "modules/Navigation/NavigationWrapper.tsx", () => {
+        route("u/:username", "modules/PublicProfile/PublicProfile.page.tsx");
         route("", "modules/Dashboard/PublicDashboard.layout.tsx", () => {
           route("courses", "modules/Courses/Courses.page.tsx");
           route("course/:id", "modules/Courses/CourseView/CourseView.page.tsx");
@@ -61,6 +62,8 @@ export const routes: (
             id: "edit-article",
           });
           route("profile/:id", "modules/Profile/Profile.page.tsx");
+          route("community", "modules/Community/Community.page.tsx");
+          route("community/:postId", "modules/Community/CommunityPostDetail.page.tsx");
         });
         route("course/:courseId/lesson", "modules/Courses/Lesson/Lesson.layout.tsx", () => {
           route(":lessonId", "modules/Courses/Lesson/Lesson.page.tsx");

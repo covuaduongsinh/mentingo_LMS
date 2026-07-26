@@ -1348,6 +1348,83 @@
       "generic": "Nie udało się wygenerować pytań. Spróbuj ponownie."
     }
   },
+  "communityView": {
+    "header": "Społeczność",
+    "empty": "Brak postów. Bądź pierwszą osobą, która rozpocznie dyskusję!",
+    "pinned": "Przypięty",
+    "locked": "Zablokowany",
+    "deletedAuthor": "Usunięty użytkownik",
+    "upvotes_one": "{{count}} głos",
+    "upvotes_few": "{{count}} głosy",
+    "upvotes_many": "{{count}} głosów",
+    "upvotes_other": "{{count}} głosów",
+    "comments_one": "{{count}} komentarz",
+    "comments_few": "{{count}} komentarze",
+    "comments_many": "{{count}} komentarzy",
+    "comments_other": "{{count}} komentarzy",
+    "postLockedNotice": "Ten post jest zablokowany — nowe komentarze są wyłączone.",
+    "label": {
+      "general_discussion": "Dyskusja ogólna",
+      "question": "Pytanie",
+      "announcement": "Ogłoszenie",
+      "showcase": "Prezentacja",
+      "feedback": "Opinia"
+    },
+    "filter": {
+      "allLabels": "Wszystkie etykiety"
+    },
+    "sort": {
+      "newest": "Najnowsze",
+      "top": "Najlepsze"
+    },
+    "field": {
+      "label": "Etykieta",
+      "title": "Tytuł",
+      "content": "Treść",
+      "commentPlaceholder": "Napisz komentarz..."
+    },
+    "button": {
+      "newPost": "Nowy post",
+      "publish": "Opublikuj",
+      "comment": "Skomentuj",
+      "pin": "Przypnij",
+      "unpin": "Odepnij",
+      "lock": "Zablokuj",
+      "unlock": "Odblokuj"
+    },
+    "confirm": {
+      "deletePost": "Usunąć ten post? Tej operacji nie można cofnąć.",
+      "deleteComment": "Usunąć ten komentarz? Tej operacji nie można cofnąć."
+    },
+    "errors": {
+      "forumDisabled": "Forum społeczności nie jest włączone.",
+      "postNotFound": "Nie znaleziono posta.",
+      "commentNotFound": "Nie znaleziono komentarza.",
+      "postLocked": "Ten post jest zablokowany.",
+      "blockedWordDetected": "Twój post zawiera niedozwolone słowo.",
+      "maxPostsPerDayReached": "Osiągnięto dzienny limit postów. Spróbuj ponownie jutro.",
+      "generic": "Coś poszło nie tak. Spróbuj ponownie."
+    }
+  },
+  "publicProfileView": {
+    "errors": {
+      "profileNotFound": "Ten profil nie istnieje lub nie jest publiczny.",
+      "invalidUsername": "Nazwa użytkownika musi mieć 3-30 znaków (małe litery, cyfry, - lub _).",
+      "usernameTaken": "Ta nazwa użytkownika jest już zajęta.",
+      "usernameRequiredToEnable": "Ustaw nazwę użytkownika przed włączeniem profilu publicznego.",
+      "generic": "Coś poszło nie tak. Spróbuj ponownie."
+    },
+    "toast": {
+      "settingsUpdated": "Ustawienia profilu zaktualizowane pomyślnie"
+    },
+    "settings": {
+      "title": "Profil publiczny",
+      "username": "Nazwa użytkownika",
+      "usernamePlaceholder": "twoja-nazwa",
+      "bio": "Opis",
+      "enablePublicProfile": "Uczyń mój profil publicznie widocznym"
+    }
+  },
   "adminStatisticsView": {
     "header": "Witaj ponownie,",
     "other": {

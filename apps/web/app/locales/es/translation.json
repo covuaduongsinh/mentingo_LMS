@@ -1135,6 +1135,79 @@
       "generic": "No se pudieron generar las preguntas. Inténtalo de nuevo."
     }
   },
+  "communityView": {
+    "header": "Comunidad",
+    "empty": "Aún no hay publicaciones. ¡Sé el primero en iniciar una discusión!",
+    "pinned": "Fijado",
+    "locked": "Bloqueado",
+    "deletedAuthor": "Usuario eliminado",
+    "upvotes_one": "{{count}} voto",
+    "upvotes_other": "{{count}} votos",
+    "comments_one": "{{count}} comentario",
+    "comments_other": "{{count}} comentarios",
+    "postLockedNotice": "Esta publicación está bloqueada — los nuevos comentarios están deshabilitados.",
+    "label": {
+      "general_discussion": "Discusión general",
+      "question": "Pregunta",
+      "announcement": "Anuncio",
+      "showcase": "Presentación",
+      "feedback": "Comentarios"
+    },
+    "filter": {
+      "allLabels": "Todas las etiquetas"
+    },
+    "sort": {
+      "newest": "Más recientes",
+      "top": "Mejores"
+    },
+    "field": {
+      "label": "Etiqueta",
+      "title": "Título",
+      "content": "Contenido",
+      "commentPlaceholder": "Escribe un comentario..."
+    },
+    "button": {
+      "newPost": "Nueva publicación",
+      "publish": "Publicar",
+      "comment": "Comentar",
+      "pin": "Fijar",
+      "unpin": "Desfijar",
+      "lock": "Bloquear",
+      "unlock": "Desbloquear"
+    },
+    "confirm": {
+      "deletePost": "¿Eliminar esta publicación? Esto no se puede deshacer.",
+      "deleteComment": "¿Eliminar este comentario? Esto no se puede deshacer."
+    },
+    "errors": {
+      "forumDisabled": "El foro de la comunidad no está habilitado.",
+      "postNotFound": "Publicación no encontrada.",
+      "commentNotFound": "Comentario no encontrado.",
+      "postLocked": "Esta publicación está bloqueada.",
+      "blockedWordDetected": "Tu publicación contiene una palabra no permitida.",
+      "maxPostsPerDayReached": "Has alcanzado el límite diario de publicaciones. Inténtalo de nuevo mañana.",
+      "generic": "Algo salió mal. Inténtalo de nuevo."
+    }
+  },
+  "publicProfileView": {
+    "errors": {
+      "profileNotFound": "Este perfil no existe o no es público.",
+      "invalidUsername": "El nombre de usuario debe tener 3-30 caracteres (minúsculas, números, - o _).",
+      "usernameTaken": "Este nombre de usuario ya está en uso.",
+      "usernameRequiredToEnable": "Establece un nombre de usuario antes de habilitar tu perfil público.",
+      "generic": "Algo salió mal. Inténtalo de nuevo."
+    },
+    "toast": {
+      "settingsUpdated": "Configuración del perfil actualizada con éxito"
+    },
+    "settings": {
+      "title": "Perfil público",
+      "username": "Nombre de usuario",
+      "usernamePlaceholder": "tu-nombre-de-usuario",
+      "bio": "Biografía",
+      "enablePublicProfile": "Hacer mi perfil visible públicamente"
+    }
+  },
   "adminStatisticsView": {
     "header": "Bienvenido de nuevo,",
     "other": {

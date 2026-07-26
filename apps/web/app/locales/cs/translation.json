@@ -1134,6 +1134,83 @@
       "generic": "Generování otázek se nezdařilo. Zkuste to prosím znovu."
     }
   },
+  "communityView": {
+    "header": "Komunita",
+    "empty": "Zatím žádné příspěvky. Buďte první, kdo zahájí diskuzi!",
+    "pinned": "Připnuto",
+    "locked": "Uzamčeno",
+    "deletedAuthor": "Smazaný uživatel",
+    "upvotes_one": "{{count}} hlas",
+    "upvotes_few": "{{count}} hlasy",
+    "upvotes_many": "{{count}} hlasů",
+    "upvotes_other": "{{count}} hlasů",
+    "comments_one": "{{count}} komentář",
+    "comments_few": "{{count}} komentáře",
+    "comments_many": "{{count}} komentářů",
+    "comments_other": "{{count}} komentářů",
+    "postLockedNotice": "Tento příspěvek je uzamčen — nové komentáře jsou zakázány.",
+    "label": {
+      "general_discussion": "Obecná diskuze",
+      "question": "Otázka",
+      "announcement": "Oznámení",
+      "showcase": "Ukázka",
+      "feedback": "Zpětná vazba"
+    },
+    "filter": {
+      "allLabels": "Všechny štítky"
+    },
+    "sort": {
+      "newest": "Nejnovější",
+      "top": "Nejlepší"
+    },
+    "field": {
+      "label": "Štítek",
+      "title": "Název",
+      "content": "Obsah",
+      "commentPlaceholder": "Napište komentář..."
+    },
+    "button": {
+      "newPost": "Nový příspěvek",
+      "publish": "Publikovat",
+      "comment": "Komentovat",
+      "pin": "Připnout",
+      "unpin": "Odepnout",
+      "lock": "Uzamknout",
+      "unlock": "Odemknout"
+    },
+    "confirm": {
+      "deletePost": "Smazat tento příspěvek? Tuto akci nelze vrátit zpět.",
+      "deleteComment": "Smazat tento komentář? Tuto akci nelze vrátit zpět."
+    },
+    "errors": {
+      "forumDisabled": "Fórum komunity není povoleno.",
+      "postNotFound": "Příspěvek nenalezen.",
+      "commentNotFound": "Komentář nenalezen.",
+      "postLocked": "Tento příspěvek je uzamčen.",
+      "blockedWordDetected": "Váš příspěvek obsahuje nepovolené slovo.",
+      "maxPostsPerDayReached": "Dosáhli jste denního limitu příspěvků. Zkuste to prosím zítra.",
+      "generic": "Něco se pokazilo. Zkuste to prosím znovu."
+    }
+  },
+  "publicProfileView": {
+    "errors": {
+      "profileNotFound": "Tento profil neexistuje nebo není veřejný.",
+      "invalidUsername": "Uživatelské jméno musí mít 3-30 znaků (malá písmena, čísla, - nebo _).",
+      "usernameTaken": "Toto uživatelské jméno je již obsazené.",
+      "usernameRequiredToEnable": "Před povolením veřejného profilu nastavte uživatelské jméno.",
+      "generic": "Něco se pokazilo. Zkuste to prosím znovu."
+    },
+    "toast": {
+      "settingsUpdated": "Nastavení profilu bylo úspěšně aktualizováno"
+    },
+    "settings": {
+      "title": "Veřejný profil",
+      "username": "Uživatelské jméno",
+      "usernamePlaceholder": "vase-jmeno",
+      "bio": "Bio",
+      "enablePublicProfile": "Zveřejnit můj profil"
+    }
+  },
   "adminStatisticsView": {
     "header": "vítej zpět,",
     "other": {

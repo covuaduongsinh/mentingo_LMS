@@ -1134,6 +1134,79 @@
       "generic": "Nepavyko sugeneruoti klausimų. Bandykite dar kartą."
     }
   },
+  "communityView": {
+    "header": "Bendruomenė",
+    "empty": "Kol kas nėra įrašų. Būkite pirmas, pradėkite diskusiją!",
+    "pinned": "Prisegta",
+    "locked": "Užrakinta",
+    "deletedAuthor": "Ištrintas vartotojas",
+    "upvotes_one": "{{count}} balsas",
+    "upvotes_other": "{{count}} balsai",
+    "comments_one": "{{count}} komentaras",
+    "comments_other": "{{count}} komentarai",
+    "postLockedNotice": "Šis įrašas užrakintas — nauji komentarai negalimi.",
+    "label": {
+      "general_discussion": "Bendra diskusija",
+      "question": "Klausimas",
+      "announcement": "Pranešimas",
+      "showcase": "Pristatymas",
+      "feedback": "Atsiliepimas"
+    },
+    "filter": {
+      "allLabels": "Visos žymos"
+    },
+    "sort": {
+      "newest": "Naujausi",
+      "top": "Populiariausi"
+    },
+    "field": {
+      "label": "Žyma",
+      "title": "Pavadinimas",
+      "content": "Turinys",
+      "commentPlaceholder": "Rašyti komentarą..."
+    },
+    "button": {
+      "newPost": "Naujas įrašas",
+      "publish": "Skelbti",
+      "comment": "Komentuoti",
+      "pin": "Prisegti",
+      "unpin": "Atsegti",
+      "lock": "Užrakinti",
+      "unlock": "Atrakinti"
+    },
+    "confirm": {
+      "deletePost": "Ištrinti šį įrašą? Šio veiksmo negalima anuliuoti.",
+      "deleteComment": "Ištrinti šį komentarą? Šio veiksmo negalima anuliuoti."
+    },
+    "errors": {
+      "forumDisabled": "Bendruomenės forumas neįjungtas.",
+      "postNotFound": "Įrašas nerastas.",
+      "commentNotFound": "Komentaras nerastas.",
+      "postLocked": "Šis įrašas užrakintas.",
+      "blockedWordDetected": "Jūsų įraše yra neleidžiamas žodis.",
+      "maxPostsPerDayReached": "Pasiektas dienos įrašų limitas. Bandykite dar kartą rytoj.",
+      "generic": "Kažkas nutiko. Bandykite dar kartą."
+    }
+  },
+  "publicProfileView": {
+    "errors": {
+      "profileNotFound": "Šis profilis neegzistuoja arba nėra viešas.",
+      "invalidUsername": "Vartotojo vardas turi būti 3-30 simbolių (mažosios raidės, skaičiai, - arba _).",
+      "usernameTaken": "Šis vartotojo vardas jau užimtas.",
+      "usernameRequiredToEnable": "Nustatykite vartotojo vardą prieš įjungdami viešą profilį.",
+      "generic": "Kažkas nutiko. Bandykite dar kartą."
+    },
+    "toast": {
+      "settingsUpdated": "Profilio nustatymai sėkmingai atnaujinti"
+    },
+    "settings": {
+      "title": "Viešas profilis",
+      "username": "Vartotojo vardas",
+      "usernamePlaceholder": "tavo-vardas",
+      "bio": "Aprašymas",
+      "enablePublicProfile": "Padaryti mano profilį viešai matomą"
+    }
+  },
   "adminStatisticsView": {
     "header": "Sveiki sugrįžę,",
     "other": {

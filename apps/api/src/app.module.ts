@@ -48,6 +48,7 @@ import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { PasswordChangeRequiredGuard } from "./common/guards/password-change-required.guard";
 import { PermissionsGuard } from "./common/guards/permissions.guard";
 import { StagingGuard } from "./common/guards/staging.guard";
+import { CommunityModule } from "./community/community.module";
 import { CourseChatModule } from "./course-chat/course-chat.module";
 import { CourseModule } from "./courses/course.module";
 import { EventsModule } from "./events/events.module";
@@ -66,6 +67,7 @@ import { LumaModule } from "./luma/luma.module";
 import { NewsModule } from "./news/news.module";
 import { OutboxModule } from "./outbox/outbox.module";
 import { PermissionsModule } from "./permissions/permissions.module";
+import { PublicProfileModule } from "./public-profile/public-profile.module";
 import { QuestionsModule } from "./questions/question.module";
 import { AppThrottlerGuard } from "./rate-limit/app-throttler.guard";
 import { RedisThrottlerStorage } from "./rate-limit/redis-throttler.storage";
@@ -148,6 +150,7 @@ import type { RedisClient } from "src/redis";
     ConditionalModule.registerWhen(ScheduleModule.forRoot(), (env) => !env.JEST_WORKER_ID),
     CourseModule,
     CourseChatModule,
+    CommunityModule,
     LearningPathModule,
     GroupModule,
     GlobalSearchModule,
@@ -182,6 +185,7 @@ import type { RedisClient } from "src/redis";
     EnvModule,
     LocalizationModule,
     PermissionsModule,
+    PublicProfileModule,
     ActivityLogsModule,
     QAModule,
     NewsModule,

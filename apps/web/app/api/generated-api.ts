@@ -127,6 +127,8 @@ export interface RegisterResponse {
     deletedAt: string | null;
     failedLoginAttempts: number;
     lockedUntil: string | null;
+    username: string | null;
+    publicProfileEnabled: boolean;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -170,6 +172,8 @@ export interface LoginResponse {
     deletedAt: string | null;
     failedLoginAttempts: number;
     lockedUntil: string | null;
+    username: string | null;
+    publicProfileEnabled: boolean;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -205,6 +209,8 @@ export interface CurrentUserResponse {
     deletedAt: string | null;
     failedLoginAttempts: number;
     lockedUntil: string | null;
+    username: string | null;
+    publicProfileEnabled: boolean;
     profilePictureUrl: string | null;
     roleSlugs: string[];
     permissions: (
@@ -276,6 +282,10 @@ export interface CurrentUserResponse {
       | "qa.read_public"
       | "qa.manage"
       | "qa.manage_own"
+      | "community.read"
+      | "community.post.create"
+      | "community.post.manage_own"
+      | "community.moderate"
       | "report.read"
       | "statistics.read_self"
       | "statistics.read"
@@ -361,6 +371,8 @@ export interface CreatePasswordResponse {
     deletedAt: string | null;
     failedLoginAttempts: number;
     lockedUntil: string | null;
+    username: string | null;
+    publicProfileEnabled: boolean;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -425,6 +437,8 @@ export interface HandleMagicLinkResponse {
     deletedAt: string | null;
     failedLoginAttempts: number;
     lockedUntil: string | null;
+    username: string | null;
+    publicProfileEnabled: boolean;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -455,6 +469,10 @@ export interface GetPublicGlobalSettingsResponse {
     liveTrainingMaxParallelSessions: number;
     /** @min 1 */
     aiGenerationMonthlyLimit: number;
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    /** @min 1 */
+    communityMaxPostsPerDay: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -612,6 +630,10 @@ export interface UpdateUnregisteredUserCoursesAccessibilityResponse {
     liveTrainingMaxParallelSessions: number;
     /** @min 1 */
     aiGenerationMonthlyLimit: number;
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    /** @min 1 */
+    communityMaxPostsPerDay: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -667,6 +689,10 @@ export interface UpdateEnforceSSOResponse {
     liveTrainingMaxParallelSessions: number;
     /** @min 1 */
     aiGenerationMonthlyLimit: number;
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    /** @min 1 */
+    communityMaxPostsPerDay: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -722,6 +748,10 @@ export interface UpdateModernCourseListEnabledResponse {
     liveTrainingMaxParallelSessions: number;
     /** @min 1 */
     aiGenerationMonthlyLimit: number;
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    /** @min 1 */
+    communityMaxPostsPerDay: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -777,6 +807,10 @@ export interface UpdateCourseDiscussionsEnabledResponse {
     liveTrainingMaxParallelSessions: number;
     /** @min 1 */
     aiGenerationMonthlyLimit: number;
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    /** @min 1 */
+    communityMaxPostsPerDay: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -832,6 +866,10 @@ export interface UpdateCalendarEnabledResponse {
     liveTrainingMaxParallelSessions: number;
     /** @min 1 */
     aiGenerationMonthlyLimit: number;
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    /** @min 1 */
+    communityMaxPostsPerDay: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -887,6 +925,10 @@ export interface UpdateLiveTrainingEnabledResponse {
     liveTrainingMaxParallelSessions: number;
     /** @min 1 */
     aiGenerationMonthlyLimit: number;
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    /** @min 1 */
+    communityMaxPostsPerDay: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -947,6 +989,10 @@ export interface UpdateLiveTrainingMaxParallelSessionsResponse {
     liveTrainingMaxParallelSessions: number;
     /** @min 1 */
     aiGenerationMonthlyLimit: number;
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    /** @min 1 */
+    communityMaxPostsPerDay: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -1002,6 +1048,10 @@ export interface UpdateLearningPathsEnabledResponse {
     liveTrainingMaxParallelSessions: number;
     /** @min 1 */
     aiGenerationMonthlyLimit: number;
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    /** @min 1 */
+    communityMaxPostsPerDay: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -1088,6 +1138,10 @@ export interface UpdateColorSchemaResponse {
     liveTrainingMaxParallelSessions: number;
     /** @min 1 */
     aiGenerationMonthlyLimit: number;
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    /** @min 1 */
+    communityMaxPostsPerDay: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -1397,6 +1451,8 @@ export interface GetUsersResponse {
     deletedAt: string | null;
     failedLoginAttempts: number;
     lockedUntil: string | null;
+    username: string | null;
+    publicProfileEnabled: boolean;
     profilePictureUrl: string | null;
   } & {
     roleSlugs: string[];
@@ -1436,6 +1492,8 @@ export interface GetUserByIdResponse {
     deletedAt: string | null;
     failedLoginAttempts: number;
     lockedUntil: string | null;
+    username: string | null;
+    publicProfileEnabled: boolean;
     profilePictureUrl: string | null;
     roleSlugs: string[];
     groups: {
@@ -1482,6 +1540,8 @@ export interface UpdateUserResponse {
     deletedAt: string | null;
     failedLoginAttempts: number;
     lockedUntil: string | null;
+    username: string | null;
+    publicProfileEnabled: boolean;
     profilePictureUrl: string | null;
   };
 }
@@ -1524,6 +1584,8 @@ export interface AdminUpdateUserResponse {
     deletedAt: string | null;
     failedLoginAttempts: number;
     lockedUntil: string | null;
+    username: string | null;
+    publicProfileEnabled: boolean;
     profilePictureUrl: string | null;
   };
 }
@@ -1697,6 +1759,8 @@ export interface GetAllGroupsResponse {
       deletedAt: string | null;
       failedLoginAttempts: number;
       lockedUntil: string | null;
+      username: string | null;
+      publicProfileEnabled: boolean;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -1729,6 +1793,8 @@ export interface GetGroupByIdResponse {
       deletedAt: string | null;
       failedLoginAttempts: number;
       lockedUntil: string | null;
+      username: string | null;
+      publicProfileEnabled: boolean;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -1755,6 +1821,8 @@ export interface GetUserGroupsResponse {
       deletedAt: string | null;
       failedLoginAttempts: number;
       lockedUntil: string | null;
+      username: string | null;
+      publicProfileEnabled: boolean;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -5558,6 +5626,144 @@ export interface DeleteMessageResponse {
   };
 }
 
+export interface ListPostsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    authorId: string | null;
+    authorName: string | null;
+    title: string;
+    content: string;
+    label: string;
+    pinned: boolean;
+    locked: boolean;
+    upvoteCount: number;
+    commentCount: number;
+    hasVoted: boolean;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+  appliedFilters?: object;
+}
+
+export interface GetPostResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    authorId: string | null;
+    authorName: string | null;
+    title: string;
+    content: string;
+    label: string;
+    pinned: boolean;
+    locked: boolean;
+    upvoteCount: number;
+    commentCount: number;
+    hasVoted: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface CreatePostBody {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  title: string;
+  /** @minLength 1 */
+  content: string;
+  label: "general_discussion" | "question" | "announcement" | "showcase" | "feedback";
+}
+
+export interface CreatePostResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    authorId: string | null;
+    authorName: string | null;
+    title: string;
+    content: string;
+    label: string;
+    pinned: boolean;
+    locked: boolean;
+    upvoteCount: number;
+    commentCount: number;
+    hasVoted: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface UpdatePostBody {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  title?: string;
+  /** @minLength 1 */
+  content?: string;
+  label?: "general_discussion" | "question" | "announcement" | "showcase" | "feedback";
+}
+
+export interface UpdatePostResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    authorId: string | null;
+    authorName: string | null;
+    title: string;
+    content: string;
+    label: string;
+    pinned: boolean;
+    locked: boolean;
+    upvoteCount: number;
+    commentCount: number;
+    hasVoted: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface SetPinnedBody {
+  pinned: boolean;
+}
+
+export interface SetLockedBody {
+  locked: boolean;
+}
+
+export interface ListCommentsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    postId: string;
+    authorId: string | null;
+    authorName: string | null;
+    content: string;
+    upvoteCount: number;
+    hasVoted: boolean;
+    createdAt: string;
+  }[];
+}
+
+export interface CreateCommentBody {
+  /** @minLength 1 */
+  content: string;
+}
+
+export interface VoteBody {
+  targetType: "post" | "comment";
+  /** @format uuid */
+  targetId: string;
+}
+
 export interface GetLearningPathsResponse {
   data: ({
     /** @format uuid */
@@ -7892,6 +8098,8 @@ export interface GetGroupsResponse {
       deletedAt: string | null;
       failedLoginAttempts: number;
       lockedUntil: string | null;
+      username: string | null;
+      publicProfileEnabled: boolean;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -8064,6 +8272,30 @@ export interface CreateSupportSessionResponse {
   data: {
     redirectUrl: string;
     expiresAt: string;
+  };
+}
+
+export interface GetOwnSettingsResponse {
+  data: {
+    username: string | null;
+    publicProfileEnabled: boolean;
+    bio: string | null;
+  };
+}
+
+export interface UpdateSettingsBody {
+  username: string | null;
+  publicProfileEnabled: boolean;
+  bio?: string | null;
+}
+
+export interface GetPublicProfileResponse {
+  data: {
+    username: string;
+    firstName: string;
+    lastName: string;
+    bio: string | null;
+    avatarUrl: string | null;
   };
 }
 
@@ -14561,6 +14793,181 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name CommunityControllerListPosts
+     * @request GET:/api/community/posts
+     */
+    communityControllerListPosts: (
+      query?: {
+        label?: "general_discussion" | "question" | "announcement" | "showcase" | "feedback";
+        sort?: "newest" | "top";
+        /** @min 1 */
+        page?: number;
+        /** @min 1 */
+        perPage?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ListPostsResponse, any>({
+        path: `/api/community/posts`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerCreatePost
+     * @request POST:/api/community/posts
+     */
+    communityControllerCreatePost: (data: CreatePostBody, params: RequestParams = {}) =>
+      this.request<CreatePostResponse, any>({
+        path: `/api/community/posts`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerGetPost
+     * @request GET:/api/community/posts/{id}
+     */
+    communityControllerGetPost: (id: string, params: RequestParams = {}) =>
+      this.request<GetPostResponse, any>({
+        path: `/api/community/posts/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerUpdatePost
+     * @request PATCH:/api/community/posts/{id}
+     */
+    communityControllerUpdatePost: (id: string, data: UpdatePostBody, params: RequestParams = {}) =>
+      this.request<UpdatePostResponse, any>({
+        path: `/api/community/posts/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerDeletePost
+     * @request DELETE:/api/community/posts/{id}
+     */
+    communityControllerDeletePost: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/community/posts/${id}`,
+        method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerSetPinned
+     * @request POST:/api/community/posts/{id}/pin
+     */
+    communityControllerSetPinned: (id: string, data: SetPinnedBody, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/community/posts/${id}/pin`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerSetLocked
+     * @request POST:/api/community/posts/{id}/lock
+     */
+    communityControllerSetLocked: (id: string, data: SetLockedBody, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/community/posts/${id}/lock`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerListComments
+     * @request GET:/api/community/posts/{id}/comments
+     */
+    communityControllerListComments: (id: string, params: RequestParams = {}) =>
+      this.request<ListCommentsResponse, any>({
+        path: `/api/community/posts/${id}/comments`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerCreateComment
+     * @request POST:/api/community/posts/{id}/comments
+     */
+    communityControllerCreateComment: (
+      id: string,
+      data: CreateCommentBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/community/posts/${id}/comments`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerDeleteComment
+     * @request DELETE:/api/community/comments/{id}
+     */
+    communityControllerDeleteComment: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/community/comments/${id}`,
+        method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CommunityControllerVote
+     * @request POST:/api/community/vote
+     */
+    communityControllerVote: (data: VoteBody, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/community/vote`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name LearningPathControllerGetLearningPaths
      * @request GET:/api/learning-path
      */
@@ -16464,6 +16871,49 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name PublicProfileControllerGetOwnSettings
+     * @request GET:/api/public-profile/settings/me
+     */
+    publicProfileControllerGetOwnSettings: (params: RequestParams = {}) =>
+      this.request<GetOwnSettingsResponse, any>({
+        path: `/api/public-profile/settings/me`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name PublicProfileControllerUpdateSettings
+     * @request PATCH:/api/public-profile/settings
+     */
+    publicProfileControllerUpdateSettings: (data: UpdateSettingsBody, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/public-profile/settings`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name PublicProfileControllerGetPublicProfile
+     * @request GET:/api/public-profile/{username}
+     */
+    publicProfileControllerGetPublicProfile: (username: string, params: RequestParams = {}) =>
+      this.request<GetPublicProfileResponse, any>({
+        path: `/api/public-profile/${username}`,
+        method: "GET",
         format: "json",
         ...params,
       }),

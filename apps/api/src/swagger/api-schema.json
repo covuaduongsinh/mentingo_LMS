@@ -11123,6 +11123,354 @@
         }
       }
     },
+    "/api/community/posts": {
+      "get": {
+        "operationId": "CommunityController_listPosts",
+        "parameters": [
+          {
+            "name": "label",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "general_discussion",
+                  "type": "string"
+                },
+                {
+                  "const": "question",
+                  "type": "string"
+                },
+                {
+                  "const": "announcement",
+                  "type": "string"
+                },
+                {
+                  "const": "showcase",
+                  "type": "string"
+                },
+                {
+                  "const": "feedback",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "newest",
+                  "type": "string"
+                },
+                {
+                  "const": "top",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListPostsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "CommunityController_createPost",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePostResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/community/posts/{id}": {
+      "get": {
+        "operationId": "CommunityController_getPost",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPostResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "CommunityController_updatePost",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatePostResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "CommunityController_deletePost",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/community/posts/{id}/pin": {
+      "post": {
+        "operationId": "CommunityController_setPinned",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPinnedBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/community/posts/{id}/lock": {
+      "post": {
+        "operationId": "CommunityController_setLocked",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetLockedBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/community/posts/{id}/comments": {
+      "get": {
+        "operationId": "CommunityController_listComments",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListCommentsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "CommunityController_createComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/community/comments/{id}": {
+      "delete": {
+        "operationId": "CommunityController_deleteComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/community/vote": {
+      "post": {
+        "operationId": "CommunityController_vote",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoteBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/learning-path": {
       "get": {
         "operationId": "LearningPathController_getLearningPaths",
@@ -15308,6 +15656,70 @@
         }
       }
     },
+    "/api/public-profile/settings/me": {
+      "get": {
+        "operationId": "PublicProfileController_getOwnSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOwnSettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public-profile/settings": {
+      "patch": {
+        "operationId": "PublicProfileController_updateSettings",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSettingsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/public-profile/{username}": {
+      "get": {
+        "operationId": "PublicProfileController_getPublicProfile",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/activity-logs": {
       "get": {
         "operationId": "ActivityLogsController_getActivityLogs",
@@ -18147,6 +18559,20 @@
                   }
                 ]
               },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -18225,6 +18651,8 @@
               "deletedAt",
               "failedLoginAttempts",
               "lockedUntil",
+              "username",
+              "publicProfileEnabled",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -18311,6 +18739,20 @@
                   }
                 ]
               },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -18389,6 +18831,8 @@
               "deletedAt",
               "failedLoginAttempts",
               "lockedUntil",
+              "username",
+              "publicProfileEnabled",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -18456,6 +18900,20 @@
                     "type": "null"
                   }
                 ]
+              },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
               },
               "profilePictureUrl": {
                 "anyOf": [
@@ -18750,6 +19208,22 @@
                       "type": "string"
                     },
                     {
+                      "const": "community.read",
+                      "type": "string"
+                    },
+                    {
+                      "const": "community.post.create",
+                      "type": "string"
+                    },
+                    {
+                      "const": "community.post.manage_own",
+                      "type": "string"
+                    },
+                    {
+                      "const": "community.moderate",
+                      "type": "string"
+                    },
+                    {
                       "const": "report.read",
                       "type": "string"
                     },
@@ -18941,6 +19415,8 @@
               "deletedAt",
               "failedLoginAttempts",
               "lockedUntil",
+              "username",
+              "publicProfileEnabled",
               "profilePictureUrl",
               "roleSlugs",
               "permissions",
@@ -19119,6 +19595,20 @@
                   }
                 ]
               },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -19197,6 +19687,8 @@
               "deletedAt",
               "failedLoginAttempts",
               "lockedUntil",
+              "username",
+              "publicProfileEnabled",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -19389,6 +19881,20 @@
                   }
                 ]
               },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -19467,6 +19973,8 @@
               "deletedAt",
               "failedLoginAttempts",
               "lockedUntil",
+              "username",
+              "publicProfileEnabled",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -19505,6 +20013,19 @@
                 "type": "number"
               },
               "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
+              "communityForumEnabled": {
+                "type": "boolean"
+              },
+              "communityBlockedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "communityMaxPostsPerDay": {
                 "minimum": 1,
                 "type": "number"
               },
@@ -19717,6 +20238,9 @@
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
               "aiGenerationMonthlyLimit",
+              "communityForumEnabled",
+              "communityBlockedWords",
+              "communityMaxPostsPerDay",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -20441,6 +20965,19 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "communityForumEnabled": {
+                "type": "boolean"
+              },
+              "communityBlockedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "communityMaxPostsPerDay": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -20650,6 +21187,9 @@
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
               "aiGenerationMonthlyLimit",
+              "communityForumEnabled",
+              "communityBlockedWords",
+              "communityMaxPostsPerDay",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -20708,6 +21248,19 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "communityForumEnabled": {
+                "type": "boolean"
+              },
+              "communityBlockedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "communityMaxPostsPerDay": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -20917,6 +21470,9 @@
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
               "aiGenerationMonthlyLimit",
+              "communityForumEnabled",
+              "communityBlockedWords",
+              "communityMaxPostsPerDay",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -20975,6 +21531,19 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "communityForumEnabled": {
+                "type": "boolean"
+              },
+              "communityBlockedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "communityMaxPostsPerDay": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -21184,6 +21753,9 @@
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
               "aiGenerationMonthlyLimit",
+              "communityForumEnabled",
+              "communityBlockedWords",
+              "communityMaxPostsPerDay",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -21242,6 +21814,19 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "communityForumEnabled": {
+                "type": "boolean"
+              },
+              "communityBlockedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "communityMaxPostsPerDay": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -21451,6 +22036,9 @@
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
               "aiGenerationMonthlyLimit",
+              "communityForumEnabled",
+              "communityBlockedWords",
+              "communityMaxPostsPerDay",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -21509,6 +22097,19 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "communityForumEnabled": {
+                "type": "boolean"
+              },
+              "communityBlockedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "communityMaxPostsPerDay": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -21718,6 +22319,9 @@
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
               "aiGenerationMonthlyLimit",
+              "communityForumEnabled",
+              "communityBlockedWords",
+              "communityMaxPostsPerDay",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -21776,6 +22380,19 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "communityForumEnabled": {
+                "type": "boolean"
+              },
+              "communityBlockedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "communityMaxPostsPerDay": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -21985,6 +22602,9 @@
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
               "aiGenerationMonthlyLimit",
+              "communityForumEnabled",
+              "communityBlockedWords",
+              "communityMaxPostsPerDay",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -22055,6 +22675,19 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "communityForumEnabled": {
+                "type": "boolean"
+              },
+              "communityBlockedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "communityMaxPostsPerDay": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -22264,6 +22897,9 @@
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
               "aiGenerationMonthlyLimit",
+              "communityForumEnabled",
+              "communityBlockedWords",
+              "communityMaxPostsPerDay",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -22322,6 +22958,19 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "communityForumEnabled": {
+                "type": "boolean"
+              },
+              "communityBlockedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "communityMaxPostsPerDay": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -22531,6 +23180,9 @@
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
               "aiGenerationMonthlyLimit",
+              "communityForumEnabled",
+              "communityBlockedWords",
+              "communityMaxPostsPerDay",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -22760,6 +23412,19 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "communityForumEnabled": {
+                "type": "boolean"
+              },
+              "communityBlockedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "communityMaxPostsPerDay": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -22969,6 +23634,9 @@
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
               "aiGenerationMonthlyLimit",
+              "communityForumEnabled",
+              "communityBlockedWords",
+              "communityMaxPostsPerDay",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -24213,6 +24881,20 @@
                         }
                       ]
                     },
+                    "username": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 30
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "publicProfileEnabled": {
+                      "type": "boolean"
+                    },
                     "profilePictureUrl": {
                       "anyOf": [
                         {
@@ -24235,6 +24917,8 @@
                     "deletedAt",
                     "failedLoginAttempts",
                     "lockedUntil",
+                    "username",
+                    "publicProfileEnabled",
                     "profilePictureUrl"
                   ]
                 },
@@ -24391,6 +25075,20 @@
                   }
                 ]
               },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -24438,6 +25136,8 @@
               "deletedAt",
               "failedLoginAttempts",
               "lockedUntil",
+              "username",
+              "publicProfileEnabled",
               "profilePictureUrl",
               "roleSlugs",
               "groups"
@@ -24632,6 +25332,20 @@
                   }
                 ]
               },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -24654,6 +25368,8 @@
               "deletedAt",
               "failedLoginAttempts",
               "lockedUntil",
+              "username",
+              "publicProfileEnabled",
               "profilePictureUrl"
             ]
           }
@@ -24791,6 +25507,20 @@
                   }
                 ]
               },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -24813,6 +25543,8 @@
               "deletedAt",
               "failedLoginAttempts",
               "lockedUntil",
+              "username",
+              "publicProfileEnabled",
               "profilePictureUrl"
             ]
           }
@@ -25505,6 +26237,20 @@
                           }
                         ]
                       },
+                      "username": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 30
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "publicProfileEnabled": {
+                        "type": "boolean"
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -25527,6 +26273,8 @@
                       "deletedAt",
                       "failedLoginAttempts",
                       "lockedUntil",
+                      "username",
+                      "publicProfileEnabled",
                       "profilePictureUrl"
                     ]
                   }
@@ -25717,6 +26465,20 @@
                         }
                       ]
                     },
+                    "username": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 30
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "publicProfileEnabled": {
+                      "type": "boolean"
+                    },
                     "profilePictureUrl": {
                       "anyOf": [
                         {
@@ -25739,6 +26501,8 @@
                     "deletedAt",
                     "failedLoginAttempts",
                     "lockedUntil",
+                    "username",
+                    "publicProfileEnabled",
                     "profilePictureUrl"
                   ]
                 }
@@ -25904,6 +26668,20 @@
                           }
                         ]
                       },
+                      "username": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 30
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "publicProfileEnabled": {
+                        "type": "boolean"
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -25926,6 +26704,8 @@
                       "deletedAt",
                       "failedLoginAttempts",
                       "lockedUntil",
+                      "username",
+                      "publicProfileEnabled",
                       "profilePictureUrl"
                     ]
                   }
@@ -46327,6 +47107,574 @@
           "data"
         ]
       },
+      "ListPostsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "authorId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "authorName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "pinned": {
+                  "type": "boolean"
+                },
+                "locked": {
+                  "type": "boolean"
+                },
+                "upvoteCount": {
+                  "type": "number"
+                },
+                "commentCount": {
+                  "type": "number"
+                },
+                "hasVoted": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "authorId",
+                "authorName",
+                "title",
+                "content",
+                "label",
+                "pinned",
+                "locked",
+                "upvoteCount",
+                "commentCount",
+                "hasVoted",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "GetPostResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "authorName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "pinned": {
+                "type": "boolean"
+              },
+              "locked": {
+                "type": "boolean"
+              },
+              "upvoteCount": {
+                "type": "number"
+              },
+              "commentCount": {
+                "type": "number"
+              },
+              "hasVoted": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "authorId",
+              "authorName",
+              "title",
+              "content",
+              "label",
+              "pinned",
+              "locked",
+              "upvoteCount",
+              "commentCount",
+              "hasVoted",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreatePostBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          },
+          "content": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "const": "general_discussion",
+                "type": "string"
+              },
+              {
+                "const": "question",
+                "type": "string"
+              },
+              {
+                "const": "announcement",
+                "type": "string"
+              },
+              {
+                "const": "showcase",
+                "type": "string"
+              },
+              {
+                "const": "feedback",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "title",
+          "content",
+          "label"
+        ]
+      },
+      "CreatePostResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "authorName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "pinned": {
+                "type": "boolean"
+              },
+              "locked": {
+                "type": "boolean"
+              },
+              "upvoteCount": {
+                "type": "number"
+              },
+              "commentCount": {
+                "type": "number"
+              },
+              "hasVoted": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "authorId",
+              "authorName",
+              "title",
+              "content",
+              "label",
+              "pinned",
+              "locked",
+              "upvoteCount",
+              "commentCount",
+              "hasVoted",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdatePostBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          },
+          "content": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "const": "general_discussion",
+                "type": "string"
+              },
+              {
+                "const": "question",
+                "type": "string"
+              },
+              {
+                "const": "announcement",
+                "type": "string"
+              },
+              {
+                "const": "showcase",
+                "type": "string"
+              },
+              {
+                "const": "feedback",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "UpdatePostResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "authorName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "pinned": {
+                "type": "boolean"
+              },
+              "locked": {
+                "type": "boolean"
+              },
+              "upvoteCount": {
+                "type": "number"
+              },
+              "commentCount": {
+                "type": "number"
+              },
+              "hasVoted": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "authorId",
+              "authorName",
+              "title",
+              "content",
+              "label",
+              "pinned",
+              "locked",
+              "upvoteCount",
+              "commentCount",
+              "hasVoted",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SetPinnedBody": {
+        "type": "object",
+        "properties": {
+          "pinned": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pinned"
+        ]
+      },
+      "SetLockedBody": {
+        "type": "object",
+        "properties": {
+          "locked": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "locked"
+        ]
+      },
+      "ListCommentsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "postId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "authorId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "authorName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "upvoteCount": {
+                  "type": "number"
+                },
+                "hasVoted": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "postId",
+                "authorId",
+                "authorName",
+                "content",
+                "upvoteCount",
+                "hasVoted",
+                "createdAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateCommentBody": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "VoteBody": {
+        "type": "object",
+        "properties": {
+          "targetType": {
+            "anyOf": [
+              {
+                "const": "post",
+                "type": "string"
+              },
+              {
+                "const": "comment",
+                "type": "string"
+              }
+            ]
+          },
+          "targetId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "targetType",
+          "targetId"
+        ]
+      },
       "GetLearningPathsResponse": {
         "type": "object",
         "properties": {
@@ -57809,6 +59157,20 @@
                           }
                         ]
                       },
+                      "username": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 30
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "publicProfileEnabled": {
+                        "type": "boolean"
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -57831,6 +59193,8 @@
                       "deletedAt",
                       "failedLoginAttempts",
                       "lockedUntil",
+                      "username",
+                      "publicProfileEnabled",
                       "profilePictureUrl"
                     ]
                   }
@@ -58504,6 +59868,132 @@
             "required": [
               "redirectUrl",
               "expiresAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetOwnSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
+              "bio": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "username",
+              "publicProfileEnabled",
+              "bio"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateSettingsBody": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "anyOf": [
+              {
+                "minLength": 3,
+                "maxLength": 30,
+                "pattern": "^[a-z0-9_-]+$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "publicProfileEnabled": {
+            "type": "boolean"
+          },
+          "bio": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "username",
+          "publicProfileEnabled"
+        ]
+      },
+      "GetPublicProfileResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "bio": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "avatarUrl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "username",
+              "firstName",
+              "lastName",
+              "bio",
+              "avatarUrl"
             ]
           }
         },

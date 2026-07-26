@@ -1134,6 +1134,79 @@
       "generic": "Fragen konnten nicht generiert werden. Bitte versuchen Sie es erneut."
     }
   },
+  "communityView": {
+    "header": "Community",
+    "empty": "Noch keine Beiträge. Starten Sie die erste Diskussion!",
+    "pinned": "Angeheftet",
+    "locked": "Gesperrt",
+    "deletedAuthor": "Gelöschter Nutzer",
+    "upvotes_one": "{{count}} Upvote",
+    "upvotes_other": "{{count}} Upvotes",
+    "comments_one": "{{count}} Kommentar",
+    "comments_other": "{{count}} Kommentare",
+    "postLockedNotice": "Dieser Beitrag ist gesperrt — neue Kommentare sind deaktiviert.",
+    "label": {
+      "general_discussion": "Allgemeine Diskussion",
+      "question": "Frage",
+      "announcement": "Ankündigung",
+      "showcase": "Präsentation",
+      "feedback": "Feedback"
+    },
+    "filter": {
+      "allLabels": "Alle Labels"
+    },
+    "sort": {
+      "newest": "Neueste",
+      "top": "Top"
+    },
+    "field": {
+      "label": "Label",
+      "title": "Titel",
+      "content": "Inhalt",
+      "commentPlaceholder": "Kommentar schreiben..."
+    },
+    "button": {
+      "newPost": "Neuer Beitrag",
+      "publish": "Veröffentlichen",
+      "comment": "Kommentieren",
+      "pin": "Anheften",
+      "unpin": "Lösen",
+      "lock": "Sperren",
+      "unlock": "Entsperren"
+    },
+    "confirm": {
+      "deletePost": "Diesen Beitrag löschen? Dies kann nicht rückgängig gemacht werden.",
+      "deleteComment": "Diesen Kommentar löschen? Dies kann nicht rückgängig gemacht werden."
+    },
+    "errors": {
+      "forumDisabled": "Das Community-Forum ist nicht aktiviert.",
+      "postNotFound": "Beitrag nicht gefunden.",
+      "commentNotFound": "Kommentar nicht gefunden.",
+      "postLocked": "Dieser Beitrag ist gesperrt.",
+      "blockedWordDetected": "Ihr Beitrag enthält ein hier nicht erlaubtes Wort.",
+      "maxPostsPerDayReached": "Sie haben das tägliche Beitragslimit erreicht. Bitte versuchen Sie es morgen erneut.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    }
+  },
+  "publicProfileView": {
+    "errors": {
+      "profileNotFound": "Dieses Profil existiert nicht oder ist nicht öffentlich.",
+      "invalidUsername": "Der Benutzername muss 3-30 Zeichen lang sein (Kleinbuchstaben, Zahlen, - oder _).",
+      "usernameTaken": "Dieser Benutzername ist bereits vergeben.",
+      "usernameRequiredToEnable": "Legen Sie einen Benutzernamen fest, bevor Sie Ihr öffentliches Profil aktivieren.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    },
+    "toast": {
+      "settingsUpdated": "Profileinstellungen erfolgreich aktualisiert"
+    },
+    "settings": {
+      "title": "Öffentliches Profil",
+      "username": "Benutzername",
+      "usernamePlaceholder": "dein-benutzername",
+      "bio": "Bio",
+      "enablePublicProfile": "Mein Profil öffentlich sichtbar machen"
+    }
+  },
   "adminStatisticsView": {
     "header": "Willkommen zurück,",
     "other": {

@@ -1226,6 +1226,20 @@
       "when": 1785027532573,
       "tag": "0174_enable_ai_generations_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 175,
+      "version": "7",
+      "when": 1785029641363,
+      "tag": "0175_add_community_forum",
+      "breakpoints": true
+    },
+    {
+      "idx": 176,
+      "version": "7",
+      "when": 1785029641364,
+      "tag": "0176_enable_community_forum_rls",
+      "breakpoints": true
     }
   ]
 }

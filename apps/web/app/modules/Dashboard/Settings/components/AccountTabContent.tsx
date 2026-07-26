@@ -6,6 +6,7 @@ import UserDetailsForm from "../forms/UserDetailsForm";
 import { IntegrationApiKeyCard } from "./IntegrationApiKeyCard";
 import LanguageSelect from "./LanguageSelect";
 import NotificationPreferences from "./NotificationPreferences";
+import { PublicProfileSettingsCard } from "./PublicProfileSettingsCard";
 import { ResetOnboarding } from "./ResetOnboarding";
 
 import type { AdminSettings, UserSettings } from "../types";
@@ -30,6 +31,7 @@ export default function AccountTabContent({
       <LanguageSelect />
       {(canManageCourses || canManageUsers) && <UserDetailsForm />}
       <ChangePasswordForm />
+      <PublicProfileSettingsCard />
       {isAdminSettings(settings) && <NotificationPreferences adminSettings={settings} />}
       {canAccessIntegrationApi && <IntegrationApiKeyCard />}
       {canResetOnboarding && <ResetOnboarding />}

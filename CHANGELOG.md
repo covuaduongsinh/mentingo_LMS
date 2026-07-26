@@ -1,3 +1,13 @@
+<a name="community-forum"></a>
+
+## [Community forum & public profiles] - 26.07.2026
+
+### Features:
+
+- add a course-independent community forum: posts with fixed labels, single-level comments, upvotes on both, pinning/locking (moderators only)
+- add moderation settings: a blocked-words list and a per-tenant daily post limit, plus a forum-enabled toggle (off by default)
+- add opt-in public profiles at `/u/:username` (avatar, name, bio — no email or learning-progress data ever shown), with a settings-page card to claim a username and toggle visibility
+
 <a name="ai-quiz-generation"></a>
 
 ## [AI quiz generation] - 26.07.2026

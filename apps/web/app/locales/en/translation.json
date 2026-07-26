@@ -1295,6 +1295,79 @@
       "generic": "Failed to generate questions. Please try again."
     }
   },
+  "communityView": {
+    "header": "Community",
+    "empty": "No posts yet. Be the first to start a discussion!",
+    "pinned": "Pinned",
+    "locked": "Locked",
+    "deletedAuthor": "Deleted user",
+    "upvotes_one": "{{count}} upvote",
+    "upvotes_other": "{{count}} upvotes",
+    "comments_one": "{{count}} comment",
+    "comments_other": "{{count}} comments",
+    "postLockedNotice": "This post is locked — new comments are disabled.",
+    "label": {
+      "general_discussion": "General discussion",
+      "question": "Question",
+      "announcement": "Announcement",
+      "showcase": "Showcase",
+      "feedback": "Feedback"
+    },
+    "filter": {
+      "allLabels": "All labels"
+    },
+    "sort": {
+      "newest": "Newest",
+      "top": "Top"
+    },
+    "field": {
+      "label": "Label",
+      "title": "Title",
+      "content": "Content",
+      "commentPlaceholder": "Write a comment..."
+    },
+    "button": {
+      "newPost": "New post",
+      "publish": "Publish",
+      "comment": "Comment",
+      "pin": "Pin",
+      "unpin": "Unpin",
+      "lock": "Lock",
+      "unlock": "Unlock"
+    },
+    "confirm": {
+      "deletePost": "Delete this post? This cannot be undone.",
+      "deleteComment": "Delete this comment? This cannot be undone."
+    },
+    "errors": {
+      "forumDisabled": "The community forum is not enabled.",
+      "postNotFound": "Post not found.",
+      "commentNotFound": "Comment not found.",
+      "postLocked": "This post is locked.",
+      "blockedWordDetected": "Your post contains a word that isn't allowed here.",
+      "maxPostsPerDayReached": "You've reached the daily post limit. Please try again tomorrow.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "publicProfileView": {
+    "errors": {
+      "profileNotFound": "This profile doesn't exist or isn't public.",
+      "invalidUsername": "Username must be 3-30 characters (lowercase letters, numbers, - or _).",
+      "usernameTaken": "This username is already taken.",
+      "usernameRequiredToEnable": "Set a username before enabling your public profile.",
+      "generic": "Something went wrong. Please try again."
+    },
+    "toast": {
+      "settingsUpdated": "Profile settings updated successfully"
+    },
+    "settings": {
+      "title": "Public profile",
+      "username": "Username",
+      "usernamePlaceholder": "your-username",
+      "bio": "Bio",
+      "enablePublicProfile": "Make my profile publicly visible"
+    }
+  },
   "adminStatisticsView": {
     "header": "Welcome back,",
     "other": {
