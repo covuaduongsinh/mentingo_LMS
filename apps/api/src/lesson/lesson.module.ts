@@ -18,6 +18,7 @@ import { StudentLessonProgressModule } from "src/studentLessonProgress/studentLe
 import { LessonController } from "./lesson.controller";
 import { AdminLessonRepository } from "./repositories/adminLesson.repository";
 import { LessonRepository } from "./repositories/lesson.repository";
+import { LessonContentVersionsRepository } from "./repositories/lessonContentVersions.repository";
 import { AdminLessonService } from "./services/adminLesson.service";
 import { LessonService } from "./services/lesson.service";
 
@@ -42,6 +43,7 @@ import { LessonService } from "./services/lesson.service";
     LessonRepository,
     AdminLessonService,
     AdminLessonRepository,
+    LessonContentVersionsRepository,
     LessonService,
     LocalizationService,
   ],

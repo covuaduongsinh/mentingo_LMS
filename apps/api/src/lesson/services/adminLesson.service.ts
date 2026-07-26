@@ -3,6 +3,7 @@ import { Readable } from "stream";
 
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Inject,
   Injectable,
@@ -47,6 +48,7 @@ import { isRichTextEmpty } from "src/utils/isRichTextEmpty";
 import { LESSON_TYPES } from "../lesson.type";
 import { AdminLessonRepository } from "../repositories/adminLesson.repository";
 import { LessonRepository } from "../repositories/lesson.repository";
+import { LessonContentVersionsRepository } from "../repositories/lessonContentVersions.repository";
 
 import type { LessonResourceMetadata, ResourceWithUrlError } from "../lesson-resource.types";
 import type {
@@ -92,6 +94,7 @@ export class AdminLessonService {
     private readonly resourceLibraryService: ResourceLibraryService,
     private readonly liveTrainingService: LiveTrainingService,
     private readonly searchIndexService: SearchIndexService,
+    private readonly lessonContentVersionsRepository: LessonContentVersionsRepository,
     @Inject("CACHE_MANAGER") private readonly cache: CacheManagerStore,
   ) {}
 
@@ -683,9 +686,32 @@ export class AdminLessonService {
 
     if (!lesson) throw new NotFoundException("adminCourseView.errors.notFound.lesson");
 
+    if (
+      data.expectedUpdatedAt &&
+      !data.forceOverwrite &&
+      new Date(data.expectedUpdatedAt).getTime() !== new Date(lesson.updatedAt).getTime()
+    ) {
+      throw new ConflictException("adminCourseView.errors.lessonContentConflict");
+    }
+
     this.assertLiveTrainingLessonTitleOnlyUpdate(lesson.type, data);
 
     const previousLessonSnapshot = await this.buildLessonActivitySnapshot(id, data.language);
+
+    if (
+      lesson.type === LESSON_TYPES.CONTENT &&
+      data.description !== undefined &&
+      data.description !== lesson.description
+    ) {
+      await this.lessonContentVersionsRepository.createSnapshot({
+        lessonId: id,
+        language: data.language,
+        title: lesson.title ?? null,
+        description: lesson.description ?? null,
+        createdBy: currentUser.userId,
+      });
+      await this.lessonContentVersionsRepository.pruneOldVersions(id);
+    }
 
     if (data.description !== undefined) {
       data.description = annotateVideoAutoplayAndBlockIndexesInContent(data.description);
@@ -711,6 +737,49 @@ export class AdminLessonService {
     );
 
     return updatedLesson.id;
+  }
+
+  async listLessonContentVersions(
+    lessonId: UUIDType,
+    language: SupportedLanguages,
+    currentUser: CurrentUserType,
+  ) {
+    await this.validateAccess(ENTITY_TYPES.LESSON, currentUser, lessonId);
+
+    return this.lessonContentVersionsRepository.listVersions(lessonId, language);
+  }
+
+  async getLessonContentVersion(versionId: UUIDType, currentUser: CurrentUserType) {
+    const version = await this.lessonContentVersionsRepository.getVersionById(versionId);
+
+    if (!version) {
+      throw new NotFoundException("adminCourseView.errors.notFound.lessonContentVersion");
+    }
+
+    await this.validateAccess(ENTITY_TYPES.LESSON, currentUser, version.lessonId);
+
+    return version;
+  }
+
+  async restoreLessonContentVersion(versionId: UUIDType, currentUser: CurrentUserType) {
+    const version = await this.lessonContentVersionsRepository.getVersionById(versionId);
+
+    if (!version) {
+      throw new NotFoundException("adminCourseView.errors.notFound.lessonContentVersion");
+    }
+
+    await this.validateAccess(ENTITY_TYPES.LESSON, currentUser, version.lessonId);
+
+    return this.updateLesson(
+      version.lessonId,
+      {
+        language: version.language as SupportedLanguages,
+        title: version.title ?? undefined,
+        description: version.description ?? undefined,
+        forceOverwrite: true,
+      },
+      currentUser,
+    );
   }
 
   private assertLiveTrainingLessonTitleOnlyUpdate(lessonType: string, data: UpdateLessonBody) {

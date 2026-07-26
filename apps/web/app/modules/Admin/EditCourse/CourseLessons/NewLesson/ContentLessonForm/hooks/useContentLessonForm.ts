@@ -18,6 +18,7 @@ import { contentLessonFormSchema } from "../validators/useContentLessonFormSchem
 
 import type { ContentLessonFormValues } from "../validators/useContentLessonFormSchema";
 import type { SupportedLanguages } from "@repo/shared";
+import type { AxiosError } from "axios";
 
 type ContentLessonFormProps = {
   chapterToEdit: Chapter | null;
@@ -63,7 +64,7 @@ export const useContentLessonForm = ({
     }
   }, [lessonToEdit, reset]);
 
-  const onSubmit = async (values: ContentLessonFormValues) => {
+  const submitLesson = async (values: ContentLessonFormValues, forceOverwrite: boolean) => {
     if (!chapterToEdit) return;
 
     try {
@@ -72,6 +73,8 @@ export const useContentLessonForm = ({
           data: {
             ...values,
             language,
+            expectedUpdatedAt: lessonToEdit.updatedAt,
+            forceOverwrite,
           },
           lessonId: lessonToEdit.id,
         });
@@ -90,9 +93,20 @@ export const useContentLessonForm = ({
 
       setIsCurrectFormDirty(false);
     } catch (error) {
+      const isConflict = (error as AxiosError)?.response?.status === 409;
+
+      if (isConflict && !forceOverwrite) {
+        if (window.confirm(t("adminCourseView.curriculum.lesson.confirm.contentConflict"))) {
+          await submitLesson(values, true);
+        }
+        return;
+      }
+
       console.error("Error creating text block:", error);
     }
   };
+
+  const onSubmit = (values: ContentLessonFormValues) => submitLesson(values, false);
 
   const onDelete = async () => {
     if (!chapterToEdit?.id || !lessonToEdit?.id) {

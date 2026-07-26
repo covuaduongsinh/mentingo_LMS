@@ -267,8 +267,30 @@ export const updateLessonSchema = Type.Intersect([
   Type.Partial(createLessonSchema),
   Type.Object({
     language: supportedLanguagesSchema,
+    expectedUpdatedAt: Type.Optional(Type.String()),
+    forceOverwrite: Type.Optional(Type.Boolean()),
   }),
 ]);
+
+export const lessonContentVersionSummarySchema = Type.Object({
+  id: UUIDSchema,
+  versionNumber: Type.Number(),
+  createdAt: Type.String(),
+  createdByName: Type.Union([Type.String(), Type.Null()]),
+  excerpt: Type.String(),
+});
+
+export const lessonContentVersionListSchema = Type.Array(lessonContentVersionSummarySchema);
+
+export const lessonContentVersionDetailSchema = Type.Object({
+  id: UUIDSchema,
+  lessonId: UUIDSchema,
+  language: Type.String(),
+  versionNumber: Type.Number(),
+  title: Type.Union([Type.String(), Type.Null()]),
+  description: Type.Union([Type.String(), Type.Null()]),
+  createdAt: Type.String(),
+});
 
 export const updateQuizLessonSchema = Type.Intersect([
   Type.Partial(createQuizLessonSchema),
@@ -410,6 +432,8 @@ export type AnswerQuestionBody = Static<typeof answerQuestionsForLessonBody>;
 export type QuestionDetails = Static<typeof questionDetails>;
 export type NextLesson = Static<typeof nextLessonSchema>;
 export type StudentQuestionAnswer = Static<typeof studentQuestionAnswersSchema>;
+export type LessonContentVersionSummary = Static<typeof lessonContentVersionSummarySchema>;
+export type LessonContentVersionDetail = Static<typeof lessonContentVersionDetailSchema>;
 export type OnlyAnswerIdAsnwer = Static<typeof onlyAnswerIdSAnswerSchema>;
 export type OnlyValueAnswer = Static<typeof onlyValueAnswerSchema>;
 export type FullAnswer = Static<typeof fullAnswerSchema>;

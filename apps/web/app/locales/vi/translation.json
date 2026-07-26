@@ -240,6 +240,7 @@
       "private": "Riêng tư",
       "publish": "Xuất bản",
       "uploadingImage": "Đang tải ảnh lên...",
+      "loading": "Đang tải...",
       "copyUrl": "Đã sao chép địa chỉ URL vào bộ nhớ tạm",
       "dueDate": "Hạn chót: {{date}}",
       "appVersion": "Phiên bản ứng dụng: {{version}}"
@@ -2055,8 +2056,10 @@
         "course": "Không tìm thấy khóa học.",
         "category": "Không tìm thấy danh mục.",
         "chapter": "Không tìm thấy chương.",
-        "lesson": "Không tìm thấy bài học."
+        "lesson": "Không tìm thấy bài học.",
+        "lessonContentVersion": "Không tìm thấy phiên bản."
       },
+      "lessonContentConflict": "Bài học này đã được người khác cập nhật trong lúc bạn đang chỉnh sửa.",
       "create": {
         "courseFailed": "Tạo khóa học thất bại.",
         "stripeProductFailed": "Tạo sản phẩm thanh toán khóa học thất bại."
@@ -2307,10 +2310,22 @@
           "removeResource": "Xóa tài nguyên",
           "uploadFiles": "Tải tệp lên",
           "addLessonDisabledTooltip": "Để tạo bài học, bạn phải đang ở ngôn ngữ gốc.",
-          "addTask": "Thêm câu hỏi/nhiệm vụ"
+          "addTask": "Thêm câu hỏi/nhiệm vụ",
+          "versionHistory": "Lịch sử phiên bản"
         },
         "breadcrumbs": {
           "back": "Quay lại"
+        },
+        "confirm": {
+          "restoreVersion": "Khôi phục phiên bản này? Nội dung hiện tại của bạn sẽ được lưu vào lịch sử trước khi bị thay thế.",
+          "contentConflict": "Bài học này đã được người khác cập nhật trong lúc bạn đang chỉnh sửa. Vẫn muốn lưu đè thay đổi của bạn?"
+        },
+        "versionHistory": {
+          "title": "Lịch sử phiên bản",
+          "versionLabel": "Phiên bản {{number}}",
+          "view": "Xem",
+          "restore": "Khôi phục phiên bản này",
+          "empty": "Chưa có phiên bản nào trước đó."
         },
         "settings": {
           "title": "Cài đặt",
@@ -2375,6 +2390,7 @@
           "lessonDeletedSuccessfully": "Đã xóa bài học thành công",
           "lessonDeleteError": "Xóa bài học thất bại",
           "contentLessonUpdatedSuccessfully": "Đã cập nhật bài học nội dung thành công",
+          "contentVersionRestored": "Khôi phục phiên bản thành công",
           "fileLessonUpdatedSuccessfully": "Đã cập nhật mục tệp thành công",
           "questionOptionsUpdatedSuccessfully": "Đã cập nhật lựa chọn câu hỏi thành công",
           "embedLessonCreatedSuccessfully": "Đã tạo bài học nhúng thành công",

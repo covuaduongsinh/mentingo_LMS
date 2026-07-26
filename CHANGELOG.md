@@ -1,3 +1,13 @@
+<a name="lesson-content-versioning"></a>
+
+## [Lesson content versioning] - 26.07.2026
+
+### Features:
+
+- snapshot a content lesson's previous title/description every time it's saved (up to 20 versions per lesson, oldest pruned first), so accidental overwrites are never permanent
+- add a "Version history" panel in the content lesson editor to browse past versions, preview one read-only, and restore it (restoring itself snapshots the pre-restore content, so restores are undoable too)
+- detect concurrent-edit conflicts on save (optimistic locking via the lesson's `updatedAt`) and prompt to overwrite instead of silently discarding another editor's changes
+
 <a name="account-security-hardening"></a>
 
 ## [Account security hardening] - 26.07.2026

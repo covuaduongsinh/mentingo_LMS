@@ -29,6 +29,7 @@ import { ContentTypes, DeleteContentType } from "../../../EditCourse.types";
 import Breadcrumb from "../components/Breadcrumb";
 
 import { useContentLessonForm } from "./hooks/useContentLessonForm";
+import { LessonContentVersionHistory } from "./LessonContentVersionHistory";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
 import type { SupportedLanguages } from "@repo/shared";
@@ -66,6 +67,7 @@ const ContentLessonForm = ({
   const { mutate: initializeLessonContext } = useInitializeLessonContext();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVersionHistoryOpen, setIsVersionHistoryOpen] = useState(false);
 
   const { mutateAsync: initVideoUpload } = useInitVideoUpload();
   const { uploadResource } = useEntityResourceUpload();
@@ -270,6 +272,16 @@ const ContentLessonForm = ({
             >
               {lessonToEdit ? t("common.button.delete") : t("common.button.cancel")}
             </Button>
+            {lessonToEdit && (
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-6"
+                onClick={() => setIsVersionHistoryOpen(true)}
+              >
+                {t("adminCourseView.curriculum.lesson.button.versionHistory")}
+              </Button>
+            )}
           </div>
         </form>
       </Form>
@@ -285,6 +297,12 @@ const ContentLessonForm = ({
         onSave={onSaveLeaveModal}
         onValidate={onValidateLeave}
         isValidated={isValidated}
+      />
+      <LessonContentVersionHistory
+        lessonId={lessonToEdit?.id}
+        language={language}
+        open={isVersionHistoryOpen}
+        onClose={() => setIsVersionHistoryOpen(false)}
       />
       {uploadDisplayModeDialog}
     </div>
