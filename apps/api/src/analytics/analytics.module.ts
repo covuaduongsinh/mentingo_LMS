@@ -8,9 +8,10 @@ import { CourseAnalyticsService } from "src/analytics/services/course-analytics.
 
 import { AnalyticsController } from "./analytics.controller";
 import { CourseAnalyticsController } from "./controllers/course-analytics.controller";
+import { OrgAnalyticsController } from "./controllers/org-analytics.controller";
 
 @Module({
-  controllers: [AnalyticsController, CourseAnalyticsController],
+  controllers: [AnalyticsController, CourseAnalyticsController, OrgAnalyticsController],
   providers: [
     AnalyticsService,
     AnalyticsRepository,

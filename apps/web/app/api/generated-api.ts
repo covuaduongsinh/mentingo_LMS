@@ -8732,6 +8732,71 @@ export interface GetTopLearnersResponse {
   }[];
 }
 
+export interface GetDauTrendResponse {
+  data: {
+    date: string;
+    activeUsers: number;
+  }[];
+}
+
+export interface GetNewVsReturningResponse {
+  data: {
+    date: string;
+    newUsers: number;
+    returningUsers: number;
+  }[];
+}
+
+export interface GetWeekdayActivityResponse {
+  data: {
+    weekday: number;
+    activityCount: number;
+  }[];
+}
+
+export interface GetCohortRetentionResponse {
+  data: {
+    cohortWeek: string;
+    cohortSize: number;
+    retention: {
+      weekOffset: number;
+      percentage: number | null;
+    }[];
+  }[];
+}
+
+export interface GetScoreDistributionResponse {
+  data: {
+    quiz: {
+      bucket: string;
+      count: number;
+    }[];
+    assignment: {
+      bucket: string;
+      count: number;
+    }[];
+  };
+}
+
+export interface GetCertificateIssuanceRateResponse {
+  data: {
+    completedCount: number;
+    certifiedCount: number;
+    percentage: number;
+  };
+}
+
+export interface GetEngagementScoreResponse {
+  data: {
+    score: number;
+    components: {
+      recentActivityRatio: number;
+      courseCompletionRatio: number;
+      quizPassRatio: number;
+    };
+  };
+}
+
 export interface GetEventsResponse {
   data: {
     events: {
@@ -17214,6 +17279,137 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/analytics/courses/${courseId}/top-learners`,
         method: "GET",
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name OrgAnalyticsControllerGetDauTrend
+     * @request GET:/api/analytics/org/dau-trend
+     */
+    orgAnalyticsControllerGetDauTrend: (
+      query?: {
+        /**
+         * @min 1
+         * @max 90
+         */
+        days?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetDauTrendResponse, any>({
+        path: `/api/analytics/org/dau-trend`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name OrgAnalyticsControllerGetNewVsReturning
+     * @request GET:/api/analytics/org/new-vs-returning
+     */
+    orgAnalyticsControllerGetNewVsReturning: (
+      query?: {
+        /**
+         * @min 1
+         * @max 90
+         */
+        days?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetNewVsReturningResponse, any>({
+        path: `/api/analytics/org/new-vs-returning`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name OrgAnalyticsControllerGetWeekdayActivity
+     * @request GET:/api/analytics/org/weekday-activity
+     */
+    orgAnalyticsControllerGetWeekdayActivity: (params: RequestParams = {}) =>
+      this.request<GetWeekdayActivityResponse, any>({
+        path: `/api/analytics/org/weekday-activity`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name OrgAnalyticsControllerGetCohortRetention
+     * @request GET:/api/analytics/org/cohort-retention
+     */
+    orgAnalyticsControllerGetCohortRetention: (params: RequestParams = {}) =>
+      this.request<GetCohortRetentionResponse, any>({
+        path: `/api/analytics/org/cohort-retention`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name OrgAnalyticsControllerGetScoreDistribution
+     * @request GET:/api/analytics/org/score-distribution
+     */
+    orgAnalyticsControllerGetScoreDistribution: (params: RequestParams = {}) =>
+      this.request<GetScoreDistributionResponse, any>({
+        path: `/api/analytics/org/score-distribution`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name OrgAnalyticsControllerGetCertificateIssuanceRate
+     * @request GET:/api/analytics/org/certificate-issuance-rate
+     */
+    orgAnalyticsControllerGetCertificateIssuanceRate: (params: RequestParams = {}) =>
+      this.request<GetCertificateIssuanceRateResponse, any>({
+        path: `/api/analytics/org/certificate-issuance-rate`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name OrgAnalyticsControllerGetEngagementScore
+     * @request GET:/api/analytics/org/engagement-score
+     */
+    orgAnalyticsControllerGetEngagementScore: (params: RequestParams = {}) =>
+      this.request<GetEngagementScoreResponse, any>({
+        path: `/api/analytics/org/engagement-score`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name OrgAnalyticsControllerExportAdvancedAnalytics
+     * @request GET:/api/analytics/org/export
+     */
+    orgAnalyticsControllerExportAdvancedAnalytics: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/analytics/org/export`,
+        method: "GET",
         ...params,
       }),
 

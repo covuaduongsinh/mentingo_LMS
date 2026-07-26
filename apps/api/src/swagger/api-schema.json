@@ -17338,6 +17338,158 @@
         }
       }
     },
+    "/api/analytics/org/dau-trend": {
+      "get": {
+        "operationId": "OrgAnalyticsController_getDauTrend",
+        "parameters": [
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 90,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDauTrendResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/org/new-vs-returning": {
+      "get": {
+        "operationId": "OrgAnalyticsController_getNewVsReturning",
+        "parameters": [
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 90,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNewVsReturningResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/org/weekday-activity": {
+      "get": {
+        "operationId": "OrgAnalyticsController_getWeekdayActivity",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWeekdayActivityResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/org/cohort-retention": {
+      "get": {
+        "operationId": "OrgAnalyticsController_getCohortRetention",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCohortRetentionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/org/score-distribution": {
+      "get": {
+        "operationId": "OrgAnalyticsController_getScoreDistribution",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetScoreDistributionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/org/certificate-issuance-rate": {
+      "get": {
+        "operationId": "OrgAnalyticsController_getCertificateIssuanceRate",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCertificateIssuanceRateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/org/engagement-score": {
+      "get": {
+        "operationId": "OrgAnalyticsController_getEngagementScore",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEngagementScoreResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/org/export": {
+      "get": {
+        "operationId": "OrgAnalyticsController_exportAdvancedAnalytics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/calendar/events": {
       "get": {
         "operationId": "CalendarController_getEvents",
@@ -61763,6 +61915,259 @@
                 "completedLessonCount"
               ]
             }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetDauTrendResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string"
+                },
+                "activeUsers": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "date",
+                "activeUsers"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetNewVsReturningResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string"
+                },
+                "newUsers": {
+                  "type": "number"
+                },
+                "returningUsers": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "date",
+                "newUsers",
+                "returningUsers"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetWeekdayActivityResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "weekday": {
+                  "type": "number"
+                },
+                "activityCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "weekday",
+                "activityCount"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetCohortRetentionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cohortWeek": {
+                  "type": "string"
+                },
+                "cohortSize": {
+                  "type": "number"
+                },
+                "retention": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "weekOffset": {
+                        "type": "number"
+                      },
+                      "percentage": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "weekOffset",
+                      "percentage"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "cohortWeek",
+                "cohortSize",
+                "retention"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetScoreDistributionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "quiz": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "bucket": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "bucket",
+                    "count"
+                  ]
+                }
+              },
+              "assignment": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "bucket": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "bucket",
+                    "count"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "quiz",
+              "assignment"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetCertificateIssuanceRateResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "completedCount": {
+                "type": "number"
+              },
+              "certifiedCount": {
+                "type": "number"
+              },
+              "percentage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "completedCount",
+              "certifiedCount",
+              "percentage"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetEngagementScoreResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "score": {
+                "type": "number"
+              },
+              "components": {
+                "type": "object",
+                "properties": {
+                  "recentActivityRatio": {
+                    "type": "number"
+                  },
+                  "courseCompletionRatio": {
+                    "type": "number"
+                  },
+                  "quizPassRatio": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "recentActivityRatio",
+                  "courseCompletionRatio",
+                  "quizPassRatio"
+                ]
+              }
+            },
+            "required": [
+              "score",
+              "components"
+            ]
           }
         },
         "required": [
