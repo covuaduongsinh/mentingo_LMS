@@ -1240,6 +1240,20 @@
       "when": 1785029641364,
       "tag": "0176_enable_community_forum_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 177,
+      "version": "7",
+      "when": 1785034283644,
+      "tag": "0177_add_resource_folders",
+      "breakpoints": true
+    },
+    {
+      "idx": 178,
+      "version": "7",
+      "when": 1785034283645,
+      "tag": "0178_enable_resource_folders_rls",
+      "breakpoints": true
     }
   ]
 }

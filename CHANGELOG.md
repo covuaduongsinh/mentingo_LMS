@@ -1,3 +1,14 @@
+<a name="hierarchical-resource-library"></a>
+
+## [Hierarchical resource library] - 26.07.2026
+
+### Features:
+
+- add nested folders (color, optional cover image, manual ordering) to the resource library, alongside the existing flat asset list
+- assign an asset to a folder and move it between folders (or back to the library root) without duplicating it; block a folder from becoming its own ancestor
+- only allow deleting empty folders (no subfolders, no assets inside) to avoid silently losing content
+- add folder grid, breadcrumb navigation, and a "move to..." action to the existing asset-library dialog used across lesson/article/news editors
+
 <a name="community-forum"></a>
 
 ## [Community forum & public profiles] - 26.07.2026

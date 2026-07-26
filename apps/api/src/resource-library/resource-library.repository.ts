@@ -2,6 +2,8 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ENTITY_TYPES, RESOURCE_LIBRARY_ASSET_TYPE, type SupportedLanguages } from "@repo/shared";
 import {
   and,
+  asc,
+  count,
   countDistinct,
   desc,
   eq,
@@ -21,10 +23,18 @@ import { addPagination } from "src/common/pagination";
 import { RESOURCE_RELATIONSHIP_TYPES } from "src/file/file.constants";
 import { LocalizationService } from "src/localization/localization.service";
 import { DB } from "src/storage/db/db.providers";
-import { articles, lessons, news, resourceEntity, resources } from "src/storage/schema";
+import {
+  articles,
+  lessons,
+  news,
+  resourceEntity,
+  resourceFolders,
+  resources,
+} from "src/storage/schema";
 
 import {
   KNOWN_RICH_TEXT_ASSET_MIME_TYPES,
+  RESOURCE_FOLDER_DEFAULT_COLOR,
   RICH_TEXT_ASSET_MIME_TYPES_BY_TYPE,
   RICH_TEXT_ENTITY_TYPES,
   RICH_TEXT_RELATIONSHIP_TYPES,
@@ -32,8 +42,10 @@ import {
 import { getAssetDisplayFileName, getMetadataTextValue } from "./resource-library.utils";
 
 import type {
+  CreateFolderBody,
   ResourceLibraryAssetType,
   RichTextAssetEntityType,
+  UpdateFolderBody,
 } from "./schemas/resource-library.schema";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 
@@ -50,8 +62,9 @@ export class ResourceLibraryRepository {
     search?: string;
     type?: ResourceLibraryAssetType;
     language?: SupportedLanguages;
+    folderId?: string;
   }) {
-    const conditions = this.getAssetConditions(params.search, params.type);
+    const conditions = this.getAssetConditions(params.search, params.type, params.folderId);
 
     return this.db.transaction(async (trx) => {
       const assetQuery = trx
@@ -485,7 +498,132 @@ export class ResourceLibraryRepository {
     );
   }
 
-  private getAssetConditions(search?: string, type?: ResourceLibraryAssetType): SQL[] {
+  async createFolder(body: CreateFolderBody) {
+    const [folder] = await this.db
+      .insert(resourceFolders)
+      .values({
+        name: body.name,
+        parentFolderId: body.parentFolderId ?? null,
+        color: body.color ?? RESOURCE_FOLDER_DEFAULT_COLOR,
+        coverResourceId: body.coverResourceId ?? null,
+      })
+      .returning({ id: resourceFolders.id });
+
+    return folder;
+  }
+
+  async updateFolder(id: UUIDType, body: UpdateFolderBody) {
+    const updateValues: Partial<typeof resourceFolders.$inferInsert> = {};
+
+    if (body.name !== undefined) updateValues.name = body.name;
+    if (body.parentFolderId !== undefined) updateValues.parentFolderId = body.parentFolderId;
+    if (body.color !== undefined) updateValues.color = body.color;
+    if (body.coverResourceId !== undefined) updateValues.coverResourceId = body.coverResourceId;
+    if (body.displayOrder !== undefined) updateValues.displayOrder = body.displayOrder;
+
+    await this.db.update(resourceFolders).set(updateValues).where(eq(resourceFolders.id, id));
+  }
+
+  async deleteFolder(id: UUIDType) {
+    await this.db.delete(resourceFolders).where(eq(resourceFolders.id, id));
+  }
+
+  async getFolderById(id: UUIDType) {
+    const [folder] = await this.db
+      .select()
+      .from(resourceFolders)
+      .where(eq(resourceFolders.id, id))
+      .limit(1);
+
+    return folder;
+  }
+
+  async getFolderAncestorChain(folderId: UUIDType) {
+    const chain: UUIDType[] = [];
+    let currentId: UUIDType | null = folderId;
+
+    while (currentId) {
+      const folder = await this.getFolderById(currentId);
+
+      if (!folder) break;
+
+      chain.push(folder.id as UUIDType);
+      currentId = folder.parentFolderId as UUIDType | null;
+    }
+
+    return chain;
+  }
+
+  async isFolderEmpty(id: UUIDType) {
+    const [{ childFolderCount }] = await this.db
+      .select({ childFolderCount: count(resourceFolders.id) })
+      .from(resourceFolders)
+      .where(eq(resourceFolders.parentFolderId, id));
+
+    if (childFolderCount > 0) return false;
+
+    const [{ assetCount }] = await this.db
+      .select({ assetCount: count(resources.id) })
+      .from(resources)
+      .where(and(eq(resources.folderId, id), eq(resources.archived, false)));
+
+    return assetCount === 0;
+  }
+
+  async listFolders(parentFolderId: string | null) {
+    const parentCondition =
+      parentFolderId === null
+        ? isNull(resourceFolders.parentFolderId)
+        : eq(resourceFolders.parentFolderId, parentFolderId);
+
+    const childFolders = this.db
+      .select({ id: resourceFolders.id, parentFolderId: resourceFolders.parentFolderId })
+      .from(resourceFolders)
+      .as("child_folders");
+
+    const folderAssets = this.db
+      .select({ id: resources.id, folderId: resources.folderId })
+      .from(resources)
+      .where(eq(resources.archived, false))
+      .as("folder_assets");
+
+    return this.db
+      .select({
+        id: resourceFolders.id,
+        name: resourceFolders.name,
+        parentFolderId: resourceFolders.parentFolderId,
+        color: resourceFolders.color,
+        coverResourceId: resourceFolders.coverResourceId,
+        coverReference: resources.reference,
+        displayOrder: resourceFolders.displayOrder,
+        createdAt: sql<string>`${resourceFolders.createdAt}::text`,
+        childFolderCount: sql<number>`count(distinct ${childFolders.id})::int`,
+        assetCount: sql<number>`count(distinct ${folderAssets.id})::int`,
+      })
+      .from(resourceFolders)
+      .leftJoin(resources, eq(resources.id, resourceFolders.coverResourceId))
+      .leftJoin(childFolders, eq(childFolders.parentFolderId, resourceFolders.id))
+      .leftJoin(folderAssets, eq(folderAssets.folderId, resourceFolders.id))
+      .where(parentCondition)
+      .groupBy(resourceFolders.id, resources.reference)
+      .orderBy(asc(resourceFolders.displayOrder), asc(resourceFolders.createdAt));
+  }
+
+  async moveAsset(resourceId: UUIDType, folderId: UUIDType | null) {
+    await this.db.update(resources).set({ folderId }).where(eq(resources.id, resourceId));
+  }
+
+  async folderExists(id: UUIDType) {
+    const folder = await this.getFolderById(id);
+
+    return Boolean(folder);
+  }
+
+  private getAssetConditions(
+    search?: string,
+    type?: ResourceLibraryAssetType,
+    folderId?: string,
+  ): SQL[] {
     const richTextUsageOrUnusedAssetCondition = or(
       and(
         inArray(resourceEntity.entityType, [...RICH_TEXT_ENTITY_TYPES]),
@@ -515,6 +653,12 @@ export class ResourceLibraryRepository {
     const typeCondition = this.getAssetTypeCondition(type);
 
     if (typeCondition) conditions.push(typeCondition);
+
+    if (folderId === "root") {
+      conditions.push(isNull(resources.folderId));
+    } else if (folderId) {
+      conditions.push(eq(resources.folderId, folderId));
+    }
 
     return conditions;
   }
@@ -553,6 +697,7 @@ export class ResourceLibraryRepository {
       originalFilename,
       reference: resources.reference,
       uploadedBy: resources.uploadedBy,
+      folderId: resources.folderId,
       createdAt: sql<string>`${resources.createdAt}::text`,
       usageCount: sql<number>`count(distinct ${resourceEntity.id})::int`,
     };

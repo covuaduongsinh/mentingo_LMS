@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { AssetLibraryAssetItem } from "./AssetLibraryAssetItem";
 
+import type { AssetLibraryMoveTarget } from "./AssetLibraryAssetItem";
 import type { ResourceLibraryAsset } from "~/api/queries/useResourceLibraryAssets";
 
 type AssetLibraryAssetListProps = {
@@ -11,8 +12,10 @@ type AssetLibraryAssetListProps = {
   canInsert: boolean;
   canDelete: boolean;
   isMutating: boolean;
+  moveTargets?: AssetLibraryMoveTarget[];
   onInsert: (asset: ResourceLibraryAsset) => void;
   onDelete: (asset: ResourceLibraryAsset) => void;
+  onMove?: (asset: ResourceLibraryAsset, folderId: string | null) => void;
 };
 
 export const AssetLibraryAssetList = ({
@@ -21,8 +24,10 @@ export const AssetLibraryAssetList = ({
   canInsert,
   canDelete,
   isMutating,
+  moveTargets,
   onInsert,
   onDelete,
+  onMove,
 }: AssetLibraryAssetListProps) => {
   const { t } = useTranslation();
 
@@ -56,8 +61,10 @@ export const AssetLibraryAssetList = ({
           canInsert={canInsert}
           canDelete={canDelete}
           isMutating={isMutating}
+          moveTargets={moveTargets}
           onInsert={onInsert}
           onDelete={onDelete}
+          onMove={onMove}
         />
       ))}
     </div>

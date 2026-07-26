@@ -294,12 +294,16 @@
   },
   "resourceLibrary": {
     "toast": {
-      "assetDeletedSuccessfully": "Đã xóa tài nguyên thành công"
+      "assetDeletedSuccessfully": "Đã xóa tài nguyên thành công",
+      "folderDeletedSuccessfully": "Đã xóa thư mục thành công"
     },
     "error": {
       "fileRequired": "Cần có tệp",
       "assetNotFound": "Không tìm thấy tài nguyên",
-      "entityNotFound": "Không tìm thấy đối tượng"
+      "entityNotFound": "Không tìm thấy đối tượng",
+      "folderNotFound": "Không tìm thấy thư mục",
+      "folderCycleDetected": "Không thể di chuyển thư mục vào chính nó hoặc thư mục con của nó",
+      "folderNotEmpty": "Chỉ có thể xóa thư mục rỗng. Hãy di chuyển hoặc xóa nội dung bên trong trước."
     }
   },
   "adminCourseDuplication": {
@@ -4225,7 +4229,30 @@
         "noUsages": "Không tìm thấy nơi sử dụng nào."
       },
       "usageCount_one": "{{count}} lượt sử dụng",
-      "usageCount_other": "{{count}} lượt sử dụng"
+      "usageCount_other": "{{count}} lượt sử dụng",
+      "folder": {
+        "root": "Thư viện",
+        "new": "Thư mục mới",
+        "nameLabel": "Tên thư mục",
+        "namePlaceholder": "vd: Ảnh chương 1",
+        "colorLabel": "Màu sắc",
+        "create": "Tạo thư mục",
+        "actions": "Thao tác thư mục",
+        "delete": "Xóa thư mục",
+        "moveTo": "Di chuyển đến...",
+        "itemCount_one": "{{count}} mục",
+        "itemCount_other": "{{count}} mục",
+        "colors": {
+          "neutral": "Trung tính",
+          "red": "Đỏ",
+          "orange": "Cam",
+          "yellow": "Vàng",
+          "green": "Xanh lá",
+          "blue": "Xanh dương",
+          "purple": "Tím",
+          "pink": "Hồng"
+        }
+      }
     }
   },
   "pages": {

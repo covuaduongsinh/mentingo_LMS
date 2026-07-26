@@ -134,12 +134,16 @@
   },
   "resourceLibrary": {
     "toast": {
-      "assetDeletedSuccessfully": "Recurso eliminado correctamente"
+      "assetDeletedSuccessfully": "Recurso eliminado correctamente",
+      "folderDeletedSuccessfully": "Carpeta eliminada correctamente"
     },
     "error": {
       "fileRequired": "El archivo es obligatorio",
       "assetNotFound": "Recurso no encontrado",
-      "entityNotFound": "Entidad no encontrada"
+      "entityNotFound": "Entidad no encontrada",
+      "folderNotFound": "Carpeta no encontrada",
+      "folderCycleDetected": "No se puede mover una carpeta dentro de sí misma o de una de sus subcarpetas",
+      "folderNotEmpty": "Solo se pueden eliminar carpetas vacías. Mueve o elimina primero su contenido."
     }
   },
   "adminCourseDuplication": {
@@ -4061,7 +4065,30 @@
         "noUsages": "No se encontraron usos."
       },
       "usageCount_one": "Uso de {{count}}",
-      "usageCount_other": "Usos de {{count}}"
+      "usageCount_other": "Usos de {{count}}",
+      "folder": {
+        "root": "Biblioteca",
+        "new": "Nueva carpeta",
+        "nameLabel": "Nombre de la carpeta",
+        "namePlaceholder": "p. ej. Imágenes del capítulo 1",
+        "colorLabel": "Color",
+        "create": "Crear carpeta",
+        "actions": "Acciones de carpeta",
+        "delete": "Eliminar carpeta",
+        "moveTo": "Mover a...",
+        "itemCount_one": "{{count}} elemento",
+        "itemCount_other": "{{count}} elementos",
+        "colors": {
+          "neutral": "Neutro",
+          "red": "Rojo",
+          "orange": "Naranja",
+          "yellow": "Amarillo",
+          "green": "Verde",
+          "blue": "Azul",
+          "purple": "Morado",
+          "pink": "Rosa"
+        }
+      }
     }
   },
   "pages": {

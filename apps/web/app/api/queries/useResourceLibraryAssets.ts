@@ -13,6 +13,7 @@ export type ResourceLibraryAssetsParams = {
   search?: string;
   type?: ResourceLibraryAssetType;
   language?: SupportedLanguages;
+  folderId?: string;
 };
 
 type QueryOptions = {

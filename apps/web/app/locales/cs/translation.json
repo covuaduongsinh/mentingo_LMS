@@ -134,12 +134,16 @@
   },
   "resourceLibrary": {
     "toast": {
-      "assetDeletedSuccessfully": "Zdroj byl úspěšně smazán"
+      "assetDeletedSuccessfully": "Zdroj byl úspěšně smazán",
+      "folderDeletedSuccessfully": "Složka byla úspěšně smazána"
     },
     "error": {
       "fileRequired": "Soubor je povinný",
       "assetNotFound": "Zdroj nebyl nalezen",
-      "entityNotFound": "Prostředek nebyl nalezen"
+      "entityNotFound": "Prostředek nebyl nalezen",
+      "folderNotFound": "Složka nebyla nalezena",
+      "folderCycleDetected": "Složku nelze přesunout do sebe sama ani do jedné z jejích podsložek",
+      "folderNotEmpty": "Lze smazat pouze prázdné složky. Nejprve přesuňte nebo odstraňte její obsah."
     }
   },
   "adminCourseDuplication": {
@@ -3989,7 +3993,31 @@
         "noUsages": "No usages were found."
       },
       "usageCount_one": "{{count}} usage",
-      "usageCount_other": "{{count}} usages"
+      "usageCount_other": "{{count}} usages",
+      "folder": {
+        "root": "Knihovna",
+        "new": "Nová složka",
+        "nameLabel": "Název složky",
+        "namePlaceholder": "např. Obrázky kapitoly 1",
+        "colorLabel": "Barva",
+        "create": "Vytvořit složku",
+        "actions": "Akce složky",
+        "delete": "Smazat složku",
+        "moveTo": "Přesunout do...",
+        "itemCount_one": "{{count}} položka",
+        "itemCount_few": "{{count}} položky",
+        "itemCount_other": "{{count}} položek",
+        "colors": {
+          "neutral": "Neutrální",
+          "red": "Červená",
+          "orange": "Oranžová",
+          "yellow": "Žlutá",
+          "green": "Zelená",
+          "blue": "Modrá",
+          "purple": "Fialová",
+          "pink": "Růžová"
+        }
+      }
     }
   },
   "pages": {
