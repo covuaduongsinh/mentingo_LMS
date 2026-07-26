@@ -363,6 +363,60 @@
       "seekAcceptFailed": "Could not accept the seek"
     }
   },
+  "chessClass": {
+    "nav": {
+      "title": "Chess class",
+      "manageChessClass": "Manage chess class"
+    },
+    "bulkCreate": {
+      "title": "Add students in bulk",
+      "placeholder": "One student name per line",
+      "submit": "Create accounts",
+      "showOnceWarning": "Save these credentials now — they won't be shown again."
+    },
+    "loginCodes": {
+      "title": "Class login codes",
+      "generate": "Generate new codes",
+      "expiresAt": "Expires at {{time}}"
+    },
+    "progress": {
+      "title": "Class progress (last 30 days)",
+      "classWinRate": "Class win rate: {{rate}}%",
+      "classPuzzleAccuracy": "Class puzzle accuracy: {{rate}}%"
+    },
+    "table": {
+      "realName": "Name",
+      "username": "Username",
+      "password": "Password",
+      "displayName": "Display name",
+      "code": "Code",
+      "matches": "Matches",
+      "winRate": "Win rate",
+      "puzzles": "Puzzles",
+      "actions": "Actions"
+    },
+    "button": {
+      "resetPassword": "Reset password",
+      "release": "Release",
+      "confirmRelease": "Confirm release"
+    },
+    "releaseDialog": {
+      "title": "Release student account",
+      "emailLabel": "Student's real email"
+    },
+    "toast": {
+      "bulkCreateSuccess": "{{count}} student accounts created",
+      "bulkCreateFailed": "Could not create student accounts",
+      "resetPasswordFailed": "Could not reset password",
+      "newPassword": "New password: {{password}}",
+      "released": "Account released",
+      "releaseFailed": "Could not release the account",
+      "loginCodesFailed": "Could not generate login codes"
+    },
+    "errors": {
+      "groupNotFound": "Group not found"
+    }
+  },
   "common": {
     "button": {
       "save": "Save",
@@ -3293,6 +3347,20 @@
       "sent": "Login link sent to your email."
     }
   },
+  "chessClassLoginView": {
+    "header": "Log in with your class code",
+    "subHeader": "Enter the 5-character code your teacher has shown on the classroom screen.",
+    "validation": {
+      "code": "Code must be exactly 5 characters"
+    },
+    "field": {
+      "code": "Login code"
+    },
+    "button": {
+      "login": "Log in",
+      "backToLogin": "Back to password login"
+    }
+  },
   "magicLink": {
     "error": {
       "createToken": "Unable to generate login link. Please try again.",
@@ -4480,6 +4548,8 @@
     "chessPuzzleDashboard": "Chess Puzzle Progress",
     "chessLobby": "Play Chess Online",
     "chessMatchPlay": "Chess Match",
+    "chessClassManagement": "Chess Class Management",
+    "chessClassLogin": "Class Code Login",
     "dashboard": "Dashboard",
     "settings": "Settings",
     "providerInformation": "Provider Information",

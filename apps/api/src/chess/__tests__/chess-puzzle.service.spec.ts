@@ -178,7 +178,7 @@ describe("ChessPuzzleService", () => {
         ]),
       });
 
-      const dashboard = await service.getDashboard(buildUser());
+      const dashboard = await service.getDashboard(USER_ID);
 
       expect(dashboard.weakMotifs).toContain("pin");
       expect(dashboard.weakMotifs).not.toContain("fork");
@@ -193,7 +193,7 @@ describe("ChessPuzzleService", () => {
         ]),
       });
 
-      const dashboard = await service.getDashboard(buildUser());
+      const dashboard = await service.getDashboard(USER_ID);
 
       expect(dashboard.weakMotifs).not.toContain("skewer");
     });

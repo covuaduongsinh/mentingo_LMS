@@ -1,10 +1,11 @@
-import { useParams } from "@remix-run/react";
+import { Link, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useGroupById } from "~/api/queries/admin/useGroupById";
 import { getLocalizedResourceLanguage } from "~/components/LanguageSelector/utils";
 import { PageWrapper } from "~/components/PageWrapper";
+import { Button } from "~/components/ui/button";
 import { EditGroupForm } from "~/modules/Admin/Groups/components/EditGroupForm";
 import { GroupLanguageSelector } from "~/modules/Admin/Groups/components/GroupLanguageSelector";
 import Loader from "~/modules/common/Loader/Loader";
@@ -59,7 +60,12 @@ const EditGroup = (): ReactElement => {
         },
       ]}
     >
-      <div data-testid={GROUP_PAGE_HANDLES.PAGE} className="flex h-full flex-col">
+      <div data-testid={GROUP_PAGE_HANDLES.PAGE} className="flex h-full flex-col gap-4">
+        <Button type="button" variant="outline" className="w-fit" asChild>
+          <Link to={`/admin/chess/classes/${groupId}`}>
+            {t("chessClass.nav.manageChessClass", { defaultValue: "Manage chess class" })}
+          </Link>
+        </Button>
         <EditGroupForm
           key={formKey}
           formKey={formKey}

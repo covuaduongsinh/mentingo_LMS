@@ -124,11 +124,11 @@ export class ChessPuzzleService {
     });
   }
 
-  async getDashboard(user: CurrentUserType) {
+  async getDashboard(userId: UUIDType) {
     const [rating, ratingHistory, themeStats] = await Promise.all([
-      this.getRatingOrDefault(user.userId),
-      this.repository.getRatingHistory(user.userId, CHESS_RATING_CATEGORIES.PUZZLE),
-      this.repository.getThemeStats(user.userId),
+      this.getRatingOrDefault(userId),
+      this.repository.getRatingHistory(userId, CHESS_RATING_CATEGORIES.PUZZLE),
+      this.repository.getThemeStats(userId),
     ]);
 
     const stats = themeStats.map((row) => ({

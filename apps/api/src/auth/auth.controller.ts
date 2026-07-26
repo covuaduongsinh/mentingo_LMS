@@ -38,9 +38,10 @@ import { OutboxPublisher } from "src/outbox/outbox.publisher";
 import { SettingsService } from "src/settings/settings.service";
 import { TenantDbRunnerService } from "src/storage/db/tenant-db-runner.service";
 import { TenantResolverService } from "src/storage/db/tenant-resolver.service";
-import { currentUserResponseSchema } from "src/user/schemas/user.schema";
+import { currentUserResponseSchema, type CurrentUserResponse } from "src/user/schemas/user.schema";
 
 import { AuthService } from "./auth.service";
+import { ClassLoginBody, classLoginSchema } from "./schemas/class-login.schema";
 import { CreateAccountBody, createAccountSchema } from "./schemas/create-account.schema";
 import { type CreatePasswordBody, createPasswordSchema } from "./schemas/create-password.schema";
 import { LoginBody, loginResponseSchema, loginSchema } from "./schemas/login.schema";
@@ -208,7 +209,7 @@ export class AuthController {
   })
   async currentUser(
     @CurrentUser() currentUser: CurrentUserType,
-  ): Promise<BaseResponse<Static<typeof currentUserResponseSchema>>> {
+  ): Promise<BaseResponse<CurrentUserResponse>> {
     const account = await this.authService.currentUser(currentUser);
 
     if (isSupportModeSession(currentUser)) {
@@ -478,6 +479,21 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ): Promise<BaseResponse<LoginResponse>> {
     const loginResponse = await this.authService.handleMagicLinkLogin(response, token);
+
+    return new BaseResponse(loginResponse);
+  }
+
+  @Public()
+  @Post("class-login")
+  @Validate({
+    request: [{ type: "body", schema: classLoginSchema }],
+    response: baseResponse(loginResponseSchema),
+  })
+  async classLogin(
+    @Body() body: ClassLoginBody,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<BaseResponse<LoginResponse>> {
+    const loginResponse = await this.authService.loginWithClassCode(response, body.code);
 
     return new BaseResponse(loginResponse);
   }

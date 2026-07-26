@@ -1,3 +1,16 @@
+<a name="chess-class-management"></a>
+
+## [Chess class management] - 26.07.2026
+
+### Features:
+
+- teachers can create student accounts without a real email address — ideal for young students who don't have their own — individually or in bulk from a pasted list of names
+- each managed account gets an auto-generated display pseudonym (a chess piece name + number) so the student's real name never appears publicly; only the managing teacher/admin can see it
+- generate short-lived (15-minute), single-use 5-character login codes for an entire class at once, to project on the classroom screen — students log in with just the code, no password to remember
+- teachers can reset a managed student's password, or "release" the account once the student has a real email of their own, handing over full self-service control
+- per-class progress report: rating trend, win rate, and puzzle accuracy per student and averaged across the class
+- new permissions: `chess.class.manage_students`, `chess.class.reset_password`, `chess.class.progress`
+
 <a name="chess-online-match"></a>
 
 ## [Chess online matches] - 26.07.2026

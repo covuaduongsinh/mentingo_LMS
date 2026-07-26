@@ -16,7 +16,11 @@ export const baseUserResponseSchema = Type.Composite([
 
 export const userOnboardingStatusSchema = omitTenantId(createSelectSchema(userOnboarding));
 
-export const currentUserResponseSchema = Type.Composite([
+// Type.Intersect (not Type.Composite) here: Composite's flattening pushes TS past its
+// type-instantiation depth limit (TS2589) combined with the full users-table schema below,
+// now that the table has grown past ~15 columns. Nothing spreads `.properties` off this
+// schema (unlike baseUserResponseSchema), so Intersect's non-flattened shape is safe here.
+export const currentUserResponseSchema = Type.Intersect([
   baseUserResponseSchema,
   Type.Object({
     roleSlugs: Type.Array(Type.String()),
@@ -41,6 +45,8 @@ export const currentUserResponseSchema = Type.Composite([
     ),
   }),
 ]);
+
+export type CurrentUserResponse = Static<typeof currentUserResponseSchema>;
 
 export const allUsersSchema = Type.Array(
   Type.Intersect([

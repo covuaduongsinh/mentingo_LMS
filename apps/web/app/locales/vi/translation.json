@@ -363,6 +363,60 @@
       "seekAcceptFailed": "Không thể chấp nhận lời mời"
     }
   },
+  "chessClass": {
+    "nav": {
+      "title": "Lớp cờ",
+      "manageChessClass": "Quản lý lớp cờ"
+    },
+    "bulkCreate": {
+      "title": "Thêm học sinh hàng loạt",
+      "placeholder": "Mỗi dòng một tên học sinh",
+      "submit": "Tạo tài khoản",
+      "showOnceWarning": "Lưu lại thông tin này ngay — sẽ không hiển thị lại lần nữa."
+    },
+    "loginCodes": {
+      "title": "Mã đăng nhập lớp",
+      "generate": "Tạo mã mới",
+      "expiresAt": "Hết hạn lúc {{time}}"
+    },
+    "progress": {
+      "title": "Tiến độ lớp (30 ngày gần nhất)",
+      "classWinRate": "Tỉ lệ thắng cả lớp: {{rate}}%",
+      "classPuzzleAccuracy": "Độ chính xác bài đố cả lớp: {{rate}}%"
+    },
+    "table": {
+      "realName": "Tên",
+      "username": "Tên đăng nhập",
+      "password": "Mật khẩu",
+      "displayName": "Bút danh",
+      "code": "Mã",
+      "matches": "Ván đấu",
+      "winRate": "Tỉ lệ thắng",
+      "puzzles": "Bài đố",
+      "actions": "Thao tác"
+    },
+    "button": {
+      "resetPassword": "Đặt lại mật khẩu",
+      "release": "Giải phóng",
+      "confirmRelease": "Xác nhận giải phóng"
+    },
+    "releaseDialog": {
+      "title": "Giải phóng tài khoản học sinh",
+      "emailLabel": "Email thật của học sinh"
+    },
+    "toast": {
+      "bulkCreateSuccess": "Đã tạo {{count}} tài khoản học sinh",
+      "bulkCreateFailed": "Không thể tạo tài khoản học sinh",
+      "resetPasswordFailed": "Không thể đặt lại mật khẩu",
+      "newPassword": "Mật khẩu mới: {{password}}",
+      "released": "Đã giải phóng tài khoản",
+      "releaseFailed": "Không thể giải phóng tài khoản",
+      "loginCodesFailed": "Không thể tạo mã đăng nhập"
+    },
+    "errors": {
+      "groupNotFound": "Không tìm thấy lớp"
+    }
+  },
   "common": {
     "button": {
       "save": "Lưu",
@@ -3293,6 +3347,20 @@
       "sent": "Liên kết đăng nhập đã được gửi đến email của bạn."
     }
   },
+  "chessClassLoginView": {
+    "header": "Đăng nhập bằng mã lớp",
+    "subHeader": "Nhập mã 5 ký tự mà giáo viên chiếu lên màn hình lớp.",
+    "validation": {
+      "code": "Mã phải gồm đúng 5 ký tự"
+    },
+    "field": {
+      "code": "Mã đăng nhập"
+    },
+    "button": {
+      "login": "Đăng nhập",
+      "backToLogin": "Quay lại đăng nhập bằng mật khẩu"
+    }
+  },
   "magicLink": {
     "error": {
       "createToken": "Không thể tạo liên kết đăng nhập. Vui lòng thử lại.",
@@ -4478,6 +4546,8 @@
     "chessPuzzleDashboard": "Tiến độ bài đố cờ vua",
     "chessLobby": "Chơi cờ trực tuyến",
     "chessMatchPlay": "Ván đấu cờ vua",
+    "chessClassManagement": "Quản lý lớp cờ",
+    "chessClassLogin": "Đăng nhập bằng mã lớp",
     "chessAnalysisRoom": "Phòng phân tích cờ",
     "chessEditor": "Dựng thế cờ",
     "dashboard": "Bảng điều khiển",

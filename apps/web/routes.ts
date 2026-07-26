@@ -11,6 +11,7 @@ export const routes: (
         route("create-new-password", "modules/Auth/CreateNewPassword.page.tsx");
         route("password-recovery", "modules/Auth/PasswordRecovery.page.tsx");
         route("magic-link", "modules/Auth/MagicLink.page.tsx");
+        route("class-login", "modules/Auth/ChessClassLogin.page.tsx");
         route("mfa", "modules/Auth/MFA.page.tsx");
         route("change-password", "modules/Auth/ForcedPasswordChange.page.tsx");
       });
@@ -104,6 +105,7 @@ export const routes: (
           route("activity-logs", "modules/ActivityLogs/ActivityLogs.page.tsx");
           route("chess/exercises", "modules/Chess/Admin/ChessExercisesAdmin.page.tsx");
           route("chess/games", "modules/Chess/Admin/ChessGamesAdmin.page.tsx");
+          route("chess/classes/:groupId", "modules/Chess/Admin/ChessClassManagement.page.tsx");
           route(
             "assignments/:lessonId/grading",
             "modules/Admin/AssignmentGrading/AssignmentGrading.page.tsx",

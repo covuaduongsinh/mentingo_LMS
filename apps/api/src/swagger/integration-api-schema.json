@@ -1437,6 +1437,29 @@
                     "publicProfileEnabled": {
                       "type": "boolean"
                     },
+                    "isManagedAccount": {
+                      "type": "boolean"
+                    },
+                    "managedByUserId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "realName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
                     "profilePictureUrl": {
                       "anyOf": [
                         {
@@ -1461,6 +1484,9 @@
                     "lockedUntil",
                     "username",
                     "publicProfileEnabled",
+                    "isManagedAccount",
+                    "managedByUserId",
+                    "realName",
                     "profilePictureUrl"
                   ]
                 },
@@ -1864,6 +1890,29 @@
               "publicProfileEnabled": {
                 "type": "boolean"
               },
+              "isManagedAccount": {
+                "type": "boolean"
+              },
+              "managedByUserId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -1913,6 +1962,9 @@
               "lockedUntil",
               "username",
               "publicProfileEnabled",
+              "isManagedAccount",
+              "managedByUserId",
+              "realName",
               "profilePictureUrl",
               "roleSlugs",
               "groups"
@@ -2111,6 +2163,29 @@
               "publicProfileEnabled": {
                 "type": "boolean"
               },
+              "isManagedAccount": {
+                "type": "boolean"
+              },
+              "managedByUserId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -2135,6 +2210,9 @@
               "lockedUntil",
               "username",
               "publicProfileEnabled",
+              "isManagedAccount",
+              "managedByUserId",
+              "realName",
               "profilePictureUrl"
             ]
           }
@@ -2317,6 +2395,29 @@
                       "publicProfileEnabled": {
                         "type": "boolean"
                       },
+                      "isManagedAccount": {
+                        "type": "boolean"
+                      },
+                      "managedByUserId": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "realName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -2341,6 +2442,9 @@
                       "lockedUntil",
                       "username",
                       "publicProfileEnabled",
+                      "isManagedAccount",
+                      "managedByUserId",
+                      "realName",
                       "profilePictureUrl"
                     ]
                   }
