@@ -53,6 +53,8 @@ export const routes: (
           route("chess/analysis", "modules/Chess/Analysis/ChessAnalysis.page.tsx");
           route("chess/analysis-room/:id", "modules/Chess/Room/ChessAnalysisRoom.page.tsx");
           route("chess/editor", "modules/Chess/Editor/ChessEditor.page.tsx");
+          route("chess/studies", "modules/Chess/Study/ChessStudyList.page.tsx");
+          route("chess/studies/:id", "modules/Chess/Study/ChessStudyDetail.page.tsx");
         });
         route("", "modules/Dashboard/UserDashboard.layout.tsx", () => {
           route("", "modules/Dashboard/IndexRedirect.page.tsx", { index: true });

@@ -300,6 +300,10 @@ export interface CurrentUserResponse {
       | "chess.exercise.manage"
       | "chess.game.read"
       | "chess.game.manage"
+      | "chess.study.read"
+      | "chess.study.create"
+      | "chess.study.manage"
+      | "chess.study.manage_own"
       | "assignment.read"
       | "assignment.manage"
       | "assignment.manage_own"
@@ -5850,6 +5854,383 @@ export interface GetAnalysisSessionResponse {
     /** @format date-time */
     createdAt: string;
     endedAt: string | null;
+  };
+}
+
+export interface ListStudiesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    authorId: string | null;
+    title: string;
+    description: string | null;
+    visibility: "public" | "private";
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    sourceStudyId: string | null;
+    chapterCount: number;
+    canWrite: boolean;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+  appliedFilters?: object;
+}
+
+export interface CreateStudyBody {
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title: string;
+  description?: string | null;
+  visibility?: "public" | "private";
+  topics?: (
+    | "intro"
+    | "rules"
+    | "tournament_rules"
+    | "opening"
+    | "middlegame"
+    | "endgame"
+    | "tactics"
+    | "strategy"
+    | "story"
+    | "competitive_psychology"
+    | "student_psychology"
+    | "pedagogy"
+  )[];
+}
+
+export interface CreateStudyResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    authorId: string | null;
+    title: string;
+    description: string | null;
+    visibility: "public" | "private";
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    sourceStudyId: string | null;
+    chapterCount: number;
+    canWrite: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface GetStudyResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    authorId: string | null;
+    title: string;
+    description: string | null;
+    visibility: "public" | "private";
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    sourceStudyId: string | null;
+    chapterCount: number;
+    canWrite: boolean;
+    createdAt: string;
+    updatedAt: string;
+  } & {
+    chapters: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      studyId: string;
+      title: string;
+      rootFen: string;
+      moveNodes: {
+        id: string;
+        parentId: string | null;
+        uci: string;
+        san: string;
+        fenAfter: string;
+        comment?: string;
+        glyph?: string;
+        order: number;
+      }[];
+      mode: "normal" | "gamebook" | "conceal";
+      concealFromPly: number | null;
+      practiceGoal: string | null;
+      displayOrder: number;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+    members: {
+      /** @format uuid */
+      userId: string;
+      role: "read" | "write";
+      firstName: string | null;
+      lastName: string | null;
+    }[];
+  };
+}
+
+export interface UpdateStudyBody {
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title?: string;
+  description?: string | null;
+  visibility?: "public" | "private";
+  topics?: (
+    | "intro"
+    | "rules"
+    | "tournament_rules"
+    | "opening"
+    | "middlegame"
+    | "endgame"
+    | "tactics"
+    | "strategy"
+    | "story"
+    | "competitive_psychology"
+    | "student_psychology"
+    | "pedagogy"
+  )[];
+}
+
+export interface UpdateStudyResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    authorId: string | null;
+    title: string;
+    description: string | null;
+    visibility: "public" | "private";
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    sourceStudyId: string | null;
+    chapterCount: number;
+    canWrite: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface DeleteStudyResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+  };
+}
+
+export interface CloneStudyResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    authorId: string | null;
+    title: string;
+    description: string | null;
+    visibility: "public" | "private";
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    sourceStudyId: string | null;
+    chapterCount: number;
+    canWrite: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface CreateStudyChapterBody {
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title: string;
+  rootFen?: string;
+  moveNodes?: {
+    id: string;
+    parentId: string | null;
+    uci: string;
+    san: string;
+    fenAfter: string;
+    comment?: string;
+    glyph?: string;
+    order: number;
+  }[];
+  mode?: "normal" | "gamebook" | "conceal";
+  concealFromPly?: number | null;
+  practiceGoal?: string | null;
+}
+
+export interface CreateStudyChapterResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    studyId: string;
+    title: string;
+    rootFen: string;
+    moveNodes: {
+      id: string;
+      parentId: string | null;
+      uci: string;
+      san: string;
+      fenAfter: string;
+      comment?: string;
+      glyph?: string;
+      order: number;
+    }[];
+    mode: "normal" | "gamebook" | "conceal";
+    concealFromPly: number | null;
+    practiceGoal: string | null;
+    displayOrder: number;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface UpdateStudyChapterBody {
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title?: string;
+  rootFen?: string;
+  moveNodes?: {
+    id: string;
+    parentId: string | null;
+    uci: string;
+    san: string;
+    fenAfter: string;
+    comment?: string;
+    glyph?: string;
+    order: number;
+  }[];
+  mode?: "normal" | "gamebook" | "conceal";
+  concealFromPly?: number | null;
+  practiceGoal?: string | null;
+}
+
+export interface UpdateStudyChapterResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    studyId: string;
+    title: string;
+    rootFen: string;
+    moveNodes: {
+      id: string;
+      parentId: string | null;
+      uci: string;
+      san: string;
+      fenAfter: string;
+      comment?: string;
+      glyph?: string;
+      order: number;
+    }[];
+    mode: "normal" | "gamebook" | "conceal";
+    concealFromPly: number | null;
+    practiceGoal: string | null;
+    displayOrder: number;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface DeleteStudyChapterResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+  };
+}
+
+export interface ReorderStudyChaptersBody {
+  /** @minItems 1 */
+  chapterIds: string[];
+}
+
+export interface ReorderStudyChaptersResponse {
+  data: {
+    success: boolean;
+  };
+}
+
+export interface AddMemberBody {
+  /** @format uuid */
+  userId: string;
+  role?: "read" | "write";
+}
+
+export interface AddMemberResponse {
+  data: {
+    success: boolean;
+  };
+}
+
+export interface RemoveMemberResponse {
+  data: {
+    success: boolean;
   };
 }
 
@@ -14904,6 +15285,227 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<GetAnalysisSessionResponse, any>({
         path: `/api/chess/analysis-sessions/${id}`,
         method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerListStudies
+     * @request GET:/api/chess/studies
+     */
+    chessControllerListStudies: (
+      query?: {
+        /** @min 1 */
+        page?: number;
+        /** @min 1 */
+        perPage?: number;
+        search?: string;
+        topic?:
+          | "intro"
+          | "rules"
+          | "tournament_rules"
+          | "opening"
+          | "middlegame"
+          | "endgame"
+          | "tactics"
+          | "strategy"
+          | "story"
+          | "competitive_psychology"
+          | "student_psychology"
+          | "pedagogy";
+        mine?: boolean | "true" | "false";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ListStudiesResponse, any>({
+        path: `/api/chess/studies`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerCreateStudy
+     * @request POST:/api/chess/studies
+     */
+    chessControllerCreateStudy: (data: CreateStudyBody, params: RequestParams = {}) =>
+      this.request<CreateStudyResponse, any>({
+        path: `/api/chess/studies`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetStudy
+     * @request GET:/api/chess/studies/{id}
+     */
+    chessControllerGetStudy: (id: string, params: RequestParams = {}) =>
+      this.request<GetStudyResponse, any>({
+        path: `/api/chess/studies/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerUpdateStudy
+     * @request PATCH:/api/chess/studies/{id}
+     */
+    chessControllerUpdateStudy: (id: string, data: UpdateStudyBody, params: RequestParams = {}) =>
+      this.request<UpdateStudyResponse, any>({
+        path: `/api/chess/studies/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerDeleteStudy
+     * @request DELETE:/api/chess/studies/{id}
+     */
+    chessControllerDeleteStudy: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteStudyResponse, any>({
+        path: `/api/chess/studies/${id}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerCloneStudy
+     * @request POST:/api/chess/studies/{id}/clone
+     */
+    chessControllerCloneStudy: (id: string, params: RequestParams = {}) =>
+      this.request<CloneStudyResponse, any>({
+        path: `/api/chess/studies/${id}/clone`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerCreateStudyChapter
+     * @request POST:/api/chess/studies/{id}/chapters
+     */
+    chessControllerCreateStudyChapter: (
+      id: string,
+      data: CreateStudyChapterBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateStudyChapterResponse, any>({
+        path: `/api/chess/studies/${id}/chapters`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerUpdateStudyChapter
+     * @request PATCH:/api/chess/studies/{id}/chapters/{chapterId}
+     */
+    chessControllerUpdateStudyChapter: (
+      id: string,
+      chapterId: string,
+      data: UpdateStudyChapterBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateStudyChapterResponse, any>({
+        path: `/api/chess/studies/${id}/chapters/${chapterId}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerDeleteStudyChapter
+     * @request DELETE:/api/chess/studies/{id}/chapters/{chapterId}
+     */
+    chessControllerDeleteStudyChapter: (
+      id: string,
+      chapterId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<DeleteStudyChapterResponse, any>({
+        path: `/api/chess/studies/${id}/chapters/${chapterId}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerReorderStudyChapters
+     * @request PATCH:/api/chess/studies/{id}/chapters/reorder
+     */
+    chessControllerReorderStudyChapters: (
+      id: string,
+      data: ReorderStudyChaptersBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<ReorderStudyChaptersResponse, any>({
+        path: `/api/chess/studies/${id}/chapters/reorder`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerAddMember
+     * @request POST:/api/chess/studies/{id}/members
+     */
+    chessControllerAddMember: (id: string, data: AddMemberBody, params: RequestParams = {}) =>
+      this.request<AddMemberResponse, any>({
+        path: `/api/chess/studies/${id}/members`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerRemoveMember
+     * @request DELETE:/api/chess/studies/{id}/members/{userId}
+     */
+    chessControllerRemoveMember: (id: string, userId: string, params: RequestParams = {}) =>
+      this.request<RemoveMemberResponse, any>({
+        path: `/api/chess/studies/${id}/members/${userId}`,
+        method: "DELETE",
         format: "json",
         ...params,
       }),

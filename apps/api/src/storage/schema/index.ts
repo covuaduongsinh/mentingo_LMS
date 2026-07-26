@@ -30,6 +30,9 @@ import {
   CHESS_CONTENT_SOURCE,
   CHESS_DIFFICULTY,
   CHESS_GAME_LEVELS,
+  CHESS_STUDY_VISIBILITY,
+  CHESS_STUDY_MEMBER_ROLES,
+  CHESS_STUDY_CHAPTER_MODES,
 } from "@repo/shared";
 import { sql } from "drizzle-orm";
 import {
@@ -111,6 +114,9 @@ import type {
   ChessPlayEndReason,
   ChessPlayOutcome,
   ChessTopic,
+  ChessStudyVisibility,
+  ChessStudyMemberRole,
+  ChessStudyChapterMode,
   AssignmentGradingType,
   AssignmentTaskType,
   AssignmentSubmissionStatus,
@@ -3007,5 +3013,105 @@ export const chessAnalysisSessionParticipants = pgTable(
     sessionUserUniqueIdx: uniqueIndex(
       "chess_analysis_session_participants_session_user_unique_idx",
     ).on(table.sessionId, table.userId),
+  })),
+);
+
+/**
+ * A move tree flattened into an adjacency list for storage (see moveTree.ts on the web app
+ * for the recursive shape used in the editor). `parentId: null` means a top-level move
+ * (child of the chapter's root position); `order` reconstructs sibling order so index 0
+ * stays the mainline continuation.
+ */
+export type ChessStudyFlatMoveNode = {
+  id: string;
+  parentId: string | null;
+  uci: string;
+  san: string;
+  fenAfter: string;
+  comment?: string;
+  glyph?: string;
+  order: number;
+};
+
+export const chessStudies = pgTable(
+  "chess_studies",
+  {
+    ...id,
+    ...timestamps,
+    authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
+    title: text("title").notNull(),
+    description: text("description"),
+    visibility: text("visibility")
+      .$type<ChessStudyVisibility>()
+      .notNull()
+      .default(CHESS_STUDY_VISIBILITY.PRIVATE),
+    topics: text("topics")
+      .array()
+      .$type<ChessTopic[]>()
+      .notNull()
+      .default(sql`ARRAY[]::text[]`),
+    sourceStudyId: uuid("source_study_id").references((): AnyPgColumn => chessStudies.id, {
+      onDelete: "set null",
+    }),
+    chapterCount: integer("chapter_count").notNull().default(0),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_studies")(table),
+    visibilityIdx: index("chess_studies_visibility_idx").on(table.visibility),
+    authorIdx: index("chess_studies_author_id_idx").on(table.authorId),
+  }),
+);
+
+export const chessStudyChapters = pgTable(
+  "chess_study_chapters",
+  {
+    ...id,
+    ...timestamps,
+    studyId: uuid("study_id")
+      .references(() => chessStudies.id, { onDelete: "cascade" })
+      .notNull(),
+    title: text("title").notNull(),
+    rootFen: varchar("root_fen", { length: 100 })
+      .notNull()
+      .default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
+    moveNodes: jsonb("move_nodes").$type<ChessStudyFlatMoveNode[]>().notNull().default([]),
+    mode: text("mode")
+      .$type<ChessStudyChapterMode>()
+      .notNull()
+      .default(CHESS_STUDY_CHAPTER_MODES.NORMAL),
+    concealFromPly: integer("conceal_from_ply"),
+    practiceGoal: text("practice_goal"),
+    displayOrder: integer("display_order").notNull().default(0),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_study_chapters")(table),
+    studyIdx: index("chess_study_chapters_study_id_idx").on(table.studyId),
+  }),
+);
+
+export const chessStudyMembers = pgTable(
+  "chess_study_members",
+  {
+    ...id,
+    ...timestamps,
+    studyId: uuid("study_id")
+      .references(() => chessStudies.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    role: text("role")
+      .$type<ChessStudyMemberRole>()
+      .notNull()
+      .default(CHESS_STUDY_MEMBER_ROLES.READ),
+    tenantId,
+  },
+  withTenantIdIndex("chess_study_members", (table) => ({
+    studyUserUniqueIdx: uniqueIndex("chess_study_members_study_user_unique_idx").on(
+      table.studyId,
+      table.userId,
+    ),
   })),
 );
