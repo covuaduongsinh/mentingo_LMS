@@ -168,6 +168,14 @@ export const users = pgTable(
     }),
     username: varchar("username", { length: 30 }),
     publicProfileEnabled: boolean("public_profile_enabled").notNull().default(false),
+    // Managed accounts (chess class management): teacher-created students without
+    // a real email. `email` stays NOT NULL/unique via a generated placeholder value.
+    // See docs/specs/chess-class-management-business-spec.md.
+    isManagedAccount: boolean("is_managed_account").notNull().default(false),
+    managedByUserId: uuid("managed_by_user_id").references((): AnyPgColumn => users.id, {
+      onDelete: "set null",
+    }),
+    realName: text("real_name"),
     tenantId,
   },
   withTenantIdIndex("users", (table) => ({
@@ -3311,5 +3319,28 @@ export const chessMatchMoves = pgTable(
   (table) => ({
     ...withTenantIdIndex("chess_match_moves")(table),
     matchIdx: index("chess_match_moves_match_id_idx").on(table.matchId),
+  }),
+);
+
+export const chessClassLoginCodes = pgTable(
+  "chess_class_login_codes",
+  {
+    ...id,
+    ...timestamps,
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    groupId: uuid("group_id")
+      .references(() => groups.id, { onDelete: "cascade" })
+      .notNull(),
+    codeHash: text("code_hash").notNull(),
+    expiresAt: timestamp("expires_at", { precision: 3, withTimezone: true }).notNull(),
+    consumedAt: timestamp("consumed_at", { precision: 3, withTimezone: true }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_class_login_codes")(table),
+    codeHashIdx: index("chess_class_login_codes_code_hash_idx").on(table.codeHash),
+    groupIdx: index("chess_class_login_codes_group_id_idx").on(table.groupId),
   }),
 );

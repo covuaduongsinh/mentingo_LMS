@@ -1324,6 +1324,20 @@
       "when": 1785071237307,
       "tag": "0188_enable_chess_matches_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 189,
+      "version": "7",
+      "when": 1785074686747,
+      "tag": "0189_add_chess_class_management",
+      "breakpoints": true
+    },
+    {
+      "idx": 190,
+      "version": "7",
+      "when": 1785074686748,
+      "tag": "0190_enable_chess_class_login_codes_rls",
+      "breakpoints": true
     }
   ]
 }

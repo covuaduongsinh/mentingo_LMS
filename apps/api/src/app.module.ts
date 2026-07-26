@@ -32,6 +32,7 @@ import { CalendarModule } from "./calendar/calendar.module";
 import { CategoryModule } from "./category/category.module";
 import { CertificatesModule } from "./certificates/certificates.module";
 import { ChessModule } from "./chess/chess.module";
+import { ChessClassModule } from "./chess-class/chess-class.module";
 import bunnyConfig from "./common/configuration/bunny";
 import callbackUrlConfig from "./common/configuration/callbackUrl";
 import database from "./common/configuration/database";
@@ -179,6 +180,7 @@ import type { RedisClient } from "src/redis";
     SeoModule,
     CertificatesModule,
     ChessModule,
+    ChessClassModule,
     AssignmentsModule,
     AnnouncementsModule,
     IngestionModule,

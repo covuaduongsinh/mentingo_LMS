@@ -635,6 +635,33 @@
         }
       }
     },
+    "/api/auth/class-login": {
+      "post": {
+        "operationId": "AuthController_classLogin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassLoginBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassLoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/settings/global": {
       "get": {
         "operationId": "SettingsController_getPublicGlobalSettings",
@@ -15172,6 +15199,169 @@
         }
       }
     },
+    "/api/chess-class/groups/{groupId}/students/bulk": {
+      "post": {
+        "operationId": "ChessClassController_bulkCreateStudents",
+        "parameters": [
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkCreateStudentsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkCreateStudentsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-class/students/{userId}/reset-password": {
+      "post": {
+        "operationId": "ChessClassController_resetStudentPassword",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetStudentPasswordResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-class/students/{userId}/release": {
+      "post": {
+        "operationId": "ChessClassController_releaseStudentAccount",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReleaseStudentAccountBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseStudentAccountResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-class/groups/{groupId}/login-codes": {
+      "post": {
+        "operationId": "ChessClassController_generateLoginCodes",
+        "parameters": [
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateLoginCodesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-class/groups/{groupId}/progress": {
+      "get": {
+        "operationId": "ChessClassController_getClassProgress",
+        "parameters": [
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClassProgressResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/assignments/lessons": {
       "post": {
         "operationId": "AssignmentsController_createAssignmentLesson",
@@ -19912,6 +20102,29 @@
               "publicProfileEnabled": {
                 "type": "boolean"
               },
+              "isManagedAccount": {
+                "type": "boolean"
+              },
+              "managedByUserId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -19992,6 +20205,9 @@
               "lockedUntil",
               "username",
               "publicProfileEnabled",
+              "isManagedAccount",
+              "managedByUserId",
+              "realName",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -20092,6 +20308,29 @@
               "publicProfileEnabled": {
                 "type": "boolean"
               },
+              "isManagedAccount": {
+                "type": "boolean"
+              },
+              "managedByUserId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -20172,6 +20411,9 @@
               "lockedUntil",
               "username",
               "publicProfileEnabled",
+              "isManagedAccount",
+              "managedByUserId",
+              "realName",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -20195,491 +20437,8 @@
         "properties": {
           "data": {
             "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "createdAt": {
-                "type": "string"
-              },
-              "updatedAt": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "firstName": {
-                "type": "string"
-              },
-              "lastName": {
-                "type": "string"
-              },
-              "archived": {
-                "type": "boolean"
-              },
-              "deletedAt": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "failedLoginAttempts": {
-                "type": "number"
-              },
-              "lockedUntil": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "username": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "maxLength": 30
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "publicProfileEnabled": {
-                "type": "boolean"
-              },
-              "profilePictureUrl": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "roleSlugs": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "permissions": {
-                "type": "array",
-                "items": {
-                  "anyOf": [
-                    {
-                      "const": "account.read_self",
-                      "type": "string"
-                    },
-                    {
-                      "const": "account.update_self",
-                      "type": "string"
-                    },
-                    {
-                      "const": "user.read_self",
-                      "type": "string"
-                    },
-                    {
-                      "const": "user.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "settings.read_self",
-                      "type": "string"
-                    },
-                    {
-                      "const": "settings.update_self",
-                      "type": "string"
-                    },
-                    {
-                      "const": "settings.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "env.read_public",
-                      "type": "string"
-                    },
-                    {
-                      "const": "env.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "category.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "category.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "group.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "group.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_path.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_path.create",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_path.update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_path.update_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_path.delete",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_path.course_update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_path.course_update_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_path.enrollment",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_path.export",
-                      "type": "string"
-                    },
-                    {
-                      "const": "calendar.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "live_training.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "live_training.create",
-                      "type": "string"
-                    },
-                    {
-                      "const": "live_training.update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "live_training.update_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "live_training.delete",
-                      "type": "string"
-                    },
-                    {
-                      "const": "live_training.delete_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "live_training.join",
-                      "type": "string"
-                    },
-                    {
-                      "const": "live_training.start",
-                      "type": "string"
-                    },
-                    {
-                      "const": "live_training.end",
-                      "type": "string"
-                    },
-                    {
-                      "const": "live_training.statistics",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.read_assigned",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.read_manageable",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.create",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.update_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.delete",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.enrollment",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.statistics",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.export",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course_discussion.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course_discussion.message.create",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course_discussion.message.react",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course_discussion.message.delete_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course_discussion.message.delete",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_mode.use",
-                      "type": "string"
-                    },
-                    {
-                      "const": "learning_progress.update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "certificate.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "certificate.share",
-                      "type": "string"
-                    },
-                    {
-                      "const": "certificate.render",
-                      "type": "string"
-                    },
-                    {
-                      "const": "file.upload",
-                      "type": "string"
-                    },
-                    {
-                      "const": "file.delete",
-                      "type": "string"
-                    },
-                    {
-                      "const": "ai.use",
-                      "type": "string"
-                    },
-                    {
-                      "const": "announcement.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "announcement.create",
-                      "type": "string"
-                    },
-                    {
-                      "const": "announcement.delete",
-                      "type": "string"
-                    },
-                    {
-                      "const": "news.read_public",
-                      "type": "string"
-                    },
-                    {
-                      "const": "news.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "news.manage_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "article.read_public",
-                      "type": "string"
-                    },
-                    {
-                      "const": "article.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "article.manage_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "qa.read_public",
-                      "type": "string"
-                    },
-                    {
-                      "const": "qa.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "qa.manage_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "community.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "community.post.create",
-                      "type": "string"
-                    },
-                    {
-                      "const": "community.post.manage_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "community.moderate",
-                      "type": "string"
-                    },
-                    {
-                      "const": "report.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "statistics.read_self",
-                      "type": "string"
-                    },
-                    {
-                      "const": "statistics.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "billing.checkout",
-                      "type": "string"
-                    },
-                    {
-                      "const": "billing.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "integration_key.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "integration_api.use",
-                      "type": "string"
-                    },
-                    {
-                      "const": "tenant.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "course.ai_generation",
-                      "type": "string"
-                    },
-                    {
-                      "const": "activity_log.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.exercise.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.exercise.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.game.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.game.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.study.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.study.create",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.study.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.study.manage_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.puzzle.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.puzzle.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.match.play",
-                      "type": "string"
-                    },
-                    {
-                      "const": "chess.match.watch",
-                      "type": "string"
-                    },
-                    {
-                      "const": "assignment.read",
-                      "type": "string"
-                    },
-                    {
-                      "const": "assignment.manage",
-                      "type": "string"
-                    },
-                    {
-                      "const": "assignment.manage_own",
-                      "type": "string"
-                    },
-                    {
-                      "const": "assignment.grade",
-                      "type": "string"
-                    },
-                    {
-                      "const": "assignment.submit",
-                      "type": "string"
-                    }
-                  ]
-                }
-              },
-              "shouldVerifyMFA": {
-                "type": "boolean"
-              },
-              "requiresPasswordChange": {
-                "type": "boolean"
-              },
-              "onboardingStatus": {
+            "allOf": [
+              {
                 "type": "object",
                 "properties": {
                   "id": {
@@ -20691,112 +20450,645 @@
                   "updatedAt": {
                     "type": "string"
                   },
-                  "userId": {
+                  "email": {
                     "type": "string"
                   },
-                  "dashboard": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "archived": {
                     "type": "boolean"
                   },
-                  "courses": {
+                  "deletedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "failedLoginAttempts": {
+                    "type": "number"
+                  },
+                  "lockedUntil": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "username": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 30
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "publicProfileEnabled": {
                     "type": "boolean"
                   },
-                  "announcements": {
+                  "isManagedAccount": {
                     "type": "boolean"
                   },
-                  "profile": {
-                    "type": "boolean"
+                  "managedByUserId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
-                  "settings": {
-                    "type": "boolean"
+                  "realName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
-                  "providerInformation": {
-                    "type": "boolean"
+                  "profilePictureUrl": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   }
                 },
                 "required": [
                   "id",
                   "createdAt",
                   "updatedAt",
-                  "userId",
-                  "dashboard",
-                  "courses",
-                  "announcements",
-                  "profile",
-                  "settings",
-                  "providerInformation"
+                  "email",
+                  "firstName",
+                  "lastName",
+                  "archived",
+                  "deletedAt",
+                  "failedLoginAttempts",
+                  "lockedUntil",
+                  "username",
+                  "publicProfileEnabled",
+                  "isManagedAccount",
+                  "managedByUserId",
+                  "realName",
+                  "profilePictureUrl"
                 ]
               },
-              "isManagingTenantAdmin": {
-                "type": "boolean"
-              },
-              "isSupportMode": {
-                "type": "boolean"
-              },
-              "studentModeCourseIds": {
-                "type": "array",
-                "items": {
-                  "format": "uuid",
-                  "type": "string"
-                }
-              },
-              "supportContext": {
+              {
                 "type": "object",
                 "properties": {
-                  "originalUserId": {
-                    "format": "uuid",
-                    "type": "string"
+                  "roleSlugs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   },
-                  "originalTenantId": {
-                    "format": "uuid",
-                    "type": "string"
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "const": "account.read_self",
+                          "type": "string"
+                        },
+                        {
+                          "const": "account.update_self",
+                          "type": "string"
+                        },
+                        {
+                          "const": "user.read_self",
+                          "type": "string"
+                        },
+                        {
+                          "const": "user.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "settings.read_self",
+                          "type": "string"
+                        },
+                        {
+                          "const": "settings.update_self",
+                          "type": "string"
+                        },
+                        {
+                          "const": "settings.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "env.read_public",
+                          "type": "string"
+                        },
+                        {
+                          "const": "env.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "category.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "category.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "group.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "group.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_path.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_path.create",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_path.update",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_path.update_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_path.delete",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_path.course_update",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_path.course_update_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_path.enrollment",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_path.export",
+                          "type": "string"
+                        },
+                        {
+                          "const": "calendar.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "live_training.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "live_training.create",
+                          "type": "string"
+                        },
+                        {
+                          "const": "live_training.update",
+                          "type": "string"
+                        },
+                        {
+                          "const": "live_training.update_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "live_training.delete",
+                          "type": "string"
+                        },
+                        {
+                          "const": "live_training.delete_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "live_training.join",
+                          "type": "string"
+                        },
+                        {
+                          "const": "live_training.start",
+                          "type": "string"
+                        },
+                        {
+                          "const": "live_training.end",
+                          "type": "string"
+                        },
+                        {
+                          "const": "live_training.statistics",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.read_assigned",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.read_manageable",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.create",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.update",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.update_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.delete",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.enrollment",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.statistics",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.export",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course_discussion.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course_discussion.message.create",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course_discussion.message.react",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course_discussion.message.delete_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course_discussion.message.delete",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_mode.use",
+                          "type": "string"
+                        },
+                        {
+                          "const": "learning_progress.update",
+                          "type": "string"
+                        },
+                        {
+                          "const": "certificate.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "certificate.share",
+                          "type": "string"
+                        },
+                        {
+                          "const": "certificate.render",
+                          "type": "string"
+                        },
+                        {
+                          "const": "file.upload",
+                          "type": "string"
+                        },
+                        {
+                          "const": "file.delete",
+                          "type": "string"
+                        },
+                        {
+                          "const": "ai.use",
+                          "type": "string"
+                        },
+                        {
+                          "const": "announcement.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "announcement.create",
+                          "type": "string"
+                        },
+                        {
+                          "const": "announcement.delete",
+                          "type": "string"
+                        },
+                        {
+                          "const": "news.read_public",
+                          "type": "string"
+                        },
+                        {
+                          "const": "news.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "news.manage_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "article.read_public",
+                          "type": "string"
+                        },
+                        {
+                          "const": "article.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "article.manage_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "qa.read_public",
+                          "type": "string"
+                        },
+                        {
+                          "const": "qa.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "qa.manage_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "community.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "community.post.create",
+                          "type": "string"
+                        },
+                        {
+                          "const": "community.post.manage_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "community.moderate",
+                          "type": "string"
+                        },
+                        {
+                          "const": "report.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "statistics.read_self",
+                          "type": "string"
+                        },
+                        {
+                          "const": "statistics.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "billing.checkout",
+                          "type": "string"
+                        },
+                        {
+                          "const": "billing.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "integration_key.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "integration_api.use",
+                          "type": "string"
+                        },
+                        {
+                          "const": "tenant.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "course.ai_generation",
+                          "type": "string"
+                        },
+                        {
+                          "const": "activity_log.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.exercise.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.exercise.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.game.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.game.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.study.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.study.create",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.study.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.study.manage_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.puzzle.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.puzzle.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.match.play",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.match.watch",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.class.manage_students",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.class.reset_password",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.class.progress",
+                          "type": "string"
+                        },
+                        {
+                          "const": "assignment.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "assignment.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "assignment.manage_own",
+                          "type": "string"
+                        },
+                        {
+                          "const": "assignment.grade",
+                          "type": "string"
+                        },
+                        {
+                          "const": "assignment.submit",
+                          "type": "string"
+                        }
+                      ]
+                    }
                   },
-                  "targetUserId": {
-                    "format": "uuid",
-                    "type": "string"
+                  "shouldVerifyMFA": {
+                    "type": "boolean"
                   },
-                  "targetTenantId": {
-                    "format": "uuid",
-                    "type": "string"
+                  "requiresPasswordChange": {
+                    "type": "boolean"
                   },
-                  "expiresAt": {
-                    "type": "string"
+                  "onboardingStatus": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      },
+                      "userId": {
+                        "type": "string"
+                      },
+                      "dashboard": {
+                        "type": "boolean"
+                      },
+                      "courses": {
+                        "type": "boolean"
+                      },
+                      "announcements": {
+                        "type": "boolean"
+                      },
+                      "profile": {
+                        "type": "boolean"
+                      },
+                      "settings": {
+                        "type": "boolean"
+                      },
+                      "providerInformation": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "createdAt",
+                      "updatedAt",
+                      "userId",
+                      "dashboard",
+                      "courses",
+                      "announcements",
+                      "profile",
+                      "settings",
+                      "providerInformation"
+                    ]
                   },
-                  "returnUrl": {
-                    "type": "string"
+                  "isManagingTenantAdmin": {
+                    "type": "boolean"
+                  },
+                  "isSupportMode": {
+                    "type": "boolean"
+                  },
+                  "studentModeCourseIds": {
+                    "type": "array",
+                    "items": {
+                      "format": "uuid",
+                      "type": "string"
+                    }
+                  },
+                  "supportContext": {
+                    "type": "object",
+                    "properties": {
+                      "originalUserId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "originalTenantId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "targetUserId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "targetTenantId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "expiresAt": {
+                        "type": "string"
+                      },
+                      "returnUrl": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "originalUserId",
+                      "originalTenantId",
+                      "targetUserId",
+                      "targetTenantId",
+                      "expiresAt",
+                      "returnUrl"
+                    ]
                   }
                 },
                 "required": [
-                  "originalUserId",
-                  "originalTenantId",
-                  "targetUserId",
-                  "targetTenantId",
-                  "expiresAt",
-                  "returnUrl"
+                  "roleSlugs",
+                  "permissions",
+                  "shouldVerifyMFA",
+                  "requiresPasswordChange",
+                  "onboardingStatus",
+                  "isManagingTenantAdmin",
+                  "isSupportMode",
+                  "studentModeCourseIds"
                 ]
               }
-            },
-            "required": [
-              "id",
-              "createdAt",
-              "updatedAt",
-              "email",
-              "firstName",
-              "lastName",
-              "archived",
-              "deletedAt",
-              "failedLoginAttempts",
-              "lockedUntil",
-              "username",
-              "publicProfileEnabled",
-              "profilePictureUrl",
-              "roleSlugs",
-              "permissions",
-              "shouldVerifyMFA",
-              "requiresPasswordChange",
-              "onboardingStatus",
-              "isManagingTenantAdmin",
-              "isSupportMode",
-              "studentModeCourseIds"
             ]
           }
         },
@@ -20980,6 +21272,29 @@
               "publicProfileEnabled": {
                 "type": "boolean"
               },
+              "isManagedAccount": {
+                "type": "boolean"
+              },
+              "managedByUserId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -21060,6 +21375,9 @@
               "lockedUntil",
               "username",
               "publicProfileEnabled",
+              "isManagedAccount",
+              "managedByUserId",
+              "realName",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -21266,6 +21584,29 @@
               "publicProfileEnabled": {
                 "type": "boolean"
               },
+              "isManagedAccount": {
+                "type": "boolean"
+              },
+              "managedByUserId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -21346,6 +21687,204 @@
               "lockedUntil",
               "username",
               "publicProfileEnabled",
+              "isManagedAccount",
+              "managedByUserId",
+              "realName",
+              "profilePictureUrl",
+              "shouldVerifyMFA",
+              "requiresPasswordChange",
+              "onboardingStatus",
+              "isManagingTenantAdmin"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ClassLoginBody": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "minLength": 5,
+            "maxLength": 5,
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "ClassLoginResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "archived": {
+                "type": "boolean"
+              },
+              "deletedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "failedLoginAttempts": {
+                "type": "number"
+              },
+              "lockedUntil": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
+              "isManagedAccount": {
+                "type": "boolean"
+              },
+              "managedByUserId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "profilePictureUrl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "shouldVerifyMFA": {
+                "type": "boolean"
+              },
+              "requiresPasswordChange": {
+                "type": "boolean"
+              },
+              "onboardingStatus": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "string"
+                  },
+                  "dashboard": {
+                    "type": "boolean"
+                  },
+                  "courses": {
+                    "type": "boolean"
+                  },
+                  "announcements": {
+                    "type": "boolean"
+                  },
+                  "profile": {
+                    "type": "boolean"
+                  },
+                  "settings": {
+                    "type": "boolean"
+                  },
+                  "providerInformation": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "createdAt",
+                  "updatedAt",
+                  "userId",
+                  "dashboard",
+                  "courses",
+                  "announcements",
+                  "profile",
+                  "settings",
+                  "providerInformation"
+                ]
+              },
+              "isManagingTenantAdmin": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email",
+              "firstName",
+              "lastName",
+              "archived",
+              "deletedAt",
+              "failedLoginAttempts",
+              "lockedUntil",
+              "username",
+              "publicProfileEnabled",
+              "isManagedAccount",
+              "managedByUserId",
+              "realName",
               "profilePictureUrl",
               "shouldVerifyMFA",
               "requiresPasswordChange",
@@ -26285,6 +26824,29 @@
                     "publicProfileEnabled": {
                       "type": "boolean"
                     },
+                    "isManagedAccount": {
+                      "type": "boolean"
+                    },
+                    "managedByUserId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "realName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
                     "profilePictureUrl": {
                       "anyOf": [
                         {
@@ -26309,6 +26871,9 @@
                     "lockedUntil",
                     "username",
                     "publicProfileEnabled",
+                    "isManagedAccount",
+                    "managedByUserId",
+                    "realName",
                     "profilePictureUrl"
                   ]
                 },
@@ -26479,6 +27044,29 @@
               "publicProfileEnabled": {
                 "type": "boolean"
               },
+              "isManagedAccount": {
+                "type": "boolean"
+              },
+              "managedByUserId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -26528,6 +27116,9 @@
               "lockedUntil",
               "username",
               "publicProfileEnabled",
+              "isManagedAccount",
+              "managedByUserId",
+              "realName",
               "profilePictureUrl",
               "roleSlugs",
               "groups"
@@ -26736,6 +27327,29 @@
               "publicProfileEnabled": {
                 "type": "boolean"
               },
+              "isManagedAccount": {
+                "type": "boolean"
+              },
+              "managedByUserId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -26760,6 +27374,9 @@
               "lockedUntil",
               "username",
               "publicProfileEnabled",
+              "isManagedAccount",
+              "managedByUserId",
+              "realName",
               "profilePictureUrl"
             ]
           }
@@ -26911,6 +27528,29 @@
               "publicProfileEnabled": {
                 "type": "boolean"
               },
+              "isManagedAccount": {
+                "type": "boolean"
+              },
+              "managedByUserId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -26935,6 +27575,9 @@
               "lockedUntil",
               "username",
               "publicProfileEnabled",
+              "isManagedAccount",
+              "managedByUserId",
+              "realName",
               "profilePictureUrl"
             ]
           }
@@ -27641,6 +28284,29 @@
                       "publicProfileEnabled": {
                         "type": "boolean"
                       },
+                      "isManagedAccount": {
+                        "type": "boolean"
+                      },
+                      "managedByUserId": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "realName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -27665,6 +28331,9 @@
                       "lockedUntil",
                       "username",
                       "publicProfileEnabled",
+                      "isManagedAccount",
+                      "managedByUserId",
+                      "realName",
                       "profilePictureUrl"
                     ]
                   }
@@ -27869,6 +28538,29 @@
                     "publicProfileEnabled": {
                       "type": "boolean"
                     },
+                    "isManagedAccount": {
+                      "type": "boolean"
+                    },
+                    "managedByUserId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "realName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
                     "profilePictureUrl": {
                       "anyOf": [
                         {
@@ -27893,6 +28585,9 @@
                     "lockedUntil",
                     "username",
                     "publicProfileEnabled",
+                    "isManagedAccount",
+                    "managedByUserId",
+                    "realName",
                     "profilePictureUrl"
                   ]
                 }
@@ -28072,6 +28767,29 @@
                       "publicProfileEnabled": {
                         "type": "boolean"
                       },
+                      "isManagedAccount": {
+                        "type": "boolean"
+                      },
+                      "managedByUserId": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "realName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -28096,6 +28814,9 @@
                       "lockedUntil",
                       "username",
                       "publicProfileEnabled",
+                      "isManagedAccount",
+                      "managedByUserId",
+                      "realName",
                       "profilePictureUrl"
                     ]
                   }
@@ -59690,6 +60411,326 @@
           "data"
         ]
       },
+      "BulkCreateStudentsBody": {
+        "type": "object",
+        "properties": {
+          "names": {
+            "minItems": 1,
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "names"
+        ]
+      },
+      "BulkCreateStudentsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "students": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "temporaryPassword": {
+                      "type": "string"
+                    },
+                    "realName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "username",
+                    "temporaryPassword",
+                    "realName"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "students"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ResetStudentPasswordResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "temporaryPassword": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "temporaryPassword"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ReleaseStudentAccountBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "format": "email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "ReleaseStudentAccountResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "createToken": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "createToken"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GenerateLoginCodesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "codes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "username": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "username",
+                    "displayName",
+                    "code"
+                  ]
+                }
+              },
+              "expiresAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "codes",
+              "expiresAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetClassProgressResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "groupId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "days": {
+                "type": "number"
+              },
+              "students": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "username": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "isManagedAccount": {
+                      "type": "boolean"
+                    },
+                    "ratings": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "category": {
+                            "type": "string"
+                          },
+                          "rating": {
+                            "type": "number"
+                          },
+                          "gamesPlayed": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "category",
+                          "rating",
+                          "gamesPlayed"
+                        ]
+                      }
+                    },
+                    "ratingHistory": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "category": {
+                            "type": "string"
+                          },
+                          "rating": {
+                            "type": "number"
+                          },
+                          "recordedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "category",
+                          "rating",
+                          "recordedAt"
+                        ]
+                      }
+                    },
+                    "matchesPlayed": {
+                      "type": "number"
+                    },
+                    "matchesWon": {
+                      "type": "number"
+                    },
+                    "winRate": {
+                      "type": "number"
+                    },
+                    "puzzlesAttempted": {
+                      "type": "number"
+                    },
+                    "puzzlesCorrect": {
+                      "type": "number"
+                    },
+                    "weakMotifs": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "strongMotifs": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "username",
+                    "displayName",
+                    "isManagedAccount",
+                    "ratings",
+                    "ratingHistory",
+                    "matchesPlayed",
+                    "matchesWon",
+                    "winRate",
+                    "puzzlesAttempted",
+                    "puzzlesCorrect",
+                    "weakMotifs",
+                    "strongMotifs"
+                  ]
+                }
+              },
+              "classAverage": {
+                "type": "object",
+                "properties": {
+                  "winRate": {
+                    "type": "number"
+                  },
+                  "puzzleAccuracy": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "winRate",
+                  "puzzleAccuracy"
+                ]
+              }
+            },
+            "required": [
+              "groupId",
+              "days",
+              "students",
+              "classAverage"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "CreateAssignmentLessonBody": {
         "type": "object",
         "properties": {
@@ -64805,6 +65846,29 @@
                       "publicProfileEnabled": {
                         "type": "boolean"
                       },
+                      "isManagedAccount": {
+                        "type": "boolean"
+                      },
+                      "managedByUserId": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "realName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -64829,6 +65893,9 @@
                       "lockedUntil",
                       "username",
                       "publicProfileEnabled",
+                      "isManagedAccount",
+                      "managedByUserId",
+                      "realName",
                       "profilePictureUrl"
                     ]
                   }

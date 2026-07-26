@@ -43,6 +43,7 @@ import { DB, DB_ADMIN } from "src/storage/db/db.providers";
 import { SupportModeService } from "src/support-mode/support-mode.service";
 
 import {
+  chessClassLoginCodes,
   courseStudentMode,
   createTokens,
   credentials,
@@ -448,6 +449,9 @@ export class AuthService {
         lockedUntil: users.lockedUntil,
         username: users.username,
         publicProfileEnabled: users.publicProfileEnabled,
+        isManagedAccount: users.isManagedAccount,
+        managedByUserId: users.managedByUserId,
+        realName: users.realName,
       })
       .from(users)
       .leftJoin(credentials, eq(users.id, credentials.userId))
@@ -645,6 +649,9 @@ export class AuthService {
         lockedUntil: users.lockedUntil,
         username: users.username,
         publicProfileEnabled: users.publicProfileEnabled,
+        isManagedAccount: users.isManagedAccount,
+        managedByUserId: users.managedByUserId,
+        realName: users.realName,
       })
       .from(users)
       .where(eq(users.id, createToken.userId));
@@ -988,6 +995,88 @@ export class AuthService {
       new UserLoginEvent({
         userId,
         method: USER_LOGIN_METHOD.MAGIC_LINK,
+        actor: {
+          userId,
+          email,
+          roleSlugs,
+          permissions,
+          tenantId: user.tenantId,
+        },
+      }),
+    );
+
+    const isManagingTenantAdmin = await this.isManagingTenantAdmin(user.tenantId, permissions);
+
+    if (this.isMfaRoleEnforced(MFAEnforcedRoles, roleSlugs) || userSettings.isMFAEnabled) {
+      this.tokenService.setTemporaryTokenCookies(response, accessToken, refreshToken);
+
+      return {
+        ...user,
+        shouldVerifyMFA: true,
+        requiresPasswordChange: user.requiresPasswordChange ?? false,
+        onboardingStatus,
+        isManagingTenantAdmin,
+      };
+    }
+
+    this.tokenService.setTokenCookies(response, accessToken, refreshToken, true);
+
+    return {
+      ...user,
+      shouldVerifyMFA: false,
+      requiresPasswordChange: user.requiresPasswordChange ?? false,
+      onboardingStatus,
+      isManagingTenantAdmin,
+    };
+  }
+
+  // Chess class management (L5): teacher-projected short-lived login code,
+  // single-use, no password check — possession of the code is the credential.
+  // See docs/specs/chess-class-management-business-spec.md.
+  async loginWithClassCode(response: Response, code: string) {
+    const { MFAEnforcedRoles } = await this.settingsService.getGlobalSettings();
+
+    const dateNow = new Date();
+    const hashedCode = hashToken(code.toUpperCase());
+
+    const { user, accessToken, refreshToken } = await this.db.transaction(async (trx) => {
+      const [loginCode] = await trx
+        .select()
+        .from(chessClassLoginCodes)
+        .where(eq(chessClassLoginCodes.codeHash, hashedCode))
+        .limit(1)
+        .for("update");
+
+      if (!loginCode || loginCode.consumedAt)
+        throw new UnauthorizedException("chessClass.error.invalidLoginCode");
+
+      if (loginCode.expiresAt < dateNow)
+        throw new UnauthorizedException("chessClass.error.expiredLoginCode");
+
+      const user = await this.userService.getUserById(loginCode.userId);
+
+      if (user.archived) throw new UnauthorizedException("user.error.archived");
+
+      await trx
+        .update(chessClassLoginCodes)
+        .set({ consumedAt: dateNow })
+        .where(eq(chessClassLoginCodes.id, loginCode.id));
+
+      const { refreshToken, accessToken } = await this.getTokens(user);
+
+      return { user, accessToken, refreshToken };
+    });
+
+    const { id: userId, email } = user;
+    const { roleSlugs, permissions } = await this.permissionsService.getUserAccess(userId);
+
+    const userSettings = await this.settingsService.getUserSettings(userId);
+    const onboardingStatus = await this.userService.getAllOnboardingStatus(userId);
+
+    await this.outboxPublisher.publish(
+      new UserLoginEvent({
+        userId,
+        method: USER_LOGIN_METHOD.CHESS_CLASS_LOGIN_CODE,
         actor: {
           userId,
           email,

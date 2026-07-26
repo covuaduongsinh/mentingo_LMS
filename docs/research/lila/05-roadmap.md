@@ -12,15 +12,15 @@ Theo yêu cầu của người dùng, mỗi đợt tự động verify (tsc + es
 | **L1**  | #21 merged          | Nền bàn cờ tương tác: shapes, glyph, cây biến, board editor             |
 | **L2**  | #22 merged          | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
 | **L3**  | #23 merged          | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
-| **L4**  | _(đang triển khai)_ | Chơi trực tuyến người-với-người                                         |
-| **L5**  |                     | Lớp học cờ: tài khoản do giáo viên quản lý                              |
+| **L4**  | #24 merged          | Chơi trực tuyến người-với-người                                         |
+| **L5**  | _(đang triển khai)_ | Lớp học cờ: tài khoản do giáo viên quản lý                              |
 | **L6**  |                     | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
 | **L7**  |                     | Nhập môn: Learn/Coordinate/Practice                                     |
 | **L8**  |                     | Phân tích điểm mạnh-yếu (Insight/Tutor)                                 |
 | **L9**  |                     | Cộng đồng cờ: mở rộng community forum có sẵn                            |
 | **L10** |                     | Tường thuật giải đấu (Broadcast/Relay)                                  |
 
-## Đợt L0 — Tài liệu khảo sát clean-room _(đang triển khai)_
+## Đợt L0 — Tài liệu khảo sát clean-room _(Đã merged, PR #20)_
 
 Không code. Tạo 6 file `docs/research/lila/` (chính tài liệu này + 00–04) để chốt ranh giới pháp lý và bản đồ tính năng trước khi viết bất kỳ dòng code nào. Cũng cập nhật `HANDOVER.md` đóng mục roadmap LearnHouse cũ và mở mục mới cho roadmap này.
 
@@ -69,7 +69,7 @@ Bảng mới: `chess_puzzles`, `chess_puzzle_attempts`, `chess_ratings`, `chess_
 
 ## Đợt L4 — Chơi trực tuyến người-với-người
 
-> **Đã triển khai** — xem `docs/specs/chess-online-match-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
+> **Đã merged (PR #24)** — xem `docs/specs/chess-online-match-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
 
 Bảng mới: `chess_seeks` (gộp cả seek mở và thách đấu đích danh, thay vì 2 bảng riêng), `chess_matches`, `chess_match_moves` (+ migration RLS riêng, `0187`/`0188`).
 
@@ -87,15 +87,21 @@ Bảng mới: `chess_seeks` (gộp cả seek mở và thách đấu đích danh,
 
 ## Đợt L5 — Lớp học cờ: tài khoản do giáo viên quản lý
 
+> **Đã triển khai** — xem `docs/specs/chess-class-management-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
+
 Xây trên `groups` sẵn có, không tạo mô hình lớp song song.
 
-- Mở rộng `users`: `managedByUserId`, `realName`, `isManagedAccount`. Bảng mới `chess_class_login_codes`.
-- Tạo tài khoản học sinh không cần email, tạo hàng loạt từ danh sách tên (bộ ký tự loại bỏ ký tự dễ nhầm — xem [04-subsystem-notes.md](./04-subsystem-notes.md) mục 6).
-- Mã đăng nhập lớp ngắn hạn (15 phút — xem mục 5 cùng file trên).
-- Đặt lại mật khẩu, lưu trữ, chuyển lớp, giải phóng tài khoản.
-- Tên thật tách khỏi username.
-- Báo cáo tiến độ lớp: biến thiên rating theo N ngày, tỉ lệ thắng, thời lượng, tiến độ puzzle theo theme.
+- Mở rộng `users`: `managedByUserId`, `realName`, `isManagedAccount`. Bảng mới `chess_class_login_codes` (+ migration RLS riêng, `0189`/`0190`).
+- Tạo tài khoản học sinh không cần email (dùng **email giả sinh tự động** để giữ nguyên ràng buộc NOT NULL/unique hiện có của `users.email`, tránh rà soát lại toàn bộ nơi phụ thuộc email thật), tạo hàng loạt từ danh sách tên (bộ ký tự loại bỏ ký tự dễ nhầm — xem [04-subsystem-notes.md](./04-subsystem-notes.md) mục 6). `firstName`/`lastName` hiển thị công khai là **bút danh sinh tự động** (tên quân cờ + số), `realName` mới là tên thật, chỉ giáo viên/admin xem được.
+- Mã đăng nhập lớp ngắn hạn (15 phút — xem mục 5 cùng file trên) qua endpoint public riêng `POST /auth/class-login`, mô phỏng đúng mẫu `handleMagicLinkLogin` đã có (khóa dòng, dùng một lần) — không sửa `LocalStrategy`/`validateUser` hiện có.
+- Đặt lại mật khẩu, giải phóng tài khoản (trả `create_tokens` token trong response, giáo viên tự gửi — **lùi lại** việc tự động gửi email để tránh kéo `EmailModule` vào module mới).
+- Tên thật tách khỏi username/bút danh hiển thị.
+- Báo cáo tiến độ lớp: biến thiên rating theo N ngày, tỉ lệ thắng, tiến độ puzzle theo theme (tái dùng `ChessPuzzleService.getDashboard` cho từng thành viên).
 - Permission: `chess.class.manage_students`, `chess.class.reset_password`, `chess.class.progress`.
+
+**Lùi lại / chưa làm** (xem "Follow-up Work" trong spec): chuyển lớp hàng loạt, giới hạn quyền tài khoản managed (thuộc phạm vi kid mode ở L9), biểu đồ trực quan cho báo cáo tiến độ, tự động gửi email khi giải phóng tài khoản.
+
+**Phát hiện kỹ thuật quan trọng khi triển khai**: thêm 3 cột vào bảng `users` làm vỡ `tsc` với `TS2589: Type instantiation is excessively deep` ở schema tổng hợp `currentUserResponseSchema` — sửa bằng cách đổi outer `Type.Composite` sang `Type.Intersect` (rẻ hơn cho compiler vì không flatten object type), không đổi field nào. Cách sửa sai đã thử trước (nới `permissions` sang `Type.Array(Type.String())`) làm `tsc` API sạch nhưng vỡ ~15 file phía frontend cần kiểu `PermissionKey[]` chặt — chỉ lộ ra sau khi chạy `generate:client` + `lint-tsc-web`. Xem wiki nội bộ `typebox-composite-ts2589-depth-limit`.
 
 ## Đợt L6 — Ghép cặp hàng loạt + Giải đấu nội bộ
 

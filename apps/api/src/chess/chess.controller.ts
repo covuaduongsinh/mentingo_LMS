@@ -607,7 +607,7 @@ export class ChessController {
     response: baseResponse(chessPuzzleDashboardResponseSchema),
   })
   async getPuzzleDashboard(@CurrentUser() user: CurrentUserType) {
-    return new BaseResponse(await this.chessPuzzleService.getDashboard(user));
+    return new BaseResponse(await this.chessPuzzleService.getDashboard(user.userId));
   }
 
   @Post("puzzles/:id/attempts")

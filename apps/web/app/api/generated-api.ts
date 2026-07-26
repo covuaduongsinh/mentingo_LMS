@@ -129,6 +129,9 @@ export interface RegisterResponse {
     lockedUntil: string | null;
     username: string | null;
     publicProfileEnabled: boolean;
+    isManagedAccount: boolean;
+    managedByUserId: string | null;
+    realName: string | null;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -174,6 +177,9 @@ export interface LoginResponse {
     lockedUntil: string | null;
     username: string | null;
     publicProfileEnabled: boolean;
+    isManagedAccount: boolean;
+    managedByUserId: string | null;
+    realName: string | null;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -211,7 +217,11 @@ export interface CurrentUserResponse {
     lockedUntil: string | null;
     username: string | null;
     publicProfileEnabled: boolean;
+    isManagedAccount: boolean;
+    managedByUserId: string | null;
+    realName: string | null;
     profilePictureUrl: string | null;
+  } & {
     roleSlugs: string[];
     permissions: (
       | "account.read_self"
@@ -308,6 +318,9 @@ export interface CurrentUserResponse {
       | "chess.puzzle.manage"
       | "chess.match.play"
       | "chess.match.watch"
+      | "chess.class.manage_students"
+      | "chess.class.reset_password"
+      | "chess.class.progress"
       | "assignment.read"
       | "assignment.manage"
       | "assignment.manage_own"
@@ -381,6 +394,9 @@ export interface CreatePasswordResponse {
     lockedUntil: string | null;
     username: string | null;
     publicProfileEnabled: boolean;
+    isManagedAccount: boolean;
+    managedByUserId: string | null;
+    realName: string | null;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -447,6 +463,53 @@ export interface HandleMagicLinkResponse {
     lockedUntil: string | null;
     username: string | null;
     publicProfileEnabled: boolean;
+    isManagedAccount: boolean;
+    managedByUserId: string | null;
+    realName: string | null;
+    profilePictureUrl: string | null;
+    shouldVerifyMFA: boolean;
+    requiresPasswordChange: boolean;
+    onboardingStatus: {
+      id: string;
+      createdAt: string;
+      updatedAt: string;
+      userId: string;
+      dashboard: boolean;
+      courses: boolean;
+      announcements: boolean;
+      profile: boolean;
+      settings: boolean;
+      providerInformation: boolean;
+    };
+    isManagingTenantAdmin: boolean;
+  };
+}
+
+export interface ClassLoginBody {
+  /**
+   * @minLength 5
+   * @maxLength 5
+   */
+  code: string;
+}
+
+export interface ClassLoginResponse {
+  data: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    archived: boolean;
+    deletedAt: string | null;
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
+    username: string | null;
+    publicProfileEnabled: boolean;
+    isManagedAccount: boolean;
+    managedByUserId: string | null;
+    realName: string | null;
     profilePictureUrl: string | null;
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -1467,6 +1530,9 @@ export interface GetUsersResponse {
     lockedUntil: string | null;
     username: string | null;
     publicProfileEnabled: boolean;
+    isManagedAccount: boolean;
+    managedByUserId: string | null;
+    realName: string | null;
     profilePictureUrl: string | null;
   } & {
     roleSlugs: string[];
@@ -1508,6 +1574,9 @@ export interface GetUserByIdResponse {
     lockedUntil: string | null;
     username: string | null;
     publicProfileEnabled: boolean;
+    isManagedAccount: boolean;
+    managedByUserId: string | null;
+    realName: string | null;
     profilePictureUrl: string | null;
     roleSlugs: string[];
     groups: {
@@ -1556,6 +1625,9 @@ export interface UpdateUserResponse {
     lockedUntil: string | null;
     username: string | null;
     publicProfileEnabled: boolean;
+    isManagedAccount: boolean;
+    managedByUserId: string | null;
+    realName: string | null;
     profilePictureUrl: string | null;
   };
 }
@@ -1600,6 +1672,9 @@ export interface AdminUpdateUserResponse {
     lockedUntil: string | null;
     username: string | null;
     publicProfileEnabled: boolean;
+    isManagedAccount: boolean;
+    managedByUserId: string | null;
+    realName: string | null;
     profilePictureUrl: string | null;
   };
 }
@@ -1775,6 +1850,9 @@ export interface GetAllGroupsResponse {
       lockedUntil: string | null;
       username: string | null;
       publicProfileEnabled: boolean;
+      isManagedAccount: boolean;
+      managedByUserId: string | null;
+      realName: string | null;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -1809,6 +1887,9 @@ export interface GetGroupByIdResponse {
       lockedUntil: string | null;
       username: string | null;
       publicProfileEnabled: boolean;
+      isManagedAccount: boolean;
+      managedByUserId: string | null;
+      realName: string | null;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -1837,6 +1918,9 @@ export interface GetUserGroupsResponse {
       lockedUntil: string | null;
       username: string | null;
       publicProfileEnabled: boolean;
+      isManagedAccount: boolean;
+      managedByUserId: string | null;
+      realName: string | null;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -8077,6 +8161,92 @@ export interface FinishScormAttemptResponse {
   };
 }
 
+export interface BulkCreateStudentsBody {
+  /**
+   * @maxItems 200
+   * @minItems 1
+   */
+  names: string[];
+}
+
+export interface BulkCreateStudentsResponse {
+  data: {
+    students: {
+      /** @format uuid */
+      userId: string;
+      username: string;
+      temporaryPassword: string;
+      realName: string;
+    }[];
+  };
+}
+
+export interface ResetStudentPasswordResponse {
+  data: {
+    temporaryPassword: string;
+  };
+}
+
+export interface ReleaseStudentAccountBody {
+  /** @format email */
+  email: string;
+}
+
+export interface ReleaseStudentAccountResponse {
+  data: {
+    createToken: string;
+  };
+}
+
+export interface GenerateLoginCodesResponse {
+  data: {
+    codes: {
+      /** @format uuid */
+      userId: string;
+      username: string | null;
+      displayName: string;
+      code: string;
+    }[];
+    expiresAt: string;
+  };
+}
+
+export interface GetClassProgressResponse {
+  data: {
+    /** @format uuid */
+    groupId: string;
+    days: number;
+    students: {
+      /** @format uuid */
+      userId: string;
+      username: string | null;
+      displayName: string;
+      isManagedAccount: boolean;
+      ratings: {
+        category: string;
+        rating: number;
+        gamesPlayed: number;
+      }[];
+      ratingHistory: {
+        category: string;
+        rating: number;
+        recordedAt: string;
+      }[];
+      matchesPlayed: number;
+      matchesWon: number;
+      winRate: number;
+      puzzlesAttempted: number;
+      puzzlesCorrect: number;
+      weakMotifs: string[];
+      strongMotifs: string[];
+    }[];
+    classAverage: {
+      winRate: number;
+      puzzleAccuracy: number;
+    };
+  };
+}
+
 export interface CreateAssignmentLessonBody {
   /** @format uuid */
   chapterId: string;
@@ -9108,6 +9278,9 @@ export interface GetGroupsResponse {
       lockedUntil: string | null;
       username: string | null;
       publicProfileEnabled: boolean;
+      isManagedAccount: boolean;
+      managedByUserId: string | null;
+      realName: string | null;
       profilePictureUrl: string | null;
     }[];
     createdAt?: string;
@@ -10845,6 +11018,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/auth/magic-link/verify`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AuthControllerClassLogin
+     * @request POST:/api/auth/class-login
+     */
+    authControllerClassLogin: (data: ClassLoginBody, params: RequestParams = {}) =>
+      this.request<ClassLoginResponse, any>({
+        path: `/api/auth/class-login`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -17843,6 +18032,95 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/seo/course-preview/${idOrSlug}`,
         method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessClassControllerBulkCreateStudents
+     * @request POST:/api/chess-class/groups/{groupId}/students/bulk
+     */
+    chessClassControllerBulkCreateStudents: (
+      groupId: string,
+      data: BulkCreateStudentsBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<BulkCreateStudentsResponse, any>({
+        path: `/api/chess-class/groups/${groupId}/students/bulk`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessClassControllerResetStudentPassword
+     * @request POST:/api/chess-class/students/{userId}/reset-password
+     */
+    chessClassControllerResetStudentPassword: (userId: string, params: RequestParams = {}) =>
+      this.request<ResetStudentPasswordResponse, any>({
+        path: `/api/chess-class/students/${userId}/reset-password`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessClassControllerReleaseStudentAccount
+     * @request POST:/api/chess-class/students/{userId}/release
+     */
+    chessClassControllerReleaseStudentAccount: (
+      userId: string,
+      data: ReleaseStudentAccountBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<ReleaseStudentAccountResponse, any>({
+        path: `/api/chess-class/students/${userId}/release`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessClassControllerGenerateLoginCodes
+     * @request POST:/api/chess-class/groups/{groupId}/login-codes
+     */
+    chessClassControllerGenerateLoginCodes: (groupId: string, params: RequestParams = {}) =>
+      this.request<GenerateLoginCodesResponse, any>({
+        path: `/api/chess-class/groups/${groupId}/login-codes`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessClassControllerGetClassProgress
+     * @request GET:/api/chess-class/groups/{groupId}/progress
+     */
+    chessClassControllerGetClassProgress: (
+      groupId: string,
+      query?: {
+        days?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetClassProgressResponse, any>({
+        path: `/api/chess-class/groups/${groupId}/progress`,
+        method: "GET",
+        query: query,
+        format: "json",
         ...params,
       }),
 
