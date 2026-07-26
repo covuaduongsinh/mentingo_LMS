@@ -2,12 +2,29 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useStatistics } from "~/api/queries";
+import {
+  useCertificateIssuanceRate,
+  useCohortRetention,
+  useDauTrend,
+  useEngagementScore,
+  useNewVsReturning,
+  useScoreDistribution,
+  useWeekdayActivity,
+} from "~/api/queries/admin/useOrgAnalytics";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Button } from "~/components/ui/button";
 import { useLanguageStore } from "~/modules/Dashboard/Settings/Language/LanguageStore";
 import { AvgScoreAcrossAllQuizzesChart } from "~/modules/Statistics/Admin/components/AvgScoreAcrossAllQuizzessChart";
+import { CertificateIssuanceRateCard } from "~/modules/Statistics/Admin/components/CertificateIssuanceRateCard";
+import { CohortRetentionTable } from "~/modules/Statistics/Admin/components/CohortRetentionTable";
 import { ConversionsAfterFreemiumLessonChart } from "~/modules/Statistics/Admin/components/ConversionsAfterFreemiumLessonChart";
+import { DauTrendChart } from "~/modules/Statistics/Admin/components/DauTrendChart";
+import { EngagementScoreCard } from "~/modules/Statistics/Admin/components/EngagementScoreCard";
 import { EnrollmentChart } from "~/modules/Statistics/Admin/components/EnrollmentChart";
+import { NewVsReturningChart } from "~/modules/Statistics/Admin/components/NewVsReturningChart";
+import { ScoreDistributionChart } from "~/modules/Statistics/Admin/components/ScoreDistributionChart";
+import { WeekdayActivityChart } from "~/modules/Statistics/Admin/components/WeekdayActivityChart";
+import { useDownloadAdvancedAnalyticsReport } from "~/modules/Statistics/Admin/hooks/useDownloadAdvancedAnalyticsReport";
 import { useDownloadSummaryReport } from "~/modules/Statistics/Admin/hooks/useDownloadSummaryReport";
 
 import { ADMIN_STATISTICS_HANDLES } from "../../../../e2e/data/statistics/handles";
@@ -21,6 +38,16 @@ export const AdminStatistics = () => {
 
   const { data: statistics, isLoading } = useStatistics(language);
   const { downloadReport, isDownloading } = useDownloadSummaryReport();
+  const { downloadReport: downloadAdvancedReport, isDownloading: isDownloadingAdvanced } =
+    useDownloadAdvancedAnalyticsReport();
+  const { data: dauTrend, isLoading: isDauTrendLoading } = useDauTrend();
+  const { data: newVsReturning, isLoading: isNewVsReturningLoading } = useNewVsReturning();
+  const { data: weekdayActivity, isLoading: isWeekdayActivityLoading } = useWeekdayActivity();
+  const { data: cohortRetention, isLoading: isCohortRetentionLoading } = useCohortRetention();
+  const { data: scoreDistribution, isLoading: isScoreDistributionLoading } = useScoreDistribution();
+  const { data: certificateIssuanceRate, isLoading: isCertificateIssuanceRateLoading } =
+    useCertificateIssuanceRate();
+  const { data: engagementScore, isLoading: isEngagementScoreLoading } = useEngagementScore();
   const { t } = useTranslation();
   const totalCoursesCompletion =
     statistics?.totalCoursesCompletionStats.totalCoursesCompletion ?? 0;
@@ -121,6 +148,11 @@ export const AdminStatistics = () => {
       className="flex flex-col gap-y-6 xl:!h-full xl:gap-y-8 2xl:!h-auto"
     >
       <div className="flex items-center justify-end gap-x-4">
+        <Button onClick={downloadAdvancedReport} disabled={isDownloadingAdvanced} variant="outline">
+          {isDownloadingAdvanced
+            ? t("adminStatisticsView.other.downloadingReport")
+            : t("adminStatisticsView.other.downloadAdvancedReport")}
+        </Button>
         <Button
           data-testid={ADMIN_STATISTICS_HANDLES.DOWNLOAD_REPORT_BUTTON}
           onClick={downloadReport}
@@ -185,6 +217,35 @@ export const AdminStatistics = () => {
             chartConfig={avgQuizScoreChartConfig}
             chartData={avgQuizScoreChartData}
           />
+        </div>
+      </div>
+      <h2 className="body-lg-md text-neutral-950">
+        {t("adminStatisticsView.other.advancedAnalytics")}
+      </h2>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-6">
+        <div className="md:col-span-1 lg:col-span-3">
+          <DauTrendChart data={dauTrend} isLoading={isDauTrendLoading} />
+        </div>
+        <div className="md:col-span-1 lg:col-span-3">
+          <NewVsReturningChart data={newVsReturning} isLoading={isNewVsReturningLoading} />
+        </div>
+        <div className="md:col-span-1 lg:col-span-3">
+          <WeekdayActivityChart data={weekdayActivity} isLoading={isWeekdayActivityLoading} />
+        </div>
+        <div className="md:col-span-1 lg:col-span-3">
+          <ScoreDistributionChart data={scoreDistribution} isLoading={isScoreDistributionLoading} />
+        </div>
+        <div className="md:col-span-2 lg:col-span-4">
+          <CohortRetentionTable data={cohortRetention} isLoading={isCohortRetentionLoading} />
+        </div>
+        <div className="md:col-span-1 lg:col-span-1">
+          <CertificateIssuanceRateCard
+            data={certificateIssuanceRate}
+            isLoading={isCertificateIssuanceRateLoading}
+          />
+        </div>
+        <div className="md:col-span-1 lg:col-span-1">
+          <EngagementScoreCard data={engagementScore} isLoading={isEngagementScoreLoading} />
         </div>
       </div>
     </PageWrapper>

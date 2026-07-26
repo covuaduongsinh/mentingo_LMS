@@ -1,3 +1,12 @@
+<a name="deep-analytics-phase2"></a>
+
+## [Deep analytics — phase 2] - 26.07.2026
+
+### Features:
+
+- add org-level trend analytics computed entirely from existing tables (no new event pipeline): daily-active-users trend, new-vs-returning users, weekly cohort retention, activity-by-weekday, quiz/assignment score distribution, certificate issuance rate, and a transparent 3-component engagement score
+- add an "Export advanced report" XLSX download (DAU trend, cohort retention, score distribution, certificate rate sheets) alongside the existing summary report
+
 <a name="lesson-content-versioning"></a>
 
 ## [Lesson content versioning] - 26.07.2026
