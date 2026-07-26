@@ -60,6 +60,7 @@ export const routes: (
           route("chess/puzzles/dashboard", "modules/Chess/Puzzle/ChessPuzzleDashboard.page.tsx");
           route("chess/lobby", "modules/Chess/Match/ChessLobby.page.tsx");
           route("chess/matches/:id", "modules/Chess/Match/ChessMatchPlay.page.tsx");
+          route("chess/tournaments/:id", "modules/Chess/Tournament/ChessTournamentDetail.page.tsx");
         });
         route("", "modules/Dashboard/UserDashboard.layout.tsx", () => {
           route("", "modules/Dashboard/IndexRedirect.page.tsx", { index: true });
@@ -106,6 +107,7 @@ export const routes: (
           route("chess/exercises", "modules/Chess/Admin/ChessExercisesAdmin.page.tsx");
           route("chess/games", "modules/Chess/Admin/ChessGamesAdmin.page.tsx");
           route("chess/classes/:groupId", "modules/Chess/Admin/ChessClassManagement.page.tsx");
+          route("chess/tournaments/new", "modules/Chess/Admin/ChessTournamentCreate.page.tsx");
           route(
             "assignments/:lessonId/grading",
             "modules/Admin/AssignmentGrading/AssignmentGrading.page.tsx",

@@ -15362,6 +15362,242 @@
         }
       }
     },
+    "/api/chess-tournament/bulk-pairing": {
+      "post": {
+        "operationId": "ChessTournamentController_bulkPairing",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkPairingBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkPairingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-tournament": {
+      "post": {
+        "operationId": "ChessTournamentController_createTournament",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTournamentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTournamentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-tournament/{id}": {
+      "get": {
+        "operationId": "ChessTournamentController_getTournament",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTournamentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-tournament/{id}/join": {
+      "post": {
+        "operationId": "ChessTournamentController_joinTournament",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinTournamentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-tournament/{id}/start": {
+      "post": {
+        "operationId": "ChessTournamentController_startTournament",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartTournamentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-tournament/{id}/next-round": {
+      "post": {
+        "operationId": "ChessTournamentController_generateNextRound",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateNextRoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-tournament/{id}/arena/pair-next": {
+      "post": {
+        "operationId": "ChessTournamentController_pairNextArena",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairNextArenaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-tournament/{id}/standings": {
+      "get": {
+        "operationId": "ChessTournamentController_getStandings",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStandingsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-tournament/{id}/export/trf": {
+      "get": {
+        "operationId": "ChessTournamentController_exportTrf",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/assignments/lessons": {
       "post": {
         "operationId": "AssignmentsController_createAssignmentLesson",
@@ -20951,6 +21187,18 @@
                         },
                         {
                           "const": "chess.class.progress",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.tournament.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.tournament.create",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.tournament.manage",
                           "type": "string"
                         },
                         {
@@ -60724,6 +60972,895 @@
               "days",
               "students",
               "classAverage"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "BulkPairingBody": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "timeControlId": {
+            "anyOf": [
+              {
+                "const": "1+0",
+                "type": "string"
+              },
+              {
+                "const": "5+0",
+                "type": "string"
+              },
+              {
+                "const": "10+0",
+                "type": "string"
+              },
+              {
+                "const": "15+10",
+                "type": "string"
+              }
+            ]
+          },
+          "rated": {
+            "type": "boolean"
+          },
+          "pairs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "whiteUserId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "blackUserId": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "whiteUserId",
+                "blackUserId"
+              ]
+            }
+          },
+          "auto": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "groupId",
+          "timeControlId"
+        ]
+      },
+      "BulkPairingResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "tournament": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "format": {
+                    "type": "string"
+                  },
+                  "groupId": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "timeControlId": {
+                    "type": "string"
+                  },
+                  "rated": {
+                    "type": "boolean"
+                  },
+                  "roundCount": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "durationMinutes": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "hostUserId": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "currentRound": {
+                    "type": "number"
+                  },
+                  "startsAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "endsAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "format",
+                  "groupId",
+                  "timeControlId",
+                  "rated",
+                  "roundCount",
+                  "durationMinutes",
+                  "hostUserId",
+                  "status",
+                  "currentRound",
+                  "startsAt",
+                  "endsAt",
+                  "createdAt"
+                ]
+              },
+              "pairings": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "round": {
+                      "type": "number"
+                    },
+                    "whiteUserId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "blackUserId": {
+                      "anyOf": [
+                        {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "matchId": {
+                      "anyOf": [
+                        {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "round",
+                    "whiteUserId",
+                    "blackUserId",
+                    "matchId",
+                    "result"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "tournament",
+              "pairings"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateTournamentBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          },
+          "format": {
+            "anyOf": [
+              {
+                "const": "bulk_pairing",
+                "type": "string"
+              },
+              {
+                "const": "swiss",
+                "type": "string"
+              },
+              {
+                "const": "arena",
+                "type": "string"
+              },
+              {
+                "const": "simul",
+                "type": "string"
+              }
+            ]
+          },
+          "groupId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "timeControlId": {
+            "anyOf": [
+              {
+                "const": "1+0",
+                "type": "string"
+              },
+              {
+                "const": "5+0",
+                "type": "string"
+              },
+              {
+                "const": "10+0",
+                "type": "string"
+              },
+              {
+                "const": "15+10",
+                "type": "string"
+              }
+            ]
+          },
+          "rated": {
+            "type": "boolean"
+          },
+          "roundCount": {
+            "minimum": 1,
+            "maximum": 30,
+            "type": "integer"
+          },
+          "durationMinutes": {
+            "minimum": 1,
+            "maximum": 1440,
+            "type": "integer"
+          },
+          "minRating": {
+            "type": "integer"
+          },
+          "maxRating": {
+            "type": "integer"
+          },
+          "minGamesPlayed": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "participantUserIds": {
+            "type": "array",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "format",
+          "timeControlId"
+        ]
+      },
+      "CreateTournamentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              },
+              "groupId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "timeControlId": {
+                "type": "string"
+              },
+              "rated": {
+                "type": "boolean"
+              },
+              "roundCount": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "durationMinutes": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "hostUserId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "status": {
+                "type": "string"
+              },
+              "currentRound": {
+                "type": "number"
+              },
+              "startsAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "endsAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "format",
+              "groupId",
+              "timeControlId",
+              "rated",
+              "roundCount",
+              "durationMinutes",
+              "hostUserId",
+              "status",
+              "currentRound",
+              "startsAt",
+              "endsAt",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetTournamentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              },
+              "groupId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "timeControlId": {
+                "type": "string"
+              },
+              "rated": {
+                "type": "boolean"
+              },
+              "roundCount": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "durationMinutes": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "hostUserId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "status": {
+                "type": "string"
+              },
+              "currentRound": {
+                "type": "number"
+              },
+              "startsAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "endsAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "format",
+              "groupId",
+              "timeControlId",
+              "rated",
+              "roundCount",
+              "durationMinutes",
+              "hostUserId",
+              "status",
+              "currentRound",
+              "startsAt",
+              "endsAt",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "JoinTournamentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "success": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "success"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "StartTournamentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              },
+              "groupId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "timeControlId": {
+                "type": "string"
+              },
+              "rated": {
+                "type": "boolean"
+              },
+              "roundCount": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "durationMinutes": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "hostUserId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "status": {
+                "type": "string"
+              },
+              "currentRound": {
+                "type": "number"
+              },
+              "startsAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "endsAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "format",
+              "groupId",
+              "timeControlId",
+              "rated",
+              "roundCount",
+              "durationMinutes",
+              "hostUserId",
+              "status",
+              "currentRound",
+              "startsAt",
+              "endsAt",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GenerateNextRoundResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              },
+              "groupId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "timeControlId": {
+                "type": "string"
+              },
+              "rated": {
+                "type": "boolean"
+              },
+              "roundCount": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "durationMinutes": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "hostUserId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "status": {
+                "type": "string"
+              },
+              "currentRound": {
+                "type": "number"
+              },
+              "startsAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "endsAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "format",
+              "groupId",
+              "timeControlId",
+              "rated",
+              "roundCount",
+              "durationMinutes",
+              "hostUserId",
+              "status",
+              "currentRound",
+              "startsAt",
+              "endsAt",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "PairNextArenaResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "paired": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "paired"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetStandingsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "round": {
+                "type": "number"
+              },
+              "standings": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "buchholz": {
+                      "type": "number"
+                    },
+                    "sonnebornBerger": {
+                      "type": "number"
+                    },
+                    "gamesPlayed": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "displayName",
+                    "score",
+                    "buchholz",
+                    "sonnebornBerger",
+                    "gamesPlayed"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "round",
+              "standings"
             ]
           }
         },

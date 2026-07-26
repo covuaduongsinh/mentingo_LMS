@@ -417,6 +417,58 @@
       "groupNotFound": "Group not found"
     }
   },
+  "chessTournament": {
+    "nav": {
+      "title": "Tournaments"
+    },
+    "format": {
+      "bulkPairing": "Bulk pairing",
+      "swiss": "Swiss",
+      "arena": "Arena",
+      "simul": "Simul"
+    },
+    "create": {
+      "title": "Create a chess event",
+      "group": "Group / class",
+      "selectGroup": "Select a group",
+      "timeControl": "Time control",
+      "rated": "Rated",
+      "name": "Tournament name",
+      "roundCount": "Number of rounds",
+      "durationMinutes": "Duration (minutes)",
+      "bulkPairingHelp": "Instantly pairs every member of the group by current rating and starts games right away.",
+      "simulHelp": "You'll play one board against every member of this group at once.",
+      "pairNow": "Pair everyone now",
+      "submit": "Create tournament"
+    },
+    "detail": {
+      "round": "Round {{current}} / {{total}}",
+      "join": "Join",
+      "start": "Start",
+      "nextRound": "Next round",
+      "pairNext": "Pair next",
+      "exportTrf": "Export TRF"
+    },
+    "table": {
+      "rank": "#",
+      "displayName": "Player",
+      "score": "Score",
+      "buchholz": "Buchholz",
+      "sb": "SB",
+      "games": "Games"
+    },
+    "toast": {
+      "bulkPairingFailed": "Could not pair players",
+      "createFailed": "Could not create the tournament",
+      "joinFailed": "Could not join the tournament",
+      "startFailed": "Could not start the tournament",
+      "nextRoundFailed": "Could not generate the next round",
+      "pairNextFailed": "Could not pair the next round"
+    },
+    "errors": {
+      "notFound": "Tournament not found"
+    }
+  },
   "common": {
     "button": {
       "save": "Save",
@@ -4550,6 +4602,8 @@
     "chessMatchPlay": "Chess Match",
     "chessClassManagement": "Chess Class Management",
     "chessClassLogin": "Class Code Login",
+    "chessTournamentCreate": "Create Chess Tournament",
+    "chessTournamentDetail": "Chess Tournament",
     "dashboard": "Dashboard",
     "settings": "Settings",
     "providerInformation": "Provider Information",

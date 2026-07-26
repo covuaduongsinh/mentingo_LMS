@@ -37,6 +37,7 @@ import {
   CHESS_COLOR_PREFERENCES,
   CHESS_SEEK_STATUSES,
   CHESS_MATCH_STATUSES,
+  CHESS_TOURNAMENT_STATUSES,
 } from "@repo/shared";
 import { sql } from "drizzle-orm";
 import {
@@ -129,6 +130,8 @@ import type {
   ChessMatchStatus,
   ChessMatchResult,
   ChessMatchEndReason,
+  ChessTournamentFormat,
+  ChessTournamentStatus,
   AssignmentGradingType,
   AssignmentTaskType,
   AssignmentSubmissionStatus,
@@ -3342,5 +3345,86 @@ export const chessClassLoginCodes = pgTable(
     ...withTenantIdIndex("chess_class_login_codes")(table),
     codeHashIdx: index("chess_class_login_codes_code_hash_idx").on(table.codeHash),
     groupIdx: index("chess_class_login_codes_group_id_idx").on(table.groupId),
+  }),
+);
+
+export const chessTournaments = pgTable(
+  "chess_tournaments",
+  {
+    ...id,
+    ...timestamps,
+    name: text("name").notNull(),
+    format: text("format").$type<ChessTournamentFormat>().notNull(),
+    groupId: uuid("group_id").references(() => groups.id, { onDelete: "cascade" }),
+    timeControlId: varchar("time_control_id", { length: 20 }).notNull(),
+    rated: boolean("rated").notNull().default(true),
+    roundCount: integer("round_count"),
+    durationMinutes: integer("duration_minutes"),
+    hostUserId: uuid("host_user_id").references(() => users.id, { onDelete: "set null" }),
+    status: text("status")
+      .$type<ChessTournamentStatus>()
+      .notNull()
+      .default(CHESS_TOURNAMENT_STATUSES.REGISTRATION),
+    currentRound: integer("current_round").notNull().default(0),
+    startsAt: timestamp("starts_at", { withTimezone: true }),
+    endsAt: timestamp("ends_at", { withTimezone: true }),
+    minRating: integer("min_rating"),
+    maxRating: integer("max_rating"),
+    minGamesPlayed: integer("min_games_played"),
+    createdByUserId: uuid("created_by_user_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_tournaments")(table),
+    statusIdx: index("chess_tournaments_status_idx").on(table.status),
+    groupIdx: index("chess_tournaments_group_id_idx").on(table.groupId),
+  }),
+);
+
+export const chessTournamentPlayers = pgTable(
+  "chess_tournament_players",
+  {
+    ...id,
+    ...timestamps,
+    tournamentId: uuid("tournament_id")
+      .references(() => chessTournaments.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    withdrawnAt: timestamp("withdrawn_at", { withTimezone: true }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_tournament_players")(table),
+    tournamentIdx: index("chess_tournament_players_tournament_id_idx").on(table.tournamentId),
+    unq: unique().on(table.tournamentId, table.userId),
+  }),
+);
+
+export const chessTournamentPairings = pgTable(
+  "chess_tournament_pairings",
+  {
+    ...id,
+    ...timestamps,
+    tournamentId: uuid("tournament_id")
+      .references(() => chessTournaments.id, { onDelete: "cascade" })
+      .notNull(),
+    round: integer("round").notNull(),
+    whiteUserId: uuid("white_user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    // null blackUserId = a bye (odd player count in a Swiss round)
+    blackUserId: uuid("black_user_id").references(() => users.id, { onDelete: "cascade" }),
+    matchId: uuid("match_id").references(() => chessMatches.id, { onDelete: "set null" }),
+    result: text("result").$type<ChessMatchResult>(),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_tournament_pairings")(table),
+    tournamentIdx: index("chess_tournament_pairings_tournament_id_idx").on(table.tournamentId),
+    roundIdx: index("chess_tournament_pairings_round_idx").on(table.round),
   }),
 );
