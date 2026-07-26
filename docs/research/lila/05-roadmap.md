@@ -16,11 +16,9 @@ Theo yêu cầu của người dùng, mỗi đợt tự động verify (tsc + es
 | **L5**  | #25 merged       | Lớp học cờ: tài khoản do giáo viên quản lý                              |
 | **L6**  | #26 merged       | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
 | **L7**  | #27 merged       | Nhập môn: Learn/Coordinate/Practice                                     |
-| **L8**  | _(chưa bắt đầu)_ | Phân tích điểm mạnh-yếu (Insight/Tutor)                                 |
+| **L8**  | #28 merged       | Phân tích điểm mạnh-yếu (Insight/Tutor)                                 |
 | **L9**  | _(chưa bắt đầu)_ | Cộng đồng cờ: mở rộng community forum có sẵn                            |
 | **L10** | _(chưa bắt đầu)_ | Tường thuật giải đấu (Broadcast/Relay)                                  |
-
-**Tạm dừng sau L7 (2026-07-27)**: theo yêu cầu người dùng, phiên làm việc dừng lại sau khi merge xong L7 để tổng kết và bàn giao, thay vì tự động tiếp sang L8. Phạm vi/kế hoạch L8–L10 không đổi — phiên tiếp theo tiếp tục bình thường theo đúng quy trình (xem `HANDOVER.md` mục "Việc cần làm tiếp").
 
 ## Đợt L0 — Tài liệu khảo sát clean-room _(Đã merged, PR #20)_
 
@@ -135,11 +133,22 @@ Bảng mới: `chess_tournaments`, `chess_tournament_players`, `chess_tournament
 
 ## Đợt L8 — Phân tích điểm mạnh-yếu (Insight/Tutor)
 
-Bảng mới: `chess_game_insights`.
+> **Đã merged (PR #28)** — xem `docs/specs/chess-insight-tutor-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
 
-- Chấm độ chính xác ván đấu bằng Arasan qua BullMQ job (không Stockfish).
-- Truy vấn nhiều chiều: khai cuộc/giai đoạn/loại quân/thời gian/đánh giá.
-- Báo cáo tự động mạnh/yếu cho học sinh & giáo viên.
+Bảng mới: `chess_game_insights` (mỗi ply một entry — làm phẳng, không phải một entry mỗi ván; RLS riêng, `0195`/`0196`).
+
+- Chỉ áp dụng cho **ván đấu trực tuyến** (`chess_matches`, L4) — không đụng ngân hàng PGN tĩnh (`chess_games`) hay puzzle (đã có dashboard riêng từ L3).
+- Chấm độ chính xác từng nước bằng engine MIT (Arasan/builtin, không Stockfish) qua BullMQ job (`chess-match-insight-analysis`) tự động xếp hàng khi `ChessMatchService.endMatch` kết thúc một ván có ≥2 nước — **một** lệnh gọi engine mỗi nước (không phải hai): điểm sau nước thứ _k_ tái dùng tự nhiên làm điểm trước nước thứ _k+1_.
+- Độ chính xác dùng công thức suy giảm mũ **tự thiết kế** `100 × e^(−centipawnLoss/300)` — cố ý khác công thức win%-based mà lichess công bố.
+- Truy vấn nhiều chiều: giai đoạn (khai/trung/tàn cuộc, heuristic tự chọn theo ply + vật chất còn lại), loại quân, khai cuộc (sổ khai cuộc rút gọn ~20 mục tự soạn, khớp tiền tố UCI dài nhất).
+- Thời gian suy nghĩ mỗi nước **suy ra** từ `chess_match_moves.createdAt` (không thêm cột mới).
+- Báo cáo Tutor tự động: yếu/mạnh theo giai đoạn/loại quân/khai cuộc (ngưỡng mẫu tối thiểu + so sánh nội bộ, cùng nguyên tắc dashboard puzzle L3), quản lý thời gian (cờ "cần cải thiện" nếu hay thua vì hết giờ), khả năng gỡ thế xấu, khả năng chuyển ưu thế thành thắng (cả hai suy từ quỹ đạo đánh giá — không lưu thêm cột), so sánh trung bình toàn tenant (đơn giản hóa, không theo khoảng rating).
+- Báo cáo chi tiết theo từng ván (post-game review) + endpoint yêu cầu phân tích lại thủ công (giáo viên/admin).
+- Permission mới: `chess.insight.read` (xem báo cáo của chính mình), `chess.insight.read_all` (xem báo cáo người khác — trainer/admin, cùng mức `chess.class.progress`).
+
+**Lùi lại / chưa làm** (xem "Follow-up Work" trong spec): so sánh theo khoảng rating (peer group), backfill ván đã kết thúc trước khi tính năng lên production, biểu đồ eval-graph trực quan.
+
+**Phát hiện kỹ thuật quan trọng khi triển khai**: xác minh bằng smoke test thủ công qua Caddy (không chỉ tsc/eslint/jest) — tạo ván thật qua API, chèn tay một ván "fool's mate" đã kết thúc, gọi endpoint phân tích lại, xác nhận job chạy thật và báo cáo tổng hợp đúng số liệu. Trong lúc đó tái xác nhận lỗi Node đã biết: quên `export PATH=".../v22.15.0/installation:$PATH"` ở **một** lệnh Bash riêng lẻ (dù đã export ở lệnh trước) khiến `git push` chạy pre-push hook dưới Node 25 → vỡ ngay với lỗi JWT/`buffer-equal-constant-time` — mỗi lệnh Bash là một shell mới, không có ngoại lệ.
 
 ## Đợt L9 — Cộng đồng cờ
 
