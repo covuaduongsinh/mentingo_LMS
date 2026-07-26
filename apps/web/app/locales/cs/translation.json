@@ -1116,6 +1116,24 @@
       "dailyStreak": "denní pruh"
     }
   },
+  "aiQuizGeneration": {
+    "button": {
+      "generate": "Generovat otázky pomocí AI"
+    },
+    "dialog": {
+      "title": "Generovat otázky kvízu pomocí AI",
+      "sourceLesson": "Zdrojová lekce",
+      "sourceLessonPlaceholder": "Vyberte lekci, ze které se mají generovat otázky",
+      "questionCount": "Počet otázek",
+      "generate": "Generovat",
+      "generating": "Generuje se..."
+    },
+    "errors": {
+      "sourceContentTooShort": "Vybraná lekce nemá dostatek obsahu pro generování otázek.",
+      "monthlyLimitReached": "Byl dosažen měsíční limit generování AI obsahu. Zkuste to prosím příští měsíc nebo kontaktujte administrátora pro navýšení limitu.",
+      "generic": "Generování otázek se nezdařilo. Zkuste to prosím znovu."
+    }
+  },
   "adminStatisticsView": {
     "header": "vítej zpět,",
     "other": {

@@ -1330,6 +1330,24 @@
       "dailyStreak": "seria dni"
     }
   },
+  "aiQuizGeneration": {
+    "button": {
+      "generate": "Generuj pytania z AI"
+    },
+    "dialog": {
+      "title": "Generuj pytania quizu z AI",
+      "sourceLesson": "Lekcja źródłowa",
+      "sourceLessonPlaceholder": "Wybierz lekcję do wygenerowania pytań",
+      "questionCount": "Liczba pytań",
+      "generate": "Generuj",
+      "generating": "Generowanie..."
+    },
+    "errors": {
+      "sourceContentTooShort": "Wybrana lekcja nie ma wystarczającej treści do wygenerowania pytań.",
+      "monthlyLimitReached": "Osiągnięto miesięczny limit generowania treści przez AI. Spróbuj ponownie w przyszłym miesiącu lub skontaktuj się z administratorem, aby zwiększyć limit.",
+      "generic": "Nie udało się wygenerować pytań. Spróbuj ponownie."
+    }
+  },
   "adminStatisticsView": {
     "header": "Witaj ponownie,",
     "other": {

@@ -1277,6 +1277,24 @@
       "dailyStreak": "day streak"
     }
   },
+  "aiQuizGeneration": {
+    "button": {
+      "generate": "Generate questions with AI"
+    },
+    "dialog": {
+      "title": "Generate quiz questions with AI",
+      "sourceLesson": "Source lesson",
+      "sourceLessonPlaceholder": "Select a lesson to generate from",
+      "questionCount": "Number of questions",
+      "generate": "Generate",
+      "generating": "Generating..."
+    },
+    "errors": {
+      "sourceContentTooShort": "The selected lesson doesn't have enough content to generate questions from.",
+      "monthlyLimitReached": "The monthly AI generation limit has been reached. Please try again next month or contact an administrator to raise the limit.",
+      "generic": "Failed to generate questions. Please try again."
+    }
+  },
   "adminStatisticsView": {
     "header": "Welcome back,",
     "other": {

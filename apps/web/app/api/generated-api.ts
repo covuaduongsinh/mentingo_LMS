@@ -453,6 +453,8 @@ export interface GetPublicGlobalSettingsResponse {
     liveTrainingEnabled: boolean;
     /** @min 1 */
     liveTrainingMaxParallelSessions: number;
+    /** @min 1 */
+    aiGenerationMonthlyLimit: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -608,6 +610,8 @@ export interface UpdateUnregisteredUserCoursesAccessibilityResponse {
     liveTrainingEnabled: boolean;
     /** @min 1 */
     liveTrainingMaxParallelSessions: number;
+    /** @min 1 */
+    aiGenerationMonthlyLimit: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -661,6 +665,8 @@ export interface UpdateEnforceSSOResponse {
     liveTrainingEnabled: boolean;
     /** @min 1 */
     liveTrainingMaxParallelSessions: number;
+    /** @min 1 */
+    aiGenerationMonthlyLimit: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -714,6 +720,8 @@ export interface UpdateModernCourseListEnabledResponse {
     liveTrainingEnabled: boolean;
     /** @min 1 */
     liveTrainingMaxParallelSessions: number;
+    /** @min 1 */
+    aiGenerationMonthlyLimit: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -767,6 +775,8 @@ export interface UpdateCourseDiscussionsEnabledResponse {
     liveTrainingEnabled: boolean;
     /** @min 1 */
     liveTrainingMaxParallelSessions: number;
+    /** @min 1 */
+    aiGenerationMonthlyLimit: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -820,6 +830,8 @@ export interface UpdateCalendarEnabledResponse {
     liveTrainingEnabled: boolean;
     /** @min 1 */
     liveTrainingMaxParallelSessions: number;
+    /** @min 1 */
+    aiGenerationMonthlyLimit: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -873,6 +885,8 @@ export interface UpdateLiveTrainingEnabledResponse {
     liveTrainingEnabled: boolean;
     /** @min 1 */
     liveTrainingMaxParallelSessions: number;
+    /** @min 1 */
+    aiGenerationMonthlyLimit: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -931,6 +945,8 @@ export interface UpdateLiveTrainingMaxParallelSessionsResponse {
     liveTrainingEnabled: boolean;
     /** @min 1 */
     liveTrainingMaxParallelSessions: number;
+    /** @min 1 */
+    aiGenerationMonthlyLimit: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -984,6 +1000,8 @@ export interface UpdateLearningPathsEnabledResponse {
     liveTrainingEnabled: boolean;
     /** @min 1 */
     liveTrainingMaxParallelSessions: number;
+    /** @min 1 */
+    aiGenerationMonthlyLimit: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -1068,6 +1086,8 @@ export interface UpdateColorSchemaResponse {
     liveTrainingEnabled: boolean;
     /** @min 1 */
     liveTrainingMaxParallelSessions: number;
+    /** @min 1 */
+    aiGenerationMonthlyLimit: number;
     trainerRoleUserCount?: number;
     enforceSSO: boolean;
     certificateBackgroundImage: string | null;
@@ -4180,6 +4200,30 @@ export interface JudgeThreadResponse {
     maxScore: number;
     percentage: number;
   };
+}
+
+export interface GenerateQuizQuestionsBody {
+  /** @format uuid */
+  sourceLessonId: string;
+  /** @default "en" */
+  language: "en" | "pl" | "de" | "lt" | "cs" | "es" | "vi";
+  /**
+   * @min 1
+   * @max 10
+   * @default 5
+   */
+  questionCount: number;
+}
+
+export interface GenerateQuizQuestionsResponse {
+  data: {
+    title: string;
+    solutionExplanation: string;
+    options: {
+      optionText: string;
+      isCorrect: boolean;
+    }[];
+  }[];
 }
 
 export interface GetAllAssignedDocumentsForLessonResponse {
@@ -13156,6 +13200,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/ai/retake/${lessonId}`,
         method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AiControllerGenerateQuizQuestions
+     * @request POST:/api/ai/quiz-generation
+     */
+    aiControllerGenerateQuizQuestions: (
+      data: GenerateQuizQuestionsBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<GenerateQuizQuestionsResponse, any>({
+        path: `/api/ai/quiz-generation`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

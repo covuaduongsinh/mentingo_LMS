@@ -4,7 +4,14 @@ import { Type } from "@sinclair/typebox";
 import { Response } from "express";
 import { Validate } from "nestjs-typebox";
 
+import {
+  type GenerateQuizQuestionsBody,
+  type GenerateQuizQuestionsResponse,
+  generateQuizQuestionsBodySchema,
+  generateQuizQuestionsResponseSchema,
+} from "src/ai/schemas/quiz-generation.schema";
 import { AiService } from "src/ai/services/ai.service";
+import { QuizGenerationService } from "src/ai/services/quiz-generation.service";
 import { ThreadService } from "src/ai/services/thread.service";
 import { loadAiSdk } from "src/ai/utils/ai-esm";
 import {
@@ -28,6 +35,7 @@ export class AiController {
   constructor(
     private readonly threadService: ThreadService,
     private readonly aiService: AiService,
+    private readonly quizGenerationService: QuizGenerationService,
   ) {}
 
   @Get("thread")
@@ -102,5 +110,25 @@ export class AiController {
     @CurrentUser() currentUser: CurrentUserType,
   ) {
     await this.aiService.retakeLesson(lessonId, currentUser);
+  }
+
+  @Post("quiz-generation")
+  @RequirePermission(PERMISSIONS.COURSE_AI_GENERATION)
+  @Validate({
+    request: [{ type: "body", schema: generateQuizQuestionsBodySchema }],
+    response: baseResponse(generateQuizQuestionsResponseSchema),
+  })
+  async generateQuizQuestions(
+    @Body() data: GenerateQuizQuestionsBody,
+    @CurrentUser() currentUser: CurrentUserType,
+  ): Promise<BaseResponse<GenerateQuizQuestionsResponse>> {
+    const questions = await this.quizGenerationService.generateQuizQuestions(
+      data.sourceLessonId,
+      data.language,
+      data.questionCount,
+      currentUser,
+    );
+
+    return { data: questions };
   }
 }

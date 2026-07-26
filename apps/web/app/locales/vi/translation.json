@@ -1277,6 +1277,24 @@
       "dailyStreak": "ngày liên tiếp"
     }
   },
+  "aiQuizGeneration": {
+    "button": {
+      "generate": "Sinh câu hỏi bằng AI"
+    },
+    "dialog": {
+      "title": "Sinh câu hỏi quiz bằng AI",
+      "sourceLesson": "Bài học nguồn",
+      "sourceLessonPlaceholder": "Chọn bài học để sinh câu hỏi",
+      "questionCount": "Số lượng câu hỏi",
+      "generate": "Sinh câu hỏi",
+      "generating": "Đang sinh câu hỏi..."
+    },
+    "errors": {
+      "sourceContentTooShort": "Bài học được chọn không có đủ nội dung để sinh câu hỏi.",
+      "monthlyLimitReached": "Đã đạt hạn mức sinh nội dung AI trong tháng này, vui lòng thử lại tháng sau hoặc liên hệ quản trị viên để tăng hạn mức.",
+      "generic": "Sinh câu hỏi thất bại. Vui lòng thử lại."
+    }
+  },
   "adminStatisticsView": {
     "header": "Chào mừng trở lại,",
     "other": {

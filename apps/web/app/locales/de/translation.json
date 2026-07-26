@@ -1116,6 +1116,24 @@
       "dailyStreak": "Tagessträhne"
     }
   },
+  "aiQuizGeneration": {
+    "button": {
+      "generate": "Fragen mit KI generieren"
+    },
+    "dialog": {
+      "title": "Quizfragen mit KI generieren",
+      "sourceLesson": "Quelllektion",
+      "sourceLessonPlaceholder": "Lektion zum Generieren auswählen",
+      "questionCount": "Anzahl der Fragen",
+      "generate": "Generieren",
+      "generating": "Wird generiert..."
+    },
+    "errors": {
+      "sourceContentTooShort": "Die ausgewählte Lektion hat nicht genug Inhalt, um Fragen zu generieren.",
+      "monthlyLimitReached": "Das monatliche KI-Generierungslimit wurde erreicht. Bitte versuchen Sie es nächsten Monat erneut oder wenden Sie sich an einen Administrator, um das Limit zu erhöhen.",
+      "generic": "Fragen konnten nicht generiert werden. Bitte versuchen Sie es erneut."
+    }
+  },
   "adminStatisticsView": {
     "header": "Willkommen zurück,",
     "other": {

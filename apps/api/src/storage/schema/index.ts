@@ -473,6 +473,23 @@ export const lessonContentVersions = pgTable(
   })),
 );
 
+export const aiGenerations = pgTable(
+  "ai_generations",
+  {
+    ...id,
+    ...timestamps,
+    userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
+    artifactType: varchar("artifact_type", { length: 30 }).notNull(),
+    sourceLessonId: uuid("source_lesson_id").references(() => lessons.id, {
+      onDelete: "set null",
+    }),
+    requestedCount: integer("requested_count").notNull(),
+    status: varchar("status", { length: 20 }).notNull(),
+    tenantId,
+  },
+  withTenantIdIndex("ai_generations"),
+);
+
 export const calendarEvents = pgTable(
   "calendar_events",
   {

@@ -976,6 +976,13 @@ export class SettingsService {
     return globalSettings.liveTrainingMaxParallelSessions;
   }
 
+  public async getAiGenerationMonthlyLimit(): Promise<number> {
+    const globalSettingsRecord = await this.getGlobalSettingsRecord();
+    const globalSettings = this.parseGlobalSettings(globalSettingsRecord.settings);
+
+    return globalSettings.aiGenerationMonthlyLimit;
+  }
+
   public async updateGlobalLearningPathsEnabled(
     actor?: CurrentUserType,
   ): Promise<GlobalSettingsJSONContentSchema> {
@@ -1968,6 +1975,8 @@ export class SettingsService {
       liveTrainingMaxParallelSessions:
         settings.liveTrainingMaxParallelSessions ??
         DEFAULT_GLOBAL_SETTINGS.liveTrainingMaxParallelSessions,
+      aiGenerationMonthlyLimit:
+        settings.aiGenerationMonthlyLimit ?? DEFAULT_GLOBAL_SETTINGS.aiGenerationMonthlyLimit,
       MFAEnforcedRoles: Array.isArray(settings.MFAEnforcedRoles)
         ? settings.MFAEnforcedRoles
         : JSON.parse(settings.MFAEnforcedRoles ?? "[]"),
