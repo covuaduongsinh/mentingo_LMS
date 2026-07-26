@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from "@nestjs/common";
@@ -22,6 +23,7 @@ import {
   type SupportedLanguages,
 } from "@repo/shared";
 import { Type } from "@sinclair/typebox";
+import { Response } from "express";
 import { memoryStorage } from "multer";
 import { Validate } from "nestjs-typebox";
 
@@ -52,6 +54,7 @@ import {
   createUserSchema,
   importUserResponseSchema,
 } from "src/user/schemas/createUser.schema";
+import { GdprService } from "src/user/services/gdpr.service";
 import {
   AVATAR_ASPECT_RATIO,
   AVATAR_MAX_RESOLUTION,
@@ -119,7 +122,39 @@ export class UserController {
     private readonly usersService: UserService,
     private readonly userImportService: UserImportService,
     private readonly userPasswordEmailService: UserPasswordEmailService,
+    private readonly gdprService: GdprService,
   ) {}
+
+  @Get("gdpr-export")
+  @RequirePermission(PERMISSIONS.USER_MANAGE)
+  @Validate({
+    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
+  })
+  async exportUserGdprData(@Query("id") id: UUIDType, @Res() res: Response): Promise<void> {
+    const data = await this.gdprService.exportUserData(id);
+    const buffer = Buffer.from(JSON.stringify(data, null, 2), "utf-8");
+
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Content-Disposition", `attachment; filename="user-${id}-gdpr-export.json"`);
+    res.setHeader("Content-Length", buffer.length);
+
+    res.send(buffer);
+  }
+
+  @Post("gdpr-anonymize")
+  @RequirePermission(PERMISSIONS.USER_MANAGE)
+  @Validate({
+    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async anonymizeUserGdpr(
+    @Query("id") id: UUIDType,
+    @CurrentUser() currentUser: CurrentUserType,
+  ): Promise<BaseResponse<{ message: string }>> {
+    const result = await this.gdprService.anonymizeUser(currentUser, id);
+
+    return new BaseResponse(result);
+  }
 
   @Get("all")
   @RequirePermission(PERMISSIONS.USER_MANAGE)

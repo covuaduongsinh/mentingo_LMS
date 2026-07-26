@@ -1,3 +1,13 @@
+<a name="gdpr-user-data"></a>
+
+## [GDPR data export & anonymize] - 26.07.2026
+
+### Features:
+
+- add an admin-facing "GDPR data request" section on the user detail page: export a JSON bundle of a user's personal data and learning activity, or anonymize the account
+- anonymize scrubs name/email/avatar/username and revokes all active sessions and tokens, while preserving certificates, learning progress, and aggregate statistics so tenant reporting stays accurate
+- blocks anonymizing the last remaining admin of an organization to avoid locking a tenant out of user management
+
 <a name="outbound-webhooks"></a>
 
 ## [Outbound webhooks] - 26.07.2026

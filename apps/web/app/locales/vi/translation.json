@@ -1938,6 +1938,19 @@
       "users": "Người dùng",
       "userDetails": "Chi tiết người dùng",
       "back": "Quay lại"
+    },
+    "gdpr": {
+      "title": "Yêu cầu dữ liệu GDPR",
+      "description": "Xuất dữ liệu cá nhân của người dùng này hoặc ẩn danh hóa tài khoản để đáp ứng yêu cầu truy cập/xóa dữ liệu theo GDPR.",
+      "exportButton": "Xuất dữ liệu (JSON)",
+      "anonymizeButton": "Ẩn danh hóa tài khoản",
+      "confirmTitle": "Ẩn danh hóa tài khoản này?",
+      "confirmDescription": "Thao tác này xóa tên, email, ảnh đại diện, username của người dùng và thu hồi mọi phiên đăng nhập. Không thể hoàn tác. Lịch sử học tập và chứng chỉ vẫn được giữ lại để báo cáo của tenant không bị sai lệch.",
+      "confirmAction": "Ẩn danh hóa tài khoản",
+      "toast": {
+        "exportSuccess": "Đã tải xuống dữ liệu GDPR",
+        "exportError": "Tải xuống dữ liệu GDPR thất bại"
+      }
     }
   },
   "adminEnvsView": {

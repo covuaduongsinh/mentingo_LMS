@@ -1778,6 +1778,19 @@
       "users": "Usuarios",
       "userDetails": "Detalles del usuario",
       "back": "Atrás"
+    },
+    "gdpr": {
+      "title": "Solicitud de datos RGPD",
+      "description": "Exporta los datos personales de este usuario o anonimiza la cuenta en respuesta a una solicitud de acceso/eliminación conforme al RGPD.",
+      "exportButton": "Exportar datos (JSON)",
+      "anonymizeButton": "Anonimizar cuenta",
+      "confirmTitle": "¿Anonimizar esta cuenta?",
+      "confirmDescription": "Esto elimina el nombre, correo electrónico, avatar y nombre de usuario, y revoca todas las sesiones activas. Esta acción no se puede deshacer. El historial de aprendizaje y los certificados se conservan para que los informes de la organización sigan siendo precisos.",
+      "confirmAction": "Anonimizar cuenta",
+      "toast": {
+        "exportSuccess": "Exportación RGPD descargada",
+        "exportError": "No se pudo descargar la exportación RGPD"
+      }
     }
   },
   "adminEnvsView": {

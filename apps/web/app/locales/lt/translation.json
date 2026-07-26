@@ -1717,6 +1717,19 @@
       "users": "Vartotojai",
       "userDetails": "Vartotojo informacija",
       "back": "Atgal"
+    },
+    "gdpr": {
+      "title": "BDAR duomenų užklausa",
+      "description": "Eksportuokite šio vartotojo asmens duomenis arba anonimizuokite paskyrą atsakydami į BDAR prieigos/ištrynimo prašymą.",
+      "exportButton": "Eksportuoti duomenis (JSON)",
+      "anonymizeButton": "Anonimizuoti paskyrą",
+      "confirmTitle": "Anonimizuoti šią paskyrą?",
+      "confirmDescription": "Tai ištrina vartotojo vardą, el. paštą, avatarą ir vartotojo vardą bei panaikina visas aktyvias sesijas. Šio veiksmo atšaukti negalima. Mokymosi istorija ir pažymėjimai išsaugomi, kad organizacijos ataskaitos liktų tikslios.",
+      "confirmAction": "Anonimizuoti paskyrą",
+      "toast": {
+        "exportSuccess": "BDAR eksportas atsisiųstas",
+        "exportError": "Nepavyko atsisiųsti BDAR eksporto"
+      }
     }
   },
   "adminEnvsView": {

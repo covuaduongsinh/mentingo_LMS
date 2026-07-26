@@ -21,6 +21,7 @@ export * from "./user/user-registered.event";
 export * from "./user/create-user.event";
 export * from "./user/delete-user.event";
 export * from "./user/update-user.event";
+export * from "./user/user-anonymized.event";
 export * from "./user/user-password-created.event";
 export * from "./user/user-chapter-finished.event";
 export * from "./user/user-course-finished.event";

@@ -1717,6 +1717,19 @@
       "users": "Benutzer",
       "userDetails": "Benutzerdetails",
       "back": "Zurück"
+    },
+    "gdpr": {
+      "title": "DSGVO-Datenanfrage",
+      "description": "Exportieren Sie die personenbezogenen Daten dieses Benutzers oder anonymisieren Sie das Konto als Antwort auf eine DSGVO-Auskunfts-/Löschanfrage.",
+      "exportButton": "Daten exportieren (JSON)",
+      "anonymizeButton": "Konto anonymisieren",
+      "confirmTitle": "Dieses Konto anonymisieren?",
+      "confirmDescription": "Dadurch werden Name, E-Mail, Avatar und Benutzername des Benutzers gelöscht und alle aktiven Sitzungen widerrufen. Dies kann nicht rückgängig gemacht werden. Lernverlauf und Zertifikate bleiben erhalten, damit die Berichte des Mandanten korrekt bleiben.",
+      "confirmAction": "Konto anonymisieren",
+      "toast": {
+        "exportSuccess": "DSGVO-Export heruntergeladen",
+        "exportError": "DSGVO-Export konnte nicht heruntergeladen werden"
+      }
     }
   },
   "adminEnvsView": {
