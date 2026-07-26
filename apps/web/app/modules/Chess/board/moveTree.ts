@@ -219,3 +219,64 @@ function siblingsToMovetext(
 export function movetextFromTree(tree: MoveTree): string {
   return siblingsToMovetext(tree.children, 0, true);
 }
+
+/**
+ * Flat adjacency-list shape used to persist a move tree server-side (see
+ * ChessStudyFlatMoveNode in apps/api). Avoids a recursive TypeBox schema; the client
+ * reconstructs the recursive MoveTree from this on load via `unflattenMoveTree`.
+ */
+export type FlatMoveNode = {
+  id: string;
+  parentId: string | null;
+  uci: string;
+  san: string;
+  fenAfter: string;
+  comment?: string;
+  glyph?: string;
+  order: number;
+};
+
+export function flattenMoveTree(tree: MoveTree): FlatMoveNode[] {
+  const result: FlatMoveNode[] = [];
+  function walk(nodes: MoveNode[], parentId: string | null) {
+    nodes.forEach((node, index) => {
+      result.push({
+        id: node.id,
+        parentId,
+        uci: node.uci,
+        san: node.san,
+        fenAfter: node.fenAfter,
+        comment: node.comment,
+        glyph: node.glyph,
+        order: index,
+      });
+      walk(node.children, node.id);
+    });
+  }
+  walk(tree.children, null);
+  return result;
+}
+
+export function unflattenMoveTree(rootFen: string, flatNodes: FlatMoveNode[]): MoveTree {
+  const byParent = new Map<string | null, FlatMoveNode[]>();
+  for (const flatNode of flatNodes) {
+    const siblings = byParent.get(flatNode.parentId) ?? [];
+    siblings.push(flatNode);
+    byParent.set(flatNode.parentId, siblings);
+  }
+  for (const siblings of byParent.values()) {
+    siblings.sort((a, b) => a.order - b.order);
+  }
+  function build(parentId: string | null): MoveNode[] {
+    return (byParent.get(parentId) ?? []).map((flatNode) => ({
+      id: flatNode.id,
+      uci: flatNode.uci,
+      san: flatNode.san,
+      fenAfter: flatNode.fenAfter,
+      comment: flatNode.comment,
+      glyph: flatNode.glyph as GlyphSymbol | undefined,
+      children: build(flatNode.id),
+    }));
+  }
+  return { rootFen, children: build(null) };
+}

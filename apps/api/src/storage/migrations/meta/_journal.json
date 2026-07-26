@@ -1282,6 +1282,20 @@
       "when": 1785046793785,
       "tag": "0182_enable_chess_analysis_sessions_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 183,
+      "version": "7",
+      "when": 1785058085993,
+      "tag": "0183_add_chess_studies",
+      "breakpoints": true
+    },
+    {
+      "idx": 184,
+      "version": "7",
+      "when": 1785058085994,
+      "tag": "0184_enable_chess_studies_rls",
+      "breakpoints": true
     }
   ]
 }

@@ -8,9 +8,9 @@ Theo yêu cầu của người dùng, mỗi đợt tự động verify (tsc + es
 
 | Đợt     | PR                  | Nội dung                                                                |
 | ------- | ------------------- | ----------------------------------------------------------------------- |
-| **L0**  | _(đang triển khai)_ | Tài liệu khảo sát clean-room `docs/research/lila/` (6 file, không code) |
-| **L1**  |                     | Nền bàn cờ tương tác: shapes, glyph, cây biến, board editor             |
-| **L2**  |                     | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
+| **L0**  | #20 merged          | Tài liệu khảo sát clean-room `docs/research/lila/` (6 file, không code) |
+| **L1**  | #21 merged          | Nền bàn cờ tương tác: shapes, glyph, cây biến, board editor             |
+| **L2**  | _(đang triển khai)_ | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
 | **L3**  |                     | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
 | **L4**  |                     | Chơi trực tuyến người-với-người                                         |
 | **L5**  |                     | Lớp học cờ: tài khoản do giáo viên quản lý                              |
@@ -38,14 +38,17 @@ Không dùng chessground (GPL) — mở rộng `ChessBoard.tsx`/`chess.js` (MIT)
 
 ## Đợt L2 — Study/Chapter: bài giảng cờ tương tác
 
-Bảng mới: `chess_studies`, `chess_study_chapters`, `chess_study_members`, `chess_study_likes` (+ migration RLS riêng, mẫu `chess_exercises`/`0163`).
+> **Đã triển khai** — xem `docs/specs/chess-study-business-spec.md` (đặc tả đầy đủ + "Follow-up Work" cho phần lùi lại). Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
 
-- Study nhiều chương, mỗi chương một cây nước đi có bình luận/shapes/glyph (dùng lại engine cây biến từ L1).
-- **Chế độ chương**: thường · **gamebook** (hỏi–đáp có gợi ý) · **conceal** (che nước từ ply X) · **practice goal** (mục tiêu parse từ metadata ván: chiếu hết/hòa/đạt ưu thế trong N nước).
-- Phân quyền: chủ sở hữu / cộng tác viên (ghi) / thành viên (đọc); hiển thị công khai · không niêm yết · riêng tư.
-- Import/export PGN theo chương, clone study, gắn chủ đề (tái dùng `CHESS_TOPICS`).
-- **Nhúng vào khóa học**: lesson type mới hoặc TipTap block → giáo viên đưa bài giảng cờ vào chương trình học sẵn có.
+Bảng mới: `chess_studies`, `chess_study_chapters`, `chess_study_members` (+ migration RLS riêng, mẫu `chess_exercises`/`0163` → `0183`/`0184`).
+
+- Study nhiều chương, mỗi chương một cây nước đi có bình luận/glyph, lưu server dạng danh sách kề phẳng (dùng lại engine cây biến từ L1 qua `flattenMoveTree`/`unflattenMoveTree`).
+- **Chế độ chương**: thường · **gamebook** (hỏi–đáp, học sinh tự tìm nước đúng trên đường chính) · **conceal** (che nước từ ply X) · **practice goal** (mục tiêu dạng văn bản tự do, hiển thị cho người học — **chưa** tự động chấm điểm theo mục tiêu, để dành cho Đợt L7).
+- Phân quyền: chủ sở hữu / thành viên `write` / thành viên `read`; hiển thị công khai · riêng tư (**bỏ** "không niêm yết" — chưa có giá trị nghiệp vụ rõ ràng khi chưa có chia sẻ liên kết công khai không cần đăng nhập).
+- Clone study (chỉ cần quyền đọc study gốc), gắn chủ đề (tái dùng `CHESS_TOPICS`).
 - Permission mới: `chess.study.read`, `chess.study.create`, `chess.study.manage`, `chess.study.manage_own`.
+
+**Lùi lại sang đợt sau / chưa làm** (xem "Follow-up Work" trong spec để biết lý do chi tiết): nhúng study vào lesson khóa học (lesson type/TipTap block riêng), import/export PGN theo chương, lượt thích (`chess_study_likes`), E2E Playwright.
 
 ## Đợt L3 — Glicko-2 + Ngân hàng Puzzle thích ứng
 

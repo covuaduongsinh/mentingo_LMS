@@ -16,6 +16,7 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { CurrentUserType } from "src/common/types/current-user.type";
 
 import { ChessAnalysisService } from "./chess-analysis.service";
+import { ChessStudyService } from "./chess-study.service";
 import { ChessService } from "./chess.service";
 import {
   createChessAnalysisSessionBodySchema,
@@ -23,6 +24,23 @@ import {
   chessAnalysisSessionSchema,
   type CreateChessAnalysisSessionBody,
 } from "./schemas/chess-analysis.schema";
+import {
+  addChessStudyMemberBodySchema,
+  createChessStudyBodySchema,
+  createChessStudyChapterBodySchema,
+  chessStudyChapterSchema,
+  chessStudyDetailSchema,
+  chessStudySchema,
+  reorderChessStudyChaptersBodySchema,
+  updateChessStudyBodySchema,
+  updateChessStudyChapterBodySchema,
+  type AddChessStudyMemberBody,
+  type CreateChessStudyBody,
+  type CreateChessStudyChapterBody,
+  type ReorderChessStudyChaptersBody,
+  type UpdateChessStudyBody,
+  type UpdateChessStudyChapterBody,
+} from "./schemas/chess-study.schema";
 import {
   chessAudienceSchema,
   chessExerciseAttemptResultSchema,
@@ -63,6 +81,7 @@ export class ChessController {
   constructor(
     private readonly chessService: ChessService,
     private readonly chessAnalysisService: ChessAnalysisService,
+    private readonly chessStudyService: ChessStudyService,
   ) {}
 
   @Get("topics")
@@ -318,5 +337,204 @@ export class ChessController {
   })
   async getAnalysisSession(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
     return new BaseResponse(await this.chessAnalysisService.getSessionState(id, user));
+  }
+
+  @Get("studies")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [
+      { type: "query", name: "page", schema: Type.Optional(Type.Number({ minimum: 1 })) },
+      { type: "query", name: "perPage", schema: Type.Optional(Type.Number({ minimum: 1 })) },
+      { type: "query", name: "search", schema: Type.Optional(Type.String()) },
+      { type: "query", name: "topic", schema: Type.Optional(chessTopicSchema) },
+      { type: "query", name: "mine", schema: queryBooleanSchema },
+    ],
+    response: paginatedResponse(Type.Array(chessStudySchema)),
+  })
+  async listStudies(
+    @Query("page") page: number,
+    @Query("perPage") perPage: number,
+    @Query("search") search: string,
+    @Query("topic") topic: string,
+    @Query("mine") mine: boolean | "true" | "false",
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    const result = await this.chessStudyService.listStudies(user, {
+      page,
+      perPage,
+      search,
+      topic,
+      mineOnly: parseQueryBoolean(mine),
+    });
+    return new PaginatedResponse({
+      data: result.data.map((study) => ({ ...study, canWrite: study.authorId === user.userId })),
+      pagination: result.pagination,
+    });
+  }
+
+  @Post("studies")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_CREATE)
+  @Validate({
+    request: [{ type: "body", schema: createChessStudyBodySchema }],
+    response: baseResponse(chessStudySchema),
+  })
+  async createStudy(@Body() body: CreateChessStudyBody, @CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessStudyService.createStudy(body, user));
+  }
+
+  @Get("studies/:id")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(chessStudyDetailSchema),
+  })
+  async getStudy(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessStudyService.getStudyDetail(id, user));
+  }
+
+  @Patch("studies/:id")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "body", schema: updateChessStudyBodySchema },
+    ],
+    response: baseResponse(chessStudySchema),
+  })
+  async updateStudy(
+    @Param("id") id: UUIDType,
+    @Body() body: UpdateChessStudyBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.chessStudyService.updateStudy(id, body, user));
+  }
+
+  @Delete("studies/:id")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(Type.Object({ id: UUIDSchema })),
+  })
+  async deleteStudy(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
+    await this.chessStudyService.deleteStudy(id, user);
+    return new BaseResponse({ id });
+  }
+
+  @Post("studies/:id/clone")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_CREATE)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(chessStudySchema),
+  })
+  async cloneStudy(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessStudyService.cloneStudy(id, user));
+  }
+
+  @Post("studies/:id/chapters")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "body", schema: createChessStudyChapterBodySchema },
+    ],
+    response: baseResponse(chessStudyChapterSchema),
+  })
+  async createStudyChapter(
+    @Param("id") id: UUIDType,
+    @Body() body: CreateChessStudyChapterBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.chessStudyService.createChapter(id, body, user));
+  }
+
+  @Patch("studies/:id/chapters/:chapterId")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "param", name: "chapterId", schema: UUIDSchema },
+      { type: "body", schema: updateChessStudyChapterBodySchema },
+    ],
+    response: baseResponse(chessStudyChapterSchema),
+  })
+  async updateStudyChapter(
+    @Param("id") id: UUIDType,
+    @Param("chapterId") chapterId: UUIDType,
+    @Body() body: UpdateChessStudyChapterBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.chessStudyService.updateChapter(id, chapterId, body, user));
+  }
+
+  @Delete("studies/:id/chapters/:chapterId")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "param", name: "chapterId", schema: UUIDSchema },
+    ],
+    response: baseResponse(Type.Object({ id: UUIDSchema })),
+  })
+  async deleteStudyChapter(
+    @Param("id") id: UUIDType,
+    @Param("chapterId") chapterId: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    await this.chessStudyService.deleteChapter(id, chapterId, user);
+    return new BaseResponse({ id: chapterId });
+  }
+
+  @Patch("studies/:id/chapters/reorder")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "body", schema: reorderChessStudyChaptersBodySchema },
+    ],
+    response: baseResponse(Type.Object({ success: Type.Boolean() })),
+  })
+  async reorderStudyChapters(
+    @Param("id") id: UUIDType,
+    @Body() body: ReorderChessStudyChaptersBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    await this.chessStudyService.reorderChapters(id, body, user);
+    return new BaseResponse({ success: true });
+  }
+
+  @Post("studies/:id/members")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "body", schema: addChessStudyMemberBodySchema },
+    ],
+    response: baseResponse(Type.Object({ success: Type.Boolean() })),
+  })
+  async addMember(
+    @Param("id") id: UUIDType,
+    @Body() body: AddChessStudyMemberBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    await this.chessStudyService.addMember(id, body, user);
+    return new BaseResponse({ success: true });
+  }
+
+  @Delete("studies/:id/members/:userId")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "param", name: "userId", schema: UUIDSchema },
+    ],
+    response: baseResponse(Type.Object({ success: Type.Boolean() })),
+  })
+  async removeMember(
+    @Param("id") id: UUIDType,
+    @Param("userId") userId: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    await this.chessStudyService.removeMember(id, userId, user);
+    return new BaseResponse({ success: true });
   }
 }

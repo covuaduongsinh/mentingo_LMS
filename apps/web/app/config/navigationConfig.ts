@@ -126,6 +126,14 @@ export const getNavigationConfig = (
           },
         },
         {
+          label: t("chess.nav.studies", { defaultValue: "Studies" }),
+          path: "chess/studies",
+          iconName: "Course",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_STUDY_READ],
+          },
+        },
+        {
           label: t("chess.nav.editor", { defaultValue: "Board editor" }),
           path: "chess/editor",
           iconName: "Edit",

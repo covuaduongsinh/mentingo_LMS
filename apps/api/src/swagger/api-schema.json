@@ -10958,6 +10958,493 @@
         }
       }
     },
+    "/api/chess/studies": {
+      "get": {
+        "operationId": "ChessController_listStudies",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "topic",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "intro",
+                  "type": "string"
+                },
+                {
+                  "const": "rules",
+                  "type": "string"
+                },
+                {
+                  "const": "tournament_rules",
+                  "type": "string"
+                },
+                {
+                  "const": "opening",
+                  "type": "string"
+                },
+                {
+                  "const": "middlegame",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame",
+                  "type": "string"
+                },
+                {
+                  "const": "tactics",
+                  "type": "string"
+                },
+                {
+                  "const": "strategy",
+                  "type": "string"
+                },
+                {
+                  "const": "story",
+                  "type": "string"
+                },
+                {
+                  "const": "competitive_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "student_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "pedagogy",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "mine",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "const": "true",
+                  "type": "string"
+                },
+                {
+                  "const": "false",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListStudiesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "ChessController_createStudy",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStudyBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateStudyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}": {
+      "get": {
+        "operationId": "ChessController_getStudy",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStudyResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "ChessController_updateStudy",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStudyBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateStudyResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "ChessController_deleteStudy",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteStudyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}/clone": {
+      "post": {
+        "operationId": "ChessController_cloneStudy",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneStudyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}/chapters": {
+      "post": {
+        "operationId": "ChessController_createStudyChapter",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStudyChapterBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateStudyChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}/chapters/{chapterId}": {
+      "patch": {
+        "operationId": "ChessController_updateStudyChapter",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStudyChapterBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateStudyChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "ChessController_deleteStudyChapter",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteStudyChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}/chapters/reorder": {
+      "patch": {
+        "operationId": "ChessController_reorderStudyChapters",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReorderStudyChaptersBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReorderStudyChaptersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}/members": {
+      "post": {
+        "operationId": "ChessController_addMember",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMemberBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMemberResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}/members/{userId}": {
+      "delete": {
+        "operationId": "ChessController_removeMember",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveMemberResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/chess/engine/status": {
       "get": {
         "operationId": "ChessEngineController_getStatus",
@@ -19723,6 +20210,22 @@
                     },
                     {
                       "const": "chess.game.manage",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.study.read",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.study.create",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.study.manage",
+                      "type": "string"
+                    },
+                    {
+                      "const": "chess.study.manage_own",
                       "type": "string"
                     },
                     {
@@ -48556,6 +49059,1721 @@
               "role",
               "createdAt",
               "endedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListStudiesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "authorId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "visibility": {
+                  "anyOf": [
+                    {
+                      "const": "public",
+                      "type": "string"
+                    },
+                    {
+                      "const": "private",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "topics": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "const": "intro",
+                        "type": "string"
+                      },
+                      {
+                        "const": "rules",
+                        "type": "string"
+                      },
+                      {
+                        "const": "tournament_rules",
+                        "type": "string"
+                      },
+                      {
+                        "const": "opening",
+                        "type": "string"
+                      },
+                      {
+                        "const": "middlegame",
+                        "type": "string"
+                      },
+                      {
+                        "const": "endgame",
+                        "type": "string"
+                      },
+                      {
+                        "const": "tactics",
+                        "type": "string"
+                      },
+                      {
+                        "const": "strategy",
+                        "type": "string"
+                      },
+                      {
+                        "const": "story",
+                        "type": "string"
+                      },
+                      {
+                        "const": "competitive_psychology",
+                        "type": "string"
+                      },
+                      {
+                        "const": "student_psychology",
+                        "type": "string"
+                      },
+                      {
+                        "const": "pedagogy",
+                        "type": "string"
+                      }
+                    ]
+                  }
+                },
+                "sourceStudyId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "chapterCount": {
+                  "type": "number"
+                },
+                "canWrite": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "authorId",
+                "title",
+                "description",
+                "visibility",
+                "topics",
+                "sourceStudyId",
+                "chapterCount",
+                "canWrite",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "CreateStudyBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "visibility": {
+            "anyOf": [
+              {
+                "const": "public",
+                "type": "string"
+              },
+              {
+                "const": "private",
+                "type": "string"
+              }
+            ]
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "const": "intro",
+                  "type": "string"
+                },
+                {
+                  "const": "rules",
+                  "type": "string"
+                },
+                {
+                  "const": "tournament_rules",
+                  "type": "string"
+                },
+                {
+                  "const": "opening",
+                  "type": "string"
+                },
+                {
+                  "const": "middlegame",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame",
+                  "type": "string"
+                },
+                {
+                  "const": "tactics",
+                  "type": "string"
+                },
+                {
+                  "const": "strategy",
+                  "type": "string"
+                },
+                {
+                  "const": "story",
+                  "type": "string"
+                },
+                {
+                  "const": "competitive_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "student_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "pedagogy",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "CreateStudyResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "visibility": {
+                "anyOf": [
+                  {
+                    "const": "public",
+                    "type": "string"
+                  },
+                  {
+                    "const": "private",
+                    "type": "string"
+                  }
+                ]
+              },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "intro",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tournament_rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tactics",
+                      "type": "string"
+                    },
+                    {
+                      "const": "strategy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "story",
+                      "type": "string"
+                    },
+                    {
+                      "const": "competitive_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pedagogy",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "sourceStudyId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "chapterCount": {
+                "type": "number"
+              },
+              "canWrite": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "authorId",
+              "title",
+              "description",
+              "visibility",
+              "topics",
+              "sourceStudyId",
+              "chapterCount",
+              "canWrite",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetStudyResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "authorId": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "visibility": {
+                    "anyOf": [
+                      {
+                        "const": "public",
+                        "type": "string"
+                      },
+                      {
+                        "const": "private",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "topics": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "const": "intro",
+                          "type": "string"
+                        },
+                        {
+                          "const": "rules",
+                          "type": "string"
+                        },
+                        {
+                          "const": "tournament_rules",
+                          "type": "string"
+                        },
+                        {
+                          "const": "opening",
+                          "type": "string"
+                        },
+                        {
+                          "const": "middlegame",
+                          "type": "string"
+                        },
+                        {
+                          "const": "endgame",
+                          "type": "string"
+                        },
+                        {
+                          "const": "tactics",
+                          "type": "string"
+                        },
+                        {
+                          "const": "strategy",
+                          "type": "string"
+                        },
+                        {
+                          "const": "story",
+                          "type": "string"
+                        },
+                        {
+                          "const": "competitive_psychology",
+                          "type": "string"
+                        },
+                        {
+                          "const": "student_psychology",
+                          "type": "string"
+                        },
+                        {
+                          "const": "pedagogy",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "sourceStudyId": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "chapterCount": {
+                    "type": "number"
+                  },
+                  "canWrite": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "authorId",
+                  "title",
+                  "description",
+                  "visibility",
+                  "topics",
+                  "sourceStudyId",
+                  "chapterCount",
+                  "canWrite",
+                  "createdAt",
+                  "updatedAt"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "chapters": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "studyId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "rootFen": {
+                          "type": "string"
+                        },
+                        "moveNodes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "parentId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "uci": {
+                                "type": "string"
+                              },
+                              "san": {
+                                "type": "string"
+                              },
+                              "fenAfter": {
+                                "type": "string"
+                              },
+                              "comment": {
+                                "type": "string"
+                              },
+                              "glyph": {
+                                "type": "string"
+                              },
+                              "order": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "parentId",
+                              "uci",
+                              "san",
+                              "fenAfter",
+                              "order"
+                            ]
+                          }
+                        },
+                        "mode": {
+                          "anyOf": [
+                            {
+                              "const": "normal",
+                              "type": "string"
+                            },
+                            {
+                              "const": "gamebook",
+                              "type": "string"
+                            },
+                            {
+                              "const": "conceal",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "concealFromPly": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "practiceGoal": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "displayOrder": {
+                          "type": "number"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "studyId",
+                        "title",
+                        "rootFen",
+                        "moveNodes",
+                        "mode",
+                        "concealFromPly",
+                        "practiceGoal",
+                        "displayOrder",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "members": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "userId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "role": {
+                          "anyOf": [
+                            {
+                              "const": "read",
+                              "type": "string"
+                            },
+                            {
+                              "const": "write",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "firstName": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "lastName": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "userId",
+                        "role",
+                        "firstName",
+                        "lastName"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "chapters",
+                  "members"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateStudyBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "visibility": {
+            "anyOf": [
+              {
+                "const": "public",
+                "type": "string"
+              },
+              {
+                "const": "private",
+                "type": "string"
+              }
+            ]
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "const": "intro",
+                  "type": "string"
+                },
+                {
+                  "const": "rules",
+                  "type": "string"
+                },
+                {
+                  "const": "tournament_rules",
+                  "type": "string"
+                },
+                {
+                  "const": "opening",
+                  "type": "string"
+                },
+                {
+                  "const": "middlegame",
+                  "type": "string"
+                },
+                {
+                  "const": "endgame",
+                  "type": "string"
+                },
+                {
+                  "const": "tactics",
+                  "type": "string"
+                },
+                {
+                  "const": "strategy",
+                  "type": "string"
+                },
+                {
+                  "const": "story",
+                  "type": "string"
+                },
+                {
+                  "const": "competitive_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "student_psychology",
+                  "type": "string"
+                },
+                {
+                  "const": "pedagogy",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "UpdateStudyResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "visibility": {
+                "anyOf": [
+                  {
+                    "const": "public",
+                    "type": "string"
+                  },
+                  {
+                    "const": "private",
+                    "type": "string"
+                  }
+                ]
+              },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "intro",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tournament_rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tactics",
+                      "type": "string"
+                    },
+                    {
+                      "const": "strategy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "story",
+                      "type": "string"
+                    },
+                    {
+                      "const": "competitive_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pedagogy",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "sourceStudyId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "chapterCount": {
+                "type": "number"
+              },
+              "canWrite": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "authorId",
+              "title",
+              "description",
+              "visibility",
+              "topics",
+              "sourceStudyId",
+              "chapterCount",
+              "canWrite",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "DeleteStudyResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CloneStudyResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "visibility": {
+                "anyOf": [
+                  {
+                    "const": "public",
+                    "type": "string"
+                  },
+                  {
+                    "const": "private",
+                    "type": "string"
+                  }
+                ]
+              },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "const": "intro",
+                      "type": "string"
+                    },
+                    {
+                      "const": "rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tournament_rules",
+                      "type": "string"
+                    },
+                    {
+                      "const": "opening",
+                      "type": "string"
+                    },
+                    {
+                      "const": "middlegame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "endgame",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tactics",
+                      "type": "string"
+                    },
+                    {
+                      "const": "strategy",
+                      "type": "string"
+                    },
+                    {
+                      "const": "story",
+                      "type": "string"
+                    },
+                    {
+                      "const": "competitive_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student_psychology",
+                      "type": "string"
+                    },
+                    {
+                      "const": "pedagogy",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "sourceStudyId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "chapterCount": {
+                "type": "number"
+              },
+              "canWrite": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "authorId",
+              "title",
+              "description",
+              "visibility",
+              "topics",
+              "sourceStudyId",
+              "chapterCount",
+              "canWrite",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateStudyChapterBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "rootFen": {
+            "type": "string"
+          },
+          "moveNodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "parentId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uci": {
+                  "type": "string"
+                },
+                "san": {
+                  "type": "string"
+                },
+                "fenAfter": {
+                  "type": "string"
+                },
+                "comment": {
+                  "type": "string"
+                },
+                "glyph": {
+                  "type": "string"
+                },
+                "order": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "parentId",
+                "uci",
+                "san",
+                "fenAfter",
+                "order"
+              ]
+            }
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "const": "normal",
+                "type": "string"
+              },
+              {
+                "const": "gamebook",
+                "type": "string"
+              },
+              {
+                "const": "conceal",
+                "type": "string"
+              }
+            ]
+          },
+          "concealFromPly": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "practiceGoal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "CreateStudyChapterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "studyId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "rootFen": {
+                "type": "string"
+              },
+              "moveNodes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "parentId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "uci": {
+                      "type": "string"
+                    },
+                    "san": {
+                      "type": "string"
+                    },
+                    "fenAfter": {
+                      "type": "string"
+                    },
+                    "comment": {
+                      "type": "string"
+                    },
+                    "glyph": {
+                      "type": "string"
+                    },
+                    "order": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "parentId",
+                    "uci",
+                    "san",
+                    "fenAfter",
+                    "order"
+                  ]
+                }
+              },
+              "mode": {
+                "anyOf": [
+                  {
+                    "const": "normal",
+                    "type": "string"
+                  },
+                  {
+                    "const": "gamebook",
+                    "type": "string"
+                  },
+                  {
+                    "const": "conceal",
+                    "type": "string"
+                  }
+                ]
+              },
+              "concealFromPly": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "practiceGoal": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "displayOrder": {
+                "type": "number"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "studyId",
+              "title",
+              "rootFen",
+              "moveNodes",
+              "mode",
+              "concealFromPly",
+              "practiceGoal",
+              "displayOrder",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateStudyChapterBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "rootFen": {
+            "type": "string"
+          },
+          "moveNodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "parentId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uci": {
+                  "type": "string"
+                },
+                "san": {
+                  "type": "string"
+                },
+                "fenAfter": {
+                  "type": "string"
+                },
+                "comment": {
+                  "type": "string"
+                },
+                "glyph": {
+                  "type": "string"
+                },
+                "order": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "parentId",
+                "uci",
+                "san",
+                "fenAfter",
+                "order"
+              ]
+            }
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "const": "normal",
+                "type": "string"
+              },
+              {
+                "const": "gamebook",
+                "type": "string"
+              },
+              {
+                "const": "conceal",
+                "type": "string"
+              }
+            ]
+          },
+          "concealFromPly": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "practiceGoal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "UpdateStudyChapterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "studyId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "rootFen": {
+                "type": "string"
+              },
+              "moveNodes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "parentId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "uci": {
+                      "type": "string"
+                    },
+                    "san": {
+                      "type": "string"
+                    },
+                    "fenAfter": {
+                      "type": "string"
+                    },
+                    "comment": {
+                      "type": "string"
+                    },
+                    "glyph": {
+                      "type": "string"
+                    },
+                    "order": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "parentId",
+                    "uci",
+                    "san",
+                    "fenAfter",
+                    "order"
+                  ]
+                }
+              },
+              "mode": {
+                "anyOf": [
+                  {
+                    "const": "normal",
+                    "type": "string"
+                  },
+                  {
+                    "const": "gamebook",
+                    "type": "string"
+                  },
+                  {
+                    "const": "conceal",
+                    "type": "string"
+                  }
+                ]
+              },
+              "concealFromPly": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "practiceGoal": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "displayOrder": {
+                "type": "number"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "studyId",
+              "title",
+              "rootFen",
+              "moveNodes",
+              "mode",
+              "concealFromPly",
+              "practiceGoal",
+              "displayOrder",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "DeleteStudyChapterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ReorderStudyChaptersBody": {
+        "type": "object",
+        "properties": {
+          "chapterIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "chapterIds"
+        ]
+      },
+      "ReorderStudyChaptersResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "success": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "success"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AddMemberBody": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "const": "read",
+                "type": "string"
+              },
+              {
+                "const": "write",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "userId"
+        ]
+      },
+      "AddMemberResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "success": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "success"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RemoveMemberResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "success": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "success"
             ]
           }
         },

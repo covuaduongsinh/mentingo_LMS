@@ -19,8 +19,8 @@ import type { MoveInput, MoveTree } from "./moveTree";
  * React state wrapper around the pure moveTree.ts functions. `path` is the id chain from
  * the root to the node currently being viewed — see moveTree.ts for the model.
  */
-export function useMoveTree(rootFen: string) {
-  const [tree, setTree] = useState<MoveTree>(() => createMoveTree(rootFen));
+export function useMoveTree(rootFen: string, initialTree?: MoveTree) {
+  const [tree, setTree] = useState<MoveTree>(() => initialTree ?? createMoveTree(rootFen));
   const [path, setPath] = useState<string[]>([]);
 
   const fen = useMemo(() => getFenAtPath(tree, path), [tree, path]);

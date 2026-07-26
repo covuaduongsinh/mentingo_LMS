@@ -159,3 +159,39 @@ export type ChessTimeControlId =
   (typeof CHESS_TIME_CONTROLS)[keyof typeof CHESS_TIME_CONTROLS]["id"];
 
 export const CHESS_TIME_CONTROL_LIST = Object.values(CHESS_TIME_CONTROLS);
+
+/** Who can view a study: public = anyone in the tenant, private = author + members only */
+export const CHESS_STUDY_VISIBILITY = {
+  PUBLIC: "public",
+  PRIVATE: "private",
+} as const;
+
+export type ChessStudyVisibility =
+  (typeof CHESS_STUDY_VISIBILITY)[keyof typeof CHESS_STUDY_VISIBILITY];
+
+export const CHESS_STUDY_VISIBILITY_LIST = Object.values(CHESS_STUDY_VISIBILITY);
+
+/** Member access level on a study a user doesn't own */
+export const CHESS_STUDY_MEMBER_ROLES = {
+  READ: "read",
+  WRITE: "write",
+} as const;
+
+export type ChessStudyMemberRole =
+  (typeof CHESS_STUDY_MEMBER_ROLES)[keyof typeof CHESS_STUDY_MEMBER_ROLES];
+
+/**
+ * Chapter interaction mode: normal = plain viewer; gamebook = the learner must find the
+ * next move themselves before it's revealed; conceal = moves past `concealFromPly` are
+ * hidden until the learner reaches them.
+ */
+export const CHESS_STUDY_CHAPTER_MODES = {
+  NORMAL: "normal",
+  GAMEBOOK: "gamebook",
+  CONCEAL: "conceal",
+} as const;
+
+export type ChessStudyChapterMode =
+  (typeof CHESS_STUDY_CHAPTER_MODES)[keyof typeof CHESS_STUDY_CHAPTER_MODES];
+
+export const CHESS_STUDY_CHAPTER_MODE_LIST = Object.values(CHESS_STUDY_CHAPTER_MODES);

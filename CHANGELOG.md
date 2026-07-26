@@ -1,3 +1,14 @@
+<a name="chess-study-chapter"></a>
+
+## [Chess studies] - 26.07.2026
+
+### Features:
+
+- add chess Studies: multi-chapter, savable and shareable chess lessons, replacing one-off analysis sessions with lessons a teacher can prepare once and reuse across classes
+- each chapter is a saved move tree (reusing the L1 variation-tree editor) with three viewing modes: normal (free browsing), gamebook (the learner must find the mainline move themselves before advancing), and conceal (moves past a given ply stay hidden until reached)
+- studies are public or private, with per-study membership (read/write collaborators) on top of single ownership; clone any readable study into your own copy
+- new permissions: `chess.study.read`, `chess.study.create`, `chess.study.manage`, `chess.study.manage_own`
+
 <a name="interactive-chess-board"></a>
 
 ## [Interactive chess board] - 26.07.2026
