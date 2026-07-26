@@ -133,6 +133,9 @@ import type {
   ChessMatchEndReason,
   ChessTournamentFormat,
   ChessTournamentStatus,
+  ChessGamePhase,
+  ChessPieceType,
+  ChessMoveQuality,
   AssignmentGradingType,
   AssignmentTaskType,
   AssignmentSubmissionStatus,
@@ -3472,5 +3475,51 @@ export const chessPracticeAttempts = pgTable(
     ...withTenantIdIndex("chess_practice_attempts")(table),
     chapterIdx: index("chess_practice_attempts_chapter_id_idx").on(table.chapterId),
     userIdx: index("chess_practice_attempts_user_id_idx").on(table.userId),
+  }),
+);
+
+/**
+ * One row per ply of an analyzed `chess_matches` game (Insight/Tutor, L8) — flattened so
+ * dashboards can group by phase/pieceType/openingKey without re-walking the board.
+ */
+export const chessGameInsights = pgTable(
+  "chess_game_insights",
+  {
+    ...id,
+    ...timestamps,
+    matchId: uuid("match_id")
+      .references(() => chessMatches.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    ply: integer("ply").notNull(),
+    phase: text("phase").$type<ChessGamePhase>().notNull(),
+    pieceType: text("piece_type").$type<ChessPieceType>().notNull(),
+    openingKey: varchar("opening_key", { length: 60 }).notNull(),
+    evaluationCpBefore: integer("evaluation_cp_before").notNull(),
+    evaluationCpAfter: integer("evaluation_cp_after").notNull(),
+    centipawnLoss: integer("centipawn_loss").notNull(),
+    accuracy: doublePrecision("accuracy").notNull(),
+    moveQuality: text("move_quality").$type<ChessMoveQuality>().notNull(),
+    thinkTimeMs: integer("think_time_ms").notNull(),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_game_insights")(table),
+    matchPlyUniqueIdx: uniqueIndex("chess_game_insights_match_ply_unique_idx").on(
+      table.matchId,
+      table.ply,
+    ),
+    userIdx: index("chess_game_insights_user_id_idx").on(table.userId),
+    userPhaseIdx: index("chess_game_insights_user_phase_idx").on(table.userId, table.phase),
+    userPieceTypeIdx: index("chess_game_insights_user_piece_type_idx").on(
+      table.userId,
+      table.pieceType,
+    ),
+    userOpeningIdx: index("chess_game_insights_user_opening_key_idx").on(
+      table.userId,
+      table.openingKey,
+    ),
   }),
 );

@@ -173,6 +173,14 @@ export const getNavigationConfig = (
             anyOf: [PERMISSIONS.CHESS_LEARN_READ],
           },
         },
+        {
+          label: t("chess.nav.insight", { defaultValue: "Insight & Tutor" }),
+          path: "chess/insight",
+          iconName: "ChartNoAxes",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_INSIGHT_READ],
+          },
+        },
       ],
     },
     ...(isAnyContentFeatureEnabled

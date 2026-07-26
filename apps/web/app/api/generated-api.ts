@@ -325,6 +325,8 @@ export interface CurrentUserResponse {
       | "chess.tournament.create"
       | "chess.tournament.manage"
       | "chess.learn.read"
+      | "chess.insight.read"
+      | "chess.insight.read_all"
       | "assignment.read"
       | "assignment.manage"
       | "assignment.manage_own"
@@ -6771,6 +6773,149 @@ export interface GetMatchResponse {
       san: string;
       fenAfter: string;
     }[];
+  };
+}
+
+export interface GetOwnInsightReportResponse {
+  data: {
+    hasData: boolean;
+    overallAvgAccuracy: number;
+    tenantAverageAccuracy: number;
+    byPhase: {
+      phase: "opening" | "middlegame" | "endgame";
+      moveCount: number;
+      avgAccuracy: number;
+      avgCentipawnLoss: number;
+      avgThinkTimeMs: number;
+    }[];
+    byPieceType: {
+      pieceType: "pawn" | "knight" | "bishop" | "rook" | "queen" | "king";
+      moveCount: number;
+      avgAccuracy: number;
+      avgCentipawnLoss: number;
+    }[];
+    byOpening: {
+      openingKey: string;
+      gameCount: number;
+      avgAccuracy: number;
+    }[];
+    weakPhases: ("opening" | "middlegame" | "endgame")[];
+    strongPhases: ("opening" | "middlegame" | "endgame")[];
+    weakPieceTypes: ("pawn" | "knight" | "bishop" | "rook" | "queen" | "king")[];
+    strongPieceTypes: ("pawn" | "knight" | "bishop" | "rook" | "queen" | "king")[];
+    weakOpenings: string[];
+    strongOpenings: string[];
+    timeManagement: {
+      avgThinkTimeMsByPhase: {
+        opening: number;
+        middlegame: number;
+        endgame: number;
+      };
+      totalLossCount: number;
+      timeoutLossCount: number;
+      needsTimeManagementFocus: boolean;
+    };
+    recovery: {
+      timesBehind: number;
+      recoveredCount: number;
+    };
+    conversion: {
+      timesAhead: number;
+      failedToConvertCount: number;
+    };
+  };
+}
+
+export interface GetUserInsightReportResponse {
+  data: {
+    hasData: boolean;
+    overallAvgAccuracy: number;
+    tenantAverageAccuracy: number;
+    byPhase: {
+      phase: "opening" | "middlegame" | "endgame";
+      moveCount: number;
+      avgAccuracy: number;
+      avgCentipawnLoss: number;
+      avgThinkTimeMs: number;
+    }[];
+    byPieceType: {
+      pieceType: "pawn" | "knight" | "bishop" | "rook" | "queen" | "king";
+      moveCount: number;
+      avgAccuracy: number;
+      avgCentipawnLoss: number;
+    }[];
+    byOpening: {
+      openingKey: string;
+      gameCount: number;
+      avgAccuracy: number;
+    }[];
+    weakPhases: ("opening" | "middlegame" | "endgame")[];
+    strongPhases: ("opening" | "middlegame" | "endgame")[];
+    weakPieceTypes: ("pawn" | "knight" | "bishop" | "rook" | "queen" | "king")[];
+    strongPieceTypes: ("pawn" | "knight" | "bishop" | "rook" | "queen" | "king")[];
+    weakOpenings: string[];
+    strongOpenings: string[];
+    timeManagement: {
+      avgThinkTimeMsByPhase: {
+        opening: number;
+        middlegame: number;
+        endgame: number;
+      };
+      totalLossCount: number;
+      timeoutLossCount: number;
+      needsTimeManagementFocus: boolean;
+    };
+    recovery: {
+      timesBehind: number;
+      recoveredCount: number;
+    };
+    conversion: {
+      timesAhead: number;
+      failedToConvertCount: number;
+    };
+  };
+}
+
+export interface GetMatchInsightReportResponse {
+  data: {
+    /** @format uuid */
+    matchId: string;
+    moves: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      matchId: string;
+      /** @format uuid */
+      userId: string;
+      ply: number;
+      phase: "opening" | "middlegame" | "endgame";
+      pieceType: "pawn" | "knight" | "bishop" | "rook" | "queen" | "king";
+      openingKey: string;
+      evaluationCpBefore: number;
+      evaluationCpAfter: number;
+      centipawnLoss: number;
+      accuracy: number;
+      moveQuality: "best" | "good" | "inaccuracy" | "mistake" | "blunder";
+      thinkTimeMs: number;
+    }[];
+    white: {
+      moveCount: number;
+      avgAccuracy: number | null;
+      blunders: number;
+      mistakes: number;
+    };
+    black: {
+      moveCount: number;
+      avgAccuracy: number | null;
+      blunders: number;
+      mistakes: number;
+    };
+  };
+}
+
+export interface RequestMatchInsightAnalysisResponse {
+  data: {
+    jobId: string;
   };
 }
 
@@ -16607,6 +16752,62 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<GetMatchResponse, any>({
         path: `/api/chess/matches/${id}`,
         method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetOwnInsightReport
+     * @request GET:/api/chess/insight/report
+     */
+    chessControllerGetOwnInsightReport: (params: RequestParams = {}) =>
+      this.request<GetOwnInsightReportResponse, any>({
+        path: `/api/chess/insight/report`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetUserInsightReport
+     * @request GET:/api/chess/insight/users/{userId}/report
+     */
+    chessControllerGetUserInsightReport: (userId: string, params: RequestParams = {}) =>
+      this.request<GetUserInsightReportResponse, any>({
+        path: `/api/chess/insight/users/${userId}/report`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetMatchInsightReport
+     * @request GET:/api/chess/insight/matches/{id}/report
+     */
+    chessControllerGetMatchInsightReport: (id: string, params: RequestParams = {}) =>
+      this.request<GetMatchInsightReportResponse, any>({
+        path: `/api/chess/insight/matches/${id}/report`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerRequestMatchInsightAnalysis
+     * @request POST:/api/chess/insight/matches/{id}/analyze
+     */
+    chessControllerRequestMatchInsightAnalysis: (id: string, params: RequestParams = {}) =>
+      this.request<RequestMatchInsightAnalysisResponse, any>({
+        path: `/api/chess/insight/matches/${id}/analyze`,
+        method: "POST",
         format: "json",
         ...params,
       }),

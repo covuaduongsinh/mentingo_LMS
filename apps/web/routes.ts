@@ -60,6 +60,8 @@ export const routes: (
           route("chess/puzzles/dashboard", "modules/Chess/Puzzle/ChessPuzzleDashboard.page.tsx");
           route("chess/lobby", "modules/Chess/Match/ChessLobby.page.tsx");
           route("chess/matches/:id", "modules/Chess/Match/ChessMatchPlay.page.tsx");
+          route("chess/matches/:id/insight", "modules/Chess/Insight/ChessMatchInsight.page.tsx");
+          route("chess/insight", "modules/Chess/Insight/ChessInsightDashboard.page.tsx");
           route("chess/tournaments/:id", "modules/Chess/Tournament/ChessTournamentDetail.page.tsx");
           route("chess/learn", "modules/Chess/Learn/ChessLearnStages.page.tsx");
           route("chess/learn/:stageId/:levelId", "modules/Chess/Learn/ChessLearnLevel.page.tsx");

@@ -27,7 +27,8 @@
       "editor": "Board editor",
       "studies": "Studies",
       "puzzles": "Puzzles",
-      "lobby": "Play online"
+      "lobby": "Play online",
+      "insight": "Insight & Tutor"
     },
     "engine": {
       "errorBestMove": "Engine could not move",
@@ -333,9 +334,41 @@
       "resultDraw": "Draw",
       "resultWin": "You won!",
       "resultLoss": "You lost.",
+      "viewInsight": "View game analysis",
       "errors": {
         "notFound": "Match not found"
       }
+    },
+    "insight": {
+      "title": "Insight & Tutor",
+      "subtitle": "Move accuracy across your analyzed online matches.",
+      "noData": "Play a few rated online matches — this report fills in automatically.",
+      "overallAccuracy": "Your average accuracy",
+      "tenantAverage": "Tenant average",
+      "weakAreas": "Focus areas",
+      "noWeakAreas": "No clear weak spot yet.",
+      "strongAreas": "Strengths",
+      "byPhase": "By phase",
+      "byPieceType": "By piece",
+      "byOpening": "By opening",
+      "timeManagement": "Time management",
+      "avgThinkTime": "Avg think time — opening {{opening}}s, middlegame {{middlegame}}s, endgame {{endgame}}s",
+      "timeManagementWarning": "Loses often on time — work on pacing",
+      "recovery": "Recovering from bad positions",
+      "recoveryStat": "{{recovered}} / {{behind}} times behind ended in a win or draw",
+      "conversion": "Converting an advantage",
+      "conversionStat": "{{failed}} / {{ahead}} times ahead slipped into a draw or loss",
+      "matchReportTitle": "Game analysis",
+      "notAnalyzedYet": "This game hasn't been analyzed yet — check back shortly.",
+      "blundersMistakes": "{{blunders}} blunders, {{mistakes}} mistakes",
+      "move": "Move",
+      "side": "Side",
+      "quality": "Quality",
+      "centipawnLoss": "Loss (cp)",
+      "accuracy": "Accuracy",
+      "reanalyze": "Re-analyze",
+      "reanalyzeQueued": "Re-analysis queued — refresh in a moment.",
+      "reanalyzeFailed": "Could not queue re-analysis"
     },
     "toast": {
       "exerciseCreated": "Exercise created",
@@ -4649,6 +4682,8 @@
     "chessPuzzleDashboard": "Chess Puzzle Progress",
     "chessLobby": "Play Chess Online",
     "chessMatchPlay": "Chess Match",
+    "chessMatchInsight": "Game Analysis",
+    "chessInsightDashboard": "Insight & Tutor",
     "chessClassManagement": "Chess Class Management",
     "chessClassLogin": "Class Code Login",
     "chessTournamentCreate": "Create Chess Tournament",

@@ -2,6 +2,9 @@ import { Module } from "@nestjs/common";
 
 import { ChessAnalysisRepository } from "./chess-analysis.repository";
 import { ChessAnalysisService } from "./chess-analysis.service";
+import { ChessInsightRepository } from "./chess-insight.repository";
+import { ChessInsightService } from "./chess-insight.service";
+import { ChessInsightWorker } from "./chess-insight.worker";
 import { ChessMatchTimeoutWorker } from "./chess-match-timeout.worker";
 import { ChessMatchCron } from "./chess-match.cron";
 import { ChessMatchRepository } from "./chess-match.repository";
@@ -34,6 +37,9 @@ import { ChessEngineService } from "./engine/engine.service";
     ChessMatchRepository,
     ChessMatchTimeoutWorker,
     ChessMatchCron,
+    ChessInsightService,
+    ChessInsightRepository,
+    ChessInsightWorker,
   ],
   exports: [
     ChessService,
@@ -43,6 +49,7 @@ import { ChessEngineService } from "./engine/engine.service";
     ChessPuzzleService,
     ChessPuzzleRepository,
     ChessMatchService,
+    ChessInsightService,
   ],
 })
 export class ChessModule {}

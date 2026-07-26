@@ -389,3 +389,152 @@ export const CHESS_TOURNAMENT_STATUSES = {
 
 export type ChessTournamentStatus =
   (typeof CHESS_TOURNAMENT_STATUSES)[keyof typeof CHESS_TOURNAMENT_STATUSES];
+
+/** Game phase for Insight/Tutor (L8) — self-designed heuristic, not lila's phase detection. */
+export const CHESS_GAME_PHASES = {
+  OPENING: "opening",
+  MIDDLEGAME: "middlegame",
+  ENDGAME: "endgame",
+} as const;
+
+export type ChessGamePhase = (typeof CHESS_GAME_PHASES)[keyof typeof CHESS_GAME_PHASES];
+
+export const CHESS_GAME_PHASE_LABELS: Record<ChessGamePhase, string> = {
+  [CHESS_GAME_PHASES.OPENING]: "Khai cuộc",
+  [CHESS_GAME_PHASES.MIDDLEGAME]: "Trung cuộc",
+  [CHESS_GAME_PHASES.ENDGAME]: "Tàn cuộc",
+};
+
+export const CHESS_PIECE_TYPES = {
+  PAWN: "pawn",
+  KNIGHT: "knight",
+  BISHOP: "bishop",
+  ROOK: "rook",
+  QUEEN: "queen",
+  KING: "king",
+} as const;
+
+export type ChessPieceType = (typeof CHESS_PIECE_TYPES)[keyof typeof CHESS_PIECE_TYPES];
+
+export const CHESS_PIECE_TYPE_LABELS: Record<ChessPieceType, string> = {
+  [CHESS_PIECE_TYPES.PAWN]: "Tốt",
+  [CHESS_PIECE_TYPES.KNIGHT]: "Mã",
+  [CHESS_PIECE_TYPES.BISHOP]: "Tượng",
+  [CHESS_PIECE_TYPES.ROOK]: "Xe",
+  [CHESS_PIECE_TYPES.QUEEN]: "Hậu",
+  [CHESS_PIECE_TYPES.KING]: "Vua",
+};
+
+/** chess.js single-letter piece codes -> our labeled piece type axis. */
+export const CHESS_PIECE_TYPE_BY_FEN_LETTER: Record<string, ChessPieceType> = {
+  p: CHESS_PIECE_TYPES.PAWN,
+  n: CHESS_PIECE_TYPES.KNIGHT,
+  b: CHESS_PIECE_TYPES.BISHOP,
+  r: CHESS_PIECE_TYPES.ROOK,
+  q: CHESS_PIECE_TYPES.QUEEN,
+  k: CHESS_PIECE_TYPES.KING,
+};
+
+/**
+ * Move-quality bucketing by centipawn loss — self-chosen round-number thresholds, common
+ * generic chess-analysis vocabulary (used by many independent tools), not lila-specific values.
+ */
+export const CHESS_MOVE_QUALITY_CP_THRESHOLDS = {
+  BEST: 10,
+  GOOD: 50,
+  INACCURACY: 100,
+  MISTAKE: 300,
+} as const;
+
+export const CHESS_MOVE_QUALITIES = {
+  BEST: "best",
+  GOOD: "good",
+  INACCURACY: "inaccuracy",
+  MISTAKE: "mistake",
+  BLUNDER: "blunder",
+} as const;
+
+export type ChessMoveQuality = (typeof CHESS_MOVE_QUALITIES)[keyof typeof CHESS_MOVE_QUALITIES];
+
+export const CHESS_MOVE_QUALITY_LABELS: Record<ChessMoveQuality, string> = {
+  [CHESS_MOVE_QUALITIES.BEST]: "Nước tốt nhất",
+  [CHESS_MOVE_QUALITIES.GOOD]: "Nước tốt",
+  [CHESS_MOVE_QUALITIES.INACCURACY]: "Thiếu chính xác",
+  [CHESS_MOVE_QUALITIES.MISTAKE]: "Sai lầm",
+  [CHESS_MOVE_QUALITIES.BLUNDER]: "Sai lầm nghiêm trọng",
+};
+
+/** Classifies a centipawn-loss value into a ChessMoveQuality using the thresholds above. */
+export function classifyChessMoveQuality(centipawnLoss: number): ChessMoveQuality {
+  if (centipawnLoss <= CHESS_MOVE_QUALITY_CP_THRESHOLDS.BEST) return CHESS_MOVE_QUALITIES.BEST;
+  if (centipawnLoss <= CHESS_MOVE_QUALITY_CP_THRESHOLDS.GOOD) return CHESS_MOVE_QUALITIES.GOOD;
+  if (centipawnLoss <= CHESS_MOVE_QUALITY_CP_THRESHOLDS.INACCURACY)
+    return CHESS_MOVE_QUALITIES.INACCURACY;
+  if (centipawnLoss <= CHESS_MOVE_QUALITY_CP_THRESHOLDS.MISTAKE)
+    return CHESS_MOVE_QUALITIES.MISTAKE;
+  return CHESS_MOVE_QUALITIES.BLUNDER;
+}
+
+/**
+ * Self-designed exponential-decay accuracy formula from centipawn loss — deliberately NOT
+ * lichess's published win%-based accuracy model (different rationale, see business spec).
+ */
+export function chessMoveAccuracyFromCentipawnLoss(centipawnLoss: number): number {
+  const accuracy = 100 * Math.exp(-Math.max(0, centipawnLoss) / 300);
+  return Math.max(0, Math.min(100, accuracy));
+}
+
+/**
+ * Simplified in-house opening book for Insight (L8) — common openings taught in a school
+ * chess program, matched by longest UCI move-prefix. Not a copy of any ECO database or of
+ * lila's opening data; standard opening names are general chess vocabulary.
+ */
+export const CHESS_OPENING_BOOK = [
+  {
+    key: "ruy_lopez",
+    nameVi: "Tây Ban Nha (Ruy Lopez)",
+    movesUci: ["e2e4", "e7e5", "g1f3", "b8c6", "f1b5"],
+  },
+  { key: "italian", nameVi: "Ý (Italian)", movesUci: ["e2e4", "e7e5", "g1f3", "b8c6", "f1c4"] },
+  { key: "scotch", nameVi: "Scotch", movesUci: ["e2e4", "e7e5", "g1f3", "b8c6", "d2d4"] },
+  { key: "petrov", nameVi: "Petrov", movesUci: ["e2e4", "e7e5", "g1f3", "g8f6"] },
+  { key: "kings_gambit", nameVi: "Gambit Vua", movesUci: ["e2e4", "e7e5", "f2f4"] },
+  { key: "open_game", nameVi: "Khai cuộc Tốt vua mở (1.e4 e5)", movesUci: ["e2e4", "e7e5"] },
+  {
+    key: "sicilian_najdorf",
+    nameVi: "Sicilia (nhánh Najdorf)",
+    movesUci: ["e2e4", "c7c5", "g1f3", "d7d6", "d2d4"],
+  },
+  { key: "sicilian", nameVi: "Sicilia (Sicilian)", movesUci: ["e2e4", "c7c5"] },
+  { key: "french", nameVi: "Pháp (French)", movesUci: ["e2e4", "e7e6"] },
+  { key: "caro_kann", nameVi: "Caro-Kann", movesUci: ["e2e4", "c7c6"] },
+  { key: "scandinavian", nameVi: "Scandinavia", movesUci: ["e2e4", "d7d5"] },
+  { key: "pirc", nameVi: "Pirc", movesUci: ["e2e4", "d7d6"] },
+  { key: "alekhine", nameVi: "Alekhine", movesUci: ["e2e4", "g8f6"] },
+  {
+    key: "queens_gambit",
+    nameVi: "Gambit Hậu (Queen's Gambit)",
+    movesUci: ["d2d4", "d7d5", "c2c4"],
+  },
+  {
+    key: "kings_indian",
+    nameVi: "Ấn Độ Vua (King's Indian)",
+    movesUci: ["d2d4", "g8f6", "c2c4", "g7g6"],
+  },
+  {
+    key: "nimzo_queens_indian",
+    nameVi: "Ấn Độ (Nimzo/Queen's Indian)",
+    movesUci: ["d2d4", "g8f6", "c2c4", "e7e6"],
+  },
+  { key: "queens_pawn", nameVi: "Khai cuộc Tốt hậu đóng (1.d4 d5)", movesUci: ["d2d4", "d7d5"] },
+  { key: "indian_defense", nameVi: "Phòng thủ Ấn Độ (tổng quát)", movesUci: ["d2d4", "g8f6"] },
+  { key: "english", nameVi: "Anh (English)", movesUci: ["c2c4"] },
+  { key: "reti", nameVi: "Réti", movesUci: ["g1f3"] },
+] as const;
+
+export type ChessOpeningKey = (typeof CHESS_OPENING_BOOK)[number]["key"] | "unclassified";
+
+export const CHESS_OPENING_LABELS: Record<string, string> = {
+  ...Object.fromEntries(CHESS_OPENING_BOOK.map((entry) => [entry.key, entry.nameVi])),
+  unclassified: "Chưa phân loại",
+};

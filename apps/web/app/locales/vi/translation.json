@@ -27,7 +27,8 @@
       "editor": "Dựng thế cờ",
       "studies": "Bài giảng",
       "puzzles": "Bài đố",
-      "lobby": "Chơi trực tuyến"
+      "lobby": "Chơi trực tuyến",
+      "insight": "Phân tích điểm mạnh-yếu"
     },
     "engine": {
       "errorBestMove": "Máy không thể đi nước tiếp theo",
@@ -333,9 +334,41 @@
       "resultDraw": "Hòa",
       "resultWin": "Bạn đã thắng!",
       "resultLoss": "Bạn đã thua.",
+      "viewInsight": "Xem phân tích ván đấu",
       "errors": {
         "notFound": "Không tìm thấy ván đấu"
       }
+    },
+    "insight": {
+      "title": "Phân tích điểm mạnh-yếu",
+      "subtitle": "Độ chính xác từng nước đi qua các ván đấu trực tuyến đã được phân tích.",
+      "noData": "Chơi vài ván đấu trực tuyến tính rating — báo cáo sẽ tự động điền dữ liệu.",
+      "overallAccuracy": "Độ chính xác trung bình của bạn",
+      "tenantAverage": "Trung bình toàn trường/CLB",
+      "weakAreas": "Điểm cần cải thiện",
+      "noWeakAreas": "Chưa thấy điểm yếu rõ ràng.",
+      "strongAreas": "Điểm mạnh",
+      "byPhase": "Theo giai đoạn",
+      "byPieceType": "Theo loại quân",
+      "byOpening": "Theo khai cuộc",
+      "timeManagement": "Quản lý thời gian",
+      "avgThinkTime": "Thời gian suy nghĩ trung bình — khai cuộc {{opening}}s, trung cuộc {{middlegame}}s, tàn cuộc {{endgame}}s",
+      "timeManagementWarning": "Hay thua vì hết giờ — cần cải thiện tốc độ đi cờ",
+      "recovery": "Khả năng gỡ thế xấu",
+      "recoveryStat": "{{recovered}} / {{behind}} lần bị dẫn trước đã gỡ được (thắng hoặc hòa)",
+      "conversion": "Chuyển ưu thế thành thắng",
+      "conversionStat": "{{failed}} / {{ahead}} lần có ưu thế lớn nhưng để tuột (hòa hoặc thua)",
+      "matchReportTitle": "Phân tích ván đấu",
+      "notAnalyzedYet": "Ván này chưa được phân tích — vui lòng quay lại sau.",
+      "blundersMistakes": "{{blunders}} sai lầm nghiêm trọng, {{mistakes}} sai lầm",
+      "move": "Nước",
+      "side": "Bên",
+      "quality": "Chất lượng",
+      "centipawnLoss": "Tổn thất (cp)",
+      "accuracy": "Độ chính xác",
+      "reanalyze": "Phân tích lại",
+      "reanalyzeQueued": "Đã xếp hàng phân tích lại — thử tải lại sau ít phút.",
+      "reanalyzeFailed": "Không thể xếp hàng phân tích lại"
     },
     "toast": {
       "exerciseCreated": "Đã tạo bài tập",
@@ -4647,6 +4680,8 @@
     "chessPuzzleDashboard": "Tiến độ bài đố cờ vua",
     "chessLobby": "Chơi cờ trực tuyến",
     "chessMatchPlay": "Ván đấu cờ vua",
+    "chessMatchInsight": "Phân tích ván đấu",
+    "chessInsightDashboard": "Phân tích điểm mạnh-yếu",
     "chessClassManagement": "Quản lý lớp cờ",
     "chessClassLogin": "Đăng nhập bằng mã lớp",
     "chessTournamentCreate": "Tạo giải đấu cờ",

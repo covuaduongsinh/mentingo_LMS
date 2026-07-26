@@ -15,6 +15,7 @@ export const QUEUE_NAMES = {
   WEBHOOK_DELIVERY: "webhook-delivery",
   CHESS_PUZZLE_IMPORT: "chess-puzzle-import",
   CHESS_MATCH_TIMEOUT_CHECK: "chess-match-timeout-check",
+  CHESS_MATCH_INSIGHT_ANALYSIS: "chess-match-insight-analysis",
 } as const;
 
 export type QueueName = (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES];
@@ -101,4 +102,9 @@ export interface ChessMatchTimeoutCheckJobData {
   expectedLastMoveAtMs: number;
   /** Which side was on the clock when this check was scheduled. */
   expiringUserId: UUIDType;
+}
+
+export interface ChessMatchInsightAnalysisJobData {
+  tenantId: UUIDType;
+  matchId: UUIDType;
 }
