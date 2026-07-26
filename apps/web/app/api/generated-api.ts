@@ -5181,6 +5181,724 @@ export interface GetEnvKeyResponse {
   };
 }
 
+export interface GetTopicsResponse {
+  data: {
+    id:
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy";
+    labelKey: string;
+  }[];
+}
+
+export interface ListExercisesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    audience: "student" | "teacher" | "both";
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    /**
+     * @min 1
+     * @max 10
+     */
+    difficulty: number;
+    format:
+      | "chess_find_best"
+      | "chess_move_line"
+      | "single_choice"
+      | "true_false"
+      | "brief_response";
+    fen: string | null;
+    solution: {
+      movesUci?: string[];
+      choiceIds?: string[];
+      isTrue?: boolean;
+      text?: string;
+    };
+    explanation: string | null;
+    source: "original" | "lichess_cc0" | "import";
+    pieceCount: number | null;
+    rating: number | null;
+    published: boolean;
+    authorId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+  appliedFilters?: object;
+}
+
+export interface GetExerciseResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    audience: "student" | "teacher" | "both";
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    /**
+     * @min 1
+     * @max 10
+     */
+    difficulty: number;
+    format:
+      | "chess_find_best"
+      | "chess_move_line"
+      | "single_choice"
+      | "true_false"
+      | "brief_response";
+    fen: string | null;
+    solution: {
+      movesUci?: string[];
+      choiceIds?: string[];
+      isTrue?: boolean;
+      text?: string;
+    };
+    explanation: string | null;
+    source: "original" | "lichess_cc0" | "import";
+    pieceCount: number | null;
+    rating: number | null;
+    published: boolean;
+    authorId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface CreateExerciseBody {
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title: string;
+  audience?: "student" | "teacher" | "both";
+  topics?: (
+    | "intro"
+    | "rules"
+    | "tournament_rules"
+    | "opening"
+    | "middlegame"
+    | "endgame"
+    | "tactics"
+    | "strategy"
+    | "story"
+    | "competitive_psychology"
+    | "student_psychology"
+    | "pedagogy"
+  )[];
+  /**
+   * @min 1
+   * @max 10
+   */
+  difficulty?: number;
+  format: "chess_find_best" | "chess_move_line" | "single_choice" | "true_false" | "brief_response";
+  fen?: string | null;
+  solution?: {
+    movesUci?: string[];
+    choiceIds?: string[];
+    isTrue?: boolean;
+    text?: string;
+  };
+  explanation?: string | null;
+  source?: "original" | "lichess_cc0" | "import";
+  pieceCount?: number | null;
+  rating?: number | null;
+  published?: boolean;
+}
+
+export interface CreateExerciseResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    audience: "student" | "teacher" | "both";
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    /**
+     * @min 1
+     * @max 10
+     */
+    difficulty: number;
+    format:
+      | "chess_find_best"
+      | "chess_move_line"
+      | "single_choice"
+      | "true_false"
+      | "brief_response";
+    fen: string | null;
+    solution: {
+      movesUci?: string[];
+      choiceIds?: string[];
+      isTrue?: boolean;
+      text?: string;
+    };
+    explanation: string | null;
+    source: "original" | "lichess_cc0" | "import";
+    pieceCount: number | null;
+    rating: number | null;
+    published: boolean;
+    authorId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface UpdateExerciseBody {
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title?: string;
+  audience?: "student" | "teacher" | "both";
+  topics?: (
+    | "intro"
+    | "rules"
+    | "tournament_rules"
+    | "opening"
+    | "middlegame"
+    | "endgame"
+    | "tactics"
+    | "strategy"
+    | "story"
+    | "competitive_psychology"
+    | "student_psychology"
+    | "pedagogy"
+  )[];
+  /**
+   * @min 1
+   * @max 10
+   */
+  difficulty?: number;
+  format?:
+    | "chess_find_best"
+    | "chess_move_line"
+    | "single_choice"
+    | "true_false"
+    | "brief_response";
+  fen?: string | null;
+  solution?: {
+    movesUci?: string[];
+    choiceIds?: string[];
+    isTrue?: boolean;
+    text?: string;
+  };
+  explanation?: string | null;
+  source?: "original" | "lichess_cc0" | "import";
+  pieceCount?: number | null;
+  rating?: number | null;
+  published?: boolean;
+}
+
+export interface UpdateExerciseResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    audience: "student" | "teacher" | "both";
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    /**
+     * @min 1
+     * @max 10
+     */
+    difficulty: number;
+    format:
+      | "chess_find_best"
+      | "chess_move_line"
+      | "single_choice"
+      | "true_false"
+      | "brief_response";
+    fen: string | null;
+    solution: {
+      movesUci?: string[];
+      choiceIds?: string[];
+      isTrue?: boolean;
+      text?: string;
+    };
+    explanation: string | null;
+    source: "original" | "lichess_cc0" | "import";
+    pieceCount: number | null;
+    rating: number | null;
+    published: boolean;
+    authorId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface DeleteExerciseResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+  };
+}
+
+export interface SubmitAttemptBody {
+  movesUci?: string[];
+  choiceIds?: string[];
+  isTrue?: boolean;
+  text?: string;
+  /** @min 0 */
+  timeMs?: number;
+}
+
+export interface SubmitAttemptResponse {
+  data: {
+    isCorrect: boolean;
+    explanation: string | null;
+  };
+}
+
+export interface ListGamesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    pgn: string;
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    level: "beginner" | "intermediate" | "advanced";
+    teachingNotes: string | null;
+    tags: string[];
+    published: boolean;
+    authorId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+  appliedFilters?: object;
+}
+
+export interface GetGameResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    pgn: string;
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    level: "beginner" | "intermediate" | "advanced";
+    teachingNotes: string | null;
+    tags: string[];
+    published: boolean;
+    authorId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface CreateGameBody {
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title: string;
+  /** @minLength 1 */
+  pgn: string;
+  topics?: (
+    | "intro"
+    | "rules"
+    | "tournament_rules"
+    | "opening"
+    | "middlegame"
+    | "endgame"
+    | "tactics"
+    | "strategy"
+    | "story"
+    | "competitive_psychology"
+    | "student_psychology"
+    | "pedagogy"
+  )[];
+  level?: "beginner" | "intermediate" | "advanced";
+  teachingNotes?: string | null;
+  tags?: string[];
+  published?: boolean;
+}
+
+export interface CreateGameResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    pgn: string;
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    level: "beginner" | "intermediate" | "advanced";
+    teachingNotes: string | null;
+    tags: string[];
+    published: boolean;
+    authorId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface UpdateGameBody {
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title?: string;
+  /** @minLength 1 */
+  pgn?: string;
+  topics?: (
+    | "intro"
+    | "rules"
+    | "tournament_rules"
+    | "opening"
+    | "middlegame"
+    | "endgame"
+    | "tactics"
+    | "strategy"
+    | "story"
+    | "competitive_psychology"
+    | "student_psychology"
+    | "pedagogy"
+  )[];
+  level?: "beginner" | "intermediate" | "advanced";
+  teachingNotes?: string | null;
+  tags?: string[];
+  published?: boolean;
+}
+
+export interface UpdateGameResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    pgn: string;
+    topics: (
+      | "intro"
+      | "rules"
+      | "tournament_rules"
+      | "opening"
+      | "middlegame"
+      | "endgame"
+      | "tactics"
+      | "strategy"
+      | "story"
+      | "competitive_psychology"
+      | "student_psychology"
+      | "pedagogy"
+    )[];
+    level: "beginner" | "intermediate" | "advanced";
+    teachingNotes: string | null;
+    tags: string[];
+    published: boolean;
+    authorId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface DeleteGameResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+  };
+}
+
+export interface CreatePlaySessionBody {
+  playerColor: "w" | "b";
+  level: "easy" | "medium" | "hard";
+  engine: "arasan" | "builtin";
+  outcome: "win" | "loss" | "draw";
+  endReason:
+    | "checkmate"
+    | "resignation"
+    | "timeout"
+    | "stalemate"
+    | "draw_claimed"
+    | "insufficient_material"
+    | "fifty_move"
+    | "threefold";
+  /** @minLength 1 */
+  pgn: string;
+  /** @minItems 1 */
+  movesUci: string[];
+  timeControl?: string | null;
+  playerTimeLeftMs?: number | null;
+  engineTimeLeftMs?: number | null;
+  durationMs?: number | null;
+}
+
+export interface CreatePlaySessionResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    userId: string;
+    playerColor: "w" | "b";
+    level: "easy" | "medium" | "hard";
+    engine: "arasan" | "builtin";
+    outcome: "win" | "loss" | "draw";
+    endReason:
+      | "checkmate"
+      | "resignation"
+      | "timeout"
+      | "stalemate"
+      | "draw_claimed"
+      | "insufficient_material"
+      | "fifty_move"
+      | "threefold";
+    pgn: string;
+    movesUci: string[];
+    timeControl: string | null;
+    playerTimeLeftMs: number | null;
+    engineTimeLeftMs: number | null;
+    durationMs: number | null;
+    moveCount: number;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface ListPlaySessionsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    userId: string;
+    playerColor: "w" | "b";
+    level: "easy" | "medium" | "hard";
+    engine: "arasan" | "builtin";
+    outcome: "win" | "loss" | "draw";
+    endReason:
+      | "checkmate"
+      | "resignation"
+      | "timeout"
+      | "stalemate"
+      | "draw_claimed"
+      | "insufficient_material"
+      | "fifty_move"
+      | "threefold";
+    pgn: string;
+    movesUci: string[];
+    timeControl: string | null;
+    playerTimeLeftMs: number | null;
+    engineTimeLeftMs: number | null;
+    durationMs: number | null;
+    moveCount: number;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+  appliedFilters?: object;
+}
+
+export interface GetPlaySessionResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    userId: string;
+    playerColor: "w" | "b";
+    level: "easy" | "medium" | "hard";
+    engine: "arasan" | "builtin";
+    outcome: "win" | "loss" | "draw";
+    endReason:
+      | "checkmate"
+      | "resignation"
+      | "timeout"
+      | "stalemate"
+      | "draw_claimed"
+      | "insufficient_material"
+      | "fifty_move"
+      | "threefold";
+    pgn: string;
+    movesUci: string[];
+    timeControl: string | null;
+    playerTimeLeftMs: number | null;
+    engineTimeLeftMs: number | null;
+    durationMs: number | null;
+    moveCount: number;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface CreateAnalysisSessionBody {
+  /** @maxLength 255 */
+  name?: string;
+  fen?: string;
+}
+
+export interface CreateAnalysisSessionResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+  };
+}
+
+export interface GetAnalysisSessionResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    hostUserId: string | null;
+    name: string | null;
+    status: "active" | "ended";
+    currentFen: string;
+    moveList: string[];
+    role: "host" | "viewer";
+    /** @format date-time */
+    createdAt: string;
+    endedAt: string | null;
+  };
+}
+
+export interface GetStatusResponse {
+  data: {
+    arasanConfigured: boolean;
+    arasanAvailable: boolean;
+    defaultEngine: "arasan" | "builtin";
+    levels: string[];
+  };
+}
+
+export interface BestMoveBody {
+  /** @minLength 10 */
+  fen: string;
+  movesUci?: string[];
+  level?: "easy" | "medium" | "hard";
+}
+
+export interface BestMoveResponse {
+  data: {
+    bestMoveUci: string;
+    engine: "arasan" | "builtin";
+    depth: number;
+  };
+}
+
+export interface AnalyzeBody {
+  /** @minLength 10 */
+  fen: string;
+  movesUci?: string[];
+  /**
+   * @min 1
+   * @max 16
+   */
+  depth?: number;
+}
+
+export interface AnalyzeResponse {
+  data: {
+    bestMoveUci: string | null;
+    scoreCp: number | null;
+    mate: number | null;
+    pv: string[];
+    depth: number;
+    engine: "arasan" | "builtin";
+  };
+}
+
 export interface UpsertProgressBody {
   /** @format uuid */
   lessonId: string;
@@ -6555,695 +7273,6 @@ export interface FinishScormAttemptResponse {
     messageKey: string | null;
     scormStatus: string | null;
     nextScoId: string | null;
-  };
-}
-
-export interface GetTopicsResponse {
-  data: {
-    id:
-      | "intro"
-      | "rules"
-      | "tournament_rules"
-      | "opening"
-      | "middlegame"
-      | "endgame"
-      | "tactics"
-      | "strategy"
-      | "story"
-      | "competitive_psychology"
-      | "student_psychology"
-      | "pedagogy";
-    labelKey: string;
-  }[];
-}
-
-export interface ListExercisesResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    audience: "student" | "teacher" | "both";
-    topics: (
-      | "intro"
-      | "rules"
-      | "tournament_rules"
-      | "opening"
-      | "middlegame"
-      | "endgame"
-      | "tactics"
-      | "strategy"
-      | "story"
-      | "competitive_psychology"
-      | "student_psychology"
-      | "pedagogy"
-    )[];
-    /**
-     * @min 1
-     * @max 10
-     */
-    difficulty: number;
-    format:
-      | "chess_find_best"
-      | "chess_move_line"
-      | "single_choice"
-      | "true_false"
-      | "brief_response";
-    fen: string | null;
-    solution: {
-      movesUci?: string[];
-      choiceIds?: string[];
-      isTrue?: boolean;
-      text?: string;
-    };
-    explanation: string | null;
-    source: "original" | "lichess_cc0" | "import";
-    pieceCount: number | null;
-    rating: number | null;
-    published: boolean;
-    authorId: string | null;
-    createdAt: string;
-    updatedAt: string;
-  }[];
-  pagination: {
-    totalItems: number;
-    page: number;
-    perPage: number;
-  };
-  appliedFilters?: object;
-}
-
-export interface GetExerciseResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    audience: "student" | "teacher" | "both";
-    topics: (
-      | "intro"
-      | "rules"
-      | "tournament_rules"
-      | "opening"
-      | "middlegame"
-      | "endgame"
-      | "tactics"
-      | "strategy"
-      | "story"
-      | "competitive_psychology"
-      | "student_psychology"
-      | "pedagogy"
-    )[];
-    /**
-     * @min 1
-     * @max 10
-     */
-    difficulty: number;
-    format:
-      | "chess_find_best"
-      | "chess_move_line"
-      | "single_choice"
-      | "true_false"
-      | "brief_response";
-    fen: string | null;
-    solution: {
-      movesUci?: string[];
-      choiceIds?: string[];
-      isTrue?: boolean;
-      text?: string;
-    };
-    explanation: string | null;
-    source: "original" | "lichess_cc0" | "import";
-    pieceCount: number | null;
-    rating: number | null;
-    published: boolean;
-    authorId: string | null;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
-
-export interface CreateExerciseBody {
-  /**
-   * @minLength 1
-   * @maxLength 300
-   */
-  title: string;
-  audience?: "student" | "teacher" | "both";
-  topics?: (
-    | "intro"
-    | "rules"
-    | "tournament_rules"
-    | "opening"
-    | "middlegame"
-    | "endgame"
-    | "tactics"
-    | "strategy"
-    | "story"
-    | "competitive_psychology"
-    | "student_psychology"
-    | "pedagogy"
-  )[];
-  /**
-   * @min 1
-   * @max 10
-   */
-  difficulty?: number;
-  format: "chess_find_best" | "chess_move_line" | "single_choice" | "true_false" | "brief_response";
-  fen?: string | null;
-  solution?: {
-    movesUci?: string[];
-    choiceIds?: string[];
-    isTrue?: boolean;
-    text?: string;
-  };
-  explanation?: string | null;
-  source?: "original" | "lichess_cc0" | "import";
-  pieceCount?: number | null;
-  rating?: number | null;
-  published?: boolean;
-}
-
-export interface CreateExerciseResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    audience: "student" | "teacher" | "both";
-    topics: (
-      | "intro"
-      | "rules"
-      | "tournament_rules"
-      | "opening"
-      | "middlegame"
-      | "endgame"
-      | "tactics"
-      | "strategy"
-      | "story"
-      | "competitive_psychology"
-      | "student_psychology"
-      | "pedagogy"
-    )[];
-    /**
-     * @min 1
-     * @max 10
-     */
-    difficulty: number;
-    format:
-      | "chess_find_best"
-      | "chess_move_line"
-      | "single_choice"
-      | "true_false"
-      | "brief_response";
-    fen: string | null;
-    solution: {
-      movesUci?: string[];
-      choiceIds?: string[];
-      isTrue?: boolean;
-      text?: string;
-    };
-    explanation: string | null;
-    source: "original" | "lichess_cc0" | "import";
-    pieceCount: number | null;
-    rating: number | null;
-    published: boolean;
-    authorId: string | null;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
-
-export interface UpdateExerciseBody {
-  /**
-   * @minLength 1
-   * @maxLength 300
-   */
-  title?: string;
-  audience?: "student" | "teacher" | "both";
-  topics?: (
-    | "intro"
-    | "rules"
-    | "tournament_rules"
-    | "opening"
-    | "middlegame"
-    | "endgame"
-    | "tactics"
-    | "strategy"
-    | "story"
-    | "competitive_psychology"
-    | "student_psychology"
-    | "pedagogy"
-  )[];
-  /**
-   * @min 1
-   * @max 10
-   */
-  difficulty?: number;
-  format?:
-    | "chess_find_best"
-    | "chess_move_line"
-    | "single_choice"
-    | "true_false"
-    | "brief_response";
-  fen?: string | null;
-  solution?: {
-    movesUci?: string[];
-    choiceIds?: string[];
-    isTrue?: boolean;
-    text?: string;
-  };
-  explanation?: string | null;
-  source?: "original" | "lichess_cc0" | "import";
-  pieceCount?: number | null;
-  rating?: number | null;
-  published?: boolean;
-}
-
-export interface UpdateExerciseResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    audience: "student" | "teacher" | "both";
-    topics: (
-      | "intro"
-      | "rules"
-      | "tournament_rules"
-      | "opening"
-      | "middlegame"
-      | "endgame"
-      | "tactics"
-      | "strategy"
-      | "story"
-      | "competitive_psychology"
-      | "student_psychology"
-      | "pedagogy"
-    )[];
-    /**
-     * @min 1
-     * @max 10
-     */
-    difficulty: number;
-    format:
-      | "chess_find_best"
-      | "chess_move_line"
-      | "single_choice"
-      | "true_false"
-      | "brief_response";
-    fen: string | null;
-    solution: {
-      movesUci?: string[];
-      choiceIds?: string[];
-      isTrue?: boolean;
-      text?: string;
-    };
-    explanation: string | null;
-    source: "original" | "lichess_cc0" | "import";
-    pieceCount: number | null;
-    rating: number | null;
-    published: boolean;
-    authorId: string | null;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
-
-export interface DeleteExerciseResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-  };
-}
-
-export interface SubmitAttemptBody {
-  movesUci?: string[];
-  choiceIds?: string[];
-  isTrue?: boolean;
-  text?: string;
-  /** @min 0 */
-  timeMs?: number;
-}
-
-export interface SubmitAttemptResponse {
-  data: {
-    isCorrect: boolean;
-    explanation: string | null;
-  };
-}
-
-export interface ListGamesResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    pgn: string;
-    topics: (
-      | "intro"
-      | "rules"
-      | "tournament_rules"
-      | "opening"
-      | "middlegame"
-      | "endgame"
-      | "tactics"
-      | "strategy"
-      | "story"
-      | "competitive_psychology"
-      | "student_psychology"
-      | "pedagogy"
-    )[];
-    level: "beginner" | "intermediate" | "advanced";
-    teachingNotes: string | null;
-    tags: string[];
-    published: boolean;
-    authorId: string | null;
-    createdAt: string;
-    updatedAt: string;
-  }[];
-  pagination: {
-    totalItems: number;
-    page: number;
-    perPage: number;
-  };
-  appliedFilters?: object;
-}
-
-export interface GetGameResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    pgn: string;
-    topics: (
-      | "intro"
-      | "rules"
-      | "tournament_rules"
-      | "opening"
-      | "middlegame"
-      | "endgame"
-      | "tactics"
-      | "strategy"
-      | "story"
-      | "competitive_psychology"
-      | "student_psychology"
-      | "pedagogy"
-    )[];
-    level: "beginner" | "intermediate" | "advanced";
-    teachingNotes: string | null;
-    tags: string[];
-    published: boolean;
-    authorId: string | null;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
-
-export interface CreateGameBody {
-  /**
-   * @minLength 1
-   * @maxLength 300
-   */
-  title: string;
-  /** @minLength 1 */
-  pgn: string;
-  topics?: (
-    | "intro"
-    | "rules"
-    | "tournament_rules"
-    | "opening"
-    | "middlegame"
-    | "endgame"
-    | "tactics"
-    | "strategy"
-    | "story"
-    | "competitive_psychology"
-    | "student_psychology"
-    | "pedagogy"
-  )[];
-  level?: "beginner" | "intermediate" | "advanced";
-  teachingNotes?: string | null;
-  tags?: string[];
-  published?: boolean;
-}
-
-export interface CreateGameResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    pgn: string;
-    topics: (
-      | "intro"
-      | "rules"
-      | "tournament_rules"
-      | "opening"
-      | "middlegame"
-      | "endgame"
-      | "tactics"
-      | "strategy"
-      | "story"
-      | "competitive_psychology"
-      | "student_psychology"
-      | "pedagogy"
-    )[];
-    level: "beginner" | "intermediate" | "advanced";
-    teachingNotes: string | null;
-    tags: string[];
-    published: boolean;
-    authorId: string | null;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
-
-export interface UpdateGameBody {
-  /**
-   * @minLength 1
-   * @maxLength 300
-   */
-  title?: string;
-  /** @minLength 1 */
-  pgn?: string;
-  topics?: (
-    | "intro"
-    | "rules"
-    | "tournament_rules"
-    | "opening"
-    | "middlegame"
-    | "endgame"
-    | "tactics"
-    | "strategy"
-    | "story"
-    | "competitive_psychology"
-    | "student_psychology"
-    | "pedagogy"
-  )[];
-  level?: "beginner" | "intermediate" | "advanced";
-  teachingNotes?: string | null;
-  tags?: string[];
-  published?: boolean;
-}
-
-export interface UpdateGameResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    pgn: string;
-    topics: (
-      | "intro"
-      | "rules"
-      | "tournament_rules"
-      | "opening"
-      | "middlegame"
-      | "endgame"
-      | "tactics"
-      | "strategy"
-      | "story"
-      | "competitive_psychology"
-      | "student_psychology"
-      | "pedagogy"
-    )[];
-    level: "beginner" | "intermediate" | "advanced";
-    teachingNotes: string | null;
-    tags: string[];
-    published: boolean;
-    authorId: string | null;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
-
-export interface DeleteGameResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-  };
-}
-
-export interface CreatePlaySessionBody {
-  playerColor: "w" | "b";
-  level: "easy" | "medium" | "hard";
-  engine: "arasan" | "builtin";
-  outcome: "win" | "loss" | "draw";
-  endReason:
-    | "checkmate"
-    | "resignation"
-    | "timeout"
-    | "stalemate"
-    | "draw_claimed"
-    | "insufficient_material"
-    | "fifty_move"
-    | "threefold";
-  /** @minLength 1 */
-  pgn: string;
-  /** @minItems 1 */
-  movesUci: string[];
-  timeControl?: string | null;
-  playerTimeLeftMs?: number | null;
-  engineTimeLeftMs?: number | null;
-  durationMs?: number | null;
-}
-
-export interface CreatePlaySessionResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    /** @format uuid */
-    userId: string;
-    playerColor: "w" | "b";
-    level: "easy" | "medium" | "hard";
-    engine: "arasan" | "builtin";
-    outcome: "win" | "loss" | "draw";
-    endReason:
-      | "checkmate"
-      | "resignation"
-      | "timeout"
-      | "stalemate"
-      | "draw_claimed"
-      | "insufficient_material"
-      | "fifty_move"
-      | "threefold";
-    pgn: string;
-    movesUci: string[];
-    timeControl: string | null;
-    playerTimeLeftMs: number | null;
-    engineTimeLeftMs: number | null;
-    durationMs: number | null;
-    moveCount: number;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
-
-export interface ListPlaySessionsResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    /** @format uuid */
-    userId: string;
-    playerColor: "w" | "b";
-    level: "easy" | "medium" | "hard";
-    engine: "arasan" | "builtin";
-    outcome: "win" | "loss" | "draw";
-    endReason:
-      | "checkmate"
-      | "resignation"
-      | "timeout"
-      | "stalemate"
-      | "draw_claimed"
-      | "insufficient_material"
-      | "fifty_move"
-      | "threefold";
-    pgn: string;
-    movesUci: string[];
-    timeControl: string | null;
-    playerTimeLeftMs: number | null;
-    engineTimeLeftMs: number | null;
-    durationMs: number | null;
-    moveCount: number;
-    createdAt: string;
-    updatedAt: string;
-  }[];
-  pagination: {
-    totalItems: number;
-    page: number;
-    perPage: number;
-  };
-  appliedFilters?: object;
-}
-
-export interface GetPlaySessionResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    /** @format uuid */
-    userId: string;
-    playerColor: "w" | "b";
-    level: "easy" | "medium" | "hard";
-    engine: "arasan" | "builtin";
-    outcome: "win" | "loss" | "draw";
-    endReason:
-      | "checkmate"
-      | "resignation"
-      | "timeout"
-      | "stalemate"
-      | "draw_claimed"
-      | "insufficient_material"
-      | "fifty_move"
-      | "threefold";
-    pgn: string;
-    movesUci: string[];
-    timeControl: string | null;
-    playerTimeLeftMs: number | null;
-    engineTimeLeftMs: number | null;
-    durationMs: number | null;
-    moveCount: number;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
-
-export interface GetStatusResponse {
-  data: {
-    arasanConfigured: boolean;
-    arasanAvailable: boolean;
-    defaultEngine: "arasan" | "builtin";
-    levels: string[];
-  };
-}
-
-export interface BestMoveBody {
-  /** @minLength 10 */
-  fen: string;
-  movesUci?: string[];
-  level?: "easy" | "medium" | "hard";
-}
-
-export interface BestMoveResponse {
-  data: {
-    bestMoveUci: string;
-    engine: "arasan" | "builtin";
-    depth: number;
-  };
-}
-
-export interface AnalyzeBody {
-  /** @minLength 10 */
-  fen: string;
-  movesUci?: string[];
-  /**
-   * @min 1
-   * @max 16
-   */
-  depth?: number;
-}
-
-export interface AnalyzeResponse {
-  data: {
-    bestMoveUci: string | null;
-    scoreCp: number | null;
-    mate: number | null;
-    pv: string[];
-    depth: number;
-    engine: "arasan" | "builtin";
   };
 }
 
@@ -14554,6 +14583,380 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name ChessControllerGetTopics
+     * @request GET:/api/chess/topics
+     */
+    chessControllerGetTopics: (params: RequestParams = {}) =>
+      this.request<GetTopicsResponse, any>({
+        path: `/api/chess/topics`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerListExercises
+     * @request GET:/api/chess/exercises
+     */
+    chessControllerListExercises: (
+      query?: {
+        /** @min 1 */
+        page?: number;
+        /** @min 1 */
+        perPage?: number;
+        search?: string;
+        topic?:
+          | "intro"
+          | "rules"
+          | "tournament_rules"
+          | "opening"
+          | "middlegame"
+          | "endgame"
+          | "tactics"
+          | "strategy"
+          | "story"
+          | "competitive_psychology"
+          | "student_psychology"
+          | "pedagogy";
+        audience?: "student" | "teacher" | "both";
+        format?:
+          | "chess_find_best"
+          | "chess_move_line"
+          | "single_choice"
+          | "true_false"
+          | "brief_response";
+        publishedOnly?: boolean | "true" | "false";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ListExercisesResponse, any>({
+        path: `/api/chess/exercises`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerCreateExercise
+     * @request POST:/api/chess/exercises
+     */
+    chessControllerCreateExercise: (data: CreateExerciseBody, params: RequestParams = {}) =>
+      this.request<CreateExerciseResponse, any>({
+        path: `/api/chess/exercises`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetExercise
+     * @request GET:/api/chess/exercises/{id}
+     */
+    chessControllerGetExercise: (id: string, params: RequestParams = {}) =>
+      this.request<GetExerciseResponse, any>({
+        path: `/api/chess/exercises/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerUpdateExercise
+     * @request PATCH:/api/chess/exercises/{id}
+     */
+    chessControllerUpdateExercise: (
+      id: string,
+      data: UpdateExerciseBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateExerciseResponse, any>({
+        path: `/api/chess/exercises/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerDeleteExercise
+     * @request DELETE:/api/chess/exercises/{id}
+     */
+    chessControllerDeleteExercise: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteExerciseResponse, any>({
+        path: `/api/chess/exercises/${id}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerSubmitAttempt
+     * @request POST:/api/chess/exercises/{id}/attempts
+     */
+    chessControllerSubmitAttempt: (
+      id: string,
+      data: SubmitAttemptBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<SubmitAttemptResponse, any>({
+        path: `/api/chess/exercises/${id}/attempts`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerListGames
+     * @request GET:/api/chess/games
+     */
+    chessControllerListGames: (
+      query?: {
+        /** @min 1 */
+        page?: number;
+        /** @min 1 */
+        perPage?: number;
+        search?: string;
+        topic?:
+          | "intro"
+          | "rules"
+          | "tournament_rules"
+          | "opening"
+          | "middlegame"
+          | "endgame"
+          | "tactics"
+          | "strategy"
+          | "story"
+          | "competitive_psychology"
+          | "student_psychology"
+          | "pedagogy";
+        level?: "beginner" | "intermediate" | "advanced";
+        publishedOnly?: boolean | "true" | "false";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ListGamesResponse, any>({
+        path: `/api/chess/games`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerCreateGame
+     * @request POST:/api/chess/games
+     */
+    chessControllerCreateGame: (data: CreateGameBody, params: RequestParams = {}) =>
+      this.request<CreateGameResponse, any>({
+        path: `/api/chess/games`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetGame
+     * @request GET:/api/chess/games/{id}
+     */
+    chessControllerGetGame: (id: string, params: RequestParams = {}) =>
+      this.request<GetGameResponse, any>({
+        path: `/api/chess/games/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerUpdateGame
+     * @request PATCH:/api/chess/games/{id}
+     */
+    chessControllerUpdateGame: (id: string, data: UpdateGameBody, params: RequestParams = {}) =>
+      this.request<UpdateGameResponse, any>({
+        path: `/api/chess/games/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerDeleteGame
+     * @request DELETE:/api/chess/games/{id}
+     */
+    chessControllerDeleteGame: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteGameResponse, any>({
+        path: `/api/chess/games/${id}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerCreatePlaySession
+     * @request POST:/api/chess/play-sessions
+     */
+    chessControllerCreatePlaySession: (data: CreatePlaySessionBody, params: RequestParams = {}) =>
+      this.request<CreatePlaySessionResponse, any>({
+        path: `/api/chess/play-sessions`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerListPlaySessions
+     * @request GET:/api/chess/play-sessions
+     */
+    chessControllerListPlaySessions: (
+      query?: {
+        /** @min 1 */
+        page?: number;
+        /** @min 1 */
+        perPage?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ListPlaySessionsResponse, any>({
+        path: `/api/chess/play-sessions`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetPlaySession
+     * @request GET:/api/chess/play-sessions/{id}
+     */
+    chessControllerGetPlaySession: (id: string, params: RequestParams = {}) =>
+      this.request<GetPlaySessionResponse, any>({
+        path: `/api/chess/play-sessions/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerCreateAnalysisSession
+     * @request POST:/api/chess/analysis-sessions
+     */
+    chessControllerCreateAnalysisSession: (
+      data: CreateAnalysisSessionBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateAnalysisSessionResponse, any>({
+        path: `/api/chess/analysis-sessions`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetAnalysisSession
+     * @request GET:/api/chess/analysis-sessions/{id}
+     */
+    chessControllerGetAnalysisSession: (id: string, params: RequestParams = {}) =>
+      this.request<GetAnalysisSessionResponse, any>({
+        path: `/api/chess/analysis-sessions/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessEngineControllerGetStatus
+     * @request GET:/api/chess/engine/status
+     */
+    chessEngineControllerGetStatus: (params: RequestParams = {}) =>
+      this.request<GetStatusResponse, any>({
+        path: `/api/chess/engine/status`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessEngineControllerBestMove
+     * @request POST:/api/chess/engine/bestmove
+     */
+    chessEngineControllerBestMove: (data: BestMoveBody, params: RequestParams = {}) =>
+      this.request<BestMoveResponse, any>({
+        path: `/api/chess/engine/bestmove`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessEngineControllerAnalyze
+     * @request POST:/api/chess/engine/analyze
+     */
+    chessEngineControllerAnalyze: (data: AnalyzeBody, params: RequestParams = {}) =>
+      this.request<AnalyzeResponse, any>({
+        path: `/api/chess/engine/analyze`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name LessonVideoProgressControllerUpsertProgress
      * @request POST:/api/lesson-video-progress
      */
@@ -16217,347 +16620,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/seo/course-preview/${idOrSlug}`,
         method: "GET",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerGetTopics
-     * @request GET:/api/chess/topics
-     */
-    chessControllerGetTopics: (params: RequestParams = {}) =>
-      this.request<GetTopicsResponse, any>({
-        path: `/api/chess/topics`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerListExercises
-     * @request GET:/api/chess/exercises
-     */
-    chessControllerListExercises: (
-      query?: {
-        /** @min 1 */
-        page?: number;
-        /** @min 1 */
-        perPage?: number;
-        search?: string;
-        topic?:
-          | "intro"
-          | "rules"
-          | "tournament_rules"
-          | "opening"
-          | "middlegame"
-          | "endgame"
-          | "tactics"
-          | "strategy"
-          | "story"
-          | "competitive_psychology"
-          | "student_psychology"
-          | "pedagogy";
-        audience?: "student" | "teacher" | "both";
-        format?:
-          | "chess_find_best"
-          | "chess_move_line"
-          | "single_choice"
-          | "true_false"
-          | "brief_response";
-        publishedOnly?: boolean | "true" | "false";
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<ListExercisesResponse, any>({
-        path: `/api/chess/exercises`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerCreateExercise
-     * @request POST:/api/chess/exercises
-     */
-    chessControllerCreateExercise: (data: CreateExerciseBody, params: RequestParams = {}) =>
-      this.request<CreateExerciseResponse, any>({
-        path: `/api/chess/exercises`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerGetExercise
-     * @request GET:/api/chess/exercises/{id}
-     */
-    chessControllerGetExercise: (id: string, params: RequestParams = {}) =>
-      this.request<GetExerciseResponse, any>({
-        path: `/api/chess/exercises/${id}`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerUpdateExercise
-     * @request PATCH:/api/chess/exercises/{id}
-     */
-    chessControllerUpdateExercise: (
-      id: string,
-      data: UpdateExerciseBody,
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateExerciseResponse, any>({
-        path: `/api/chess/exercises/${id}`,
-        method: "PATCH",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerDeleteExercise
-     * @request DELETE:/api/chess/exercises/{id}
-     */
-    chessControllerDeleteExercise: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteExerciseResponse, any>({
-        path: `/api/chess/exercises/${id}`,
-        method: "DELETE",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerSubmitAttempt
-     * @request POST:/api/chess/exercises/{id}/attempts
-     */
-    chessControllerSubmitAttempt: (
-      id: string,
-      data: SubmitAttemptBody,
-      params: RequestParams = {},
-    ) =>
-      this.request<SubmitAttemptResponse, any>({
-        path: `/api/chess/exercises/${id}/attempts`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerListGames
-     * @request GET:/api/chess/games
-     */
-    chessControllerListGames: (
-      query?: {
-        /** @min 1 */
-        page?: number;
-        /** @min 1 */
-        perPage?: number;
-        search?: string;
-        topic?:
-          | "intro"
-          | "rules"
-          | "tournament_rules"
-          | "opening"
-          | "middlegame"
-          | "endgame"
-          | "tactics"
-          | "strategy"
-          | "story"
-          | "competitive_psychology"
-          | "student_psychology"
-          | "pedagogy";
-        level?: "beginner" | "intermediate" | "advanced";
-        publishedOnly?: boolean | "true" | "false";
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<ListGamesResponse, any>({
-        path: `/api/chess/games`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerCreateGame
-     * @request POST:/api/chess/games
-     */
-    chessControllerCreateGame: (data: CreateGameBody, params: RequestParams = {}) =>
-      this.request<CreateGameResponse, any>({
-        path: `/api/chess/games`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerGetGame
-     * @request GET:/api/chess/games/{id}
-     */
-    chessControllerGetGame: (id: string, params: RequestParams = {}) =>
-      this.request<GetGameResponse, any>({
-        path: `/api/chess/games/${id}`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerUpdateGame
-     * @request PATCH:/api/chess/games/{id}
-     */
-    chessControllerUpdateGame: (id: string, data: UpdateGameBody, params: RequestParams = {}) =>
-      this.request<UpdateGameResponse, any>({
-        path: `/api/chess/games/${id}`,
-        method: "PATCH",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerDeleteGame
-     * @request DELETE:/api/chess/games/{id}
-     */
-    chessControllerDeleteGame: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteGameResponse, any>({
-        path: `/api/chess/games/${id}`,
-        method: "DELETE",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerCreatePlaySession
-     * @request POST:/api/chess/play-sessions
-     */
-    chessControllerCreatePlaySession: (data: CreatePlaySessionBody, params: RequestParams = {}) =>
-      this.request<CreatePlaySessionResponse, any>({
-        path: `/api/chess/play-sessions`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerListPlaySessions
-     * @request GET:/api/chess/play-sessions
-     */
-    chessControllerListPlaySessions: (
-      query?: {
-        /** @min 1 */
-        page?: number;
-        /** @min 1 */
-        perPage?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<ListPlaySessionsResponse, any>({
-        path: `/api/chess/play-sessions`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessControllerGetPlaySession
-     * @request GET:/api/chess/play-sessions/{id}
-     */
-    chessControllerGetPlaySession: (id: string, params: RequestParams = {}) =>
-      this.request<GetPlaySessionResponse, any>({
-        path: `/api/chess/play-sessions/${id}`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessEngineControllerGetStatus
-     * @request GET:/api/chess/engine/status
-     */
-    chessEngineControllerGetStatus: (params: RequestParams = {}) =>
-      this.request<GetStatusResponse, any>({
-        path: `/api/chess/engine/status`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessEngineControllerBestMove
-     * @request POST:/api/chess/engine/bestmove
-     */
-    chessEngineControllerBestMove: (data: BestMoveBody, params: RequestParams = {}) =>
-      this.request<BestMoveResponse, any>({
-        path: `/api/chess/engine/bestmove`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessEngineControllerAnalyze
-     * @request POST:/api/chess/engine/analyze
-     */
-    chessEngineControllerAnalyze: (data: AnalyzeBody, params: RequestParams = {}) =>
-      this.request<AnalyzeResponse, any>({
-        path: `/api/chess/engine/analyze`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
         ...params,
       }),
 

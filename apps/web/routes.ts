@@ -51,6 +51,7 @@ export const routes: (
           route("chess/games/:id", "modules/Chess/Practice/ChessGameView.page.tsx");
           route("chess/play", "modules/Chess/Play/ChessPlay.page.tsx");
           route("chess/analysis", "modules/Chess/Analysis/ChessAnalysis.page.tsx");
+          route("chess/analysis-room/:id", "modules/Chess/Room/ChessAnalysisRoom.page.tsx");
         });
         route("", "modules/Dashboard/UserDashboard.layout.tsx", () => {
           route("", "modules/Dashboard/IndexRedirect.page.tsx", { index: true });

@@ -95,7 +95,37 @@
       "loadFen": "Tải FEN",
       "moves": "Nước đi (UCI)",
       "bestMove": "Nước đi tốt nhất",
-      "eval": "Đánh giá"
+      "eval": "Đánh giá",
+      "createRoom": "Tạo phòng phân tích cộng tác",
+      "errors": {
+        "sessionNotFound": "Không tìm thấy phòng phân tích",
+        "tenantMismatch": "Bạn không thể truy cập phòng phân tích này",
+        "sessionEnded": "Phòng phân tích này đã kết thúc",
+        "illegalMove": "Nước đi không hợp lệ",
+        "invalidFen": "Vị trí FEN không hợp lệ",
+        "hostOnly": "Chỉ chủ phòng mới thực hiện được thao tác này"
+      }
+    },
+    "analysisRoom": {
+      "title": "Phòng phân tích",
+      "loading": "Đang tải phòng...",
+      "status": {
+        "active": "Đang hoạt động",
+        "ended": "Đã kết thúc"
+      },
+      "role": {
+        "host": "Chủ phòng",
+        "viewer": "Người xem"
+      },
+      "endButton": "Kết thúc phòng",
+      "resetFenLabel": "Đặt lại vị trí (FEN)",
+      "resetFenButton": "Đặt lại vị trí",
+      "toast": {
+        "ended": "Chủ phòng đã kết thúc phòng này."
+      },
+      "error": {
+        "notFound": "Không tìm thấy phòng phân tích"
+      }
     },
     "admin": {
       "exercisesTitle": "Ngân hàng bài tập",
@@ -4269,6 +4299,7 @@
     }
   },
   "pages": {
+    "chessAnalysisRoom": "Phòng phân tích cờ",
     "dashboard": "Bảng điều khiển",
     "settings": "Cài đặt",
     "providerInformation": "Thông tin nhà cung cấp",

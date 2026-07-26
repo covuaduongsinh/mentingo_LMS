@@ -15,7 +15,14 @@ import { RequirePermission } from "src/common/decorators/require-permission.deco
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { CurrentUserType } from "src/common/types/current-user.type";
 
+import { ChessAnalysisService } from "./chess-analysis.service";
 import { ChessService } from "./chess.service";
+import {
+  createChessAnalysisSessionBodySchema,
+  createChessAnalysisSessionResponseSchema,
+  chessAnalysisSessionSchema,
+  type CreateChessAnalysisSessionBody,
+} from "./schemas/chess-analysis.schema";
 import {
   chessAudienceSchema,
   chessExerciseAttemptResultSchema,
@@ -53,7 +60,10 @@ const parseQueryBoolean = (value?: boolean | "true" | "false"): boolean | undefi
 
 @Controller("chess")
 export class ChessController {
-  constructor(private readonly chessService: ChessService) {}
+  constructor(
+    private readonly chessService: ChessService,
+    private readonly chessAnalysisService: ChessAnalysisService,
+  ) {}
 
   @Get("topics")
   @RequirePermission(PERMISSIONS.CHESS_EXERCISE_READ, PERMISSIONS.CHESS_GAME_READ)
@@ -285,5 +295,28 @@ export class ChessController {
   })
   async getPlaySession(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
     return new BaseResponse(await this.chessService.getPlaySession(id, user.userId));
+  }
+
+  @Post("analysis-sessions")
+  @RequirePermission(PERMISSIONS.CHESS_GAME_MANAGE)
+  @Validate({
+    request: [{ type: "body", schema: createChessAnalysisSessionBodySchema }],
+    response: baseResponse(createChessAnalysisSessionResponseSchema),
+  })
+  async createAnalysisSession(
+    @Body() body: CreateChessAnalysisSessionBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.chessAnalysisService.createSession(user, body));
+  }
+
+  @Get("analysis-sessions/:id")
+  @RequirePermission(PERMISSIONS.CHESS_GAME_READ)
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(chessAnalysisSessionSchema),
+  })
+  async getAnalysisSession(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
+    return new BaseResponse(await this.chessAnalysisService.getSessionState(id, user));
   }
 }

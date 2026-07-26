@@ -1268,6 +1268,20 @@
       "when": 1785037340896,
       "tag": "0180_enable_webhooks_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 181,
+      "version": "7",
+      "when": 1785046793784,
+      "tag": "0181_add_chess_analysis_sessions",
+      "breakpoints": true
+    },
+    {
+      "idx": 182,
+      "version": "7",
+      "when": 1785046793785,
+      "tag": "0182_enable_chess_analysis_sessions_rls",
+      "breakpoints": true
     }
   ]
 }

@@ -2956,3 +2956,56 @@ export const webhookDeliveries = pgTable(
     ),
   })),
 );
+
+export const chessAnalysisSessions = pgTable(
+  "chess_analysis_sessions",
+  {
+    ...id,
+    ...timestamps,
+    hostUserId: uuid("host_user_id").references(() => users.id, { onDelete: "set null" }),
+    name: varchar("name", { length: 255 }),
+    status: varchar("status", { length: 20 }).notNull().default("active"),
+    currentFen: varchar("current_fen", { length: 100 })
+      .notNull()
+      .default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
+    moveList: jsonb("move_list").$type<string[]>().notNull().default([]),
+    endedAt: timestamp("ended_at", {
+      mode: "string",
+      withTimezone: true,
+      precision: 3,
+    }),
+    tenantId,
+  },
+  withTenantIdIndex("chess_analysis_sessions"),
+);
+
+export const chessAnalysisSessionParticipants = pgTable(
+  "chess_analysis_session_participants",
+  {
+    ...id,
+    ...timestamps,
+    sessionId: uuid("session_id")
+      .references(() => chessAnalysisSessions.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    role: varchar("role", { length: 10 }).notNull(),
+    firstJoinedAt: timestamp("first_joined_at", {
+      mode: "string",
+      withTimezone: true,
+      precision: 3,
+    }),
+    lastLeftAt: timestamp("last_left_at", {
+      mode: "string",
+      withTimezone: true,
+      precision: 3,
+    }),
+    tenantId,
+  },
+  withTenantIdIndex("chess_analysis_session_participants", (table) => ({
+    sessionUserUniqueIdx: uniqueIndex(
+      "chess_analysis_session_participants_session_user_unique_idx",
+    ).on(table.sessionId, table.userId),
+  })),
+);
