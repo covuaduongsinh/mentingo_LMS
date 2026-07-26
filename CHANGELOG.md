@@ -1,3 +1,15 @@
+<a name="chess-puzzle-rating"></a>
+
+## [Chess puzzles & rating] - 26.07.2026
+
+### Features:
+
+- add adaptive chess puzzle training: a Glicko-2 rating (implemented from the public-domain specification) updates after every attempt, and puzzle selection targets the learner's current rating within a chosen difficulty band
+- puzzles are tagged with a tactical-motif taxonomy (fork, pin, skewer, back-rank mate, and 26 more); a progress dashboard shows accuracy by theme and automatically flags weak vs. strong areas
+- replay puzzles you've previously gotten wrong; a shared daily puzzle for the whole school
+- puzzle banks are populated via a filtered CSV import (rating range, theme, count) run as a background job
+- new permissions: `chess.puzzle.read`, `chess.puzzle.manage`
+
 <a name="chess-study-chapter"></a>
 
 ## [Chess studies] - 26.07.2026

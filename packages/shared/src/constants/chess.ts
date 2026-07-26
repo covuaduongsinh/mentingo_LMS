@@ -195,3 +195,100 @@ export type ChessStudyChapterMode =
   (typeof CHESS_STUDY_CHAPTER_MODES)[keyof typeof CHESS_STUDY_CHAPTER_MODES];
 
 export const CHESS_STUDY_CHAPTER_MODE_LIST = Object.values(CHESS_STUDY_CHAPTER_MODES);
+
+/**
+ * Tactical-motif taxonomy for puzzles — a separate axis from CHESS_TOPICS (curriculum topics).
+ * Standard chess terminology, not any one reference system's original wording.
+ */
+export const CHESS_MOTIFS = {
+  FORK: "fork",
+  PIN: "pin",
+  SKEWER: "skewer",
+  DISCOVERED_ATTACK: "discovered_attack",
+  DOUBLE_CHECK: "double_check",
+  BACK_RANK_MATE: "back_rank_mate",
+  SMOTHERED_MATE: "smothered_mate",
+  DEFLECTION: "deflection",
+  DECOY: "decoy",
+  CLEARANCE: "clearance",
+  INTERFERENCE: "interference",
+  ZWISCHENZUG: "zwischenzug",
+  X_RAY: "x_ray",
+  TRAPPED_PIECE: "trapped_piece",
+  HANGING_PIECE: "hanging_piece",
+  SACRIFICE: "sacrifice",
+  ATTRACTION: "attraction",
+  OVERLOADING: "overloading",
+  ZUGZWANG: "zugzwang",
+  PROMOTION: "promotion",
+  UNDERPROMOTION: "underpromotion",
+  EN_PASSANT: "en_passant",
+  CASTLING_TACTIC: "castling_tactic",
+  KING_HUNT: "king_hunt",
+  MATE_IN_1: "mate_in_1",
+  MATE_IN_2: "mate_in_2",
+  MATE_IN_3_OR_MORE: "mate_in_3_or_more",
+  ENDGAME_TACTIC: "endgame_tactic",
+  OPENING_TRAP: "opening_trap",
+  QUIET_MOVE: "quiet_move",
+} as const;
+
+export type ChessMotif = (typeof CHESS_MOTIFS)[keyof typeof CHESS_MOTIFS];
+
+export const CHESS_MOTIF_LIST = Object.values(CHESS_MOTIFS);
+
+export const CHESS_MOTIF_LABELS: Record<ChessMotif, string> = {
+  [CHESS_MOTIFS.FORK]: "Đòn đôi (fork)",
+  [CHESS_MOTIFS.PIN]: "Ghim (pin)",
+  [CHESS_MOTIFS.SKEWER]: "Xiên (skewer)",
+  [CHESS_MOTIFS.DISCOVERED_ATTACK]: "Đòn phát hiện",
+  [CHESS_MOTIFS.DOUBLE_CHECK]: "Chiếu đôi",
+  [CHESS_MOTIFS.BACK_RANK_MATE]: "Chiếu hết hàng ngang cuối",
+  [CHESS_MOTIFS.SMOTHERED_MATE]: "Chiếu hết bóp nghẹt",
+  [CHESS_MOTIFS.DEFLECTION]: "Đánh lạc hướng (deflection)",
+  [CHESS_MOTIFS.DECOY]: "Dụ quân (decoy)",
+  [CHESS_MOTIFS.CLEARANCE]: "Dọn đường (clearance)",
+  [CHESS_MOTIFS.INTERFERENCE]: "Chắn đường (interference)",
+  [CHESS_MOTIFS.ZWISCHENZUG]: "Nước xen (zwischenzug)",
+  [CHESS_MOTIFS.X_RAY]: "Đòn xuyên thấu (x-ray)",
+  [CHESS_MOTIFS.TRAPPED_PIECE]: "Quân bị bẫy",
+  [CHESS_MOTIFS.HANGING_PIECE]: "Quân bỏ ngỏ",
+  [CHESS_MOTIFS.SACRIFICE]: "Thí quân",
+  [CHESS_MOTIFS.ATTRACTION]: "Lôi kéo (attraction)",
+  [CHESS_MOTIFS.OVERLOADING]: "Quá tải (overloading)",
+  [CHESS_MOTIFS.ZUGZWANG]: "Thế bí buộc đi (zugzwang)",
+  [CHESS_MOTIFS.PROMOTION]: "Phong cấp",
+  [CHESS_MOTIFS.UNDERPROMOTION]: "Phong cấp non",
+  [CHESS_MOTIFS.EN_PASSANT]: "Bắt tốt qua đường",
+  [CHESS_MOTIFS.CASTLING_TACTIC]: "Chiến thuật liên quan nhập thành",
+  [CHESS_MOTIFS.KING_HUNT]: "Truy đuổi vua",
+  [CHESS_MOTIFS.MATE_IN_1]: "Chiếu hết trong 1 nước",
+  [CHESS_MOTIFS.MATE_IN_2]: "Chiếu hết trong 2 nước",
+  [CHESS_MOTIFS.MATE_IN_3_OR_MORE]: "Chiếu hết từ 3 nước trở lên",
+  [CHESS_MOTIFS.ENDGAME_TACTIC]: "Chiến thuật tàn cuộc",
+  [CHESS_MOTIFS.OPENING_TRAP]: "Bẫy khai cuộc",
+  [CHESS_MOTIFS.QUIET_MOVE]: "Nước đi lặng lẽ (quiet move)",
+};
+
+/** Rating category axis — extended with time-control categories in a later phase (online play). */
+export const CHESS_RATING_CATEGORIES = {
+  PUZZLE: "puzzle",
+} as const;
+
+export type ChessRatingCategory =
+  (typeof CHESS_RATING_CATEGORIES)[keyof typeof CHESS_RATING_CATEGORIES];
+
+export const CHESS_RATING_CATEGORY_LIST = Object.values(CHESS_RATING_CATEGORIES);
+
+/** Difficulty bands for adaptive puzzle selection — rating delta around the learner's current rating. */
+export const CHESS_PUZZLE_DIFFICULTY_DELTAS = {
+  EASIER: 100,
+  NORMAL: 200,
+  HARDER: 300,
+} as const;
+
+export type ChessPuzzleDifficulty = keyof typeof CHESS_PUZZLE_DIFFICULTY_DELTAS;
+
+export const CHESS_PUZZLE_DIFFICULTY_LIST = Object.keys(
+  CHESS_PUZZLE_DIFFICULTY_DELTAS,
+) as ChessPuzzleDifficulty[];

@@ -33,11 +33,13 @@ import {
   CHESS_STUDY_VISIBILITY,
   CHESS_STUDY_MEMBER_ROLES,
   CHESS_STUDY_CHAPTER_MODES,
+  CHESS_RATING_CATEGORIES,
 } from "@repo/shared";
 import { sql } from "drizzle-orm";
 import {
   bigint,
   boolean,
+  doublePrecision,
   index,
   integer,
   jsonb,
@@ -117,6 +119,8 @@ import type {
   ChessStudyVisibility,
   ChessStudyMemberRole,
   ChessStudyChapterMode,
+  ChessMotif,
+  ChessRatingCategory,
   AssignmentGradingType,
   AssignmentTaskType,
   AssignmentSubmissionStatus,
@@ -3114,4 +3118,108 @@ export const chessStudyMembers = pgTable(
       table.userId,
     ),
   })),
+);
+
+export const chessPuzzles = pgTable(
+  "chess_puzzles",
+  {
+    ...id,
+    ...timestamps,
+    fen: text("fen").notNull(),
+    solutionUci: text("solution_uci").array().notNull(),
+    rating: doublePrecision("rating").notNull().default(1500),
+    ratingDeviation: doublePrecision("rating_deviation").notNull().default(350),
+    volatility: doublePrecision("volatility").notNull().default(0.06),
+    motifs: text("motifs")
+      .array()
+      .$type<ChessMotif[]>()
+      .notNull()
+      .default(sql`ARRAY[]::text[]`),
+    popularity: integer("popularity"),
+    source: text("source")
+      .$type<ChessContentSource>()
+      .notNull()
+      .default(CHESS_CONTENT_SOURCE.ORIGINAL),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_puzzles")(table),
+    ratingIdx: index("chess_puzzles_rating_idx").on(table.rating),
+    motifsIdx: index("chess_puzzles_motifs_idx").using("gin", table.motifs),
+  }),
+);
+
+export const chessPuzzleAttempts = pgTable(
+  "chess_puzzle_attempts",
+  {
+    ...id,
+    ...timestamps,
+    puzzleId: uuid("puzzle_id")
+      .references(() => chessPuzzles.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    correct: boolean("correct").notNull(),
+    userRatingBefore: doublePrecision("user_rating_before").notNull(),
+    userRatingAfter: doublePrecision("user_rating_after").notNull(),
+    puzzleRatingBefore: doublePrecision("puzzle_rating_before").notNull(),
+    puzzleRatingAfter: doublePrecision("puzzle_rating_after").notNull(),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_puzzle_attempts")(table),
+    puzzleIdx: index("chess_puzzle_attempts_puzzle_id_idx").on(table.puzzleId),
+    userIdx: index("chess_puzzle_attempts_user_id_idx").on(table.userId),
+    userCorrectIdx: index("chess_puzzle_attempts_user_correct_idx").on(table.userId, table.correct),
+  }),
+);
+
+export const chessRatings = pgTable(
+  "chess_ratings",
+  {
+    ...id,
+    ...timestamps,
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    category: text("category")
+      .$type<ChessRatingCategory>()
+      .notNull()
+      .default(CHESS_RATING_CATEGORIES.PUZZLE),
+    rating: doublePrecision("rating").notNull().default(1500),
+    ratingDeviation: doublePrecision("rating_deviation").notNull().default(350),
+    volatility: doublePrecision("volatility").notNull().default(0.06),
+    gamesPlayed: integer("games_played").notNull().default(0),
+    tenantId,
+  },
+  withTenantIdIndex("chess_ratings", (table) => ({
+    userCategoryUniqueIdx: uniqueIndex("chess_ratings_user_category_unique_idx").on(
+      table.userId,
+      table.category,
+    ),
+  })),
+);
+
+export const chessRatingHistory = pgTable(
+  "chess_rating_history",
+  {
+    ...id,
+    ...timestamps,
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    category: text("category").$type<ChessRatingCategory>().notNull(),
+    rating: doublePrecision("rating").notNull(),
+    ratingDeviation: doublePrecision("rating_deviation").notNull(),
+    volatility: doublePrecision("volatility").notNull(),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_rating_history")(table),
+    userCategoryIdx: index("chess_rating_history_user_category_idx").on(
+      table.userId,
+      table.category,
+    ),
+  }),
 );

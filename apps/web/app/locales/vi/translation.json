@@ -25,7 +25,8 @@
       "play": "Chơi với máy",
       "analysis": "Phân tích",
       "editor": "Dựng thế cờ",
-      "studies": "Bài giảng"
+      "studies": "Bài giảng",
+      "puzzles": "Bài đố"
     },
     "engine": {
       "errorBestMove": "Máy không thể đi nước tiếp theo",
@@ -260,6 +261,37 @@
       "guidedReveal": "Xem đáp án",
       "guidedRestart": "Làm lại từ đầu"
     },
+    "puzzle": {
+      "title": "Luyện bài đố",
+      "subtitle": "Giải bài đố phù hợp trình độ của bạn — độ khó tự điều chỉnh khi bạn tiến bộ.",
+      "adaptive": "Thích ứng",
+      "daily": "Bài đố hằng ngày",
+      "mistakes": "Luyện lại bài sai",
+      "easier": "Dễ hơn",
+      "normal": "Vừa",
+      "harder": "Khó hơn",
+      "allMotifs": "Tất cả chủ đề",
+      "noMistakes": "Không còn bài nào cần luyện lại — làm tốt lắm.",
+      "empty": "Chưa có bài đố nào.",
+      "correct": "Chính xác!",
+      "incorrect": "Chưa đúng.",
+      "submit": "Nộp bài",
+      "next": "Bài tiếp theo",
+      "dashboardTitle": "Tiến độ",
+      "dashboardSubtitle": "Hệ số của bạn và hiệu suất theo từng chủ đề.",
+      "backToPractice": "Quay lại luyện tập",
+      "currentRating": "Hệ số hiện tại",
+      "gamesPlayed": "{{count}} bài đã giải",
+      "weakMotifs": "Cần cải thiện",
+      "noWeakMotifs": "Chưa thấy điểm yếu rõ rệt.",
+      "strongMotifs": "Điểm mạnh",
+      "noStrongMotifs": "Giải thêm vài bài nữa để thấy mục này.",
+      "themeStats": "Theo chủ đề",
+      "noThemeStats": "Chưa giải bài đố nào.",
+      "theme": "Chủ đề",
+      "attempts": "Số lượt",
+      "accuracy": "Tỉ lệ đúng"
+    },
     "toast": {
       "exerciseCreated": "Đã tạo bài tập",
       "exerciseCreateFailed": "Không thể tạo bài tập",
@@ -292,7 +324,10 @@
       "memberAdded": "Đã thêm thành viên",
       "memberAddFailed": "Không thể thêm thành viên",
       "memberRemoved": "Đã xóa thành viên",
-      "memberRemoveFailed": "Không thể xóa thành viên"
+      "memberRemoveFailed": "Không thể xóa thành viên",
+      "puzzleAttemptFailed": "Không thể gửi lượt giải",
+      "puzzleImportQueued": "Đã xếp hàng nhập — bài đố sẽ xuất hiện khi job hoàn tất",
+      "puzzleImportFailed": "Không thể xếp hàng nhập"
     }
   },
   "common": {
@@ -4406,6 +4441,8 @@
   },
   "pages": {
     "chessStudies": "Bài giảng cờ vua",
+    "chessPuzzlePractice": "Bài đố cờ vua",
+    "chessPuzzleDashboard": "Tiến độ bài đố cờ vua",
     "chessAnalysisRoom": "Phòng phân tích cờ",
     "chessEditor": "Dựng thế cờ",
     "dashboard": "Bảng điều khiển",

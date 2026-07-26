@@ -198,6 +198,12 @@ export const routeAccessConfig = createRouteConfig({
   "chess/studies/:id": {
     anyOf: [PERMISSIONS.CHESS_STUDY_READ],
   },
+  "chess/puzzles": {
+    anyOf: [PERMISSIONS.CHESS_PUZZLE_READ],
+  },
+  "chess/puzzles/dashboard": {
+    anyOf: [PERMISSIONS.CHESS_PUZZLE_READ],
+  },
   "super-admin/*": {
     allOf: [PERMISSIONS.TENANT_MANAGE],
   },

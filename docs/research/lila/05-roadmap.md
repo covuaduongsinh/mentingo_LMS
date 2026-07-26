@@ -10,8 +10,8 @@ Theo yêu cầu của người dùng, mỗi đợt tự động verify (tsc + es
 | ------- | ------------------- | ----------------------------------------------------------------------- |
 | **L0**  | #20 merged          | Tài liệu khảo sát clean-room `docs/research/lila/` (6 file, không code) |
 | **L1**  | #21 merged          | Nền bàn cờ tương tác: shapes, glyph, cây biến, board editor             |
-| **L2**  | _(đang triển khai)_ | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
-| **L3**  |                     | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
+| **L2**  | #22 merged          | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
+| **L3**  | _(đang triển khai)_ | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
 | **L4**  |                     | Chơi trực tuyến người-với-người                                         |
 | **L5**  |                     | Lớp học cờ: tài khoản do giáo viên quản lý                              |
 | **L6**  |                     | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
@@ -38,7 +38,7 @@ Không dùng chessground (GPL) — mở rộng `ChessBoard.tsx`/`chess.js` (MIT)
 
 ## Đợt L2 — Study/Chapter: bài giảng cờ tương tác
 
-> **Đã triển khai** — xem `docs/specs/chess-study-business-spec.md` (đặc tả đầy đủ + "Follow-up Work" cho phần lùi lại). Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
+> **Đã merged (PR #22)** — xem `docs/specs/chess-study-business-spec.md` (đặc tả đầy đủ + "Follow-up Work" cho phần lùi lại). Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
 
 Bảng mới: `chess_studies`, `chess_study_chapters`, `chess_study_members` (+ migration RLS riêng, mẫu `chess_exercises`/`0163` → `0183`/`0184`).
 
@@ -52,16 +52,20 @@ Bảng mới: `chess_studies`, `chess_study_chapters`, `chess_study_members` (+ 
 
 ## Đợt L3 — Glicko-2 + Ngân hàng Puzzle thích ứng
 
-Bảng mới: `chess_puzzles`, `chess_puzzle_rounds`, `chess_puzzle_sessions`, `chess_ratings`, `chess_rating_history`.
+> **Đã triển khai** — xem `docs/specs/chess-puzzle-rating-business-spec.md` (đặc tả đầy đủ + "Follow-up Work"). Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
 
-- **Cài đặt Glicko-2** (rating, RD, volatility) từ đặc tả toán học public-domain — không nhìn code lila. Áp dụng đầu tiên cho puzzle.
-- **Import chọn lọc dataset CC0**: BullMQ job tải & lọc theo rating 600–1800 + theme giảng dạy → ~50k–200k thế.
-- **Taxonomy motif**: mở rộng `packages/shared/src/constants/chess.ts` với trục `CHESS_MOTIFS` mới (~60 motif chiến thuật, nhãn tiếng Việt), giữ nguyên `CHESS_TOPICS` làm trục chương trình học.
-- **Chọn puzzle thích ứng**: theo rating ± delta độ khó (5 mức), theo theme hoặc khai cuộc.
-- **Replay puzzle đã sai** + đánh dấu "đã sửa được".
-- **Dashboard tiến bộ**: hiệu suất theo theme, tự động chỉ điểm yếu/mạnh (xem [04-subsystem-notes.md](./04-subsystem-notes.md) mục 3).
-- Puzzle hằng ngày + chuỗi ngày liên tiếp (tái dùng `user_statistics.activityHistory`).
+Bảng mới: `chess_puzzles`, `chess_puzzle_attempts`, `chess_ratings`, `chess_rating_history` (+ migration RLS riêng, `0185`/`0186`).
+
+- **Cài đặt Glicko-2** (rating, RD, volatility) từ đặc tả toán học public-domain (Mark Glickman) — không nhìn code lila; unit test đối chiếu đúng ví dụ số minh họa chính thức trong tài liệu gốc. Áp dụng cho puzzle (`chess_ratings.category = 'puzzle'`, cột `category` mở rộng được cho thể loại thời gian ở L4).
+- **Import CSV có lọc**: job BullMQ (`ChessPuzzleImportWorker`) nhận nội dung CSV theo cấu trúc cột Lichess Puzzle Database (CC0), lọc theo `minRating`/`maxRating`/`motifs`/`maxCount` trước khi insert theo lô — **đơn giản hóa so với kế hoạch gốc**: nhận CSV dạng chuỗi trong body JSON thay vì qua `FileService`/multipart upload; việc thực sự tải một bộ dữ liệu CC0 đầy đủ về production là thao tác vận hành, chưa thực hiện trong đợt này (ngân hàng puzzle production trống cho tới khi import được chạy).
+- **Taxonomy motif**: `CHESS_MOTIFS` mới trong `packages/shared/src/constants/chess.ts` (30 motif chiến thuật, nhãn tiếng Việt — ít hơn ~60 dự kiến ban đầu, đủ cho quy mô trường/CLB), giữ nguyên `CHESS_TOPICS` làm trục chương trình học.
+- **Chọn puzzle thích ứng**: theo rating ± delta độ khó, UI cho 3 mức (dễ/vừa/khó) thay vì 5 — backend không giới hạn số mức, có thể mở UI sau; nới khoảng tìm kiếm tự động khi ngân hàng chưa đủ puzzle khớp.
+- **Replay puzzle đã sai**: liệt kê puzzle sai và chưa giải đúng lại lần nào.
+- **Dashboard tiến bộ**: hệ số + lịch sử, hiệu suất theo motif, tự động chỉ điểm yếu (≥3 lượt sai, tỉ lệ đúng dưới trung bình) và điểm mạnh.
+- Puzzle hằng ngày (chọn định theo ngày, dùng chung cho cả tenant).
 - Permission: `chess.puzzle.read`, `chess.puzzle.manage`.
+
+**Lùi lại / chưa làm**: streak toàn hệ thống (`user_statistics`) chưa tính lượt giải puzzle — chặn bởi một vòng lặp require() cấp file phát hiện giữa `src/chess/` và `src/statistics/` (xem `docs/specs/chess-puzzle-rating-business-spec.md` và trang wiki `nestjs-file-level-circular-require-vs-module-cycle`); Puzzle Storm/Racer (đã loại khỏi phạm vi từ đầu, xem `03-feature-matrix.md`); nhập CC0 thật vào production.
 
 ## Đợt L4 — Chơi trực tuyến người-với-người
 

@@ -25,7 +25,8 @@
       "play": "Play engine",
       "analysis": "Analysis",
       "editor": "Board editor",
-      "studies": "Studies"
+      "studies": "Studies",
+      "puzzles": "Puzzles"
     },
     "engine": {
       "errorBestMove": "Engine could not move",
@@ -260,6 +261,37 @@
       "guidedReveal": "Reveal move",
       "guidedRestart": "Restart"
     },
+    "puzzle": {
+      "title": "Puzzle training",
+      "subtitle": "Solve puzzles matched to your rating — it adapts as you improve.",
+      "adaptive": "Adaptive",
+      "daily": "Daily puzzle",
+      "mistakes": "Replay mistakes",
+      "easier": "Easier",
+      "normal": "Normal",
+      "harder": "Harder",
+      "allMotifs": "All themes",
+      "noMistakes": "No mistakes to replay — nice work.",
+      "empty": "No puzzles available yet.",
+      "correct": "Correct!",
+      "incorrect": "Not quite.",
+      "submit": "Submit",
+      "next": "Next puzzle",
+      "dashboardTitle": "Progress",
+      "dashboardSubtitle": "Your puzzle rating and performance by theme.",
+      "backToPractice": "Back to practice",
+      "currentRating": "Current rating",
+      "gamesPlayed": "{{count}} puzzles solved",
+      "weakMotifs": "Focus areas",
+      "noWeakMotifs": "No clear weak spot yet.",
+      "strongMotifs": "Strengths",
+      "noStrongMotifs": "Solve a few more puzzles to see this.",
+      "themeStats": "By theme",
+      "noThemeStats": "No puzzles solved yet.",
+      "theme": "Theme",
+      "attempts": "Attempts",
+      "accuracy": "Accuracy"
+    },
     "toast": {
       "exerciseCreated": "Exercise created",
       "exerciseCreateFailed": "Could not create exercise",
@@ -292,7 +324,10 @@
       "memberAdded": "Member added",
       "memberAddFailed": "Could not add member",
       "memberRemoved": "Member removed",
-      "memberRemoveFailed": "Could not remove member"
+      "memberRemoveFailed": "Could not remove member",
+      "puzzleAttemptFailed": "Could not submit attempt",
+      "puzzleImportQueued": "Import queued — puzzles will appear once the job finishes",
+      "puzzleImportFailed": "Could not queue the import"
     }
   },
   "common": {
@@ -4408,6 +4443,8 @@
     "chessAnalysisRoom": "Chess Analysis Room",
     "chessEditor": "Chess Board Editor",
     "chessStudies": "Chess Studies",
+    "chessPuzzlePractice": "Chess Puzzles",
+    "chessPuzzleDashboard": "Chess Puzzle Progress",
     "dashboard": "Dashboard",
     "settings": "Settings",
     "providerInformation": "Provider Information",
