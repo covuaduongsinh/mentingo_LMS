@@ -25,6 +25,8 @@ export const DEFAULT_LOCKOUT_MINUTES = 15;
 
 export const DEFAULT_AI_GENERATION_MONTHLY_LIMIT = 20;
 
+export const DEFAULT_COMMUNITY_MAX_POSTS_PER_DAY = 10;
+
 export const DEFAULT_GLOBAL_SETTINGS = {
   unregisteredUserQAAccessibility: false,
   QAEnabled: false,
@@ -40,6 +42,9 @@ export const DEFAULT_GLOBAL_SETTINGS = {
   liveTrainingEnabled: false,
   liveTrainingMaxParallelSessions: DEFAULT_LIVE_TRAINING_MAX_PARALLEL_SESSIONS,
   aiGenerationMonthlyLimit: DEFAULT_AI_GENERATION_MONTHLY_LIMIT,
+  communityForumEnabled: false,
+  communityBlockedWords: [] as string[],
+  communityMaxPostsPerDay: DEFAULT_COMMUNITY_MAX_POSTS_PER_DAY,
   companyInformation: DEFAULT_COMPANY_INFORMATION,
   enforceSSO: false,
   certificateBackgroundImage: null,

@@ -983,6 +983,21 @@ export class SettingsService {
     return globalSettings.aiGenerationMonthlyLimit;
   }
 
+  public async getCommunityModerationSettings(): Promise<{
+    communityForumEnabled: boolean;
+    communityBlockedWords: string[];
+    communityMaxPostsPerDay: number;
+  }> {
+    const globalSettingsRecord = await this.getGlobalSettingsRecord();
+    const globalSettings = this.parseGlobalSettings(globalSettingsRecord.settings);
+
+    return {
+      communityForumEnabled: globalSettings.communityForumEnabled,
+      communityBlockedWords: globalSettings.communityBlockedWords,
+      communityMaxPostsPerDay: globalSettings.communityMaxPostsPerDay,
+    };
+  }
+
   public async updateGlobalLearningPathsEnabled(
     actor?: CurrentUserType,
   ): Promise<GlobalSettingsJSONContentSchema> {
@@ -1977,6 +1992,13 @@ export class SettingsService {
         DEFAULT_GLOBAL_SETTINGS.liveTrainingMaxParallelSessions,
       aiGenerationMonthlyLimit:
         settings.aiGenerationMonthlyLimit ?? DEFAULT_GLOBAL_SETTINGS.aiGenerationMonthlyLimit,
+      communityForumEnabled:
+        settings.communityForumEnabled ?? DEFAULT_GLOBAL_SETTINGS.communityForumEnabled,
+      communityBlockedWords: Array.isArray(settings.communityBlockedWords)
+        ? settings.communityBlockedWords
+        : DEFAULT_GLOBAL_SETTINGS.communityBlockedWords,
+      communityMaxPostsPerDay:
+        settings.communityMaxPostsPerDay ?? DEFAULT_GLOBAL_SETTINGS.communityMaxPostsPerDay,
       MFAEnforcedRoles: Array.isArray(settings.MFAEnforcedRoles)
         ? settings.MFAEnforcedRoles
         : JSON.parse(settings.MFAEnforcedRoles ?? "[]"),

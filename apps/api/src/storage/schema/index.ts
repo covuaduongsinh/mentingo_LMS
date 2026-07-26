@@ -148,10 +148,16 @@ export const users = pgTable(
       withTimezone: true,
       precision: 3,
     }),
+    username: varchar("username", { length: 30 }),
+    publicProfileEnabled: boolean("public_profile_enabled").notNull().default(false),
     tenantId,
   },
   withTenantIdIndex("users", (table) => ({
     emailUniqueIdx: uniqueIndex("users_tenant_id_email_unique_idx").on(table.tenantId, table.email),
+    usernameUniqueIdx: uniqueIndex("users_tenant_id_username_unique_idx").on(
+      table.tenantId,
+      table.username,
+    ),
   })),
 );
 
@@ -488,6 +494,64 @@ export const aiGenerations = pgTable(
     tenantId,
   },
   withTenantIdIndex("ai_generations"),
+);
+
+export const communityPosts = pgTable(
+  "community_posts",
+  {
+    ...id,
+    ...timestamps,
+    authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
+    title: text("title").notNull(),
+    content: text("content").notNull(),
+    label: varchar("label", { length: 30 }).notNull(),
+    pinned: boolean("pinned").notNull().default(false),
+    locked: boolean("locked").notNull().default(false),
+    upvoteCount: integer("upvote_count").notNull().default(0),
+    tenantId,
+  },
+  withTenantIdIndex("community_posts", (table) => ({
+    authorIdIdx: index("community_posts_author_id_idx").on(table.authorId),
+  })),
+);
+
+export const communityComments = pgTable(
+  "community_comments",
+  {
+    ...id,
+    ...timestamps,
+    postId: uuid("post_id")
+      .references(() => communityPosts.id, { onDelete: "cascade" })
+      .notNull(),
+    authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
+    content: text("content").notNull(),
+    upvoteCount: integer("upvote_count").notNull().default(0),
+    tenantId,
+  },
+  withTenantIdIndex("community_comments", (table) => ({
+    postIdIdx: index("community_comments_post_id_idx").on(table.postId),
+  })),
+);
+
+export const communityVotes = pgTable(
+  "community_votes",
+  {
+    ...id,
+    ...timestamps,
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    targetType: varchar("target_type", { length: 10 }).notNull(),
+    targetId: uuid("target_id").notNull(),
+    tenantId,
+  },
+  withTenantIdIndex("community_votes", (table) => ({
+    userTargetUniqueIdx: uniqueIndex("community_votes_user_target_unique_idx").on(
+      table.userId,
+      table.targetType,
+      table.targetId,
+    ),
+  })),
 );
 
 export const calendarEvents = pgTable(

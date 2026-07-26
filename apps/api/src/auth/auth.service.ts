@@ -446,6 +446,8 @@ export class AuthService {
         tenantId: users.tenantId,
         failedLoginAttempts: users.failedLoginAttempts,
         lockedUntil: users.lockedUntil,
+        username: users.username,
+        publicProfileEnabled: users.publicProfileEnabled,
       })
       .from(users)
       .leftJoin(credentials, eq(users.id, credentials.userId))
@@ -641,6 +643,8 @@ export class AuthService {
         deletedAt: users.deletedAt,
         failedLoginAttempts: users.failedLoginAttempts,
         lockedUntil: users.lockedUntil,
+        username: users.username,
+        publicProfileEnabled: users.publicProfileEnabled,
       })
       .from(users)
       .where(eq(users.id, createToken.userId));

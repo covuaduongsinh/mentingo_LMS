@@ -1423,6 +1423,20 @@
                         }
                       ]
                     },
+                    "username": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 30
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "publicProfileEnabled": {
+                      "type": "boolean"
+                    },
                     "profilePictureUrl": {
                       "anyOf": [
                         {
@@ -1445,6 +1459,8 @@
                     "deletedAt",
                     "failedLoginAttempts",
                     "lockedUntil",
+                    "username",
+                    "publicProfileEnabled",
                     "profilePictureUrl"
                   ]
                 },
@@ -1834,6 +1850,20 @@
                   }
                 ]
               },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -1881,6 +1911,8 @@
               "deletedAt",
               "failedLoginAttempts",
               "lockedUntil",
+              "username",
+              "publicProfileEnabled",
               "profilePictureUrl",
               "roleSlugs",
               "groups"
@@ -2065,6 +2097,20 @@
                   }
                 ]
               },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publicProfileEnabled": {
+                "type": "boolean"
+              },
               "profilePictureUrl": {
                 "anyOf": [
                   {
@@ -2087,6 +2133,8 @@
               "deletedAt",
               "failedLoginAttempts",
               "lockedUntil",
+              "username",
+              "publicProfileEnabled",
               "profilePictureUrl"
             ]
           }
@@ -2255,6 +2303,20 @@
                           }
                         ]
                       },
+                      "username": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 30
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "publicProfileEnabled": {
+                        "type": "boolean"
+                      },
                       "profilePictureUrl": {
                         "anyOf": [
                           {
@@ -2277,6 +2339,8 @@
                       "deletedAt",
                       "failedLoginAttempts",
                       "lockedUntil",
+                      "username",
+                      "publicProfileEnabled",
                       "profilePictureUrl"
                     ]
                   }

@@ -1295,6 +1295,79 @@
       "generic": "Sinh câu hỏi thất bại. Vui lòng thử lại."
     }
   },
+  "communityView": {
+    "header": "Cộng đồng",
+    "empty": "Chưa có bài đăng nào. Hãy là người đầu tiên bắt đầu thảo luận!",
+    "pinned": "Đã ghim",
+    "locked": "Đã khóa",
+    "deletedAuthor": "Người dùng đã xóa",
+    "upvotes_one": "{{count}} upvote",
+    "upvotes_other": "{{count}} upvote",
+    "comments_one": "{{count}} bình luận",
+    "comments_other": "{{count}} bình luận",
+    "postLockedNotice": "Bài đăng này đã bị khóa — không thể bình luận thêm.",
+    "label": {
+      "general_discussion": "Thảo luận chung",
+      "question": "Hỏi đáp",
+      "announcement": "Thông báo",
+      "showcase": "Chia sẻ",
+      "feedback": "Góp ý"
+    },
+    "filter": {
+      "allLabels": "Tất cả nhãn"
+    },
+    "sort": {
+      "newest": "Mới nhất",
+      "top": "Nhiều upvote nhất"
+    },
+    "field": {
+      "label": "Nhãn",
+      "title": "Tiêu đề",
+      "content": "Nội dung",
+      "commentPlaceholder": "Viết bình luận..."
+    },
+    "button": {
+      "newPost": "Đăng bài mới",
+      "publish": "Đăng bài",
+      "comment": "Bình luận",
+      "pin": "Ghim",
+      "unpin": "Bỏ ghim",
+      "lock": "Khóa",
+      "unlock": "Mở khóa"
+    },
+    "confirm": {
+      "deletePost": "Xóa bài đăng này? Không thể hoàn tác.",
+      "deleteComment": "Xóa bình luận này? Không thể hoàn tác."
+    },
+    "errors": {
+      "forumDisabled": "Diễn đàn cộng đồng chưa được bật.",
+      "postNotFound": "Không tìm thấy bài đăng.",
+      "commentNotFound": "Không tìm thấy bình luận.",
+      "postLocked": "Bài đăng này đã bị khóa.",
+      "blockedWordDetected": "Bài đăng của bạn chứa từ ngữ không được phép.",
+      "maxPostsPerDayReached": "Bạn đã đạt hạn mức đăng bài trong ngày. Vui lòng thử lại vào ngày mai.",
+      "generic": "Đã xảy ra lỗi. Vui lòng thử lại."
+    }
+  },
+  "publicProfileView": {
+    "errors": {
+      "profileNotFound": "Hồ sơ này không tồn tại hoặc chưa được công khai.",
+      "invalidUsername": "Tên người dùng phải từ 3-30 ký tự (chữ thường, số, - hoặc _).",
+      "usernameTaken": "Tên người dùng này đã được sử dụng.",
+      "usernameRequiredToEnable": "Hãy đặt tên người dùng trước khi bật hồ sơ công khai.",
+      "generic": "Đã xảy ra lỗi. Vui lòng thử lại."
+    },
+    "toast": {
+      "settingsUpdated": "Cập nhật cài đặt hồ sơ thành công"
+    },
+    "settings": {
+      "title": "Hồ sơ công khai",
+      "username": "Tên người dùng",
+      "usernamePlaceholder": "ten-nguoi-dung",
+      "bio": "Giới thiệu",
+      "enablePublicProfile": "Công khai hồ sơ của tôi"
+    }
+  },
   "adminStatisticsView": {
     "header": "Chào mừng trở lại,",
     "other": {
