@@ -1938,6 +1938,19 @@
       "users": "Users",
       "userDetails": "User details",
       "back": "Back"
+    },
+    "gdpr": {
+      "title": "GDPR data request",
+      "description": "Export this user's personal data or anonymize their account in response to a GDPR access/erasure request.",
+      "exportButton": "Export data (JSON)",
+      "anonymizeButton": "Anonymize account",
+      "confirmTitle": "Anonymize this account?",
+      "confirmDescription": "This scrubs the user's name, email, avatar, and username, and revokes all active sessions. This cannot be undone. Learning history and certificates are kept so tenant reports stay accurate.",
+      "confirmAction": "Anonymize account",
+      "toast": {
+        "exportSuccess": "GDPR export downloaded",
+        "exportError": "Failed to download GDPR export"
+      }
     }
   },
   "adminEnvsView": {

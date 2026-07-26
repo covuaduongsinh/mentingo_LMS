@@ -2,21 +2,33 @@ import { useParams } from "@remix-run/react";
 import { PERMISSIONS, SYSTEM_ROLE_PERMISSIONS } from "@repo/shared";
 import { startCase } from "lodash-es";
 import { KeyRound, UserCircle2 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { useAdminUpdateUser } from "~/api/mutations/admin/useAdminUpdateUser";
+import { useAnonymizeUserGdpr } from "~/api/mutations/admin/useAnonymizeUserGdpr";
 import { useBulkSendPasswordEmails } from "~/api/mutations/admin/useBulkSendPasswordEmails";
 import { userQueryOptions, useUserById } from "~/api/queries/admin/useUserById";
 import { ENROLLED_USERS_QUERY_KEY } from "~/api/queries/admin/useUsersEnrolled";
 import { queryClient } from "~/api/queryClient";
 import { PageWrapper } from "~/components/PageWrapper";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "~/components/ui/alert-dialog";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { PermissionsMatrix } from "~/modules/Admin/Users/components/PermissionsMatrix";
+import { useDownloadUserGdprExport } from "~/modules/Admin/Users/hooks/useDownloadUserGdprExport";
 import { buildPermissionsUnionForRoleSlugs } from "~/modules/Admin/Users/utils/permissionsMatrix";
 import Loader from "~/modules/common/Loader/Loader";
 import { useLanguageStore } from "~/modules/Dashboard/Settings/Language/LanguageStore";
@@ -52,6 +64,9 @@ const User = () => {
   const { mutateAsync: updateUser } = useAdminUpdateUser();
   const { mutateAsync: sendPasswordEmail, isPending: isSendingPasswordEmail } =
     useBulkSendPasswordEmails();
+  const { downloadExport, isDownloading: isExportingGdprData } = useDownloadUserGdprExport();
+  const { mutateAsync: anonymizeUser, isPending: isAnonymizing } = useAnonymizeUserGdpr();
+  const [isAnonymizeDialogOpen, setIsAnonymizeDialogOpen] = useState(false);
 
   const {
     control,
@@ -103,6 +118,12 @@ const User = () => {
 
   const handleSendPasswordEmail = () => {
     sendPasswordEmail({ userIds: [id] });
+  };
+
+  const handleAnonymize = async () => {
+    await anonymizeUser(id);
+    setIsAnonymizeDialogOpen(false);
+    queryClient.invalidateQueries(userQueryOptions(id, language));
   };
 
   const breadcrumbs = [
@@ -203,7 +224,60 @@ const User = () => {
             </div>
           </TabsContent>
         </Tabs>
+        <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm">
+          <h3 className="h5 text-red-900">{t("adminUserView.gdpr.title")}</h3>
+          <p className="mt-1 text-sm text-red-800">{t("adminUserView.gdpr.description")}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isExportingGdprData}
+              onClick={() => void downloadExport(id)}
+            >
+              {t("adminUserView.gdpr.exportButton")}
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={isAnonymizing}
+              onClick={() => setIsAnonymizeDialogOpen(true)}
+            >
+              {t("adminUserView.gdpr.anonymizeButton")}
+            </Button>
+          </div>
+        </div>
       </div>
+
+      <AlertDialog open={isAnonymizeDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("adminUserView.gdpr.confirmTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("adminUserView.gdpr.confirmDescription")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              disabled={isAnonymizing}
+              onClick={(event) => {
+                event.preventDefault();
+                setIsAnonymizeDialogOpen(false);
+              }}
+            >
+              {t("common.button.cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={isAnonymizing}
+              onClick={(event) => {
+                event.preventDefault();
+                void handleAnonymize();
+              }}
+            >
+              {t("adminUserView.gdpr.confirmAction")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </PageWrapper>
   );
 };

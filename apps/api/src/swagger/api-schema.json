@@ -1673,6 +1673,54 @@
         }
       }
     },
+    "/api/user/gdpr-export": {
+      "get": {
+        "operationId": "UserController_exportUserGdprData",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/user/gdpr-anonymize": {
+      "post": {
+        "operationId": "UserController_anonymizeUserGdpr",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnonymizeUserGdprResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/user/all": {
       "get": {
         "operationId": "UserController_getUsers",
@@ -25163,6 +25211,25 @@
               "conversionAfterFreemiumLesson",
               "courseStudentsStats",
               "avgQuizScore"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AnonymizeUserGdprResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
             ]
           }
         },

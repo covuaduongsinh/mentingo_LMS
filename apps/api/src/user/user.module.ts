@@ -17,6 +17,7 @@ import { StatisticsService } from "src/statistics/statistics.service";
 import { TenantDbRunnerService } from "src/storage/db/tenant-db-runner.service";
 import { UserImportRepository } from "src/user/repositories/user-import.repository";
 import { UserPasswordEmailRepository } from "src/user/repositories/user-password-email.repository";
+import { GdprService } from "src/user/services/gdpr.service";
 import { UserImportService } from "src/user/services/user-import.service";
 import { UserPasswordEmailService } from "src/user/services/user-password-email.service";
 import { UserInactivityEmailCron } from "src/user/user-inactivity-email-cron";
@@ -50,6 +51,7 @@ import { UserService } from "./user.service";
     CreatePasswordService,
     TenantDbRunnerService,
     UserInactivityEmailCron,
+    GdprService,
   ],
   exports: [UserService, UserImportService, UserPasswordEmailService, StatisticsService],
 })

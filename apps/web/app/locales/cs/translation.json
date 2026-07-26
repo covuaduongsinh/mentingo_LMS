@@ -1721,6 +1721,19 @@
       "users": "Uživatelé",
       "userDetails": "Podrobnosti o uživateli",
       "back": "Zadní"
+    },
+    "gdpr": {
+      "title": "Žádost o data podle GDPR",
+      "description": "Exportujte osobní údaje tohoto uživatele nebo anonymizujte účet v reakci na žádost o přístup/výmaz podle GDPR.",
+      "exportButton": "Exportovat data (JSON)",
+      "anonymizeButton": "Anonymizovat účet",
+      "confirmTitle": "Anonymizovat tento účet?",
+      "confirmDescription": "Tímto se smaže jméno, e-mail, avatar a uživatelské jméno a zruší se všechny aktivní relace. Tuto akci nelze vrátit zpět. Historie učení a certifikáty zůstanou zachovány, aby zůstaly přesné reporty organizace.",
+      "confirmAction": "Anonymizovat účet",
+      "toast": {
+        "exportSuccess": "Export GDPR byl stažen",
+        "exportError": "Export GDPR se nepodařilo stáhnout"
+      }
     }
   },
   "adminEnvsView": {

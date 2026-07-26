@@ -2005,6 +2005,19 @@
       "users": "Użytkownicy",
       "userDetails": "Informacje o użytkowniku",
       "back": "Wstecz"
+    },
+    "gdpr": {
+      "title": "Żądanie danych RODO",
+      "description": "Wyeksportuj dane osobowe tego użytkownika lub zanonimizuj konto w odpowiedzi na żądanie dostępu/usunięcia danych zgodnie z RODO.",
+      "exportButton": "Eksportuj dane (JSON)",
+      "anonymizeButton": "Zanonimizuj konto",
+      "confirmTitle": "Zanonimizować to konto?",
+      "confirmDescription": "Spowoduje to usunięcie imienia, nazwiska, adresu e-mail, avatara i nazwy użytkownika oraz odwołanie wszystkich aktywnych sesji. Nie można tego cofnąć. Historia nauki i certyfikaty zostają zachowane, aby raporty organizacji pozostały dokładne.",
+      "confirmAction": "Zanonimizuj konto",
+      "toast": {
+        "exportSuccess": "Pobrano eksport RODO",
+        "exportError": "Nie udało się pobrać eksportu RODO"
+      }
     }
   },
   "adminEnvsView": {

@@ -1439,6 +1439,12 @@ export interface GetStatsResponse {
   };
 }
 
+export interface AnonymizeUserGdprResponse {
+  data: {
+    message: string;
+  };
+}
+
 export interface GetUsersResponse {
   data: ({
     id: string;
@@ -10750,6 +10756,47 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<GetStatsResponse, any>({
         path: `/api/statistics/stats`,
         method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name UserControllerExportUserGdprData
+     * @request GET:/api/user/gdpr-export
+     */
+    userControllerExportUserGdprData: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/user/gdpr-export`,
+        method: "GET",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name UserControllerAnonymizeUserGdpr
+     * @request POST:/api/user/gdpr-anonymize
+     */
+    userControllerAnonymizeUserGdpr: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<AnonymizeUserGdprResponse, any>({
+        path: `/api/user/gdpr-anonymize`,
+        method: "POST",
         query: query,
         format: "json",
         ...params,
