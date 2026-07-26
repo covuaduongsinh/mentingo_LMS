@@ -1117,6 +1117,24 @@
       "dailyStreak": "Racha de días"
     }
   },
+  "aiQuizGeneration": {
+    "button": {
+      "generate": "Generar preguntas con IA"
+    },
+    "dialog": {
+      "title": "Generar preguntas de quiz con IA",
+      "sourceLesson": "Lección de origen",
+      "sourceLessonPlaceholder": "Selecciona una lección para generar preguntas",
+      "questionCount": "Número de preguntas",
+      "generate": "Generar",
+      "generating": "Generando..."
+    },
+    "errors": {
+      "sourceContentTooShort": "La lección seleccionada no tiene suficiente contenido para generar preguntas.",
+      "monthlyLimitReached": "Se ha alcanzado el límite mensual de generación de IA. Inténtalo de nuevo el próximo mes o contacta a un administrador para aumentar el límite.",
+      "generic": "No se pudieron generar las preguntas. Inténtalo de nuevo."
+    }
+  },
   "adminStatisticsView": {
     "header": "Bienvenido de nuevo,",
     "other": {

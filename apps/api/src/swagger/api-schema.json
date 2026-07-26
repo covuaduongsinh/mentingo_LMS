@@ -8138,6 +8138,33 @@
         }
       }
     },
+    "/api/ai/quiz-generation": {
+      "post": {
+        "operationId": "AiController_generateQuizQuestions",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateQuizQuestionsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateQuizQuestionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ingestion/ingest": {
       "post": {
         "operationId": "IngestionController_ingest",
@@ -19477,6 +19504,10 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -19685,6 +19716,7 @@
               "calendarEnabled",
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
+              "aiGenerationMonthlyLimit",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -20405,6 +20437,10 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -20613,6 +20649,7 @@
               "calendarEnabled",
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
+              "aiGenerationMonthlyLimit",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -20667,6 +20704,10 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -20875,6 +20916,7 @@
               "calendarEnabled",
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
+              "aiGenerationMonthlyLimit",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -20929,6 +20971,10 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -21137,6 +21183,7 @@
               "calendarEnabled",
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
+              "aiGenerationMonthlyLimit",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -21191,6 +21238,10 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -21399,6 +21450,7 @@
               "calendarEnabled",
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
+              "aiGenerationMonthlyLimit",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -21453,6 +21505,10 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -21661,6 +21717,7 @@
               "calendarEnabled",
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
+              "aiGenerationMonthlyLimit",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -21715,6 +21772,10 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -21923,6 +21984,7 @@
               "calendarEnabled",
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
+              "aiGenerationMonthlyLimit",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -21989,6 +22051,10 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -22197,6 +22263,7 @@
               "calendarEnabled",
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
+              "aiGenerationMonthlyLimit",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -22251,6 +22318,10 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -22459,6 +22530,7 @@
               "calendarEnabled",
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
+              "aiGenerationMonthlyLimit",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -22684,6 +22756,10 @@
                 "minimum": 1,
                 "type": "number"
               },
+              "aiGenerationMonthlyLimit": {
+                "minimum": 1,
+                "type": "number"
+              },
               "trainerRoleUserCount": {
                 "type": "number"
               },
@@ -22892,6 +22968,7 @@
               "calendarEnabled",
               "liveTrainingEnabled",
               "liveTrainingMaxParallelSessions",
+              "aiGenerationMonthlyLimit",
               "enforceSSO",
               "certificateBackgroundImage",
               "platformLogoS3Key",
@@ -38857,6 +38934,104 @@
               "maxScore",
               "percentage"
             ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GenerateQuizQuestionsBody": {
+        "type": "object",
+        "properties": {
+          "sourceLessonId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "language": {
+            "default": "en",
+            "anyOf": [
+              {
+                "const": "en",
+                "type": "string"
+              },
+              {
+                "const": "pl",
+                "type": "string"
+              },
+              {
+                "const": "de",
+                "type": "string"
+              },
+              {
+                "const": "lt",
+                "type": "string"
+              },
+              {
+                "const": "cs",
+                "type": "string"
+              },
+              {
+                "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
+              }
+            ]
+          },
+          "questionCount": {
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sourceLessonId",
+          "language",
+          "questionCount"
+        ]
+      },
+      "GenerateQuizQuestionsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "solutionExplanation": {
+                  "type": "string"
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "optionText": {
+                        "type": "string"
+                      },
+                      "isCorrect": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "optionText",
+                      "isCorrect"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "title",
+                "solutionExplanation",
+                "options"
+              ]
+            }
           }
         },
         "required": [

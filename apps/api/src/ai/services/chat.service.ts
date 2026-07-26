@@ -8,6 +8,8 @@ import { type AiJudgeJudgementBody, aiJudgeJudgementSchema } from "src/ai/utils/
 import { OPENAI_MODELS, type OpenAIModels } from "src/ai/utils/ai.type";
 import { evaluateAiJudgeResult } from "src/ai/utils/judgeEvaluation";
 
+import type { TSchema } from "@sinclair/typebox";
+
 @Injectable()
 export class ChatService {
   constructor(private readonly promptService: PromptService) {}
@@ -70,6 +72,41 @@ export class ChatService {
         }
       },
       { name: "Generate Evaluation", asType: "generation" },
+    )();
+  }
+
+  async generateStructured<T>(system: string, prompt: string, schema: TSchema): Promise<T> {
+    return observe(
+      async () => {
+        await this.promptService.isNotEmpty(prompt);
+        const provider = await this.promptService.getOpenAI();
+        try {
+          const { generateObject, jsonSchema } = await loadAiSdk();
+          const result = await generateObject({
+            model: provider(OPENAI_MODELS.BASIC),
+            schema: jsonSchema(() => ({ ...schema, additionalProperties: false })),
+            temperature: 0.5,
+            system,
+            prompt,
+            experimental_telemetry: { isEnabled: true },
+          });
+
+          updateActiveObservation({ input: { system, prompt }, output: result.object });
+
+          return result.object as T;
+        } catch (error) {
+          updateActiveObservation({
+            level: "ERROR",
+            statusMessage: error instanceof Error ? error.message : "Unknown error",
+          });
+          throw new Error(
+            `Failed to generate structured result: ${
+              error instanceof Error ? error.message : "Unknown error"
+            }`,
+          );
+        }
+      },
+      { name: "Generate Structured", asType: "generation" },
     )();
   }
 }

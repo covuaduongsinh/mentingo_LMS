@@ -1116,6 +1116,24 @@
       "dailyStreak": "dienos serija"
     }
   },
+  "aiQuizGeneration": {
+    "button": {
+      "generate": "Generuoti klausimus su DI"
+    },
+    "dialog": {
+      "title": "Generuoti viktorinos klausimus su DI",
+      "sourceLesson": "Šaltinio pamoka",
+      "sourceLessonPlaceholder": "Pasirinkite pamoką, iš kurios generuoti",
+      "questionCount": "Klausimų skaičius",
+      "generate": "Generuoti",
+      "generating": "Generuojama..."
+    },
+    "errors": {
+      "sourceContentTooShort": "Pasirinktoje pamokoje nepakanka turinio klausimams generuoti.",
+      "monthlyLimitReached": "Pasiektas mėnesinis DI generavimo limitas. Bandykite kitą mėnesį arba susisiekite su administratoriumi dėl limito padidinimo.",
+      "generic": "Nepavyko sugeneruoti klausimų. Bandykite dar kartą."
+    }
+  },
   "adminStatisticsView": {
     "header": "Sveiki sugrįžę,",
     "other": {

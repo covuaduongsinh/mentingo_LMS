@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 
 import { AiController } from "src/ai/ai.controller";
+import { AiGenerationsRepository } from "src/ai/repositories/ai-generations.repository";
 import { AiRepository } from "src/ai/repositories/ai.repository";
 import { RagRepository } from "src/ai/repositories/rag.repository";
 import { AiRuntimeService } from "src/ai/services/ai-runtime.service";
@@ -9,16 +10,18 @@ import { ChatService } from "src/ai/services/chat.service";
 import { JudgeService } from "src/ai/services/judge.service";
 import { MessageService } from "src/ai/services/message.service";
 import { PromptService } from "src/ai/services/prompt.service";
+import { QuizGenerationService } from "src/ai/services/quiz-generation.service";
 import { RagService } from "src/ai/services/rag.service";
 import { SummaryService } from "src/ai/services/summary.service";
 import { ThreadService } from "src/ai/services/thread.service";
 import { TokenService } from "src/ai/services/token.service";
 import { LocalizationModule } from "src/localization/localization.module";
 import { PermissionsModule } from "src/permissions/permissions.module";
+import { SettingsModule } from "src/settings/settings.module";
 import { StudentLessonProgressModule } from "src/studentLessonProgress/studentLessonProgress.module";
 
 @Module({
-  imports: [StudentLessonProgressModule, LocalizationModule, PermissionsModule],
+  imports: [StudentLessonProgressModule, LocalizationModule, PermissionsModule, SettingsModule],
   controllers: [AiController],
   providers: [
     ChatService,
@@ -33,6 +36,8 @@ import { StudentLessonProgressModule } from "src/studentLessonProgress/studentLe
     SummaryService,
     RagService,
     RagRepository,
+    QuizGenerationService,
+    AiGenerationsRepository,
   ],
   // ChatService exported so other modules can reuse the generic OpenAI
   // judge/generation primitives without wiring the AI Mentor thread system

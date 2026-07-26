@@ -1,3 +1,12 @@
+<a name="ai-quiz-generation"></a>
+
+## [AI quiz generation] - 26.07.2026
+
+### Features:
+
+- add "Generate questions with AI" to the quiz lesson editor — draft multiple-choice questions from another lesson's content, review/edit/discard before saving through the existing quiz-creation flow (no new write path for question content)
+- add an `ai_generations` audit log and a per-tenant monthly AI-generation quota (configurable in settings, default 20/month)
+
 <a name="deep-analytics-phase2"></a>
 
 ## [Deep analytics — phase 2] - 26.07.2026

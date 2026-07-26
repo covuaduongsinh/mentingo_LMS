@@ -15,9 +15,10 @@ import { MissingTranslationsAlert } from "~/modules/Admin/EditCourse/components/
 import { QuestionType } from "~/modules/Admin/EditCourse/CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
 
 import { QUIZ_LESSON_FORM_HANDLES } from "../../../../../../../e2e/data/curriculum/handles";
-import { ContentTypes, DeleteContentType } from "../../../EditCourse.types";
+import { ContentTypes, DeleteContentType, LessonType } from "../../../EditCourse.types";
 import Breadcrumb from "../components/Breadcrumb";
 
+import { AiQuizGenerationDialog } from "./components/AiQuizGenerationDialog";
 import AnswerSelectQuestion from "./components/AnswerSelectQuestion";
 import { ChessQuestion } from "./components/ChessQuestion";
 import FillInTheBlanksQuestion from "./components/FillInTheBlanksQuestion";
@@ -66,7 +67,12 @@ const QuizLessonForm = ({
   });
   const { t } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
   const [openQuestionIndexes, setOpenQuestionIndexes] = useState<Set<string>>(new Set());
+
+  const contentLessonOptions = (chapterToEdit?.lessons ?? [])
+    .filter((lesson) => lesson.type === LessonType.CONTENT && lesson.description?.trim())
+    .map((lesson) => ({ id: lesson.id, title: lesson.title }));
   const {
     isLeaveModalOpen,
     closeLeaveModal,
@@ -235,6 +241,40 @@ const QuizLessonForm = ({
       setOpenQuestionIndexes((prev) => new Set(prev).add(newQuestion.sortableId));
     },
     [form, isStructureLocked],
+  );
+
+  const handleAiGenerated = useCallback(
+    (
+      aiQuestions: {
+        title: string;
+        solutionExplanation: string;
+        options: { optionText: string; isCorrect: boolean }[];
+      }[],
+    ) => {
+      const questions = form.getValues("questions") || [];
+
+      const newQuestions: Question[] = aiQuestions.map((aiQuestion, index) => ({
+        sortableId: crypto.randomUUID(),
+        title: aiQuestion.title,
+        type: QuestionType.SINGLE_CHOICE,
+        displayOrder: questions.length + index + 1,
+        options: aiQuestion.options.map((option, optionIndex) => ({
+          sortableId: crypto.randomUUID(),
+          optionText: option.optionText,
+          isCorrect: option.isCorrect,
+          displayOrder: optionIndex + 1,
+        })),
+      }));
+
+      form.setValue("questions", [...questions, ...newQuestions], { shouldDirty: true });
+
+      setOpenQuestionIndexes((prev) => {
+        const newSet = new Set(prev);
+        newQuestions.forEach((q) => newSet.add(q.sortableId));
+        return newSet;
+      });
+    },
+    [form],
   );
 
   const handleToggleQuestion = (sortableId: string) => {
@@ -457,7 +497,19 @@ const QuizLessonForm = ({
               />
             )}
 
-            <QuestionSelector addQuestion={addQuestion} disabled={isStructureLocked} />
+            <div className="flex items-center gap-x-3">
+              <QuestionSelector addQuestion={addQuestion} disabled={isStructureLocked} />
+              {contentLessonOptions.length > 0 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={isStructureLocked}
+                  onClick={() => setIsAiDialogOpen(true)}
+                >
+                  {t("aiQuizGeneration.button.generate")}
+                </Button>
+              )}
+            </div>
             <div className="mt-4 flex space-x-4">
               <Button data-testid={QUIZ_LESSON_FORM_HANDLES.SAVE_BUTTON} type="submit">
                 {t("common.button.save")}
@@ -497,6 +549,13 @@ const QuizLessonForm = ({
         onSave={onSaveModal}
         onValidate={onValidate}
         isValidated={isValidated}
+      />
+      <AiQuizGenerationDialog
+        open={isAiDialogOpen}
+        onClose={() => setIsAiDialogOpen(false)}
+        sourceLessonOptions={contentLessonOptions}
+        language={language}
+        onGenerated={handleAiGenerated}
       />
     </div>
   );
