@@ -6,19 +6,21 @@ Theo yêu cầu của người dùng, mỗi đợt tự động verify (tsc + es
 
 **Điểm xuất phát**: roadmap này bắt đầu ngay sau khi Đợt 1–11 (còn thiếu so với LearnHouse, xem `docs/research/learnhouse/05-roadmap.md`) đã merged hoàn toàn vào `main` (PR #9–#19), bao gồm bàn phân tích cờ cộng tác thời gian thực (PR #19, `chess_analysis_sessions`) — hạ tầng đó được **tái dùng** ở Đợt L1/L4 dưới đây, không làm lại.
 
-| Đợt     | PR                  | Nội dung                                                                |
-| ------- | ------------------- | ----------------------------------------------------------------------- |
-| **L0**  | #20 merged          | Tài liệu khảo sát clean-room `docs/research/lila/` (6 file, không code) |
-| **L1**  | #21 merged          | Nền bàn cờ tương tác: shapes, glyph, cây biến, board editor             |
-| **L2**  | #22 merged          | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
-| **L3**  | #23 merged          | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
-| **L4**  | #24 merged          | Chơi trực tuyến người-với-người                                         |
-| **L5**  | #25 merged          | Lớp học cờ: tài khoản do giáo viên quản lý                              |
-| **L6**  | #26 merged          | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
-| **L7**  | _(đang triển khai)_ | Nhập môn: Learn/Coordinate/Practice                                     |
-| **L8**  |                     | Phân tích điểm mạnh-yếu (Insight/Tutor)                                 |
-| **L9**  |                     | Cộng đồng cờ: mở rộng community forum có sẵn                            |
-| **L10** |                     | Tường thuật giải đấu (Broadcast/Relay)                                  |
+| Đợt     | PR               | Nội dung                                                                |
+| ------- | ---------------- | ----------------------------------------------------------------------- |
+| **L0**  | #20 merged       | Tài liệu khảo sát clean-room `docs/research/lila/` (6 file, không code) |
+| **L1**  | #21 merged       | Nền bàn cờ tương tác: shapes, glyph, cây biến, board editor             |
+| **L2**  | #22 merged       | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
+| **L3**  | #23 merged       | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
+| **L4**  | #24 merged       | Chơi trực tuyến người-với-người                                         |
+| **L5**  | #25 merged       | Lớp học cờ: tài khoản do giáo viên quản lý                              |
+| **L6**  | #26 merged       | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
+| **L7**  | #27 merged       | Nhập môn: Learn/Coordinate/Practice                                     |
+| **L8**  | _(chưa bắt đầu)_ | Phân tích điểm mạnh-yếu (Insight/Tutor)                                 |
+| **L9**  | _(chưa bắt đầu)_ | Cộng đồng cờ: mở rộng community forum có sẵn                            |
+| **L10** | _(chưa bắt đầu)_ | Tường thuật giải đấu (Broadcast/Relay)                                  |
+
+**Tạm dừng sau L7 (2026-07-27)**: theo yêu cầu người dùng, phiên làm việc dừng lại sau khi merge xong L7 để tổng kết và bàn giao, thay vì tự động tiếp sang L8. Phạm vi/kế hoạch L8–L10 không đổi — phiên tiếp theo tiếp tục bình thường theo đúng quy trình (xem `HANDOVER.md` mục "Việc cần làm tiếp").
 
 ## Đợt L0 — Tài liệu khảo sát clean-room _(Đã merged, PR #20)_
 
