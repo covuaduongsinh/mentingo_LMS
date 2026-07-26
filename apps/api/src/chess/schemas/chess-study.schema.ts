@@ -1,4 +1,5 @@
 import {
+  CHESS_PRACTICE_GOAL_TYPES,
   CHESS_STUDY_CHAPTER_MODES,
   CHESS_STUDY_MEMBER_ROLES,
   CHESS_STUDY_VISIBILITY,
@@ -12,6 +13,7 @@ export const chessStudyVisibilitySchema = Type.Enum(CHESS_STUDY_VISIBILITY);
 export const chessStudyMemberRoleSchema = Type.Enum(CHESS_STUDY_MEMBER_ROLES);
 export const chessStudyChapterModeSchema = Type.Enum(CHESS_STUDY_CHAPTER_MODES);
 export const chessStudyTopicSchema = Type.Enum(CHESS_TOPICS);
+export const chessPracticeGoalTypeSchema = Type.Enum(CHESS_PRACTICE_GOAL_TYPES);
 
 /**
  * A move tree flattened into an adjacency list — see ChessStudyFlatMoveNode in the schema
@@ -37,6 +39,8 @@ export const chessStudyChapterSchema = Type.Object({
   mode: chessStudyChapterModeSchema,
   concealFromPly: Type.Union([Type.Number(), Type.Null()]),
   practiceGoal: Type.Union([Type.String(), Type.Null()]),
+  practiceGoalType: Type.Union([chessPracticeGoalTypeSchema, Type.Null()]),
+  practiceGoalTargetValue: Type.Union([Type.Number(), Type.Null()]),
   displayOrder: Type.Number(),
   createdAt: Type.String(),
   updatedAt: Type.String(),
@@ -49,6 +53,8 @@ export const createChessStudyChapterBodySchema = Type.Object({
   mode: Type.Optional(chessStudyChapterModeSchema),
   concealFromPly: Type.Optional(Type.Union([Type.Number({ minimum: 0 }), Type.Null()])),
   practiceGoal: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  practiceGoalType: Type.Optional(Type.Union([chessPracticeGoalTypeSchema, Type.Null()])),
+  practiceGoalTargetValue: Type.Optional(Type.Union([Type.Number({ minimum: 0 }), Type.Null()])),
 });
 
 export const updateChessStudyChapterBodySchema = Type.Partial(createChessStudyChapterBodySchema);
@@ -101,6 +107,20 @@ export const addChessStudyMemberBodySchema = Type.Object({
   role: Type.Optional(chessStudyMemberRoleSchema),
 });
 
+export const submitPracticeAttemptBodySchema = Type.Object({
+  movesUci: Type.Array(Type.String(), { minItems: 1, maxItems: 300 }),
+});
+
+export const practiceAttemptResultSchema = Type.Object({
+  achievedGoal: Type.Boolean(),
+  movesUsed: Type.Number(),
+  bestMovesUsed: Type.Union([Type.Number(), Type.Null()]),
+});
+
+export const chessStudyContinueResponseSchema = Type.Object({
+  chapterId: Type.Union([UUIDSchema, Type.Null()]),
+});
+
 export type CreateChessStudyBody = Static<typeof createChessStudyBodySchema>;
 export type UpdateChessStudyBody = Static<typeof updateChessStudyBodySchema>;
 export type CreateChessStudyChapterBody = Static<typeof createChessStudyChapterBodySchema>;
@@ -108,3 +128,4 @@ export type UpdateChessStudyChapterBody = Static<typeof updateChessStudyChapterB
 export type ReorderChessStudyChaptersBody = Static<typeof reorderChessStudyChaptersBodySchema>;
 export type AddChessStudyMemberBody = Static<typeof addChessStudyMemberBodySchema>;
 export type ChessStudyMoveNode = Static<typeof chessStudyMoveNodeSchema>;
+export type SubmitPracticeAttemptBody = Static<typeof submitPracticeAttemptBodySchema>;

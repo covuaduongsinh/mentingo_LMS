@@ -31,6 +31,7 @@ import { setPageTitle } from "~/utils/setPageTitle";
 
 import { ChessStudyChapterEditor } from "./ChessStudyChapterEditor";
 import { ChessStudyGuidedChapter } from "./ChessStudyGuidedChapter";
+import { ChessStudyPracticeAttempt } from "./ChessStudyPracticeAttempt";
 
 import type { MetaFunction } from "@remix-run/react";
 import type { GetStudyResponse } from "~/api/generated-api";
@@ -341,6 +342,12 @@ export default function ChessStudyDetailPage() {
                   chapter={selectedChapter}
                 />
               </div>
+            ) : selectedChapter.practiceGoalType ? (
+              <ChessStudyPracticeAttempt
+                key={selectedChapter.id}
+                studyId={id}
+                chapter={selectedChapter}
+              />
             ) : selectedChapter.mode === CHESS_STUDY_CHAPTER_MODES.NORMAL ? (
               <ChessStudyReadOnlyChapter key={selectedChapter.id} chapter={selectedChapter} />
             ) : (

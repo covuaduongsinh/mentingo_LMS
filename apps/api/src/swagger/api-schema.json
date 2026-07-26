@@ -11399,6 +11399,79 @@
         }
       }
     },
+    "/api/chess/studies/{id}/chapters/{chapterId}/practice-attempt": {
+      "post": {
+        "operationId": "ChessController_submitPracticeAttempt",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitPracticeAttemptBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitPracticeAttemptResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}/continue": {
+      "get": {
+        "operationId": "ChessController_getContinueChapter",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetContinueChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/chess/studies/{id}/members": {
       "post": {
         "operationId": "ChessController_addMember",
@@ -15594,6 +15667,101 @@
         "responses": {
           "200": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/api/chess-learn/stages": {
+      "get": {
+        "operationId": "ChessLearnController_getStages",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStagesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-learn/stages/{stageId}/levels/{levelId}": {
+      "get": {
+        "operationId": "ChessLearnController_getLevel",
+        "parameters": [
+          {
+            "name": "stageId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "levelId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLevelResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess-learn/stages/{stageId}/levels/{levelId}/attempt": {
+      "post": {
+        "operationId": "ChessLearnController_submitLearnAttempt",
+        "parameters": [
+          {
+            "name": "stageId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "levelId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitLearnAttemptBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitLearnAttemptResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -21199,6 +21367,10 @@
                         },
                         {
                           "const": "chess.tournament.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.learn.read",
                           "type": "string"
                         },
                         {
@@ -51111,6 +51283,39 @@
                             }
                           ]
                         },
+                        "practiceGoalType": {
+                          "anyOf": [
+                            {
+                              "anyOf": [
+                                {
+                                  "const": "checkmate_in_n",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "draw",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "reach_material_advantage",
+                                  "type": "string"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "practiceGoalTargetValue": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
                         "displayOrder": {
                           "type": "number"
                         },
@@ -51130,6 +51335,8 @@
                         "mode",
                         "concealFromPly",
                         "practiceGoal",
+                        "practiceGoalType",
+                        "practiceGoalTargetValue",
                         "displayOrder",
                         "createdAt",
                         "updatedAt"
@@ -51688,6 +51895,40 @@
                 "type": "null"
               }
             ]
+          },
+          "practiceGoalType": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "const": "checkmate_in_n",
+                    "type": "string"
+                  },
+                  {
+                    "const": "draw",
+                    "type": "string"
+                  },
+                  {
+                    "const": "reach_material_advantage",
+                    "type": "string"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "practiceGoalTargetValue": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -51797,6 +52038,39 @@
                   }
                 ]
               },
+              "practiceGoalType": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "const": "checkmate_in_n",
+                        "type": "string"
+                      },
+                      {
+                        "const": "draw",
+                        "type": "string"
+                      },
+                      {
+                        "const": "reach_material_advantage",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "practiceGoalTargetValue": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "displayOrder": {
                 "type": "number"
               },
@@ -51816,6 +52090,8 @@
               "mode",
               "concealFromPly",
               "practiceGoal",
+              "practiceGoalType",
+              "practiceGoalTargetValue",
               "displayOrder",
               "createdAt",
               "updatedAt"
@@ -51915,6 +52191,40 @@
             "anyOf": [
               {
                 "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "practiceGoalType": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "const": "checkmate_in_n",
+                    "type": "string"
+                  },
+                  {
+                    "const": "draw",
+                    "type": "string"
+                  },
+                  {
+                    "const": "reach_material_advantage",
+                    "type": "string"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "practiceGoalTargetValue": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
               },
               {
                 "type": "null"
@@ -52026,6 +52336,39 @@
                   }
                 ]
               },
+              "practiceGoalType": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "const": "checkmate_in_n",
+                        "type": "string"
+                      },
+                      {
+                        "const": "draw",
+                        "type": "string"
+                      },
+                      {
+                        "const": "reach_material_advantage",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "practiceGoalTargetValue": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "displayOrder": {
                 "type": "number"
               },
@@ -52045,6 +52388,8 @@
               "mode",
               "concealFromPly",
               "practiceGoal",
+              "practiceGoalType",
+              "practiceGoalTargetValue",
               "displayOrder",
               "createdAt",
               "updatedAt"
@@ -52103,6 +52448,83 @@
             },
             "required": [
               "success"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SubmitPracticeAttemptBody": {
+        "type": "object",
+        "properties": {
+          "movesUci": {
+            "minItems": 1,
+            "maxItems": 300,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "movesUci"
+        ]
+      },
+      "SubmitPracticeAttemptResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "achievedGoal": {
+                "type": "boolean"
+              },
+              "movesUsed": {
+                "type": "number"
+              },
+              "bestMovesUsed": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "achievedGoal",
+              "movesUsed",
+              "bestMovesUsed"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetContinueChapterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "chapterId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "chapterId"
             ]
           }
         },
@@ -61861,6 +62283,137 @@
             "required": [
               "round",
               "standings"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetStagesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "stages": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "totalLevels": {
+                      "type": "number"
+                    },
+                    "completedLevels": {
+                      "type": "number"
+                    },
+                    "levels": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "completed": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "completed"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "label",
+                    "description",
+                    "totalLevels",
+                    "completedLevels",
+                    "levels"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "stages"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetLevelResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "fen": {
+                "type": "string"
+              },
+              "hint": {
+                "type": "string"
+              },
+              "completed": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "fen",
+              "hint",
+              "completed"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SubmitLearnAttemptBody": {
+        "type": "object",
+        "properties": {
+          "movesUci": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "movesUci"
+        ]
+      },
+      "SubmitLearnAttemptResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "correct": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "correct"
             ]
           }
         },

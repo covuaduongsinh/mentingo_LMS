@@ -42,6 +42,9 @@ describe("ChessStudyService", () => {
       reorderChapters: jest.fn(),
       addMember: jest.fn(),
       removeMember: jest.fn(),
+      insertPracticeAttempt: jest.fn().mockResolvedValue(undefined),
+      getBestMovesUsed: jest.fn().mockResolvedValue(null),
+      findNextIncompletePracticeChapter: jest.fn().mockResolvedValue(null),
       ...repositoryOverrides,
     } as unknown as ChessStudyRepository;
 
@@ -225,6 +228,138 @@ describe("ChessStudyService", () => {
         userId: OTHER_ID,
         role: "read",
       });
+    });
+  });
+
+  describe("submitPracticeAttempt", () => {
+    const CHAPTER_ID = "chapter-1";
+    const START_FEN = "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 2";
+
+    const buildChapter = (overrides: Partial<Record<string, unknown>> = {}) => ({
+      id: CHAPTER_ID,
+      studyId: STUDY_ID,
+      rootFen: START_FEN,
+      practiceGoalType: "checkmate_in_n",
+      practiceGoalTargetValue: 1,
+      ...overrides,
+    });
+
+    it("throws NotFoundException when the chapter doesn't belong to the study", async () => {
+      const { service } = buildService({
+        getChapterById: jest.fn().mockResolvedValue(buildChapter({ studyId: "other-study" })),
+      });
+
+      await expect(
+        service.submitPracticeAttempt(
+          STUDY_ID,
+          CHAPTER_ID,
+          { movesUci: ["d8h4"] },
+          buildUser(OWNER_ID),
+        ),
+      ).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it("throws BadRequestException when the chapter has no structured practice goal", async () => {
+      const { service } = buildService({
+        getChapterById: jest.fn().mockResolvedValue(buildChapter({ practiceGoalType: null })),
+      });
+
+      await expect(
+        service.submitPracticeAttempt(
+          STUDY_ID,
+          CHAPTER_ID,
+          { movesUci: ["d8h4"] },
+          buildUser(OWNER_ID),
+        ),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it("throws BadRequestException when the submitted move sequence is illegal", async () => {
+      const { service } = buildService({
+        getChapterById: jest.fn().mockResolvedValue(buildChapter()),
+      });
+
+      await expect(
+        service.submitPracticeAttempt(
+          STUDY_ID,
+          CHAPTER_ID,
+          { movesUci: ["a1a8"] },
+          buildUser(OWNER_ID),
+        ),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it("grades the fool's-mate sequence as achieving a checkmate-in-1 goal and records the attempt", async () => {
+      const { service, repository } = buildService({
+        getChapterById: jest.fn().mockResolvedValue(buildChapter()),
+        getBestMovesUsed: jest.fn().mockResolvedValue(1),
+      });
+
+      const result = await service.submitPracticeAttempt(
+        STUDY_ID,
+        CHAPTER_ID,
+        { movesUci: ["d8h4"] },
+        buildUser(OWNER_ID),
+      );
+
+      expect(result).toEqual({ achievedGoal: true, movesUsed: 1, bestMovesUsed: 1 });
+      expect(repository.insertPracticeAttempt).toHaveBeenCalledWith({
+        chapterId: CHAPTER_ID,
+        userId: OWNER_ID,
+        movesUsed: 1,
+        achievedGoal: true,
+      });
+    });
+
+    it("grades a legal move sequence that doesn't reach the goal as not achieved", async () => {
+      const { service } = buildService({
+        getChapterById: jest.fn().mockResolvedValue(buildChapter()),
+      });
+
+      const result = await service.submitPracticeAttempt(
+        STUDY_ID,
+        CHAPTER_ID,
+        { movesUci: ["e5e4"] },
+        buildUser(OWNER_ID),
+      );
+
+      expect(result.achievedGoal).toBe(false);
+    });
+
+    it("rejects a user without read access to the study", async () => {
+      const { service } = buildService({
+        getChapterById: jest.fn().mockResolvedValue(buildChapter()),
+      });
+
+      await expect(
+        service.submitPracticeAttempt(
+          STUDY_ID,
+          CHAPTER_ID,
+          { movesUci: ["d8h4"] },
+          buildUser(OTHER_ID),
+        ),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+  });
+
+  describe("getContinueChapterId", () => {
+    it("delegates to the repository once read access is confirmed", async () => {
+      const { service, repository } = buildService({
+        findNextIncompletePracticeChapter: jest.fn().mockResolvedValue("chapter-2"),
+      });
+
+      await expect(service.getContinueChapterId(STUDY_ID, buildUser(OWNER_ID))).resolves.toBe(
+        "chapter-2",
+      );
+      expect(repository.findNextIncompletePracticeChapter).toHaveBeenCalledWith(STUDY_ID, OWNER_ID);
+    });
+
+    it("rejects a user without read access to the study", async () => {
+      const { service } = buildService();
+
+      await expect(
+        service.getContinueChapterId(STUDY_ID, buildUser(OTHER_ID)),
+      ).rejects.toBeInstanceOf(ForbiddenException);
     });
   });
 });

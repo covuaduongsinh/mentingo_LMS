@@ -11,6 +11,7 @@ export * from "./constants/assignments";
 export * from "./constants/calendar";
 export * from "./constants/certificate";
 export * from "./constants/chess";
+export * from "./constants/chessLearn";
 export * from "./constants/course";
 export * from "./constants/courseChat";
 export * from "./constants/courseDuplication";

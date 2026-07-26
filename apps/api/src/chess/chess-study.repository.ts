@@ -3,7 +3,13 @@ import { CHESS_STUDY_MEMBER_ROLES, CHESS_STUDY_VISIBILITY } from "@repo/shared";
 import { and, count, desc, eq, ilike, or, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
-import { chessStudies, chessStudyChapters, chessStudyMembers, users } from "src/storage/schema";
+import {
+  chessPracticeAttempts,
+  chessStudies,
+  chessStudyChapters,
+  chessStudyMembers,
+  users,
+} from "src/storage/schema";
 
 import type {
   AddChessStudyMemberBody,
@@ -214,6 +220,8 @@ export class ChessStudyRepository {
           mode: body.mode,
           concealFromPly: body.concealFromPly ?? null,
           practiceGoal: body.practiceGoal ?? null,
+          practiceGoalType: body.practiceGoalType ?? null,
+          practiceGoalTargetValue: body.practiceGoalTargetValue ?? null,
           displayOrder: Number(maxOrder) + 1,
         })
         .returning();
@@ -237,6 +245,10 @@ export class ChessStudyRepository {
         ...(body.mode !== undefined ? { mode: body.mode } : {}),
         ...(body.concealFromPly !== undefined ? { concealFromPly: body.concealFromPly } : {}),
         ...(body.practiceGoal !== undefined ? { practiceGoal: body.practiceGoal } : {}),
+        ...(body.practiceGoalType !== undefined ? { practiceGoalType: body.practiceGoalType } : {}),
+        ...(body.practiceGoalTargetValue !== undefined
+          ? { practiceGoalTargetValue: body.practiceGoalTargetValue }
+          : {}),
       })
       .where(eq(chessStudyChapters.id, chapterId))
       .returning();
@@ -292,5 +304,67 @@ export class ChessStudyRepository {
     await this.db
       .delete(chessStudyMembers)
       .where(and(eq(chessStudyMembers.studyId, studyId), eq(chessStudyMembers.userId, userId)));
+  }
+
+  async insertPracticeAttempt(data: {
+    chapterId: UUIDType;
+    userId: UUIDType;
+    movesUsed: number;
+    achievedGoal: boolean;
+  }) {
+    const [row] = await this.db.insert(chessPracticeAttempts).values(data).returning();
+    return row;
+  }
+
+  async getBestMovesUsed(chapterId: UUIDType, userId: UUIDType): Promise<number | null> {
+    const [row] = await this.db
+      .select({ best: sql<number | null>`MIN(${chessPracticeAttempts.movesUsed})` })
+      .from(chessPracticeAttempts)
+      .where(
+        and(
+          eq(chessPracticeAttempts.chapterId, chapterId),
+          eq(chessPracticeAttempts.userId, userId),
+          eq(chessPracticeAttempts.achievedGoal, true),
+        ),
+      );
+    return row?.best ?? null;
+  }
+
+  async hasAchievedGoal(chapterId: UUIDType, userId: UUIDType): Promise<boolean> {
+    const [row] = await this.db
+      .select({ total: count() })
+      .from(chessPracticeAttempts)
+      .where(
+        and(
+          eq(chessPracticeAttempts.chapterId, chapterId),
+          eq(chessPracticeAttempts.userId, userId),
+          eq(chessPracticeAttempts.achievedGoal, true),
+        ),
+      );
+    return (row?.total ?? 0) > 0;
+  }
+
+  /** First practice-goal chapter (by displayOrder) in the study the user hasn't achieved yet. */
+  async findNextIncompletePracticeChapter(
+    studyId: UUIDType,
+    userId: UUIDType,
+  ): Promise<UUIDType | null> {
+    const practiceChapters = await this.db
+      .select({ id: chessStudyChapters.id })
+      .from(chessStudyChapters)
+      .where(
+        and(
+          eq(chessStudyChapters.studyId, studyId),
+          sql`${chessStudyChapters.practiceGoalType} IS NOT NULL`,
+        ),
+      )
+      .orderBy(chessStudyChapters.displayOrder);
+
+    for (const chapter of practiceChapters) {
+      const achieved = await this.hasAchievedGoal(chapter.id, userId);
+      if (!achieved) return chapter.id;
+    }
+
+    return null;
   }
 }

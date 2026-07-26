@@ -250,6 +250,21 @@
       "modeConceal": "Conceal",
       "practiceGoal": "Practice goal",
       "practiceGoalPlaceholder": "e.g. Mate in 3",
+      "practiceGoalType": "Auto-grade this goal as",
+      "practiceGoalTypeNone": "Not graded",
+      "practiceGoalTypeCheckmate": "Checkmate within N moves",
+      "practiceGoalTypeDraw": "Reach a draw",
+      "practiceGoalTypeMaterial": "Reach a material advantage",
+      "practiceGoalMaxMoves": "Maximum moves",
+      "practiceGoalMaterialThreshold": "Material advantage threshold",
+      "practiceGoalLabel": "Goal: {{goal}}",
+      "practiceReset": "Reset",
+      "practiceSubmit": "Submit",
+      "practiceAchieved": "Goal achieved!",
+      "practiceNotAchieved": "Goal not achieved yet",
+      "practiceMovesUsed": "Moves used: {{used}}",
+      "practiceBest": "Best: {{best}}",
+      "practiceAttemptFailedToast": "Could not submit your practice attempt",
       "concealFromPly": "Conceal from ply",
       "commentForMove": "Comment for current move",
       "members": "Members",
@@ -467,6 +482,40 @@
     },
     "errors": {
       "notFound": "Tournament not found"
+    }
+  },
+  "chessLearn": {
+    "nav": {
+      "title": "Learn chess"
+    },
+    "stages": {
+      "title": "Learn chess",
+      "subtitle": "Work through each stage, one small step at a time."
+    },
+    "level": {
+      "correct": "Correct! Well done.",
+      "incorrect": "Not quite, try again.",
+      "showHint": "Show hint",
+      "next": "Next level",
+      "backToStages": "Back to stages"
+    },
+    "coordinate": {
+      "title": "Coordinate trainer",
+      "modeFind": "Find the square",
+      "modeName": "Name the square",
+      "start": "Start",
+      "time": "Time: {{seconds}}s",
+      "score": "Score: {{score}}",
+      "whichSquare": "What square is highlighted?",
+      "clickSquare": "Click square {{square}}",
+      "submit": "Submit",
+      "finalScore": "Time's up! Your score: {{score}}"
+    },
+    "toast": {
+      "attemptFailed": "Could not submit your attempt"
+    },
+    "errors": {
+      "notFound": "Level not found"
     }
   },
   "common": {
@@ -4604,6 +4653,9 @@
     "chessClassLogin": "Class Code Login",
     "chessTournamentCreate": "Create Chess Tournament",
     "chessTournamentDetail": "Chess Tournament",
+    "chessLearnStages": "Learn Chess",
+    "chessLearnLevel": "Lesson",
+    "chessCoordinateTrainer": "Coordinate Trainer",
     "dashboard": "Dashboard",
     "settings": "Settings",
     "providerInformation": "Provider Information",

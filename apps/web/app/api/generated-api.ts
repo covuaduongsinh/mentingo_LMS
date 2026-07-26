@@ -324,6 +324,7 @@ export interface CurrentUserResponse {
       | "chess.tournament.read"
       | "chess.tournament.create"
       | "chess.tournament.manage"
+      | "chess.learn.read"
       | "assignment.read"
       | "assignment.manage"
       | "assignment.manage_own"
@@ -6086,6 +6087,8 @@ export interface GetStudyResponse {
       mode: "normal" | "gamebook" | "conceal";
       concealFromPly: number | null;
       practiceGoal: string | null;
+      practiceGoalType: ("checkmate_in_n" | "draw" | "reach_material_advantage") | null;
+      practiceGoalTargetValue: number | null;
       displayOrder: number;
       createdAt: string;
       updatedAt: string;
@@ -6211,6 +6214,8 @@ export interface CreateStudyChapterBody {
   mode?: "normal" | "gamebook" | "conceal";
   concealFromPly?: number | null;
   practiceGoal?: string | null;
+  practiceGoalType?: ("checkmate_in_n" | "draw" | "reach_material_advantage") | null;
+  practiceGoalTargetValue?: number | null;
 }
 
 export interface CreateStudyChapterResponse {
@@ -6234,6 +6239,8 @@ export interface CreateStudyChapterResponse {
     mode: "normal" | "gamebook" | "conceal";
     concealFromPly: number | null;
     practiceGoal: string | null;
+    practiceGoalType: ("checkmate_in_n" | "draw" | "reach_material_advantage") | null;
+    practiceGoalTargetValue: number | null;
     displayOrder: number;
     createdAt: string;
     updatedAt: string;
@@ -6260,6 +6267,8 @@ export interface UpdateStudyChapterBody {
   mode?: "normal" | "gamebook" | "conceal";
   concealFromPly?: number | null;
   practiceGoal?: string | null;
+  practiceGoalType?: ("checkmate_in_n" | "draw" | "reach_material_advantage") | null;
+  practiceGoalTargetValue?: number | null;
 }
 
 export interface UpdateStudyChapterResponse {
@@ -6283,6 +6292,8 @@ export interface UpdateStudyChapterResponse {
     mode: "normal" | "gamebook" | "conceal";
     concealFromPly: number | null;
     practiceGoal: string | null;
+    practiceGoalType: ("checkmate_in_n" | "draw" | "reach_material_advantage") | null;
+    practiceGoalTargetValue: number | null;
     displayOrder: number;
     createdAt: string;
     updatedAt: string;
@@ -6304,6 +6315,28 @@ export interface ReorderStudyChaptersBody {
 export interface ReorderStudyChaptersResponse {
   data: {
     success: boolean;
+  };
+}
+
+export interface SubmitPracticeAttemptBody {
+  /**
+   * @maxItems 300
+   * @minItems 1
+   */
+  movesUci: string[];
+}
+
+export interface SubmitPracticeAttemptResponse {
+  data: {
+    achievedGoal: boolean;
+    movesUsed: number;
+    bestMovesUsed: number | null;
+  };
+}
+
+export interface GetContinueChapterResponse {
+  data: {
+    chapterId: string | null;
   };
 }
 
@@ -8428,6 +8461,45 @@ export interface GetStandingsResponse {
       sonnebornBerger: number;
       gamesPlayed: number;
     }[];
+  };
+}
+
+export interface GetStagesResponse {
+  data: {
+    stages: {
+      id: string;
+      label: string;
+      description: string;
+      totalLevels: number;
+      completedLevels: number;
+      levels: {
+        id: string;
+        completed: boolean;
+      }[];
+    }[];
+  };
+}
+
+export interface GetLevelResponse {
+  data: {
+    id: string;
+    fen: string;
+    hint: string;
+    completed: boolean;
+  };
+}
+
+export interface SubmitLearnAttemptBody {
+  /**
+   * @maxItems 10
+   * @minItems 1
+   */
+  movesUci: string[];
+}
+
+export interface SubmitLearnAttemptResponse {
+  data: {
+    correct: boolean;
   };
 }
 
@@ -16276,6 +16348,41 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name ChessControllerSubmitPracticeAttempt
+     * @request POST:/api/chess/studies/{id}/chapters/{chapterId}/practice-attempt
+     */
+    chessControllerSubmitPracticeAttempt: (
+      id: string,
+      chapterId: string,
+      data: SubmitPracticeAttemptBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<SubmitPracticeAttemptResponse, any>({
+        path: `/api/chess/studies/${id}/chapters/${chapterId}/practice-attempt`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetContinueChapter
+     * @request GET:/api/chess/studies/{id}/continue
+     */
+    chessControllerGetContinueChapter: (id: string, params: RequestParams = {}) =>
+      this.request<GetContinueChapterResponse, any>({
+        path: `/api/chess/studies/${id}/continue`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name ChessControllerAddMember
      * @request POST:/api/chess/studies/{id}/members
      */
@@ -18437,6 +18544,55 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/chess-tournament/${id}/export/trf`,
         method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessLearnControllerGetStages
+     * @request GET:/api/chess-learn/stages
+     */
+    chessLearnControllerGetStages: (params: RequestParams = {}) =>
+      this.request<GetStagesResponse, any>({
+        path: `/api/chess-learn/stages`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessLearnControllerGetLevel
+     * @request GET:/api/chess-learn/stages/{stageId}/levels/{levelId}
+     */
+    chessLearnControllerGetLevel: (stageId: string, levelId: string, params: RequestParams = {}) =>
+      this.request<GetLevelResponse, any>({
+        path: `/api/chess-learn/stages/${stageId}/levels/${levelId}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessLearnControllerSubmitLearnAttempt
+     * @request POST:/api/chess-learn/stages/{stageId}/levels/{levelId}/attempt
+     */
+    chessLearnControllerSubmitLearnAttempt: (
+      stageId: string,
+      levelId: string,
+      data: SubmitLearnAttemptBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<SubmitLearnAttemptResponse, any>({
+        path: `/api/chess-learn/stages/${stageId}/levels/${levelId}/attempt`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

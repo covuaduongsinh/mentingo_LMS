@@ -1,4 +1,4 @@
-import { CHESS_STUDY_CHAPTER_MODES } from "@repo/shared";
+import { CHESS_PRACTICE_GOAL_TYPES, CHESS_STUDY_CHAPTER_MODES } from "@repo/shared";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -6,6 +6,13 @@ import { useUpdateChessStudyChapter } from "~/api/mutations/useUpdateChessStudyC
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
 import { ChessBoard, MoveTreeView } from "~/modules/Chess/board";
 import {
@@ -15,6 +22,7 @@ import {
 } from "~/modules/Chess/board/moveTree";
 import { useMoveTree } from "~/modules/Chess/board/useMoveTree";
 
+import type { ChessPracticeGoalType } from "@repo/shared";
 import type { GetStudyResponse } from "~/api/generated-api";
 import type { BoardShape } from "~/modules/Chess/board";
 
@@ -37,6 +45,12 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
   const [shapes, setShapes] = useState<BoardShape[]>([]);
   const [title, setTitle] = useState(chapter.title);
   const [practiceGoal, setPracticeGoal] = useState(chapter.practiceGoal ?? "");
+  const [practiceGoalType, setPracticeGoalType] = useState<"none" | ChessPracticeGoalType>(
+    chapter.practiceGoalType ?? "none",
+  );
+  const [practiceGoalTargetValue, setPracticeGoalTargetValue] = useState(
+    chapter.practiceGoalTargetValue ?? 0,
+  );
   const [concealFromPly, setConcealFromPly] = useState(chapter.concealFromPly ?? 0);
   const [comment, setComment] = useState(moveTree.currentNode?.comment ?? "");
 
@@ -80,6 +94,8 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
         rootFen: moveTree.tree.rootFen,
         moveNodes: flattenMoveTree(moveTree.tree),
         practiceGoal: practiceGoal.trim() || null,
+        practiceGoalType: practiceGoalType === "none" ? null : practiceGoalType,
+        practiceGoalTargetValue: practiceGoalType === "none" ? null : practiceGoalTargetValue,
         concealFromPly: chapter.mode === CHESS_STUDY_CHAPTER_MODES.CONCEAL ? concealFromPly : null,
       },
     });
@@ -135,6 +151,55 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
             })}
           />
         </div>
+        <div className="space-y-1">
+          <Label>
+            {t("chess.study.practiceGoalType", { defaultValue: "Auto-grade this goal as" })}
+          </Label>
+          <Select
+            value={practiceGoalType}
+            onValueChange={(value) => setPracticeGoalType(value as "none" | ChessPracticeGoalType)}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">
+                {t("chess.study.practiceGoalTypeNone", { defaultValue: "Not graded" })}
+              </SelectItem>
+              <SelectItem value={CHESS_PRACTICE_GOAL_TYPES.CHECKMATE_IN_N}>
+                {t("chess.study.practiceGoalTypeCheckmate", {
+                  defaultValue: "Checkmate within N moves",
+                })}
+              </SelectItem>
+              <SelectItem value={CHESS_PRACTICE_GOAL_TYPES.DRAW}>
+                {t("chess.study.practiceGoalTypeDraw", { defaultValue: "Reach a draw" })}
+              </SelectItem>
+              <SelectItem value={CHESS_PRACTICE_GOAL_TYPES.REACH_MATERIAL_ADVANTAGE}>
+                {t("chess.study.practiceGoalTypeMaterial", {
+                  defaultValue: "Reach a material advantage",
+                })}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        {practiceGoalType === CHESS_PRACTICE_GOAL_TYPES.CHECKMATE_IN_N ||
+        practiceGoalType === CHESS_PRACTICE_GOAL_TYPES.REACH_MATERIAL_ADVANTAGE ? (
+          <div className="space-y-1">
+            <Label>
+              {practiceGoalType === CHESS_PRACTICE_GOAL_TYPES.CHECKMATE_IN_N
+                ? t("chess.study.practiceGoalMaxMoves", { defaultValue: "Maximum moves" })
+                : t("chess.study.practiceGoalMaterialThreshold", {
+                    defaultValue: "Material advantage threshold",
+                  })}
+            </Label>
+            <Input
+              type="number"
+              min={practiceGoalType === CHESS_PRACTICE_GOAL_TYPES.CHECKMATE_IN_N ? 1 : undefined}
+              value={practiceGoalTargetValue}
+              onChange={(e) => setPracticeGoalTargetValue(Number(e.target.value))}
+            />
+          </div>
+        ) : null}
         {chapter.mode === CHESS_STUDY_CHAPTER_MODES.CONCEAL ? (
           <div className="space-y-1">
             <Label>{t("chess.study.concealFromPly", { defaultValue: "Conceal from ply" })}</Label>

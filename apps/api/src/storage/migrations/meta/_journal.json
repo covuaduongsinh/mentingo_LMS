@@ -1352,6 +1352,20 @@
       "when": 1785079030140,
       "tag": "0192_enable_chess_tournaments_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 193,
+      "version": "7",
+      "when": 1785084582684,
+      "tag": "0193_add_chess_learn_and_practice",
+      "breakpoints": true
+    },
+    {
+      "idx": 194,
+      "version": "7",
+      "when": 1785084582685,
+      "tag": "0194_enable_chess_learn_and_practice_rls",
+      "breakpoints": true
     }
   ]
 }
