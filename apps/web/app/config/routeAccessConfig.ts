@@ -171,6 +171,9 @@ export const routeAccessConfig = createRouteConfig({
   "admin/chess/classes/:groupId": {
     anyOf: [PERMISSIONS.CHESS_CLASS_MANAGE_STUDENTS, PERMISSIONS.CHESS_CLASS_PROGRESS],
   },
+  "admin/chess/tournaments/new": {
+    anyOf: [PERMISSIONS.CHESS_TOURNAMENT_CREATE],
+  },
   "admin/assignments/:lessonId/grading": {
     anyOf: [PERMISSIONS.ASSIGNMENT_GRADE],
   },
@@ -212,6 +215,9 @@ export const routeAccessConfig = createRouteConfig({
   },
   "chess/matches/:id": {
     anyOf: [PERMISSIONS.CHESS_MATCH_PLAY, PERMISSIONS.CHESS_MATCH_WATCH],
+  },
+  "chess/tournaments/:id": {
+    anyOf: [PERMISSIONS.CHESS_TOURNAMENT_READ],
   },
   "super-admin/*": {
     allOf: [PERMISSIONS.TENANT_MANAGE],

@@ -1,3 +1,16 @@
+<a name="chess-tournaments"></a>
+
+## [Chess tournaments & bulk pairing] - 26.07.2026
+
+### Features:
+
+- teachers can pair up an entire class instantly — manually pick pairs or let the system auto-pair everyone by their current rating — and games start immediately
+- run a Swiss tournament: students register, the teacher starts it and advances round by round, standings show Buchholz and Sonneborn-Berger tiebreaks, and results export to a simplified FIDE-TRF-inspired text file
+- run an Arena: players join within a time window and get paired continuously against similarly-rated opponents; a live standings board tracks points
+- run a simul: one teacher plays a separate board against every invited student at the same time
+- eligibility rules per event: rating range, group/class membership, minimum games played
+- new permissions: `chess.tournament.read`, `chess.tournament.create`, `chess.tournament.manage`
+
 <a name="chess-class-management"></a>
 
 ## [Chess class management] - 26.07.2026

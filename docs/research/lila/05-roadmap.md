@@ -13,8 +13,8 @@ Theo yêu cầu của người dùng, mỗi đợt tự động verify (tsc + es
 | **L2**  | #22 merged          | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
 | **L3**  | #23 merged          | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
 | **L4**  | #24 merged          | Chơi trực tuyến người-với-người                                         |
-| **L5**  | _(đang triển khai)_ | Lớp học cờ: tài khoản do giáo viên quản lý                              |
-| **L6**  |                     | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
+| **L5**  | #25 merged          | Lớp học cờ: tài khoản do giáo viên quản lý                              |
+| **L6**  | _(đang triển khai)_ | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
 | **L7**  |                     | Nhập môn: Learn/Coordinate/Practice                                     |
 | **L8**  |                     | Phân tích điểm mạnh-yếu (Insight/Tutor)                                 |
 | **L9**  |                     | Cộng đồng cờ: mở rộng community forum có sẵn                            |
@@ -87,7 +87,7 @@ Bảng mới: `chess_seeks` (gộp cả seek mở và thách đấu đích danh,
 
 ## Đợt L5 — Lớp học cờ: tài khoản do giáo viên quản lý
 
-> **Đã triển khai** — xem `docs/specs/chess-class-management-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
+> **Đã merged (PR #25)** — xem `docs/specs/chess-class-management-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
 
 Xây trên `groups` sẵn có, không tạo mô hình lớp song song.
 
@@ -105,14 +105,20 @@ Xây trên `groups` sẵn có, không tạo mô hình lớp song song.
 
 ## Đợt L6 — Ghép cặp hàng loạt + Giải đấu nội bộ
 
-Bảng mới: `chess_tournaments`, `chess_tournament_players`, `chess_tournament_pairings`, `chess_bulk_pairings`.
+> **Đã triển khai** — xem `docs/specs/chess-tournament-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
 
-- Ghép cặp hàng loạt (giá trị dạy học cao nhất nhóm này).
-- Swiss: tiebreak chuẩn, xuất TRF FIDE, vào muộn tối đa nửa số vòng.
-- Arena: ghép cặp liên tục, bảng xếp hạng thời gian thực.
-- Simul: 1 HLV vs nhiều học sinh.
+Bảng mới: `chess_tournaments`, `chess_tournament_players`, `chess_tournament_pairings` (+ migration RLS riêng, `0191`/`0192`) — **không có** `chess_bulk_pairings` riêng như kế hoạch gốc: ghép cặp hàng loạt tái dùng chung 3 bảng trên với `format = 'bulk_pairing'`, `roundCount = 1`, đơn giản hơn mà không mất khả năng truy vấn thống nhất.
+
+- Ghép cặp hàng loạt (giá trị dạy học cao nhất nhóm này): thủ công hoặc tự động theo rating hiện tại trong hạng mục thời gian đã chọn.
+- Swiss: sinh vòng theo thuật toán **đơn giản hóa** (chia đôi theo điểm, ghép nửa trên/nửa dưới, tránh ghép lại nếu còn lựa chọn khác, bye cho điểm thấp nhất chưa từng bye — không phải FIDE Dutch System đầy đủ), tiebreak Buchholz + Sonneborn-Berger tính lại từ đầu mỗi lần cần (pull-based, không lưu trạng thái tăng dần), xuất TRF **rút gọn** (không phải TRF16 đầy đủ), vào muộn tối đa nửa số vòng (tự nhiên nhận 0 điểm vòng bỏ lỡ nhờ cách tính điểm pull-based).
+- Arena: ghép cặp theo sự kiện (đăng ký/ván kết thúc) qua endpoint `pair-next`, không phải vòng lặp nền liên tục 24/7 như lila; bảng xếp hạng tính lại mỗi lần xem.
+- Simul: 1 HLV vs nhiều học sinh — tái dùng chung cơ chế ghép cặp hàng loạt với một bên cố định là host.
 - Điều kiện tham gia: khoảng rating, nhóm/lớp, số ván tối thiểu.
 - Permission: `chess.tournament.read/create/manage`.
+
+**Lùi lại / chưa làm** (xem "Follow-up Work" trong spec): thuật toán Thụy Sĩ chuẩn FIDE đầy đủ, Arena ghép cặp nền liên tục 24/7, "streak"/"berserk" của Arena, sửa cặp đấu thủ công sau khi vòng đã sinh, xuất TRF đúng chuẩn FIDE TRF16, cân bằng màu quân theo lịch sử.
+
+**Phát hiện kỹ thuật quan trọng khi triển khai**: mọi luồng ghép cặp (thủ công/tự động/Swiss/Arena/Simul) đều đi qua một hàm dùng chung gọi `ChessMatchService.createDirectMatch` (phương thức public mới, tách từ logic `acceptSeek` của L4) để đảm bảo ván nào cũng được lên lịch job kiểm tra hết giờ giống hệt ván qua sảnh seek. Điểm/tiebreak được tính **pull-based** (đọc thẳng `chess_matches` mỗi lần cần) thay vì để `ChessMatchService.endMatch` gọi ngược vào module mới — nếu làm vậy `chess.module.ts` và `chess-tournament.module.ts` sẽ import lẫn nhau, đúng hình dạng lỗi vòng lặp cấp file đã gặp ở L3 (`nestjs-file-level-circular-require-vs-module-cycle`).
 
 ## Đợt L7 — Nhập môn: Learn · Tọa độ · Practice
 

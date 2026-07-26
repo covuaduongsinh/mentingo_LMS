@@ -321,6 +321,9 @@ export interface CurrentUserResponse {
       | "chess.class.manage_students"
       | "chess.class.reset_password"
       | "chess.class.progress"
+      | "chess.tournament.read"
+      | "chess.tournament.create"
+      | "chess.tournament.manage"
       | "assignment.read"
       | "assignment.manage"
       | "assignment.manage_own"
@@ -8244,6 +8247,187 @@ export interface GetClassProgressResponse {
       winRate: number;
       puzzleAccuracy: number;
     };
+  };
+}
+
+export interface BulkPairingBody {
+  /** @format uuid */
+  groupId: string;
+  timeControlId: "1+0" | "5+0" | "10+0" | "15+10";
+  rated?: boolean;
+  pairs?: {
+    /** @format uuid */
+    whiteUserId: string;
+    /** @format uuid */
+    blackUserId: string;
+  }[];
+  auto?: boolean;
+}
+
+export interface BulkPairingResponse {
+  data: {
+    tournament: {
+      /** @format uuid */
+      id: string;
+      name: string;
+      format: string;
+      groupId: string | null;
+      timeControlId: string;
+      rated: boolean;
+      roundCount: number | null;
+      durationMinutes: number | null;
+      hostUserId: string | null;
+      status: string;
+      currentRound: number;
+      startsAt: string | null;
+      endsAt: string | null;
+      createdAt: string;
+    };
+    pairings: {
+      /** @format uuid */
+      id: string;
+      round: number;
+      /** @format uuid */
+      whiteUserId: string;
+      blackUserId: string | null;
+      matchId: string | null;
+      result: string | null;
+    }[];
+  };
+}
+
+export interface CreateTournamentBody {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  format: "bulk_pairing" | "swiss" | "arena" | "simul";
+  /** @format uuid */
+  groupId?: string;
+  timeControlId: "1+0" | "5+0" | "10+0" | "15+10";
+  rated?: boolean;
+  /**
+   * @min 1
+   * @max 30
+   */
+  roundCount?: number;
+  /**
+   * @min 1
+   * @max 1440
+   */
+  durationMinutes?: number;
+  minRating?: number;
+  maxRating?: number;
+  /** @min 0 */
+  minGamesPlayed?: number;
+  participantUserIds?: string[];
+}
+
+export interface CreateTournamentResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    format: string;
+    groupId: string | null;
+    timeControlId: string;
+    rated: boolean;
+    roundCount: number | null;
+    durationMinutes: number | null;
+    hostUserId: string | null;
+    status: string;
+    currentRound: number;
+    startsAt: string | null;
+    endsAt: string | null;
+    createdAt: string;
+  };
+}
+
+export interface GetTournamentResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    format: string;
+    groupId: string | null;
+    timeControlId: string;
+    rated: boolean;
+    roundCount: number | null;
+    durationMinutes: number | null;
+    hostUserId: string | null;
+    status: string;
+    currentRound: number;
+    startsAt: string | null;
+    endsAt: string | null;
+    createdAt: string;
+  };
+}
+
+export interface JoinTournamentResponse {
+  data: {
+    success: boolean;
+  };
+}
+
+export interface StartTournamentResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    format: string;
+    groupId: string | null;
+    timeControlId: string;
+    rated: boolean;
+    roundCount: number | null;
+    durationMinutes: number | null;
+    hostUserId: string | null;
+    status: string;
+    currentRound: number;
+    startsAt: string | null;
+    endsAt: string | null;
+    createdAt: string;
+  };
+}
+
+export interface GenerateNextRoundResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    format: string;
+    groupId: string | null;
+    timeControlId: string;
+    rated: boolean;
+    roundCount: number | null;
+    durationMinutes: number | null;
+    hostUserId: string | null;
+    status: string;
+    currentRound: number;
+    startsAt: string | null;
+    endsAt: string | null;
+    createdAt: string;
+  };
+}
+
+export interface PairNextArenaResponse {
+  data: {
+    paired: number;
+  };
+}
+
+export interface GetStandingsResponse {
+  data: {
+    round: number;
+    standings: {
+      /** @format uuid */
+      userId: string;
+      displayName: string;
+      score: number;
+      buchholz: number;
+      sonnebornBerger: number;
+      gamesPlayed: number;
+    }[];
   };
 }
 
@@ -18121,6 +18305,138 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "GET",
         query: query,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessTournamentControllerBulkPairing
+     * @request POST:/api/chess-tournament/bulk-pairing
+     */
+    chessTournamentControllerBulkPairing: (data: BulkPairingBody, params: RequestParams = {}) =>
+      this.request<BulkPairingResponse, any>({
+        path: `/api/chess-tournament/bulk-pairing`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessTournamentControllerCreateTournament
+     * @request POST:/api/chess-tournament
+     */
+    chessTournamentControllerCreateTournament: (
+      data: CreateTournamentBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateTournamentResponse, any>({
+        path: `/api/chess-tournament`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessTournamentControllerGetTournament
+     * @request GET:/api/chess-tournament/{id}
+     */
+    chessTournamentControllerGetTournament: (id: string, params: RequestParams = {}) =>
+      this.request<GetTournamentResponse, any>({
+        path: `/api/chess-tournament/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessTournamentControllerJoinTournament
+     * @request POST:/api/chess-tournament/{id}/join
+     */
+    chessTournamentControllerJoinTournament: (id: string, params: RequestParams = {}) =>
+      this.request<JoinTournamentResponse, any>({
+        path: `/api/chess-tournament/${id}/join`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessTournamentControllerStartTournament
+     * @request POST:/api/chess-tournament/{id}/start
+     */
+    chessTournamentControllerStartTournament: (id: string, params: RequestParams = {}) =>
+      this.request<StartTournamentResponse, any>({
+        path: `/api/chess-tournament/${id}/start`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessTournamentControllerGenerateNextRound
+     * @request POST:/api/chess-tournament/{id}/next-round
+     */
+    chessTournamentControllerGenerateNextRound: (id: string, params: RequestParams = {}) =>
+      this.request<GenerateNextRoundResponse, any>({
+        path: `/api/chess-tournament/${id}/next-round`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessTournamentControllerPairNextArena
+     * @request POST:/api/chess-tournament/{id}/arena/pair-next
+     */
+    chessTournamentControllerPairNextArena: (id: string, params: RequestParams = {}) =>
+      this.request<PairNextArenaResponse, any>({
+        path: `/api/chess-tournament/${id}/arena/pair-next`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessTournamentControllerGetStandings
+     * @request GET:/api/chess-tournament/{id}/standings
+     */
+    chessTournamentControllerGetStandings: (id: string, params: RequestParams = {}) =>
+      this.request<GetStandingsResponse, any>({
+        path: `/api/chess-tournament/${id}/standings`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessTournamentControllerExportTrf
+     * @request GET:/api/chess-tournament/{id}/export/trf
+     */
+    chessTournamentControllerExportTrf: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/chess-tournament/${id}/export/trf`,
+        method: "GET",
         ...params,
       }),
 

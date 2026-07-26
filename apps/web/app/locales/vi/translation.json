@@ -417,6 +417,58 @@
       "groupNotFound": "Không tìm thấy lớp"
     }
   },
+  "chessTournament": {
+    "nav": {
+      "title": "Giải đấu"
+    },
+    "format": {
+      "bulkPairing": "Ghép cặp hàng loạt",
+      "swiss": "Thụy Sĩ",
+      "arena": "Arena",
+      "simul": "Đánh đồng loạt"
+    },
+    "create": {
+      "title": "Tạo sự kiện cờ vua",
+      "group": "Nhóm / lớp",
+      "selectGroup": "Chọn một nhóm",
+      "timeControl": "Thể loại thời gian",
+      "rated": "Tính rating",
+      "name": "Tên giải đấu",
+      "roundCount": "Số vòng",
+      "durationMinutes": "Thời lượng (phút)",
+      "bulkPairingHelp": "Ghép cặp ngay tất cả thành viên trong nhóm theo rating hiện tại và bắt đầu ván ngay lập tức.",
+      "simulHelp": "Bạn sẽ đấu một bàn riêng với từng thành viên trong nhóm này cùng lúc.",
+      "pairNow": "Ghép cặp ngay",
+      "submit": "Tạo giải đấu"
+    },
+    "detail": {
+      "round": "Vòng {{current}} / {{total}}",
+      "join": "Tham gia",
+      "start": "Bắt đầu",
+      "nextRound": "Vòng tiếp theo",
+      "pairNext": "Ghép cặp tiếp",
+      "exportTrf": "Xuất TRF"
+    },
+    "table": {
+      "rank": "#",
+      "displayName": "Người chơi",
+      "score": "Điểm",
+      "buchholz": "Buchholz",
+      "sb": "SB",
+      "games": "Số ván"
+    },
+    "toast": {
+      "bulkPairingFailed": "Không thể ghép cặp",
+      "createFailed": "Không thể tạo giải đấu",
+      "joinFailed": "Không thể tham gia giải đấu",
+      "startFailed": "Không thể bắt đầu giải đấu",
+      "nextRoundFailed": "Không thể sinh vòng tiếp theo",
+      "pairNextFailed": "Không thể ghép cặp tiếp"
+    },
+    "errors": {
+      "notFound": "Không tìm thấy giải đấu"
+    }
+  },
   "common": {
     "button": {
       "save": "Lưu",
@@ -4548,6 +4600,8 @@
     "chessMatchPlay": "Ván đấu cờ vua",
     "chessClassManagement": "Quản lý lớp cờ",
     "chessClassLogin": "Đăng nhập bằng mã lớp",
+    "chessTournamentCreate": "Tạo giải đấu cờ",
+    "chessTournamentDetail": "Giải đấu cờ",
     "chessAnalysisRoom": "Phòng phân tích cờ",
     "chessEditor": "Dựng thế cờ",
     "dashboard": "Bảng điều khiển",

@@ -119,6 +119,38 @@ export class ChessMatchService {
     return match;
   }
 
+  /**
+   * Creates a match directly, skipping the seek/accept flow — used by bulk pairing,
+   * Swiss/Arena round generation, and Simul (chess-tournament module). Schedules the
+   * same timeout-check job acceptSeek does, so an absent player still auto-loses on time.
+   */
+  async createDirectMatch(params: {
+    whiteUserId: UUIDType;
+    blackUserId: UUIDType;
+    timeControlId: string;
+    rated: boolean;
+  }) {
+    const baseMs = timeControlBaseMs(params.timeControlId);
+    const match = await this.repository.createMatch({
+      whiteUserId: params.whiteUserId,
+      blackUserId: params.blackUserId,
+      timeControlId: params.timeControlId,
+      rated: params.rated,
+      whiteTimeRemainingMs: baseMs,
+      blackTimeRemainingMs: baseMs,
+    });
+
+    await this.scheduleTimeoutCheck(
+      match.tenantId,
+      match.id,
+      new Date(match.lastMoveAt).getTime(),
+      match.whiteUserId,
+      baseMs,
+    );
+
+    return match;
+  }
+
   async getMatchState(user: CurrentUserType, matchId: UUIDType) {
     const match = await this.getMatchOrThrow(matchId);
     const moves = await this.repository.getMatchMoves(matchId);

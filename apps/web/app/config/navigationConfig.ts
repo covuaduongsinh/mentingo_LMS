@@ -264,6 +264,14 @@ export const getNavigationConfig = (
             anyOf: [PERMISSIONS.CHESS_GAME_MANAGE, PERMISSIONS.CHESS_GAME_READ],
           },
         },
+        {
+          label: t("chessTournament.nav.title", { defaultValue: "Tournaments" }),
+          path: "admin/chess/tournaments/new",
+          iconName: "Course",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_TOURNAMENT_CREATE],
+          },
+        },
         ...(isStripeConfigured
           ? [
               {

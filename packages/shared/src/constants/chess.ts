@@ -360,3 +360,22 @@ export const CHESS_MATCH_END_REASONS = {
 
 export type ChessMatchEndReason =
   (typeof CHESS_MATCH_END_REASONS)[keyof typeof CHESS_MATCH_END_REASONS];
+
+export const CHESS_TOURNAMENT_FORMATS = {
+  BULK_PAIRING: "bulk_pairing",
+  SWISS: "swiss",
+  ARENA: "arena",
+  SIMUL: "simul",
+} as const;
+
+export type ChessTournamentFormat =
+  (typeof CHESS_TOURNAMENT_FORMATS)[keyof typeof CHESS_TOURNAMENT_FORMATS];
+
+export const CHESS_TOURNAMENT_STATUSES = {
+  REGISTRATION: "registration",
+  ACTIVE: "active",
+  FINISHED: "finished",
+} as const;
+
+export type ChessTournamentStatus =
+  (typeof CHESS_TOURNAMENT_STATUSES)[keyof typeof CHESS_TOURNAMENT_STATUSES];

@@ -41,6 +41,7 @@ import { ChessEngineService } from "./engine/engine.service";
     ChessAnalysisService,
     ChessStudyService,
     ChessPuzzleService,
+    ChessPuzzleRepository,
     ChessMatchService,
   ],
 })
