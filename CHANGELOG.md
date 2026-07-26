@@ -1,3 +1,16 @@
+<a name="chess-online-match"></a>
+
+## [Chess online matches] - 26.07.2026
+
+### Features:
+
+- play chess against another real person online, in real time: create an open seek (anyone can accept) or challenge a specific person directly, then play on a live board
+- the game clock is decided by the server, not the browser — time is deducted based on real elapsed time between moves, so a player can't cheat by tampering with their own client
+- resign or offer/accept a draw at any time; games end automatically on checkmate, stalemate, insufficient material, threefold repetition, or the fifty-move rule
+- spectators can watch a live match without being able to move pieces
+- rated games update a Glicko-2 rating in the appropriate bullet/blitz/rapid category, separate from the puzzle rating
+- new permissions: `chess.match.play`, `chess.match.watch`
+
 <a name="chess-puzzle-rating"></a>
 
 ## [Chess puzzles & rating] - 26.07.2026

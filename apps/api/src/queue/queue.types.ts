@@ -14,6 +14,7 @@ export const QUEUE_NAMES = {
   LUMA_COURSE_GENERATION_SYNC: "luma-course-generation-sync",
   WEBHOOK_DELIVERY: "webhook-delivery",
   CHESS_PUZZLE_IMPORT: "chess-puzzle-import",
+  CHESS_MATCH_TIMEOUT_CHECK: "chess-match-timeout-check",
 } as const;
 
 export type QueueName = (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES];
@@ -90,4 +91,14 @@ export interface ChessPuzzleImportJobData {
   maxRating?: number;
   motifs?: string[];
   maxCount?: number;
+}
+
+export interface ChessMatchTimeoutCheckJobData {
+  tenantId: UUIDType;
+  matchId: UUIDType;
+  /** The match's lastMoveAt (as epoch ms) at the moment this check was scheduled — if the
+   * match's lastMoveAt has since changed, a move happened and this check is stale/no-ops. */
+  expectedLastMoveAtMs: number;
+  /** Which side was on the clock when this check was scheduled. */
+  expiringUserId: UUIDType;
 }

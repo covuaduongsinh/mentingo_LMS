@@ -204,6 +204,12 @@ export const routeAccessConfig = createRouteConfig({
   "chess/puzzles/dashboard": {
     anyOf: [PERMISSIONS.CHESS_PUZZLE_READ],
   },
+  "chess/lobby": {
+    anyOf: [PERMISSIONS.CHESS_MATCH_PLAY],
+  },
+  "chess/matches/:id": {
+    anyOf: [PERMISSIONS.CHESS_MATCH_PLAY, PERMISSIONS.CHESS_MATCH_WATCH],
+  },
   "super-admin/*": {
     allOf: [PERMISSIONS.TENANT_MANAGE],
   },

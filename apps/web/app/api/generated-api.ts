@@ -306,6 +306,8 @@ export interface CurrentUserResponse {
       | "chess.study.manage_own"
       | "chess.puzzle.read"
       | "chess.puzzle.manage"
+      | "chess.match.play"
+      | "chess.match.watch"
       | "assignment.read"
       | "assignment.manage"
       | "assignment.manage_own"
@@ -6551,6 +6553,104 @@ export interface ImportPuzzlesBody {
 export interface ImportPuzzlesResponse {
   data: {
     jobId: string;
+  };
+}
+
+export interface ListSeeksResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    creatorUserId: string;
+    challengedUserId: string | null;
+    timeControlId: string;
+    colorPreference: string;
+    rated: boolean;
+    status: string;
+    matchId: string | null;
+    createdAt: string;
+  }[];
+}
+
+export interface CreateSeekBody {
+  /** @format uuid */
+  challengedUserId?: string;
+  timeControlId: "1+0" | "5+0" | "10+0" | "15+10";
+  colorPreference?: "white" | "black" | "random";
+  rated?: boolean;
+}
+
+export interface CreateSeekResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    creatorUserId: string;
+    challengedUserId: string | null;
+    timeControlId: string;
+    colorPreference: string;
+    rated: boolean;
+    status: string;
+    matchId: string | null;
+    createdAt: string;
+  };
+}
+
+export interface CancelSeekResponse {
+  data: {
+    success: boolean;
+  };
+}
+
+export interface AcceptSeekResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    whiteUserId: string;
+    /** @format uuid */
+    blackUserId: string;
+    timeControlId: string;
+    rated: boolean;
+    status: string;
+    result: string | null;
+    endReason: string | null;
+    currentFen: string;
+    whiteTimeRemainingMs: number;
+    blackTimeRemainingMs: number;
+    drawOfferedByUserId: string | null;
+    moves: {
+      ply: number;
+      uci: string;
+      san: string;
+      fenAfter: string;
+    }[];
+  };
+}
+
+export interface GetMatchResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    whiteUserId: string;
+    /** @format uuid */
+    blackUserId: string;
+    timeControlId: string;
+    rated: boolean;
+    status: string;
+    result: string | null;
+    endReason: string | null;
+    currentFen: string;
+    whiteTimeRemainingMs: number;
+    blackTimeRemainingMs: number;
+    drawOfferedByUserId: string | null;
+    moves: {
+      ply: number;
+      uci: string;
+      san: string;
+      fenAfter: string;
+    }[];
   };
 }
 
@@ -15955,6 +16055,78 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerListSeeks
+     * @request GET:/api/chess/seeks
+     */
+    chessControllerListSeeks: (params: RequestParams = {}) =>
+      this.request<ListSeeksResponse, any>({
+        path: `/api/chess/seeks`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerCreateSeek
+     * @request POST:/api/chess/seeks
+     */
+    chessControllerCreateSeek: (data: CreateSeekBody, params: RequestParams = {}) =>
+      this.request<CreateSeekResponse, any>({
+        path: `/api/chess/seeks`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerCancelSeek
+     * @request POST:/api/chess/seeks/{id}/cancel
+     */
+    chessControllerCancelSeek: (id: string, params: RequestParams = {}) =>
+      this.request<CancelSeekResponse, any>({
+        path: `/api/chess/seeks/${id}/cancel`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerAcceptSeek
+     * @request POST:/api/chess/seeks/{id}/accept
+     */
+    chessControllerAcceptSeek: (id: string, params: RequestParams = {}) =>
+      this.request<AcceptSeekResponse, any>({
+        path: `/api/chess/seeks/${id}/accept`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessControllerGetMatch
+     * @request GET:/api/chess/matches/{id}
+     */
+    chessControllerGetMatch: (id: string, params: RequestParams = {}) =>
+      this.request<GetMatchResponse, any>({
+        path: `/api/chess/matches/${id}`,
+        method: "GET",
         format: "json",
         ...params,
       }),

@@ -9,17 +9,24 @@ import {
 import { Server } from "socket.io";
 
 import { ChessAnalysisService } from "src/chess/chess-analysis.service";
+import { ChessMatchService } from "src/chess/chess-match.service";
 import { WsJwtGuard } from "src/websocket/guards/ws-jwt.guard";
 import {
   AuthenticatedSocket,
   ChessAnalysisEndPayload,
   ChessAnalysisMovePayload,
   ChessAnalysisResetFenPayload,
+  ChessMatchAcceptDrawPayload,
+  ChessMatchMovePayload,
+  ChessMatchOfferDrawPayload,
+  ChessMatchResignPayload,
   HeartbeatPayload,
   JoinChessAnalysisPayload,
+  JoinChessMatchPayload,
   JoinLiveTrainingPayload,
   JoinLessonPayload,
   LeaveChessAnalysisPayload,
+  LeaveChessMatchPayload,
   LeaveLiveTrainingPayload,
   LeaveLessonPayload,
 } from "src/websocket/websocket.types";
@@ -52,7 +59,10 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 
   private disconnectHandlers: Array<(socket: AuthenticatedSocket) => Promise<void>> = [];
 
-  constructor(private readonly chessAnalysisService: ChessAnalysisService) {}
+  constructor(
+    private readonly chessAnalysisService: ChessAnalysisService,
+    private readonly chessMatchService: ChessMatchService,
+  ) {}
 
   afterInit() {
     this.logger.log("WebSocket Gateway initialized");
@@ -195,6 +205,95 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
   }
 
   @UseGuards(WsJwtGuard)
+  @SubscribeMessage("join:chess-match")
+  async handleJoinChessMatch(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: JoinChessMatchPayload,
+  ) {
+    const { matchId } = payload;
+    const state = await this.chessMatchService.getMatchState(client.data.user, matchId);
+
+    const roomName = getChessMatchRoomName(matchId);
+    await client.join(roomName);
+
+    this.logger.debug(`User ${client.data.user.userId} joined chess match room: ${roomName}`);
+
+    return { success: true, room: roomName, ...state };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage("leave:chess-match")
+  async handleLeaveChessMatch(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: LeaveChessMatchPayload,
+  ) {
+    await client.leave(getChessMatchRoomName(payload.matchId));
+    return { success: true };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage("chess-match:move")
+  async handleChessMatchMove(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: ChessMatchMovePayload,
+  ) {
+    const { matchId, uciMove } = payload;
+    const result = await this.chessMatchService.applyMove(client.data.user, matchId, uciMove);
+
+    this.emitToRoom(getChessMatchRoomName(matchId), "chess-match:move", { matchId, ...result });
+    if (result.finished) {
+      this.emitToRoom(getChessMatchRoomName(matchId), "chess-match:end", { matchId, ...result });
+    }
+
+    return { success: true, ...result };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage("chess-match:resign")
+  async handleChessMatchResign(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: ChessMatchResignPayload,
+  ) {
+    const { matchId } = payload;
+    const result = await this.chessMatchService.resign(client.data.user, matchId);
+
+    this.emitToRoom(getChessMatchRoomName(matchId), "chess-match:end", { matchId, ...result });
+
+    return { success: true };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage("chess-match:offer-draw")
+  async handleChessMatchOfferDraw(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: ChessMatchOfferDrawPayload,
+  ) {
+    const { matchId } = payload;
+    await this.chessMatchService.offerDraw(client.data.user, matchId);
+
+    this.emitToRoom(getChessMatchRoomName(matchId), "chess-match:draw-offered", {
+      matchId,
+      offeredByUserId: client.data.user.userId,
+    });
+
+    return { success: true };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage("chess-match:accept-draw")
+  async handleChessMatchAcceptDraw(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: ChessMatchAcceptDrawPayload,
+  ) {
+    const { matchId } = payload;
+    const result = await this.chessMatchService.acceptDraw(client.data.user, matchId);
+
+    this.emitToRoom(getChessMatchRoomName(matchId), "chess-match:end", { matchId, ...result });
+
+    return { success: true };
+  }
+
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("join:lesson")
   async handleJoinLesson(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -294,3 +393,5 @@ export const getLiveTrainingRoomName = (liveTrainingId: string) =>
   `live-training:${liveTrainingId}`;
 
 export const getChessAnalysisRoomName = (sessionId: string) => `chess-analysis:${sessionId}`;
+
+export const getChessMatchRoomName = (matchId: string) => `chess-match:${matchId}`;

@@ -47,6 +47,31 @@ export interface ChessAnalysisEndPayload {
   sessionId: string;
 }
 
+export interface JoinChessMatchPayload {
+  matchId: string;
+}
+
+export interface LeaveChessMatchPayload {
+  matchId: string;
+}
+
+export interface ChessMatchMovePayload {
+  matchId: string;
+  uciMove: string;
+}
+
+export interface ChessMatchResignPayload {
+  matchId: string;
+}
+
+export interface ChessMatchOfferDrawPayload {
+  matchId: string;
+}
+
+export interface ChessMatchAcceptDrawPayload {
+  matchId: string;
+}
+
 export interface WsUser {
   userId: string;
   email: string;

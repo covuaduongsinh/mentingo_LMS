@@ -150,6 +150,7 @@ export const CHESS_PLAY_END_REASON_LIST = Object.values(CHESS_PLAY_END_REASONS);
 /** Clock presets for play vs engine; id doubles as the persisted value */
 export const CHESS_TIME_CONTROLS = {
   NONE: { id: "none", baseSeconds: null, incrementSeconds: null },
+  BULLET_1_0: { id: "1+0", baseSeconds: 60, incrementSeconds: 0 },
   BLITZ_5_0: { id: "5+0", baseSeconds: 300, incrementSeconds: 0 },
   RAPID_10_0: { id: "10+0", baseSeconds: 600, incrementSeconds: 0 },
   RAPID_15_10: { id: "15+10", baseSeconds: 900, incrementSeconds: 10 },
@@ -159,6 +160,20 @@ export type ChessTimeControlId =
   (typeof CHESS_TIME_CONTROLS)[keyof typeof CHESS_TIME_CONTROLS]["id"];
 
 export const CHESS_TIME_CONTROL_LIST = Object.values(CHESS_TIME_CONTROLS);
+
+/** Time controls playable as a live online match — "none" (no clock) is correspondence, out of scope for L4. */
+export const CHESS_MATCH_TIME_CONTROL_LIST = CHESS_TIME_CONTROL_LIST.filter(
+  (control) => control.baseSeconds !== null,
+);
+
+/** Buckets a match's base time into a rating category, matching common bullet/blitz/rapid conventions. */
+export function chessRatingCategoryForTimeControl(
+  baseSeconds: number,
+): "bullet" | "blitz" | "rapid" {
+  if (baseSeconds < 180) return CHESS_RATING_CATEGORIES.BULLET;
+  if (baseSeconds < 600) return CHESS_RATING_CATEGORIES.BLITZ;
+  return CHESS_RATING_CATEGORIES.RAPID;
+}
 
 /** Who can view a study: public = anyone in the tenant, private = author + members only */
 export const CHESS_STUDY_VISIBILITY = {
@@ -270,9 +285,12 @@ export const CHESS_MOTIF_LABELS: Record<ChessMotif, string> = {
   [CHESS_MOTIFS.QUIET_MOVE]: "Nước đi lặng lẽ (quiet move)",
 };
 
-/** Rating category axis — extended with time-control categories in a later phase (online play). */
+/** Rating category axis — puzzle (L3) plus time-control categories for online play (L4). */
 export const CHESS_RATING_CATEGORIES = {
   PUZZLE: "puzzle",
+  BULLET: "bullet",
+  BLITZ: "blitz",
+  RAPID: "rapid",
 } as const;
 
 export type ChessRatingCategory =
@@ -292,3 +310,53 @@ export type ChessPuzzleDifficulty = keyof typeof CHESS_PUZZLE_DIFFICULTY_DELTAS;
 export const CHESS_PUZZLE_DIFFICULTY_LIST = Object.keys(
   CHESS_PUZZLE_DIFFICULTY_DELTAS,
 ) as ChessPuzzleDifficulty[];
+
+/** Desired piece color when creating a seek/challenge; "random" is resolved once matched. */
+export const CHESS_COLOR_PREFERENCES = {
+  WHITE: "white",
+  BLACK: "black",
+  RANDOM: "random",
+} as const;
+
+export type ChessColorPreference =
+  (typeof CHESS_COLOR_PREFERENCES)[keyof typeof CHESS_COLOR_PREFERENCES];
+
+export const CHESS_SEEK_STATUSES = {
+  PENDING: "pending",
+  MATCHED: "matched",
+  CANCELLED: "cancelled",
+  EXPIRED: "expired",
+} as const;
+
+export type ChessSeekStatus = (typeof CHESS_SEEK_STATUSES)[keyof typeof CHESS_SEEK_STATUSES];
+
+export const CHESS_MATCH_STATUSES = {
+  ACTIVE: "active",
+  FINISHED: "finished",
+} as const;
+
+export type ChessMatchStatus = (typeof CHESS_MATCH_STATUSES)[keyof typeof CHESS_MATCH_STATUSES];
+
+export const CHESS_MATCH_RESULTS = {
+  WHITE_WIN: "white_win",
+  BLACK_WIN: "black_win",
+  DRAW: "draw",
+} as const;
+
+export type ChessMatchResult = (typeof CHESS_MATCH_RESULTS)[keyof typeof CHESS_MATCH_RESULTS];
+
+/** Reuses the same vocabulary as CHESS_PLAY_END_REASONS (vs.-engine) plus match-specific reasons. */
+export const CHESS_MATCH_END_REASONS = {
+  CHECKMATE: "checkmate",
+  RESIGNATION: "resignation",
+  TIMEOUT: "timeout",
+  STALEMATE: "stalemate",
+  INSUFFICIENT_MATERIAL: "insufficient_material",
+  FIFTY_MOVE: "fifty_move",
+  THREEFOLD: "threefold",
+  DRAW_AGREED: "draw_agreed",
+  ABANDONED: "abandoned",
+} as const;
+
+export type ChessMatchEndReason =
+  (typeof CHESS_MATCH_END_REASONS)[keyof typeof CHESS_MATCH_END_REASONS];
