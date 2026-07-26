@@ -19,6 +19,7 @@ import { CourseFeaturePolicyService } from "src/courses/course-feature-policy.se
 import { MasterCourseService } from "src/courses/master-course.service";
 import { AssignmentDueDateReminderEmailEvent } from "src/events/assignment/assignment-due-date-reminder-email.event";
 import { AssignmentGradedEvent } from "src/events/assignment/assignment-graded.event";
+import { AssignmentSubmittedEvent } from "src/events/assignment/assignment-submitted.event";
 import { FileService } from "src/file/file.service";
 import { AdminLessonRepository } from "src/lesson/repositories/adminLesson.repository";
 import { AdminLessonService } from "src/lesson/services/adminLesson.service";
@@ -338,6 +339,14 @@ export class AssignmentsService {
       taskId,
       userId,
       body.submission,
+    );
+
+    await this.outboxPublisher.publish(
+      new AssignmentSubmittedEvent({
+        assignmentId: assignment.id,
+        userId,
+        submissionId: submissionRow.id,
+      }),
     );
 
     if (assignment.autoGrading) {

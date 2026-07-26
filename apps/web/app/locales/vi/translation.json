@@ -4918,6 +4918,53 @@
       "missingTenantIdHeader": "Thiếu tiêu đề X-Tenant-Id"
     }
   },
+  "webhooks": {
+    "title": "Webhook",
+    "description": "Gửi yêu cầu HTTP đến endpoint của bạn mỗi khi có sự kiện học tập xảy ra (ghi danh, hoàn thành, cấp chứng chỉ...).",
+    "loading": "Đang tải danh sách endpoint webhook...",
+    "empty": "Chưa có endpoint webhook nào.",
+    "active": "Đang hoạt động",
+    "inactive": "Đã tắt",
+    "createdAt": "Ngày tạo",
+    "successRate": "Tỉ lệ thành công (50 lần gần nhất)",
+    "ping": "Gửi thử",
+    "viewDeliveries": "Xem log",
+    "activate": "Bật",
+    "deactivate": "Tắt",
+    "rotateSecret": "Tái sinh secret",
+    "delete": "Xóa",
+    "newEndpoint": "Endpoint mới",
+    "copy": "Sao chép secret",
+    "generated": {
+      "title": "Sao chép secret này ngay. Sẽ không hiển thị lại lần nữa."
+    },
+    "form": {
+      "title": "Endpoint webhook mới",
+      "description": "Mỗi lần gửi được ký bằng secret HMAC-SHA256 qua header X-Webhook-Signature.",
+      "urlLabel": "URL endpoint",
+      "eventsLabel": "Sự kiện muốn nhận",
+      "submit": "Tạo endpoint"
+    },
+    "deliveries": {
+      "title": "Log gửi",
+      "description": "50 lần gửi gần nhất của endpoint này, kể cả các lần thử lại.",
+      "loading": "Đang tải log gửi...",
+      "empty": "Chưa có lần gửi nào.",
+      "attempt_one": "lần thử {{count}}",
+      "attempt_other": "lần thử {{count}}",
+      "noResponse": "không có phản hồi"
+    },
+    "toast": {
+      "pingSuccess": "Gửi thử thành công (mã {{statusCode}})",
+      "pingFailure": "Gửi thử thất bại: {{error}}",
+      "copySuccess": "Đã sao chép secret webhook",
+      "copyError": "Sao chép secret webhook thất bại",
+      "endpointDeletedSuccessfully": "Đã xóa endpoint webhook thành công"
+    },
+    "error": {
+      "endpointNotFound": "Không tìm thấy endpoint webhook"
+    }
+  },
   "masterCourse": {
     "error": {
       "sourceCourseNotFound": "Không tìm thấy khóa học nguồn",

@@ -38,6 +38,7 @@ import { hasPermission } from "src/common/permissions/permission.utils";
 import { processInBatches } from "src/common/utils/processInBatches";
 import { CertificateArchivedEmailEvent } from "src/events/certificate/certificate-archived-email.event";
 import { CertificateExpirationWarningEmailEvent } from "src/events/certificate/certificate-expiration-warning-email.event";
+import { CertificateIssuedEvent } from "src/events/certificate/certificate-issued.event";
 import { FileService } from "src/file/file.service";
 import { IMAGE_QUALITY } from "src/file/image-variants/image-variant.constants";
 import { OutboxPublisher } from "src/outbox/outbox.publisher";
@@ -186,6 +187,15 @@ export class CertificatesService implements OnModuleDestroy {
         if (!createdCertificate) {
           throw new ConflictException("studentCertificateView.informations.createFailed");
         }
+
+        await this.outboxPublisher.publish(
+          new CertificateIssuedEvent({
+            certificateId: createdCertificate.id,
+            userId,
+            courseId,
+          }),
+          transactionInstance,
+        );
 
         return {
           ...createdCertificate,

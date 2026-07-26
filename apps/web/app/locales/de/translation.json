@@ -4809,6 +4809,53 @@
       "missingTenantIdHeader": "Fehlender X-Tenant-Id-Header"
     }
   },
+  "webhooks": {
+    "title": "Webhooks",
+    "description": "Sendet eine HTTP-Anfrage an Ihren eigenen Endpunkt, sobald ein Lernereignis eintritt (Einschreibung, Abschluss, Zertifikat...).",
+    "loading": "Webhook-Endpunkte werden geladen...",
+    "empty": "Noch keine Webhook-Endpunkte.",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "createdAt": "Erstellt",
+    "successRate": "Erfolgsquote (letzte 50)",
+    "ping": "Test senden",
+    "viewDeliveries": "Protokoll anzeigen",
+    "activate": "Aktivieren",
+    "deactivate": "Deaktivieren",
+    "rotateSecret": "Secret erneuern",
+    "delete": "Löschen",
+    "newEndpoint": "Neuer Endpunkt",
+    "copy": "Secret kopieren",
+    "generated": {
+      "title": "Kopieren Sie dieses Secret jetzt. Es wird nicht erneut angezeigt."
+    },
+    "form": {
+      "title": "Neuer Webhook-Endpunkt",
+      "description": "Jede Zustellung wird mit einem HMAC-SHA256-Secret über den Header X-Webhook-Signature signiert.",
+      "urlLabel": "Endpunkt-URL",
+      "eventsLabel": "Zu sendende Ereignisse",
+      "submit": "Endpunkt erstellen"
+    },
+    "deliveries": {
+      "title": "Zustellprotokoll",
+      "description": "Die letzten 50 Zustellversuche für diesen Endpunkt, einschließlich Wiederholungen.",
+      "loading": "Zustellprotokoll wird geladen...",
+      "empty": "Noch keine Zustellungen.",
+      "attempt_one": "Versuch {{count}}",
+      "attempt_other": "Versuch {{count}}",
+      "noResponse": "keine Antwort"
+    },
+    "toast": {
+      "pingSuccess": "Testzustellung erfolgreich (Status {{statusCode}})",
+      "pingFailure": "Testzustellung fehlgeschlagen: {{error}}",
+      "copySuccess": "Webhook-Secret kopiert",
+      "copyError": "Webhook-Secret konnte nicht kopiert werden",
+      "endpointDeletedSuccessfully": "Webhook-Endpunkt erfolgreich gelöscht"
+    },
+    "error": {
+      "endpointNotFound": "Webhook-Endpunkt nicht gefunden"
+    }
+  },
   "luma": {
     "errors": {
       "invalidBlankAnswerId": "Das generierte Quiz enthält eine ungültige Lückenantwort-ID. Versuche, den Kurs erneut zu generieren."

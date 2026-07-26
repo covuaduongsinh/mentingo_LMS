@@ -1,3 +1,14 @@
+<a name="outbound-webhooks"></a>
+
+## [Outbound webhooks] - 26.07.2026
+
+### Features:
+
+- add outbound webhook endpoints admins can register from Settings — deliveries are signed with an HMAC-SHA256 secret, sent over SSRF-guarded HTTP, and retried up to 3 times with exponential backoff
+- 6 core events supported: enrollment created, course completed, lesson completed, assignment submitted, assignment graded, certificate issued
+- add a "send test" button (immediate ping delivery) and a per-endpoint delivery log (last 50 attempts, including retries) for debugging integrations
+- endpoint secret is shown once (on create/rotate) and stored encrypted at rest; rotating immediately invalidates the previous secret
+
 <a name="hierarchical-resource-library"></a>
 
 ## [Hierarchical resource library] - 26.07.2026

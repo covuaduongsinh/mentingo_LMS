@@ -8,6 +8,7 @@ import LanguageSelect from "./LanguageSelect";
 import NotificationPreferences from "./NotificationPreferences";
 import { PublicProfileSettingsCard } from "./PublicProfileSettingsCard";
 import { ResetOnboarding } from "./ResetOnboarding";
+import { WebhooksCard } from "./WebhooksCard";
 
 import type { AdminSettings, UserSettings } from "../types";
 
@@ -34,6 +35,7 @@ export default function AccountTabContent({
       <PublicProfileSettingsCard />
       {isAdminSettings(settings) && <NotificationPreferences adminSettings={settings} />}
       {canAccessIntegrationApi && <IntegrationApiKeyCard />}
+      {canAccessIntegrationApi && <WebhooksCard />}
       {canResetOnboarding && <ResetOnboarding />}
     </>
   );

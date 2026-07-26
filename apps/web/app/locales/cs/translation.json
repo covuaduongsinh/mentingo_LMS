@@ -4816,6 +4816,54 @@
       "missingTenantIdHeader": "Chybí hlavička X-Tenant-Id"
     }
   },
+  "webhooks": {
+    "title": "Webhooky",
+    "description": "Odešle HTTP požadavek na váš vlastní endpoint pokaždé, když nastane vzdělávací událost (zápis, dokončení, certifikát...).",
+    "loading": "Načítání webhook endpointů...",
+    "empty": "Zatím žádné webhook endpointy.",
+    "active": "Aktivní",
+    "inactive": "Neaktivní",
+    "createdAt": "Vytvořeno",
+    "successRate": "Úspěšnost (posledních 50)",
+    "ping": "Odeslat test",
+    "viewDeliveries": "Zobrazit protokol",
+    "activate": "Aktivovat",
+    "deactivate": "Deaktivovat",
+    "rotateSecret": "Obnovit tajný klíč",
+    "delete": "Smazat",
+    "newEndpoint": "Nový endpoint",
+    "copy": "Kopírovat tajný klíč",
+    "generated": {
+      "title": "Zkopírujte tento tajný klíč nyní. Znovu se již nezobrazí."
+    },
+    "form": {
+      "title": "Nový webhook endpoint",
+      "description": "Každé doručení je podepsáno tajným klíčem HMAC-SHA256 v hlavičce X-Webhook-Signature.",
+      "urlLabel": "URL endpointu",
+      "eventsLabel": "Události k odeslání",
+      "submit": "Vytvořit endpoint"
+    },
+    "deliveries": {
+      "title": "Protokol doručení",
+      "description": "Posledních 50 pokusů o doručení pro tento endpoint, včetně opakování.",
+      "loading": "Načítání protokolu doručení...",
+      "empty": "Zatím žádná doručení.",
+      "attempt_one": "pokus {{count}}",
+      "attempt_few": "pokus {{count}}",
+      "attempt_other": "pokus {{count}}",
+      "noResponse": "žádná odpověď"
+    },
+    "toast": {
+      "pingSuccess": "Testovací doručení úspěšné (stav {{statusCode}})",
+      "pingFailure": "Testovací doručení selhalo: {{error}}",
+      "copySuccess": "Tajný klíč webhooku zkopírován",
+      "copyError": "Nepodařilo se zkopírovat tajný klíč webhooku",
+      "endpointDeletedSuccessfully": "Webhook endpoint byl úspěšně smazán"
+    },
+    "error": {
+      "endpointNotFound": "Webhook endpoint nebyl nalezen"
+    }
+  },
   "luma": {
     "errors": {
       "invalidBlankAnswerId": "Vygenerovaný kvíz obsahuje neplatné ID odpovědi do mezery. Zkuste kurz vygenerovat znovu."

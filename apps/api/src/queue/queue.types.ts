@@ -12,6 +12,7 @@ export const QUEUE_NAMES = {
   SCORM_IMPORT: "scorm-import",
   COURSE_DUPLICATION: "course-duplication",
   LUMA_COURSE_GENERATION_SYNC: "luma-course-generation-sync",
+  WEBHOOK_DELIVERY: "webhook-delivery",
 } as const;
 
 export type QueueName = (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES];
@@ -72,4 +73,11 @@ export interface CourseDuplicationJobData {
   sourceCourseId: UUIDType;
   targetCourseId: UUIDType;
   actor: CurrentUserType;
+}
+
+export interface WebhookDeliveryJobData {
+  tenantId: UUIDType;
+  webhookEndpointId: UUIDType;
+  eventType: string;
+  payload: Record<string, unknown>;
 }
