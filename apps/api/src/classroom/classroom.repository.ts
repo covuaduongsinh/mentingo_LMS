@@ -41,6 +41,19 @@ export class ClassroomRepository {
     return classroom ?? null;
   }
 
+  /** Đợt C2 backward-compat bridge only — resolves a pre-existing `groups`-based chess-class
+   * to the `classrooms` row backfilled from it (0204_backfill_classrooms_from_groups), so the
+   * old /admin/chess/classes/:groupId page can link to its new counterpart. Not used by any
+   * other Classroom feature. */
+  async getClassroomIdBySourceGroupId(groupId: UUIDType) {
+    const [row] = await this.db
+      .select({ id: classrooms.id })
+      .from(classrooms)
+      .where(eq(classrooms.sourceGroupId, groupId));
+
+    return row?.id ?? null;
+  }
+
   async updateClassroom(classroomId: UUIDType, data: UpdateClassroomInput) {
     const [updated] = await this.db
       .update(classrooms)

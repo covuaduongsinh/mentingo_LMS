@@ -54,6 +54,10 @@ export const classroomDetailSchema = Type.Composite([
 
 export const classroomListSchema = Type.Array(classroomSchema);
 
+export const classroomIdForSourceGroupResponseSchema = Type.Object({
+  classroomId: Type.Union([UUIDSchema, Type.Null()]),
+});
+
 export const classroomTeacherListSchema = Type.Array(classroomTeacherSchema);
 
 export type CreateClassroomBody = Static<typeof createClassroomBodySchema>;

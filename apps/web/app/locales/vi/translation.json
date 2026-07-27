@@ -416,6 +416,10 @@
       "title": "Lớp cờ",
       "manageChessClass": "Quản lý lớp cờ"
     },
+    "deprecatedBanner": {
+      "text": "Trang này đang được thay thế bằng module Lớp học mới.",
+      "link": "Xem lớp học tương ứng"
+    },
     "bulkCreate": {
       "title": "Thêm học sinh hàng loạt",
       "placeholder": "Mỗi dòng một tên học sinh",

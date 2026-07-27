@@ -3419,6 +3419,12 @@ export const chessClassLoginCodes = pgTable(
     groupId: uuid("group_id")
       .references(() => groups.id, { onDelete: "cascade" })
       .notNull(),
+    // Nullable bridge added in the Classroom roadmap's Đợt C2 — backfilled from `classrooms`
+    // rows mirroring existing chess-class groups (docs/specs/classroom-business-spec.md).
+    // `groupId` above stays authoritative through C2; not yet read by any query.
+    classroomId: uuid("classroom_id").references((): AnyPgColumn => classrooms.id, {
+      onDelete: "set null",
+    }),
     codeHash: text("code_hash").notNull(),
     expiresAt: timestamp("expires_at", { precision: 3, withTimezone: true }).notNull(),
     consumedAt: timestamp("consumed_at", { precision: 3, withTimezone: true }),
@@ -3428,6 +3434,7 @@ export const chessClassLoginCodes = pgTable(
     ...withTenantIdIndex("chess_class_login_codes")(table),
     codeHashIdx: index("chess_class_login_codes_code_hash_idx").on(table.codeHash),
     groupIdx: index("chess_class_login_codes_group_id_idx").on(table.groupId),
+    classroomIdx: index("chess_class_login_codes_classroom_id_idx").on(table.classroomId),
   }),
 );
 
@@ -3740,12 +3747,19 @@ export const classrooms = pgTable(
       .notNull(),
     archivedAt: timestampWithTimezone({ name: "archived_at" }),
     archivedBy: uuid("archived_by").references(() => users.id, { onDelete: "set null" }),
+    // Migration-provenance only (Đợt C2 backfill from pre-existing chess-class `groups`) —
+    // not read by any ClassroomService/ClassroomRepository query. Used solely to make the
+    // one-time backfill idempotent and to redirect the old /admin/chess/classes/:groupId
+    // page; dropped in Đợt C8 once that page is removed. Classroom membership is decided
+    // exclusively by classroom_teachers/classroom_students, never by this column.
+    sourceGroupId: uuid("source_group_id").references(() => groups.id, { onDelete: "set null" }),
     tenantId,
   },
   (table) => ({
     ...withTenantIdIndex("classrooms")(table),
     ownerIdx: index("classrooms_owner_id_idx").on(table.ownerId),
     viewedAtIdx: index("classrooms_viewed_at_idx").on(table.viewedAt),
+    sourceGroupIdx: uniqueIndex("classrooms_source_group_id_unique_idx").on(table.sourceGroupId),
   }),
 );
 

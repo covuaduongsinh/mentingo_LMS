@@ -416,6 +416,10 @@
       "title": "Chess class",
       "manageChessClass": "Manage chess class"
     },
+    "deprecatedBanner": {
+      "text": "This page is being replaced by the new Classroom module.",
+      "link": "View corresponding classroom"
+    },
     "bulkCreate": {
       "title": "Add students in bulk",
       "placeholder": "One student name per line",

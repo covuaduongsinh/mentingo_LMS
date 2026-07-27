@@ -1422,6 +1422,20 @@
       "when": 1785176015617,
       "tag": "0202_enable_classrooms_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 203,
+      "version": "7",
+      "when": 1785180016580,
+      "tag": "0203_add_classroom_group_backfill_columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 204,
+      "version": "7",
+      "when": 1785180036903,
+      "tag": "0204_backfill_classrooms_from_groups",
+      "breakpoints": true
     }
   ]
 }

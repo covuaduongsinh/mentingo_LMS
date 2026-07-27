@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useGroupById } from "~/api/queries/admin/useGroupById";
+import { useClassroomIdForSourceGroup } from "~/api/queries/useClassroomIdForSourceGroup";
 import { getLocalizedResourceLanguage } from "~/components/LanguageSelector/utils";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Button } from "~/components/ui/button";
@@ -28,6 +29,9 @@ const EditGroup = (): ReactElement => {
   const [selectedGroupLanguage, setSelectedGroupLanguage] = useState(appLanguage);
 
   const { data, isLoading } = useGroupById(groupId ?? "", selectedGroupLanguage);
+  const { data: linkedClassroomId } = useClassroomIdForSourceGroup(groupId ?? "", {
+    enabled: !!groupId,
+  });
 
   if (isLoading)
     return (
@@ -61,11 +65,22 @@ const EditGroup = (): ReactElement => {
       ]}
     >
       <div data-testid={GROUP_PAGE_HANDLES.PAGE} className="flex h-full flex-col gap-4">
-        <Button type="button" variant="outline" className="w-fit" asChild>
-          <Link to={`/admin/chess/classes/${groupId}`}>
-            {t("chessClass.nav.manageChessClass", { defaultValue: "Manage chess class" })}
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" variant="outline" className="w-fit" asChild>
+            <Link to={`/admin/chess/classes/${groupId}`}>
+              {t("chessClass.nav.manageChessClass", { defaultValue: "Manage chess class" })}
+            </Link>
+          </Button>
+          {linkedClassroomId && (
+            <Button type="button" variant="outline" className="w-fit" asChild>
+              <Link to={`/classrooms/${linkedClassroomId}`}>
+                {t("chessClass.deprecatedBanner.link", {
+                  defaultValue: "View corresponding classroom",
+                })}
+              </Link>
+            </Button>
+          )}
+        </div>
         <EditGroupForm
           key={formKey}
           formKey={formKey}

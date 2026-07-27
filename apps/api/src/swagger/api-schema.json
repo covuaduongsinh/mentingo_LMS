@@ -15662,6 +15662,8 @@
     "/api/chess-class/groups/{groupId}/students/bulk": {
       "post": {
         "operationId": "ChessClassController_bulkCreateStudents",
+        "summary": "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
+        "deprecated": true,
         "parameters": [
           {
             "name": "groupId",
@@ -15699,6 +15701,8 @@
     "/api/chess-class/students/{userId}/reset-password": {
       "post": {
         "operationId": "ChessClassController_resetStudentPassword",
+        "summary": "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
+        "deprecated": true,
         "parameters": [
           {
             "name": "userId",
@@ -15726,6 +15730,8 @@
     "/api/chess-class/students/{userId}/release": {
       "post": {
         "operationId": "ChessClassController_releaseStudentAccount",
+        "summary": "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
+        "deprecated": true,
         "parameters": [
           {
             "name": "userId",
@@ -15763,6 +15769,8 @@
     "/api/chess-class/groups/{groupId}/login-codes": {
       "post": {
         "operationId": "ChessClassController_generateLoginCodes",
+        "summary": "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
+        "deprecated": true,
         "parameters": [
           {
             "name": "groupId",
@@ -15790,6 +15798,8 @@
     "/api/chess-class/groups/{groupId}/progress": {
       "get": {
         "operationId": "ChessClassController_getClassProgress",
+        "summary": "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
+        "deprecated": true,
         "parameters": [
           {
             "name": "groupId",
@@ -16534,6 +16544,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateClassroomResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/by-source-group/{groupId}": {
+      "get": {
+        "operationId": "ClassroomController_getClassroomIdForSourceGroup",
+        "parameters": [
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClassroomIdForSourceGroupResponse"
                 }
               }
             }
@@ -66055,6 +66092,33 @@
               "archivedBy",
               "createdAt",
               "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetClassroomIdForSourceGroupResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "classroomId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "classroomId"
             ]
           }
         },

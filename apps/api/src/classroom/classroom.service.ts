@@ -64,6 +64,11 @@ export class ClassroomService {
     return this.repository.createClassroom(data, user.userId);
   }
 
+  /** Đợt C2 backward-compat bridge — see ClassroomRepository.getClassroomIdBySourceGroupId. */
+  async findClassroomIdForSourceGroup(groupId: UUIDType) {
+    return this.repository.getClassroomIdBySourceGroupId(groupId);
+  }
+
   async getClassroomDetail(classroomId: UUIDType, user: CurrentUserType) {
     const classroom = await this.getClassroomOrThrow(classroomId);
     await this.assertCanRead(classroomId, user);

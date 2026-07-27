@@ -9092,6 +9092,12 @@ export interface CreateClassroomResponse {
   };
 }
 
+export interface GetClassroomIdForSourceGroupResponse {
+  data: {
+    classroomId: string | null;
+  };
+}
+
 export interface ListTeachingClassroomsResponse {
   data: {
     /** @format uuid */
@@ -19294,7 +19300,9 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name ChessClassControllerBulkCreateStudents
+     * @summary Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8
      * @request POST:/api/chess-class/groups/{groupId}/students/bulk
+     * @deprecated
      */
     chessClassControllerBulkCreateStudents: (
       groupId: string,
@@ -19314,7 +19322,9 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name ChessClassControllerResetStudentPassword
+     * @summary Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8
      * @request POST:/api/chess-class/students/{userId}/reset-password
+     * @deprecated
      */
     chessClassControllerResetStudentPassword: (userId: string, params: RequestParams = {}) =>
       this.request<ResetStudentPasswordResponse, any>({
@@ -19328,7 +19338,9 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name ChessClassControllerReleaseStudentAccount
+     * @summary Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8
      * @request POST:/api/chess-class/students/{userId}/release
+     * @deprecated
      */
     chessClassControllerReleaseStudentAccount: (
       userId: string,
@@ -19348,7 +19360,9 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name ChessClassControllerGenerateLoginCodes
+     * @summary Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8
      * @request POST:/api/chess-class/groups/{groupId}/login-codes
+     * @deprecated
      */
     chessClassControllerGenerateLoginCodes: (groupId: string, params: RequestParams = {}) =>
       this.request<GenerateLoginCodesResponse, any>({
@@ -19362,7 +19376,9 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name ChessClassControllerGetClassProgress
+     * @summary Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8
      * @request GET:/api/chess-class/groups/{groupId}/progress
+     * @deprecated
      */
     chessClassControllerGetClassProgress: (
       groupId: string,
@@ -19774,6 +19790,23 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerGetClassroomIdForSourceGroup
+     * @request GET:/api/classroom/by-source-group/{groupId}
+     */
+    classroomControllerGetClassroomIdForSourceGroup: (
+      groupId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<GetClassroomIdForSourceGroupResponse, any>({
+        path: `/api/classroom/by-source-group/${groupId}`,
+        method: "GET",
         format: "json",
         ...params,
       }),
