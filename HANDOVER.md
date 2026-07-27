@@ -1,9 +1,21 @@
 # HANDOVER — covuahocduong.com (Chess on Mentingo)
 
-**Ngày:** 2026-07-26 (cập nhật)
+**Ngày:** 2026-07-28 (cập nhật)
 **Nền tảng:** monorepo Mentingo LMS + module cờ vua (MIT-only)
 **Domain mục tiêu:** `covuahocduong.com`
-**Trạng thái:** W1–W4 (module cờ) + đợt phát triển LMS-core PR1–PR5 (xem mục 0 dưới) đều đã **merged vào `main`**.
+**Trạng thái:** W1–W4 (module cờ) + đợt phát triển LMS-core PR1–PR5 (xem mục 0 dưới) + roadmap "còn thiếu so với lila" L0–L10 (xem mục -3) đều đã **merged vào `main`**. Đợt "Classroom" (C0–C8, xem mục -4) đang triển khai.
+
+---
+
+## -4. Cập nhật mới nhất (2026-07-28) — Đợt "Classroom" (module lớp học độc lập, teardown sâu `clas` của lila), tự động triển khai liên tục
+
+Sau khi roadmap L0–L10 đóng, khảo sát riêng sâu module `clas` (lớp học) của lila cho thấy Đợt L5 (`docs/specs/chess-class-management-business-spec.md`, PR #25) chỉ port một lát mỏng (5 endpoint dựng tạm trên `groups`) so với 41 route đầy đủ của lila. Roadmap con **C0–C8** xây một module **Classroom** độc lập (không phụ thuộc `groups`), đầy đủ tính năng ngang lila `clas`, cộng phần mở rộng riêng của mentingo (nối lớp với khóa học/bài tập/chứng chỉ — lila không có). Xem `docs/research/lila/06-clas-teardown.md` (đặc tả clean-room chi tiết module `clas`) và `docs/specs/classroom-business-spec.md` (đặc tả nghiệp vụ mentingo, superseding `chess-class-management-business-spec.md`). Kế hoạch chi tiết đã duyệt lưu tại `C:\Users\duongsinh\.claude\plans\t-i-mu-n-b-n-kh-o-inherited-mist.md` phía máy dev.
+
+Cùng quy tắc tự động hoá đã dùng ở L0–L10: mỗi đợt tự động verify (tsc + eslint sạch, test suite xanh, smoke test qua Caddy) rồi commit + push + tạo PR + merge vào `main`, tự động chuyển sang đợt tiếp theo, không dừng lại hỏi giữa chừng.
+
+**Quyết định kiến trúc đã chốt**: bảng riêng tách sạch (`classrooms`/`classroom_teachers`/`classroom_students`/...), không mở rộng `groups` (`groups` giữ nguyên vai trò cohort HR/L&D của LMS). Hệ quả: phải chủ động sửa 4 điểm neo `groupId` ẩn phát hiện được khi phản biện kế hoạch — quan trọng nhất là `CommunitySocialRepository.shareGroup()` (kid-mode DM, raw SQL `JOIN group_users`) phải sửa thành UNION với `classroom_students` ngay ở Đợt C1, nếu không nhắn tin giữa học sinh cùng lớp mới sẽ hỏng im lặng (không throw, không test đơn vị nào bắt được vì repository bị mock).
+
+Xem `docs/research/lila/05-roadmap.md` mục "Roadmap phụ: Classroom (C0–C8)" để biết bảng tổng hợp từng đợt và trạng thái merge cập nhật liên tục.
 
 ---
 

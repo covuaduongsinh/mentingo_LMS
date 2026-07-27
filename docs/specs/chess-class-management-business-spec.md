@@ -1,5 +1,7 @@
 # Chess Class Management Business Spec
 
+> **SUPERSEDED** — kể từ Đợt C0 của roadmap "Classroom", tài liệu này được thay thế bởi `docs/specs/classroom-business-spec.md`, mô tả một module Classroom đầy đủ (không phụ thuộc `groups`) mà 5 endpoint dưới đây chỉ là một lát mỏng ban đầu. Các endpoint `chess-class/*` mô tả ở đây vẫn hoạt động như alias tương thích ngược qua Đợt C2, và bị xóa hẳn ở Đợt C8 — xem `docs/specs/classroom-business-spec.md` để biết trạng thái hiện tại. Giữ nguyên nội dung gốc bên dưới làm hồ sơ lịch sử.
+>
 > Đặc tả này mô tả hành vi nghiệp vụ độc lập, viết ra sau khi khảo sát một hệ thống tham khảo cấp phép AGPL-3.0 (lila/lichess.org, xem `docs/research/lila/`). Không chứa mã nguồn hay văn bản trích dẫn trực tiếp từ hệ thống đó. Cơ chế kỹ thuật cụ thể (mã hóa mã đăng nhập, cách sinh email/username giả) là thiết kế riêng của mentingo, khớp với kiến trúc auth/users hiện có, không sao chép cách lila làm.
 
 ## Business Overview
