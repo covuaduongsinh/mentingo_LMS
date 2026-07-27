@@ -4,8 +4,11 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useAcceptClassroomInvite } from "~/api/mutations/useAcceptClassroomInvite";
 import { useCreateClassroom } from "~/api/mutations/useCreateClassroom";
+import { useDeclineClassroomInvite } from "~/api/mutations/useDeclineClassroomInvite";
 import { useLearningClassrooms } from "~/api/queries/useLearningClassrooms";
+import { useMyClassroomInvites } from "~/api/queries/useMyClassroomInvites";
 import { useTeachingClassrooms } from "~/api/queries/useTeachingClassrooms";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Button } from "~/components/ui/button";
@@ -122,6 +125,40 @@ function CreateClassroomDialog() {
   );
 }
 
+function PendingInvites() {
+  const { t } = useTranslation();
+  const { data: invites } = useMyClassroomInvites();
+  const { mutateAsync: acceptInvite } = useAcceptClassroomInvite();
+  const { mutateAsync: declineInvite } = useDeclineClassroomInvite();
+
+  if (!invites?.length) return null;
+
+  return (
+    <section className="flex flex-col gap-3">
+      <h2 className="h6 text-neutral-800">
+        {t("classroom.list.pendingInvitesHeading", { defaultValue: "Pending invitations" })}
+      </h2>
+      <div className="flex flex-col gap-2">
+        {invites.map((invite) => (
+          <Card key={invite.id}>
+            <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
+              <span className="body-sm text-neutral-800">{invite.classroomName}</span>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={() => declineInvite(invite.id)}>
+                  {t("classroom.list.declineInvite", { defaultValue: "Decline" })}
+                </Button>
+                <Button size="sm" onClick={() => acceptInvite(invite.id)}>
+                  {t("classroom.list.acceptInvite", { defaultValue: "Accept" })}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function ClassroomListPage() {
   const { t } = useTranslation();
   const { hasAccess: canCreate } = usePermissions({ required: PERMISSIONS.CLASSROOM_CREATE });
@@ -141,6 +178,8 @@ export default function ClassroomListPage() {
           </h1>
           {canCreate && <CreateClassroomDialog />}
         </div>
+
+        <PendingInvites />
 
         {!isLoadingTeaching && teaching && teaching.length > 0 && (
           <section className="flex flex-col gap-3">

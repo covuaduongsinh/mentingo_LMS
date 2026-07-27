@@ -60,7 +60,133 @@ export const classroomIdForSourceGroupResponseSchema = Type.Object({
 
 export const classroomTeacherListSchema = Type.Array(classroomTeacherSchema);
 
+// ---------------------------------------------------------------------------------------
+// Students (Đợt C3)
+// ---------------------------------------------------------------------------------------
+
+export const classroomStudentSchema = Type.Object({
+  userId: UUIDSchema,
+  realName: Type.String(),
+  notes: Type.String(),
+  isManaged: Type.Boolean(),
+  archivedAt: Type.Union([Type.String(), Type.Null()]),
+  username: Type.Union([Type.String(), Type.Null()]),
+});
+
+export const classroomStudentListSchema = Type.Array(classroomStudentSchema);
+
+export const createdClassroomStudentSchema = Type.Object({
+  userId: UUIDSchema,
+  username: Type.String(),
+  temporaryPassword: Type.String(),
+  realName: Type.String(),
+});
+
+export const createClassroomStudentBodySchema = Type.Object({
+  realName: Type.String({ minLength: 1, maxLength: 100 }),
+});
+
+export const createClassroomStudentResponseSchema = createdClassroomStudentSchema;
+
+export const bulkCreateClassroomStudentsBodySchema = Type.Object({
+  names: Type.Array(Type.String({ minLength: 1, maxLength: 100 }), {
+    minItems: 1,
+    maxItems: 200,
+  }),
+});
+
+export const bulkCreateClassroomStudentsResponseSchema = Type.Object({
+  students: Type.Array(createdClassroomStudentSchema),
+});
+
+export const updateClassroomStudentBodySchema = Type.Object({
+  realName: Type.Optional(Type.String({ minLength: 1, maxLength: 100 })),
+  notes: Type.Optional(Type.String({ maxLength: 20000 })),
+});
+
+export const setClassroomStudentArchivedBodySchema = Type.Object({
+  archived: Type.Boolean(),
+});
+
+export const resetClassroomStudentPasswordResponseSchema = Type.Object({
+  temporaryPassword: Type.String(),
+});
+
+export const releaseClassroomStudentBodySchema = Type.Object({
+  email: Type.String({ format: "email" }),
+});
+
+export const releaseClassroomStudentResponseSchema = Type.Object({
+  createToken: Type.String(),
+});
+
+export const moveClassroomStudentBodySchema = Type.Object({
+  targetClassroomId: UUIDSchema,
+});
+
+export const classroomBulkActionSchema = Type.Union([
+  Type.Literal("archive"),
+  Type.Literal("restore"),
+  Type.Literal("remove"),
+  Type.Literal("move"),
+]);
+
+export const runClassroomBulkActionBodySchema = Type.Object({
+  action: classroomBulkActionSchema,
+  userIds: Type.Array(UUIDSchema, { minItems: 1 }),
+  targetClassroomId: Type.Optional(UUIDSchema),
+});
+
+// ---------------------------------------------------------------------------------------
+// Invites (Đợt C3)
+// ---------------------------------------------------------------------------------------
+
+export const classroomInviteStatusSchema = Type.Union([
+  Type.Literal("pending"),
+  Type.Literal("accepted"),
+  Type.Literal("declined"),
+]);
+
+export const inviteClassroomStudentBodySchema = Type.Object({
+  username: Type.String({ minLength: 1 }),
+  realName: Type.String({ minLength: 1, maxLength: 100 }),
+});
+
+export const inviteClassroomStudentResponseSchema = Type.Object({
+  feedback: Type.Union([Type.Literal("already"), Type.Literal("found"), Type.Literal("invited")]),
+});
+
+export const classroomInviteSchema = Type.Object({
+  id: UUIDSchema,
+  userId: UUIDSchema,
+  realName: Type.String(),
+  status: classroomInviteStatusSchema,
+  createdAt: Type.String(),
+  username: Type.Union([Type.String(), Type.Null()]),
+});
+
+export const classroomInviteListSchema = Type.Array(classroomInviteSchema);
+
+export const myClassroomInviteSchema = Type.Object({
+  id: UUIDSchema,
+  classroomId: UUIDSchema,
+  realName: Type.String(),
+  status: classroomInviteStatusSchema,
+  createdAt: Type.String(),
+  classroomName: Type.String(),
+});
+
+export const myClassroomInviteListSchema = Type.Array(myClassroomInviteSchema);
+
 export type CreateClassroomBody = Static<typeof createClassroomBodySchema>;
 export type UpdateClassroomBody = Static<typeof updateClassroomBodySchema>;
 export type SetClassroomArchivedBody = Static<typeof setClassroomArchivedBodySchema>;
 export type AddClassroomTeacherBody = Static<typeof addClassroomTeacherBodySchema>;
+export type CreateClassroomStudentBody = Static<typeof createClassroomStudentBodySchema>;
+export type BulkCreateClassroomStudentsBody = Static<typeof bulkCreateClassroomStudentsBodySchema>;
+export type UpdateClassroomStudentBody = Static<typeof updateClassroomStudentBodySchema>;
+export type SetClassroomStudentArchivedBody = Static<typeof setClassroomStudentArchivedBodySchema>;
+export type ReleaseClassroomStudentBody = Static<typeof releaseClassroomStudentBodySchema>;
+export type MoveClassroomStudentBody = Static<typeof moveClassroomStudentBodySchema>;
+export type RunClassroomBulkActionBody = Static<typeof runClassroomBulkActionBodySchema>;
+export type InviteClassroomStudentBody = Static<typeof inviteClassroomStudentBodySchema>;

@@ -1436,6 +1436,20 @@
       "when": 1785180036903,
       "tag": "0204_backfill_classrooms_from_groups",
       "breakpoints": true
+    },
+    {
+      "idx": 205,
+      "version": "7",
+      "when": 1785182305694,
+      "tag": "0205_add_classroom_invites",
+      "breakpoints": true
+    },
+    {
+      "idx": 206,
+      "version": "7",
+      "when": 1785182327951,
+      "tag": "0206_enable_classroom_invites_rls",
+      "breakpoints": true
     }
   ]
 }

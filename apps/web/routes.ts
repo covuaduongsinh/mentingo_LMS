@@ -71,6 +71,26 @@ export const routes: (
           route("chess/broadcast/:id", "modules/Chess/Broadcast/ChessBroadcastDetail.page.tsx");
           route("classrooms", "modules/Classroom/ClassroomList.page.tsx");
           route("classrooms/:classroomId", "modules/Classroom/ClassroomDetail.page.tsx");
+          route(
+            "classrooms/:classroomId/students",
+            "modules/Classroom/ClassroomStudentsList.page.tsx",
+          );
+          route(
+            "classrooms/:classroomId/students/add",
+            "modules/Classroom/ClassroomAddStudent.page.tsx",
+          );
+          route(
+            "classrooms/:classroomId/bulk-actions",
+            "modules/Classroom/ClassroomBulkActions.page.tsx",
+          );
+          route(
+            "classrooms/:classroomId/students/:userId",
+            "modules/Classroom/ClassroomStudentDetail.page.tsx",
+          );
+          route(
+            "classrooms/:classroomId/students/:userId/edit",
+            "modules/Classroom/ClassroomEditStudent.page.tsx",
+          );
         });
         route("", "modules/Dashboard/UserDashboard.layout.tsx", () => {
           route("", "modules/Dashboard/IndexRedirect.page.tsx", { index: true });

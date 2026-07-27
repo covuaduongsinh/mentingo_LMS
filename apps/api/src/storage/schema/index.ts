@@ -148,6 +148,7 @@ import type {
   LiveTrainingSessionStatus,
   LiveTrainingStatus,
   LiveTrainingVisibilityScope,
+  ClassroomInviteStatus,
 } from "@repo/shared";
 import type { ActivityLogActionType, ActivityLogMetadata } from "src/activity-logs/types";
 import type { ActivityHistory, AllSettings } from "src/common/types";
@@ -3817,5 +3818,33 @@ export const classroomStudents = pgTable(
     activeIdx: index("classroom_students_classroom_id_active_idx")
       .on(table.classroomId)
       .where(sql`${table.archivedAt} IS NULL`),
+  }),
+);
+
+/** An invitation for an existing user account to join a classroom as a student — distinct
+ * from classroom_students, which only exists once accepted. The invite id itself doubles as
+ * the URL token; access is authorized by session + `userId` match, not by a secret. */
+export const classroomInvites = pgTable(
+  "classroom_invites",
+  {
+    ...id,
+    ...timestamps,
+    classroomId: uuid("classroom_id")
+      .references(() => classrooms.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    realName: text("real_name").notNull(),
+    status: text("status").$type<ClassroomInviteStatus>().notNull().default("pending"),
+    createdBy: uuid("created_by").references(() => users.id, { onDelete: "set null" }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("classroom_invites")(table),
+    userIdx: index("classroom_invites_user_id_idx").on(table.userId),
+    pendingUniqueIdx: uniqueIndex("classroom_invites_pending_unique_idx")
+      .on(table.classroomId, table.userId)
+      .where(sql`${table.status} = 'pending'`),
   }),
 );
