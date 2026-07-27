@@ -33,3 +33,15 @@ export type UpdateClassroomInput = {
   description?: string;
   canMsg?: boolean;
 };
+
+export type CreatedClassroomStudent = {
+  userId: UUIDType;
+  username: string;
+  temporaryPassword: string;
+  realName: string;
+};
+
+export type UpdateClassroomStudentInput = {
+  realName?: string;
+  notes?: string;
+};

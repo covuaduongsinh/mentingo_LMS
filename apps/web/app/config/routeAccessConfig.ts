@@ -237,6 +237,21 @@ export const routeAccessConfig = createRouteConfig({
   "classrooms/:classroomId": {
     anyOf: [PERMISSIONS.CLASSROOM_READ],
   },
+  "classrooms/:classroomId/students": {
+    anyOf: [PERMISSIONS.CLASSROOM_READ],
+  },
+  "classrooms/:classroomId/students/add": {
+    anyOf: [PERMISSIONS.CLASSROOM_READ],
+  },
+  "classrooms/:classroomId/bulk-actions": {
+    anyOf: [PERMISSIONS.CLASSROOM_READ],
+  },
+  "classrooms/:classroomId/students/:userId": {
+    anyOf: [PERMISSIONS.CLASSROOM_READ],
+  },
+  "classrooms/:classroomId/students/:userId/edit": {
+    anyOf: [PERMISSIONS.CLASSROOM_READ],
+  },
   "community/messages": {
     anyOf: [PERMISSIONS.COMMUNITY_MESSAGE_SEND],
   },

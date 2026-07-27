@@ -9134,6 +9134,19 @@ export interface ListLearningClassroomsResponse {
   }[];
 }
 
+export interface ListMyClassroomInvitesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    classroomId: string;
+    realName: string;
+    status: "pending" | "accepted" | "declined";
+    createdAt: string;
+    classroomName: string;
+  }[];
+}
+
 export interface GetClassroomDetailResponse {
   data: {
     /** @format uuid */
@@ -9234,6 +9247,231 @@ export interface RemoveClassroomTeacherResponse {
     lastName: string;
     addedBy: string | null;
   }[];
+}
+
+export interface ListClassroomStudentsResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    realName: string;
+    notes: string;
+    isManaged: boolean;
+    archivedAt: string | null;
+    username: string | null;
+  }[];
+}
+
+export interface CreateClassroomStudentBody {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  realName: string;
+}
+
+export interface CreateClassroomStudentResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    username: string;
+    temporaryPassword: string;
+    realName: string;
+  };
+}
+
+export interface BulkCreateClassroomStudentsBody {
+  /**
+   * @maxItems 200
+   * @minItems 1
+   */
+  names: string[];
+}
+
+export interface BulkCreateClassroomStudentsResponse {
+  data: {
+    students: {
+      /** @format uuid */
+      userId: string;
+      username: string;
+      temporaryPassword: string;
+      realName: string;
+    }[];
+  };
+}
+
+export interface GetClassroomStudentDetailResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    realName: string;
+    notes: string;
+    isManaged: boolean;
+    archivedAt: string | null;
+    username: string | null;
+  };
+}
+
+export interface UpdateClassroomStudentBody {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  realName?: string;
+  /** @maxLength 20000 */
+  notes?: string;
+}
+
+export interface UpdateClassroomStudentResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    realName: string;
+    notes: string;
+    isManaged: boolean;
+    archivedAt: string | null;
+    username: string | null;
+  };
+}
+
+export interface SetClassroomStudentArchivedBody {
+  archived: boolean;
+}
+
+export interface SetClassroomStudentArchivedResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    realName: string;
+    notes: string;
+    isManaged: boolean;
+    archivedAt: string | null;
+    username: string | null;
+  };
+}
+
+export interface ResetClassroomStudentPasswordResponse {
+  data: {
+    temporaryPassword: string;
+  };
+}
+
+export interface ReleaseClassroomStudentBody {
+  /** @format email */
+  email: string;
+}
+
+export interface ReleaseClassroomStudentResponse {
+  data: {
+    createToken: string;
+  };
+}
+
+export interface MoveClassroomStudentBody {
+  /** @format uuid */
+  targetClassroomId: string;
+}
+
+export interface MoveClassroomStudentResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    realName: string;
+    notes: string;
+    isManaged: boolean;
+    archivedAt: string | null;
+    username: string | null;
+  }[];
+}
+
+export interface RunClassroomBulkActionBody {
+  action: "archive" | "restore" | "remove" | "move";
+  /** @minItems 1 */
+  userIds: string[];
+  /** @format uuid */
+  targetClassroomId?: string;
+}
+
+export interface RunClassroomBulkActionResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    realName: string;
+    notes: string;
+    isManaged: boolean;
+    archivedAt: string | null;
+    username: string | null;
+  }[];
+}
+
+export interface InviteClassroomStudentBody {
+  /** @minLength 1 */
+  username: string;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  realName: string;
+}
+
+export interface InviteClassroomStudentResponse {
+  data: {
+    feedback: "already" | "found" | "invited";
+  };
+}
+
+export interface ListClassroomInvitesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    userId: string;
+    realName: string;
+    status: "pending" | "accepted" | "declined";
+    createdAt: string;
+    username: string | null;
+  }[];
+}
+
+export interface GetActivityLogsResponse {
+  data: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    actorId: string;
+    actorEmail: string;
+    actorRole: string;
+    actionType:
+      | "create"
+      | "update"
+      | "bulk_course_category_update"
+      | "bulk_course_status_update"
+      | "delete"
+      | "login"
+      | "login_failed"
+      | "logout"
+      | "enroll_course"
+      | "unenroll_course"
+      | "start_course"
+      | "group_assignment"
+      | "users_import"
+      | "send_password_reset_email"
+      | "resend_password_creation_email"
+      | "complete_lesson"
+      | "complete_course"
+      | "complete_chapter"
+      | "expire_certificate"
+      | "reset_certificate"
+      | "view_announcement";
+    resourceType: (string | null) | null;
+    resourceId: (string | null) | null;
+    metadata: any;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+  appliedFilters?: object;
 }
 
 export interface CreateAssignmentLessonBody {
@@ -10469,48 +10707,6 @@ export interface GetPublicProfileResponse {
     bio: string | null;
     avatarUrl: string | null;
   };
-}
-
-export interface GetActivityLogsResponse {
-  data: {
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-    actorId: string;
-    actorEmail: string;
-    actorRole: string;
-    actionType:
-      | "create"
-      | "update"
-      | "bulk_course_category_update"
-      | "bulk_course_status_update"
-      | "delete"
-      | "login"
-      | "login_failed"
-      | "logout"
-      | "enroll_course"
-      | "unenroll_course"
-      | "start_course"
-      | "group_assignment"
-      | "users_import"
-      | "send_password_reset_email"
-      | "resend_password_creation_email"
-      | "complete_lesson"
-      | "complete_course"
-      | "complete_chapter"
-      | "expire_certificate"
-      | "reset_certificate"
-      | "view_announcement";
-    resourceType: (string | null) | null;
-    resourceId: (string | null) | null;
-    metadata: any;
-  }[];
-  pagination: {
-    totalItems: number;
-    page: number;
-    perPage: number;
-  };
-  appliedFilters?: object;
 }
 
 export interface GetQAResponse {
@@ -19842,6 +20038,46 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name ClassroomControllerListMyClassroomInvites
+     * @request GET:/api/classroom/invites/mine
+     */
+    classroomControllerListMyClassroomInvites: (params: RequestParams = {}) =>
+      this.request<ListMyClassroomInvitesResponse, any>({
+        path: `/api/classroom/invites/mine`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerAcceptClassroomInvite
+     * @request POST:/api/classroom/invites/{inviteId}/accept
+     */
+    classroomControllerAcceptClassroomInvite: (inviteId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/classroom/invites/${inviteId}/accept`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerDeclineClassroomInvite
+     * @request POST:/api/classroom/invites/{inviteId}/decline
+     */
+    classroomControllerDeclineClassroomInvite: (inviteId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/classroom/invites/${inviteId}/decline`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name ClassroomControllerGetClassroomDetail
      * @request GET:/api/classroom/{classroomId}
      */
@@ -19927,6 +20163,364 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<RemoveClassroomTeacherResponse, any>({
         path: `/api/classroom/${classroomId}/teachers/${userId}`,
         method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerListClassroomStudents
+     * @request GET:/api/classroom/{classroomId}/students
+     */
+    classroomControllerListClassroomStudents: (
+      classroomId: string,
+      query?: {
+        includeArchived?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ListClassroomStudentsResponse, any>({
+        path: `/api/classroom/${classroomId}/students`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerCreateClassroomStudent
+     * @request POST:/api/classroom/{classroomId}/students
+     */
+    classroomControllerCreateClassroomStudent: (
+      classroomId: string,
+      data: CreateClassroomStudentBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateClassroomStudentResponse, any>({
+        path: `/api/classroom/${classroomId}/students`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerBulkCreateClassroomStudents
+     * @request POST:/api/classroom/{classroomId}/students/bulk
+     */
+    classroomControllerBulkCreateClassroomStudents: (
+      classroomId: string,
+      data: BulkCreateClassroomStudentsBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<BulkCreateClassroomStudentsResponse, any>({
+        path: `/api/classroom/${classroomId}/students/bulk`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerGetClassroomStudentDetail
+     * @request GET:/api/classroom/{classroomId}/students/{userId}
+     */
+    classroomControllerGetClassroomStudentDetail: (
+      classroomId: string,
+      userId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<GetClassroomStudentDetailResponse, any>({
+        path: `/api/classroom/${classroomId}/students/${userId}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerUpdateClassroomStudent
+     * @request PATCH:/api/classroom/{classroomId}/students/{userId}
+     */
+    classroomControllerUpdateClassroomStudent: (
+      classroomId: string,
+      userId: string,
+      data: UpdateClassroomStudentBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateClassroomStudentResponse, any>({
+        path: `/api/classroom/${classroomId}/students/${userId}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerSetClassroomStudentArchived
+     * @request POST:/api/classroom/{classroomId}/students/{userId}/archive
+     */
+    classroomControllerSetClassroomStudentArchived: (
+      classroomId: string,
+      userId: string,
+      data: SetClassroomStudentArchivedBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<SetClassroomStudentArchivedResponse, any>({
+        path: `/api/classroom/${classroomId}/students/${userId}/archive`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerResetClassroomStudentPassword
+     * @request POST:/api/classroom/{classroomId}/students/{userId}/reset-password
+     */
+    classroomControllerResetClassroomStudentPassword: (
+      classroomId: string,
+      userId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResetClassroomStudentPasswordResponse, any>({
+        path: `/api/classroom/${classroomId}/students/${userId}/reset-password`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerReleaseClassroomStudent
+     * @request POST:/api/classroom/{classroomId}/students/{userId}/release
+     */
+    classroomControllerReleaseClassroomStudent: (
+      classroomId: string,
+      userId: string,
+      data: ReleaseClassroomStudentBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<ReleaseClassroomStudentResponse, any>({
+        path: `/api/classroom/${classroomId}/students/${userId}/release`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerCloseClassroomStudent
+     * @request POST:/api/classroom/{classroomId}/students/{userId}/close
+     */
+    classroomControllerCloseClassroomStudent: (
+      classroomId: string,
+      userId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/classroom/${classroomId}/students/${userId}/close`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerMoveClassroomStudent
+     * @request POST:/api/classroom/{classroomId}/students/{userId}/move
+     */
+    classroomControllerMoveClassroomStudent: (
+      classroomId: string,
+      userId: string,
+      data: MoveClassroomStudentBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<MoveClassroomStudentResponse, any>({
+        path: `/api/classroom/${classroomId}/students/${userId}/move`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerRunClassroomBulkAction
+     * @request POST:/api/classroom/{classroomId}/bulk-actions
+     */
+    classroomControllerRunClassroomBulkAction: (
+      classroomId: string,
+      data: RunClassroomBulkActionBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<RunClassroomBulkActionResponse, any>({
+        path: `/api/classroom/${classroomId}/bulk-actions`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerInviteClassroomStudent
+     * @request POST:/api/classroom/{classroomId}/invites
+     */
+    classroomControllerInviteClassroomStudent: (
+      classroomId: string,
+      data: InviteClassroomStudentBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<InviteClassroomStudentResponse, any>({
+        path: `/api/classroom/${classroomId}/invites`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerListClassroomInvites
+     * @request GET:/api/classroom/{classroomId}/invites
+     */
+    classroomControllerListClassroomInvites: (classroomId: string, params: RequestParams = {}) =>
+      this.request<ListClassroomInvitesResponse, any>({
+        path: `/api/classroom/${classroomId}/invites`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerRevokeClassroomInvite
+     * @request DELETE:/api/classroom/{classroomId}/invites/{inviteId}
+     */
+    classroomControllerRevokeClassroomInvite: (
+      classroomId: string,
+      inviteId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/classroom/${classroomId}/invites/${inviteId}`,
+        method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ActivityLogsControllerGetActivityLogs
+     * @request GET:/api/activity-logs
+     */
+    activityLogsControllerGetActivityLogs: (
+      query?: {
+        /** @min 1 */
+        page?: number;
+        /** @min 1 */
+        perPage?: number;
+        keyword?: string;
+        email?: string;
+        resourceType?:
+          | "user"
+          | "course"
+          | "chapter"
+          | "lesson"
+          | "announcement"
+          | "group"
+          | "settings"
+          | "integration"
+          | "category"
+          | "qa"
+          | "news"
+          | "article"
+          | "articleSection"
+          | "live_training";
+        from?: string;
+        to?: string;
+        actionTypes?:
+          | (
+              | "create"
+              | "update"
+              | "bulk_course_category_update"
+              | "bulk_course_status_update"
+              | "delete"
+              | "login"
+              | "login_failed"
+              | "logout"
+              | "enroll_course"
+              | "unenroll_course"
+              | "start_course"
+              | "group_assignment"
+              | "users_import"
+              | "send_password_reset_email"
+              | "resend_password_creation_email"
+              | "complete_lesson"
+              | "complete_course"
+              | "complete_chapter"
+              | "expire_certificate"
+              | "reset_certificate"
+              | "view_announcement"
+            )
+          | (
+              | "create"
+              | "update"
+              | "bulk_course_category_update"
+              | "bulk_course_status_update"
+              | "delete"
+              | "login"
+              | "login_failed"
+              | "logout"
+              | "enroll_course"
+              | "unenroll_course"
+              | "start_course"
+              | "group_assignment"
+              | "users_import"
+              | "send_password_reset_email"
+              | "resend_password_creation_email"
+              | "complete_lesson"
+              | "complete_course"
+              | "complete_chapter"
+              | "expire_certificate"
+              | "reset_certificate"
+              | "view_announcement"
+            )[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetActivityLogsResponse, any>({
+        path: `/api/activity-logs`,
+        method: "GET",
+        query: query,
         format: "json",
         ...params,
       }),
@@ -20701,95 +21295,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<GetPublicProfileResponse, any>({
         path: `/api/public-profile/${username}`,
         method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ActivityLogsControllerGetActivityLogs
-     * @request GET:/api/activity-logs
-     */
-    activityLogsControllerGetActivityLogs: (
-      query?: {
-        /** @min 1 */
-        page?: number;
-        /** @min 1 */
-        perPage?: number;
-        keyword?: string;
-        email?: string;
-        resourceType?:
-          | "user"
-          | "course"
-          | "chapter"
-          | "lesson"
-          | "announcement"
-          | "group"
-          | "settings"
-          | "integration"
-          | "category"
-          | "qa"
-          | "news"
-          | "article"
-          | "articleSection"
-          | "live_training";
-        from?: string;
-        to?: string;
-        actionTypes?:
-          | (
-              | "create"
-              | "update"
-              | "bulk_course_category_update"
-              | "bulk_course_status_update"
-              | "delete"
-              | "login"
-              | "login_failed"
-              | "logout"
-              | "enroll_course"
-              | "unenroll_course"
-              | "start_course"
-              | "group_assignment"
-              | "users_import"
-              | "send_password_reset_email"
-              | "resend_password_creation_email"
-              | "complete_lesson"
-              | "complete_course"
-              | "complete_chapter"
-              | "expire_certificate"
-              | "reset_certificate"
-              | "view_announcement"
-            )
-          | (
-              | "create"
-              | "update"
-              | "bulk_course_category_update"
-              | "bulk_course_status_update"
-              | "delete"
-              | "login"
-              | "login_failed"
-              | "logout"
-              | "enroll_course"
-              | "unenroll_course"
-              | "start_course"
-              | "group_assignment"
-              | "users_import"
-              | "send_password_reset_email"
-              | "resend_password_creation_email"
-              | "complete_lesson"
-              | "complete_course"
-              | "complete_chapter"
-              | "expire_certificate"
-              | "reset_certificate"
-              | "view_announcement"
-            )[];
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetActivityLogsResponse, any>({
-        path: `/api/activity-logs`,
-        method: "GET",
-        query: query,
         format: "json",
         ...params,
       }),

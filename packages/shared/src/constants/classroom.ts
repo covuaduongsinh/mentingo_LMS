@@ -15,3 +15,22 @@ export const CLASSROOM_DEFAULTS = {
 export const CLASSROOM_LOGIN_CODE_EXPIRATION_MS = 15 * 60 * 1000;
 
 export const CLASSROOM_LOGIN_CODE_LENGTH = 5;
+
+export const CLASSROOM_INVITE_STATUSES = {
+  PENDING: "pending",
+  ACCEPTED: "accepted",
+  DECLINED: "declined",
+} as const;
+
+export type ClassroomInviteStatus =
+  (typeof CLASSROOM_INVITE_STATUSES)[keyof typeof CLASSROOM_INVITE_STATUSES];
+
+export const CLASSROOM_BULK_ACTIONS = {
+  ARCHIVE: "archive",
+  RESTORE: "restore",
+  REMOVE: "remove",
+  MOVE: "move",
+} as const;
+
+export type ClassroomBulkAction =
+  (typeof CLASSROOM_BULK_ACTIONS)[keyof typeof CLASSROOM_BULK_ACTIONS];

@@ -16612,6 +16612,65 @@
         }
       }
     },
+    "/api/classroom/invites/mine": {
+      "get": {
+        "operationId": "ClassroomController_listMyClassroomInvites",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListMyClassroomInvitesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/invites/{inviteId}/accept": {
+      "post": {
+        "operationId": "ClassroomController_acceptClassroomInvite",
+        "parameters": [
+          {
+            "name": "inviteId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/classroom/invites/{inviteId}/decline": {
+      "post": {
+        "operationId": "ClassroomController_declineClassroomInvite",
+        "parameters": [
+          {
+            "name": "inviteId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/classroom/{classroomId}": {
       "get": {
         "operationId": "ClassroomController_getClassroomDetail",
@@ -16777,6 +16836,847 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RemoveClassroomTeacherResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/students": {
+      "get": {
+        "operationId": "ClassroomController_listClassroomStudents",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeArchived",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListClassroomStudentsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "ClassroomController_createClassroomStudent",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClassroomStudentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClassroomStudentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/students/bulk": {
+      "post": {
+        "operationId": "ClassroomController_bulkCreateClassroomStudents",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkCreateClassroomStudentsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkCreateClassroomStudentsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/students/{userId}": {
+      "get": {
+        "operationId": "ClassroomController_getClassroomStudentDetail",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClassroomStudentDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "ClassroomController_updateClassroomStudent",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClassroomStudentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateClassroomStudentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/students/{userId}/archive": {
+      "post": {
+        "operationId": "ClassroomController_setClassroomStudentArchived",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetClassroomStudentArchivedBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetClassroomStudentArchivedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/students/{userId}/reset-password": {
+      "post": {
+        "operationId": "ClassroomController_resetClassroomStudentPassword",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetClassroomStudentPasswordResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/students/{userId}/release": {
+      "post": {
+        "operationId": "ClassroomController_releaseClassroomStudent",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReleaseClassroomStudentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseClassroomStudentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/students/{userId}/close": {
+      "post": {
+        "operationId": "ClassroomController_closeClassroomStudent",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/students/{userId}/move": {
+      "post": {
+        "operationId": "ClassroomController_moveClassroomStudent",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveClassroomStudentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveClassroomStudentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/bulk-actions": {
+      "post": {
+        "operationId": "ClassroomController_runClassroomBulkAction",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunClassroomBulkActionBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunClassroomBulkActionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/invites": {
+      "post": {
+        "operationId": "ClassroomController_inviteClassroomStudent",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteClassroomStudentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteClassroomStudentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "ClassroomController_listClassroomInvites",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListClassroomInvitesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/invites/{inviteId}": {
+      "delete": {
+        "operationId": "ClassroomController_revokeClassroomInvite",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "inviteId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/activity-logs": {
+      "get": {
+        "operationId": "ActivityLogsController_getActivityLogs",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resourceType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "user",
+                  "type": "string"
+                },
+                {
+                  "const": "course",
+                  "type": "string"
+                },
+                {
+                  "const": "chapter",
+                  "type": "string"
+                },
+                {
+                  "const": "lesson",
+                  "type": "string"
+                },
+                {
+                  "const": "announcement",
+                  "type": "string"
+                },
+                {
+                  "const": "group",
+                  "type": "string"
+                },
+                {
+                  "const": "settings",
+                  "type": "string"
+                },
+                {
+                  "const": "integration",
+                  "type": "string"
+                },
+                {
+                  "const": "category",
+                  "type": "string"
+                },
+                {
+                  "const": "qa",
+                  "type": "string"
+                },
+                {
+                  "const": "news",
+                  "type": "string"
+                },
+                {
+                  "const": "article",
+                  "type": "string"
+                },
+                {
+                  "const": "articleSection",
+                  "type": "string"
+                },
+                {
+                  "const": "live_training",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "actionTypes",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "anyOf": [
+                    {
+                      "const": "create",
+                      "type": "string"
+                    },
+                    {
+                      "const": "update",
+                      "type": "string"
+                    },
+                    {
+                      "const": "bulk_course_category_update",
+                      "type": "string"
+                    },
+                    {
+                      "const": "bulk_course_status_update",
+                      "type": "string"
+                    },
+                    {
+                      "const": "delete",
+                      "type": "string"
+                    },
+                    {
+                      "const": "login",
+                      "type": "string"
+                    },
+                    {
+                      "const": "login_failed",
+                      "type": "string"
+                    },
+                    {
+                      "const": "logout",
+                      "type": "string"
+                    },
+                    {
+                      "const": "enroll_course",
+                      "type": "string"
+                    },
+                    {
+                      "const": "unenroll_course",
+                      "type": "string"
+                    },
+                    {
+                      "const": "start_course",
+                      "type": "string"
+                    },
+                    {
+                      "const": "group_assignment",
+                      "type": "string"
+                    },
+                    {
+                      "const": "users_import",
+                      "type": "string"
+                    },
+                    {
+                      "const": "send_password_reset_email",
+                      "type": "string"
+                    },
+                    {
+                      "const": "resend_password_creation_email",
+                      "type": "string"
+                    },
+                    {
+                      "const": "complete_lesson",
+                      "type": "string"
+                    },
+                    {
+                      "const": "complete_course",
+                      "type": "string"
+                    },
+                    {
+                      "const": "complete_chapter",
+                      "type": "string"
+                    },
+                    {
+                      "const": "expire_certificate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "reset_certificate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "view_announcement",
+                      "type": "string"
+                    }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "const": "create",
+                        "type": "string"
+                      },
+                      {
+                        "const": "update",
+                        "type": "string"
+                      },
+                      {
+                        "const": "bulk_course_category_update",
+                        "type": "string"
+                      },
+                      {
+                        "const": "bulk_course_status_update",
+                        "type": "string"
+                      },
+                      {
+                        "const": "delete",
+                        "type": "string"
+                      },
+                      {
+                        "const": "login",
+                        "type": "string"
+                      },
+                      {
+                        "const": "login_failed",
+                        "type": "string"
+                      },
+                      {
+                        "const": "logout",
+                        "type": "string"
+                      },
+                      {
+                        "const": "enroll_course",
+                        "type": "string"
+                      },
+                      {
+                        "const": "unenroll_course",
+                        "type": "string"
+                      },
+                      {
+                        "const": "start_course",
+                        "type": "string"
+                      },
+                      {
+                        "const": "group_assignment",
+                        "type": "string"
+                      },
+                      {
+                        "const": "users_import",
+                        "type": "string"
+                      },
+                      {
+                        "const": "send_password_reset_email",
+                        "type": "string"
+                      },
+                      {
+                        "const": "resend_password_creation_email",
+                        "type": "string"
+                      },
+                      {
+                        "const": "complete_lesson",
+                        "type": "string"
+                      },
+                      {
+                        "const": "complete_course",
+                        "type": "string"
+                      },
+                      {
+                        "const": "complete_chapter",
+                        "type": "string"
+                      },
+                      {
+                        "const": "expire_certificate",
+                        "type": "string"
+                      },
+                      {
+                        "const": "reset_certificate",
+                        "type": "string"
+                      },
+                      {
+                        "const": "view_announcement",
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetActivityLogsResponse"
                 }
               }
             }
@@ -18664,327 +19564,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetPublicProfileResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/activity-logs": {
-      "get": {
-        "operationId": "ActivityLogsController_getActivityLogs",
-        "parameters": [
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "minimum": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "minimum": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "keyword",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "email",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "resourceType",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "anyOf": [
-                {
-                  "const": "user",
-                  "type": "string"
-                },
-                {
-                  "const": "course",
-                  "type": "string"
-                },
-                {
-                  "const": "chapter",
-                  "type": "string"
-                },
-                {
-                  "const": "lesson",
-                  "type": "string"
-                },
-                {
-                  "const": "announcement",
-                  "type": "string"
-                },
-                {
-                  "const": "group",
-                  "type": "string"
-                },
-                {
-                  "const": "settings",
-                  "type": "string"
-                },
-                {
-                  "const": "integration",
-                  "type": "string"
-                },
-                {
-                  "const": "category",
-                  "type": "string"
-                },
-                {
-                  "const": "qa",
-                  "type": "string"
-                },
-                {
-                  "const": "news",
-                  "type": "string"
-                },
-                {
-                  "const": "article",
-                  "type": "string"
-                },
-                {
-                  "const": "articleSection",
-                  "type": "string"
-                },
-                {
-                  "const": "live_training",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          {
-            "name": "from",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "to",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "actionTypes",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "anyOf": [
-                {
-                  "anyOf": [
-                    {
-                      "const": "create",
-                      "type": "string"
-                    },
-                    {
-                      "const": "update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "bulk_course_category_update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "bulk_course_status_update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "delete",
-                      "type": "string"
-                    },
-                    {
-                      "const": "login",
-                      "type": "string"
-                    },
-                    {
-                      "const": "login_failed",
-                      "type": "string"
-                    },
-                    {
-                      "const": "logout",
-                      "type": "string"
-                    },
-                    {
-                      "const": "enroll_course",
-                      "type": "string"
-                    },
-                    {
-                      "const": "unenroll_course",
-                      "type": "string"
-                    },
-                    {
-                      "const": "start_course",
-                      "type": "string"
-                    },
-                    {
-                      "const": "group_assignment",
-                      "type": "string"
-                    },
-                    {
-                      "const": "users_import",
-                      "type": "string"
-                    },
-                    {
-                      "const": "send_password_reset_email",
-                      "type": "string"
-                    },
-                    {
-                      "const": "resend_password_creation_email",
-                      "type": "string"
-                    },
-                    {
-                      "const": "complete_lesson",
-                      "type": "string"
-                    },
-                    {
-                      "const": "complete_course",
-                      "type": "string"
-                    },
-                    {
-                      "const": "complete_chapter",
-                      "type": "string"
-                    },
-                    {
-                      "const": "expire_certificate",
-                      "type": "string"
-                    },
-                    {
-                      "const": "reset_certificate",
-                      "type": "string"
-                    },
-                    {
-                      "const": "view_announcement",
-                      "type": "string"
-                    }
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "const": "create",
-                        "type": "string"
-                      },
-                      {
-                        "const": "update",
-                        "type": "string"
-                      },
-                      {
-                        "const": "bulk_course_category_update",
-                        "type": "string"
-                      },
-                      {
-                        "const": "bulk_course_status_update",
-                        "type": "string"
-                      },
-                      {
-                        "const": "delete",
-                        "type": "string"
-                      },
-                      {
-                        "const": "login",
-                        "type": "string"
-                      },
-                      {
-                        "const": "login_failed",
-                        "type": "string"
-                      },
-                      {
-                        "const": "logout",
-                        "type": "string"
-                      },
-                      {
-                        "const": "enroll_course",
-                        "type": "string"
-                      },
-                      {
-                        "const": "unenroll_course",
-                        "type": "string"
-                      },
-                      {
-                        "const": "start_course",
-                        "type": "string"
-                      },
-                      {
-                        "const": "group_assignment",
-                        "type": "string"
-                      },
-                      {
-                        "const": "users_import",
-                        "type": "string"
-                      },
-                      {
-                        "const": "send_password_reset_email",
-                        "type": "string"
-                      },
-                      {
-                        "const": "resend_password_creation_email",
-                        "type": "string"
-                      },
-                      {
-                        "const": "complete_lesson",
-                        "type": "string"
-                      },
-                      {
-                        "const": "complete_course",
-                        "type": "string"
-                      },
-                      {
-                        "const": "complete_chapter",
-                        "type": "string"
-                      },
-                      {
-                        "const": "expire_certificate",
-                        "type": "string"
-                      },
-                      {
-                        "const": "reset_certificate",
-                        "type": "string"
-                      },
-                      {
-                        "const": "view_announcement",
-                        "type": "string"
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetActivityLogsResponse"
                 }
               }
             }
@@ -66320,6 +66899,63 @@
           "data"
         ]
       },
+      "ListMyClassroomInvitesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "classroomId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "status": {
+                  "anyOf": [
+                    {
+                      "const": "pending",
+                      "type": "string"
+                    },
+                    {
+                      "const": "accepted",
+                      "type": "string"
+                    },
+                    {
+                      "const": "declined",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "classroomName": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "classroomId",
+                "realName",
+                "status",
+                "createdAt",
+                "classroomName"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "GetClassroomDetailResponse": {
         "type": "object",
         "properties": {
@@ -66766,6 +67402,883 @@
         },
         "required": [
           "data"
+        ]
+      },
+      "ListClassroomStudentsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                },
+                "isManaged": {
+                  "type": "boolean"
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "username": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "userId",
+                "realName",
+                "notes",
+                "isManaged",
+                "archivedAt",
+                "username"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateClassroomStudentBody": {
+        "type": "object",
+        "properties": {
+          "realName": {
+            "minLength": 1,
+            "maxLength": 100,
+            "type": "string"
+          }
+        },
+        "required": [
+          "realName"
+        ]
+      },
+      "CreateClassroomStudentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "temporaryPassword": {
+                "type": "string"
+              },
+              "realName": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "userId",
+              "username",
+              "temporaryPassword",
+              "realName"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "BulkCreateClassroomStudentsBody": {
+        "type": "object",
+        "properties": {
+          "names": {
+            "minItems": 1,
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "names"
+        ]
+      },
+      "BulkCreateClassroomStudentsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "students": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "temporaryPassword": {
+                      "type": "string"
+                    },
+                    "realName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "username",
+                    "temporaryPassword",
+                    "realName"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "students"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetClassroomStudentDetailResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "realName": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              },
+              "isManaged": {
+                "type": "boolean"
+              },
+              "archivedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "userId",
+              "realName",
+              "notes",
+              "isManaged",
+              "archivedAt",
+              "username"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateClassroomStudentBody": {
+        "type": "object",
+        "properties": {
+          "realName": {
+            "minLength": 1,
+            "maxLength": 100,
+            "type": "string"
+          },
+          "notes": {
+            "maxLength": 20000,
+            "type": "string"
+          }
+        }
+      },
+      "UpdateClassroomStudentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "realName": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              },
+              "isManaged": {
+                "type": "boolean"
+              },
+              "archivedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "userId",
+              "realName",
+              "notes",
+              "isManaged",
+              "archivedAt",
+              "username"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SetClassroomStudentArchivedBody": {
+        "type": "object",
+        "properties": {
+          "archived": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "archived"
+        ]
+      },
+      "SetClassroomStudentArchivedResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "realName": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              },
+              "isManaged": {
+                "type": "boolean"
+              },
+              "archivedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "username": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "userId",
+              "realName",
+              "notes",
+              "isManaged",
+              "archivedAt",
+              "username"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ResetClassroomStudentPasswordResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "temporaryPassword": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "temporaryPassword"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ReleaseClassroomStudentBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "format": "email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "ReleaseClassroomStudentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "createToken": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "createToken"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "MoveClassroomStudentBody": {
+        "type": "object",
+        "properties": {
+          "targetClassroomId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "targetClassroomId"
+        ]
+      },
+      "MoveClassroomStudentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                },
+                "isManaged": {
+                  "type": "boolean"
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "username": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "userId",
+                "realName",
+                "notes",
+                "isManaged",
+                "archivedAt",
+                "username"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RunClassroomBulkActionBody": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "anyOf": [
+              {
+                "const": "archive",
+                "type": "string"
+              },
+              {
+                "const": "restore",
+                "type": "string"
+              },
+              {
+                "const": "remove",
+                "type": "string"
+              },
+              {
+                "const": "move",
+                "type": "string"
+              }
+            ]
+          },
+          "userIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          "targetClassroomId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "userIds"
+        ]
+      },
+      "RunClassroomBulkActionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                },
+                "isManaged": {
+                  "type": "boolean"
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "username": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "userId",
+                "realName",
+                "notes",
+                "isManaged",
+                "archivedAt",
+                "username"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "InviteClassroomStudentBody": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "realName": {
+            "minLength": 1,
+            "maxLength": 100,
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "realName"
+        ]
+      },
+      "InviteClassroomStudentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "feedback": {
+                "anyOf": [
+                  {
+                    "const": "already",
+                    "type": "string"
+                  },
+                  {
+                    "const": "found",
+                    "type": "string"
+                  },
+                  {
+                    "const": "invited",
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "feedback"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListClassroomInvitesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "userId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "realName": {
+                  "type": "string"
+                },
+                "status": {
+                  "anyOf": [
+                    {
+                      "const": "pending",
+                      "type": "string"
+                    },
+                    {
+                      "const": "accepted",
+                      "type": "string"
+                    },
+                    {
+                      "const": "declined",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "username": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "realName",
+                "status",
+                "createdAt",
+                "username"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetActivityLogsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "actorId": {
+                  "type": "string"
+                },
+                "actorEmail": {
+                  "type": "string"
+                },
+                "actorRole": {
+                  "type": "string"
+                },
+                "actionType": {
+                  "anyOf": [
+                    {
+                      "const": "create",
+                      "type": "string"
+                    },
+                    {
+                      "const": "update",
+                      "type": "string"
+                    },
+                    {
+                      "const": "bulk_course_category_update",
+                      "type": "string"
+                    },
+                    {
+                      "const": "bulk_course_status_update",
+                      "type": "string"
+                    },
+                    {
+                      "const": "delete",
+                      "type": "string"
+                    },
+                    {
+                      "const": "login",
+                      "type": "string"
+                    },
+                    {
+                      "const": "login_failed",
+                      "type": "string"
+                    },
+                    {
+                      "const": "logout",
+                      "type": "string"
+                    },
+                    {
+                      "const": "enroll_course",
+                      "type": "string"
+                    },
+                    {
+                      "const": "unenroll_course",
+                      "type": "string"
+                    },
+                    {
+                      "const": "start_course",
+                      "type": "string"
+                    },
+                    {
+                      "const": "group_assignment",
+                      "type": "string"
+                    },
+                    {
+                      "const": "users_import",
+                      "type": "string"
+                    },
+                    {
+                      "const": "send_password_reset_email",
+                      "type": "string"
+                    },
+                    {
+                      "const": "resend_password_creation_email",
+                      "type": "string"
+                    },
+                    {
+                      "const": "complete_lesson",
+                      "type": "string"
+                    },
+                    {
+                      "const": "complete_course",
+                      "type": "string"
+                    },
+                    {
+                      "const": "complete_chapter",
+                      "type": "string"
+                    },
+                    {
+                      "const": "expire_certificate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "reset_certificate",
+                      "type": "string"
+                    },
+                    {
+                      "const": "view_announcement",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "resourceType": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "resourceId": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "metadata": {}
+              },
+              "required": [
+                "id",
+                "createdAt",
+                "updatedAt",
+                "actorId",
+                "actorEmail",
+                "actorRole",
+                "actionType",
+                "resourceType",
+                "resourceId",
+                "metadata"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
         ]
       },
       "CreateAssignmentLessonBody": {
@@ -72742,202 +74255,6 @@
         },
         "required": [
           "data"
-        ]
-      },
-      "GetActivityLogsResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "createdAt": {
-                  "type": "string"
-                },
-                "updatedAt": {
-                  "type": "string"
-                },
-                "actorId": {
-                  "type": "string"
-                },
-                "actorEmail": {
-                  "type": "string"
-                },
-                "actorRole": {
-                  "type": "string"
-                },
-                "actionType": {
-                  "anyOf": [
-                    {
-                      "const": "create",
-                      "type": "string"
-                    },
-                    {
-                      "const": "update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "bulk_course_category_update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "bulk_course_status_update",
-                      "type": "string"
-                    },
-                    {
-                      "const": "delete",
-                      "type": "string"
-                    },
-                    {
-                      "const": "login",
-                      "type": "string"
-                    },
-                    {
-                      "const": "login_failed",
-                      "type": "string"
-                    },
-                    {
-                      "const": "logout",
-                      "type": "string"
-                    },
-                    {
-                      "const": "enroll_course",
-                      "type": "string"
-                    },
-                    {
-                      "const": "unenroll_course",
-                      "type": "string"
-                    },
-                    {
-                      "const": "start_course",
-                      "type": "string"
-                    },
-                    {
-                      "const": "group_assignment",
-                      "type": "string"
-                    },
-                    {
-                      "const": "users_import",
-                      "type": "string"
-                    },
-                    {
-                      "const": "send_password_reset_email",
-                      "type": "string"
-                    },
-                    {
-                      "const": "resend_password_creation_email",
-                      "type": "string"
-                    },
-                    {
-                      "const": "complete_lesson",
-                      "type": "string"
-                    },
-                    {
-                      "const": "complete_course",
-                      "type": "string"
-                    },
-                    {
-                      "const": "complete_chapter",
-                      "type": "string"
-                    },
-                    {
-                      "const": "expire_certificate",
-                      "type": "string"
-                    },
-                    {
-                      "const": "reset_certificate",
-                      "type": "string"
-                    },
-                    {
-                      "const": "view_announcement",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "resourceType": {
-                  "anyOf": [
-                    {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "resourceId": {
-                  "anyOf": [
-                    {
-                      "anyOf": [
-                        {
-                          "format": "uuid",
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "metadata": {}
-              },
-              "required": [
-                "id",
-                "createdAt",
-                "updatedAt",
-                "actorId",
-                "actorEmail",
-                "actorRole",
-                "actionType",
-                "resourceType",
-                "resourceId",
-                "metadata"
-              ]
-            }
-          },
-          "pagination": {
-            "type": "object",
-            "properties": {
-              "totalItems": {
-                "type": "number"
-              },
-              "page": {
-                "type": "number"
-              },
-              "perPage": {
-                "type": "number"
-              }
-            },
-            "required": [
-              "totalItems",
-              "page",
-              "perPage"
-            ]
-          },
-          "appliedFilters": {
-            "type": "object",
-            "patternProperties": {
-              "^(.*)$": {}
-            }
-          }
-        },
-        "required": [
-          "data",
-          "pagination"
         ]
       },
       "GetQAResponse": {
