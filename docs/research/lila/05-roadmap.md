@@ -6,19 +6,19 @@ Theo yêu cầu của người dùng, mỗi đợt tự động verify (tsc + es
 
 **Điểm xuất phát**: roadmap này bắt đầu ngay sau khi Đợt 1–11 (còn thiếu so với LearnHouse, xem `docs/research/learnhouse/05-roadmap.md`) đã merged hoàn toàn vào `main` (PR #9–#19), bao gồm bàn phân tích cờ cộng tác thời gian thực (PR #19, `chess_analysis_sessions`) — hạ tầng đó được **tái dùng** ở Đợt L1/L4 dưới đây, không làm lại.
 
-| Đợt     | PR               | Nội dung                                                                |
-| ------- | ---------------- | ----------------------------------------------------------------------- |
-| **L0**  | #20 merged       | Tài liệu khảo sát clean-room `docs/research/lila/` (6 file, không code) |
-| **L1**  | #21 merged       | Nền bàn cờ tương tác: shapes, glyph, cây biến, board editor             |
-| **L2**  | #22 merged       | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
-| **L3**  | #23 merged       | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
-| **L4**  | #24 merged       | Chơi trực tuyến người-với-người                                         |
-| **L5**  | #25 merged       | Lớp học cờ: tài khoản do giáo viên quản lý                              |
-| **L6**  | #26 merged       | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
-| **L7**  | #27 merged       | Nhập môn: Learn/Coordinate/Practice                                     |
-| **L8**  | #28 merged       | Phân tích điểm mạnh-yếu (Insight/Tutor)                                 |
-| **L9**  | #29 merged       | Cộng đồng cờ: mở rộng community forum có sẵn                            |
-| **L10** | _(chưa bắt đầu)_ | Tường thuật giải đấu (Broadcast/Relay)                                  |
+| Đợt     | PR         | Nội dung                                                                |
+| ------- | ---------- | ----------------------------------------------------------------------- |
+| **L0**  | #20 merged | Tài liệu khảo sát clean-room `docs/research/lila/` (6 file, không code) |
+| **L1**  | #21 merged | Nền bàn cờ tương tác: shapes, glyph, cây biến, board editor             |
+| **L2**  | #22 merged | Study/Chapter: bài giảng cờ tương tác + nhúng vào khóa học              |
+| **L3**  | #23 merged | Glicko-2 + ngân hàng Puzzle CC0 + luyện tập thích ứng + dashboard       |
+| **L4**  | #24 merged | Chơi trực tuyến người-với-người                                         |
+| **L5**  | #25 merged | Lớp học cờ: tài khoản do giáo viên quản lý                              |
+| **L6**  | #26 merged | Ghép cặp hàng loạt + giải đấu Swiss/Arena/Simul                         |
+| **L7**  | #27 merged | Nhập môn: Learn/Coordinate/Practice                                     |
+| **L8**  | #28 merged | Phân tích điểm mạnh-yếu (Insight/Tutor)                                 |
+| **L9**  | #29 merged | Cộng đồng cờ: mở rộng community forum có sẵn                            |
+| **L10** | #30 merged | Tường thuật giải đấu (Broadcast/Relay)                                  |
 
 ## Đợt L0 — Tài liệu khảo sát clean-room _(Đã merged, PR #20)_
 
@@ -166,10 +166,27 @@ Bảng mới: `community_conversations`, `community_messages`, `community_user_r
 
 **Phát hiện kỹ thuật quan trọng khi triển khai**: 2 bug thật chỉ lộ ra qua smoke test thủ công qua Caddy (test đơn vị mock repository nên không chạy SQL thật) — (1) alias cột raw SQL viết `snake_case` nhưng code TS truy cập `camelCase`, phải quote alias (`AS "otherUserId"`) vì `postgres.js` trả về key đúng y hệt alias đã viết; (2) `sql\`${col} = ANY(${jsArray})\``với drizzle-orm's`sql`tag không chuyển mảng JS thành Postgres array literal đúng cách, phải dùng`inArray()` (helper có sẵn của drizzle-orm) thay cho raw SQL khi cần so khớp một mảng giá trị.
 
-## Đợt L10 — Tường thuật giải đấu (Broadcast)
+## Đợt L10 — Tường thuật giải đấu (Broadcast) — đợt cuối roadmap
 
-- Kéo PGN từ nguồn ngoài theo chu kỳ, phát ván trực tiếp.
-- Nhiều vòng, nhiều bàn, bảng xếp hạng đội, trễ phát sóng chống gian lận.
+> **Đã merged (PR #30)** — xem `docs/specs/chess-broadcast-business-spec.md`. Tóm tắt khác biệt so với kế hoạch gốc bên dưới.
+
+Bảng mới: `chess_broadcasts`, `chess_broadcast_rounds`, `chess_broadcast_teams`, `chess_broadcast_games`, `chess_broadcast_game_moves` (+ migration RLS riêng, `0199`/`0200`).
+
+- Module hoàn toàn tách biệt `src/chess-broadcast/` — chỉ dùng `chess.js` như thư viện thuần, **không** import bất kỳ service nào của `ChessModule`/`ChessTournamentModule`, đúng mẫu các module chess-\* độc lập đã có.
+- Tường thuật giải đấu **thật ngoài đời** (không phải ván chơi trong mentingo): buổi tường thuật → vòng đấu → bàn/ván (tên người chơi tự do, không cần tài khoản mentingo) → đội thi đấu.
+- Cập nhật ván chủ yếu bằng **dán tay PGN** (`PATCH .../games/:id/pgn`) với thuật toán "chỉ thêm nước mới": phát lại PGN bằng `chess.js`, so với số nước đã lưu, nếu tiền tố khớp UCI thì chỉ chèn phần dư (giữ nguyên `ingestedAt` của nước cũ — mốc thời gian duy nhất dùng để tính độ trễ), PGN lệch tiền tố hoặc ngắn hơn thì từ chối rõ ràng (400) thay vì âm thầm ghi đè lịch sử.
+- **Kéo PGN tự động theo chu kỳ** (tùy chọn, không thay thế dán tay): mỗi bàn có thể cấu hình `pgnSourceUrl`, cron mỗi phút (`ChessBroadcastCron`, mẫu `ChessMatchCron` L4) chỉ quét bàn thuộc buổi tường thuật đang `live`. Fetch PGN qua `safe-pgn-fetch.ts` — bản **nhân bản đầy đủ** của `link-preview/utils/safe-fetch.ts` (chặn SSRF, giới hạn kích thước, giới hạn redirect), không import chung.
+- **Xem trực tiếp có độ trễ** (mặc định 15 phút, chống mách nước qua điện thoại): tính hoàn toàn ở tầng đọc, lọc `ingestedAt ≤ now − delayMinutes`; `?live=true` (xem không trễ) chỉ dành cho `chess.broadcast.manage`.
+- **Bảng xếp hạng đội pull-based**: tính lại từ `chess_broadcast_games.result` mỗi lần gọi — cùng nguyên lý tiebreak L6, không lưu trạng thái tăng dần.
+- Permission mới: `chess.broadcast.read` (mọi vai trò), `chess.broadcast.manage` (trainer/admin).
+
+**Lùi lại / chưa làm** (xem "Follow-up Work" trong spec): tự động chuyển trạng thái buổi tường thuật theo lịch (người tổ chức tự đặt tay), tích hợp bàn cờ điện tử DGT, bóc tách PGN theo cấu trúc riêng của từng trang giải đấu (chỉ hỗ trợ URL trả PGN thô hoặc dán tay), tiebreak nâng cao cho bảng xếp hạng đội (chỉ cộng điểm đơn giản), thông báo/toast realtime khi có nước mới (client phải tự polling).
+
+**Phát hiện kỹ thuật quan trọng khi triển khai**: 2 bug thật chỉ lộ ra qua smoke test thủ công qua Caddy (test đơn vị mock repository nên không chạy SQL thật) — (1) quên set `mode: "string"` trên 3 cột timestamp mới, khác với **mọi** cột timestamp khác trong toàn bộ schema đều set tường minh; thiếu nó khiến drizzle trả `Date` object thay vì string, vỡ response validation TypeBox và làm sai lệch phép so sánh `<=` giữa string/Date; (2) tên method controller `createGame`/`updateGame`/`getStandings` trùng với method có sẵn ở `chess.controller.ts`/`chess-tournament.controller.ts` — nhắc lại đúng quy tắc đã ghi từ L2/L7 (`swagger-typescript-api` đặt tên DTO theo tên method, không theo class), sửa bằng đổi tên riêng (`createBroadcastGame`/`updateBroadcastGame`/`getBroadcastStandings`). Frontend dùng lại nguyên `FenBoard` (từ L1) cho khung xem trực tiếp — chỉ xem, không cần bàn cờ tương tác. **Chưa xác minh bằng trình duyệt thật** trong đợt này (không có công cụ browser-automation) — chỉ xác nhận qua tsc/eslint/test sạch và toàn bộ luồng API thật qua Caddy.
+
+## Roadmap đã hoàn tất (L0–L10)
+
+Không còn đợt nào theo kế hoạch đã duyệt. Các mục còn lại trong [03-feature-matrix.md](./03-feature-matrix.md) đều đã được xếp vào "Follow-up Work" của đợt tương ứng — là quyết định phạm vi có ghi chú rõ trong spec từng đợt, không phải việc bị bỏ sót.
 
 ## Loại khỏi phạm vi (đã cân nhắc, quyết định không làm)
 
