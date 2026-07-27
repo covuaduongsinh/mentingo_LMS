@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import { ApiOperation } from "@nestjs/swagger";
 import { PERMISSIONS } from "@repo/shared";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
@@ -25,6 +26,11 @@ import {
 export class ChessClassController {
   constructor(private readonly chessClassService: ChessClassService) {}
 
+  @ApiOperation({
+    deprecated: true,
+    summary:
+      "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
+  })
   @Post("groups/:groupId/students/bulk")
   @RequirePermission(PERMISSIONS.CHESS_CLASS_MANAGE_STUDENTS)
   @Validate({
@@ -43,6 +49,11 @@ export class ChessClassController {
     return new BaseResponse({ students });
   }
 
+  @ApiOperation({
+    deprecated: true,
+    summary:
+      "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
+  })
   @Post("students/:userId/reset-password")
   @RequirePermission(PERMISSIONS.CHESS_CLASS_RESET_PASSWORD)
   @Validate({
@@ -57,6 +68,11 @@ export class ChessClassController {
     return new BaseResponse({ temporaryPassword });
   }
 
+  @ApiOperation({
+    deprecated: true,
+    summary:
+      "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
+  })
   @Post("students/:userId/release")
   @RequirePermission(PERMISSIONS.CHESS_CLASS_MANAGE_STUDENTS)
   @Validate({
@@ -79,6 +95,11 @@ export class ChessClassController {
     return new BaseResponse({ createToken });
   }
 
+  @ApiOperation({
+    deprecated: true,
+    summary:
+      "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
+  })
   @Post("groups/:groupId/login-codes")
   @RequirePermission(PERMISSIONS.CHESS_CLASS_MANAGE_STUDENTS)
   @Validate({
@@ -92,6 +113,11 @@ export class ChessClassController {
     return new BaseResponse(await this.chessClassService.generateLoginCodes(user, groupId));
   }
 
+  @ApiOperation({
+    deprecated: true,
+    summary:
+      "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
+  })
   @Get("groups/:groupId/progress")
   @RequirePermission(PERMISSIONS.CHESS_CLASS_PROGRESS)
   @Validate({

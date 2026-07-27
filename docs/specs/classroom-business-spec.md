@@ -99,6 +99,15 @@ _(Mục này được bổ sung dần theo từng đợt C1–C8 — xem lịch 
 - Frontend: `apps/web/app/modules/Classroom/{ClassroomList,ClassroomDetail}.page.tsx`, route `classrooms` + `classrooms/:classroomId` (trong `PublicDashboard.layout` — không phải `Admin.layout`, vì học sinh cũng cần truy cập), `routeAccessConfig.ts` cập nhật, 8 hook TanStack Query (`api/queries/use{Teaching,Learning}Classrooms.ts`, `useClassroomDetail.ts`; `api/mutations/use{Create,Update,SetArchived,AddTeacher,RemoveTeacher}Classroom*.ts`).
 - Chuỗi UI mới thêm vào đủ 7 file locale (`classroom.*` + 2 khóa `pages.classrooms`/`pages.classroomDetail`), dịch thật (không machine-copy).
 
+### Đợt C2 (hoàn tất)
+
+- **Migration schema (0203, generated)**: thêm 2 cột cầu nối, cả hai nullable, đúng nguyên tắc additive-only — `chess_class_login_codes.classroom_id` (FK `classrooms`, chưa nơi nào đọc) và `classrooms.source_group_id` (FK `groups`, unique). `sourceGroupId` **chỉ dùng cho di trú/redirect ngược**, không service/repository nào của Classroom đọc cột này để quyết định thành viên lớp — ghi rõ bằng comment tại chỗ khai báo trong `storage/schema/index.ts` để tránh bị hiểu nhầm là một phụ thuộc thật vào `groups`.
+- **Migration data (0204, custom, idempotent)**: với mỗi `groups` đang có ít nhất 1 học sinh managed (Đợt L5) → tạo 1 `classrooms` (tên lấy từ `groups.name` locale en/vi, fallback "Untitled classroom"), owner = giáo viên quản nhiều học sinh nhất trong group đó (`users.managed_by_user_id`, phá hòa bằng `owner_id`) → 1 `classroom_teachers` (owner) → N `classroom_students` (mọi học sinh managed trong group, `realName` từ `users.real_name`/`username`/fallback "Học sinh") → backfill `chess_class_login_codes.classroom_id` từ mapping. Idempotent qua `ON CONFLICT (source_group_id) DO NOTHING` ở bước tạo lớp + `NOT EXISTS` ở bước tạo học sinh — chạy lại nhiều lần cho kết quả giống hệt. **Không** `UPDATE`/`DELETE` bất kỳ dòng nào trong `groups`/`group_users`.
+- **5 endpoint `chess-class` cũ**: thêm `@ApiOperation({ deprecated: true, summary: "..." })` trỏ về spec này — chỉ đổi metadata Swagger, **hành vi giữ nguyên 100%** (vẫn đọc/ghi qua `groups`/`group_users` như trước, chưa chuyển sang `classroom_students` — việc đó thuộc C3 khi tính năng tạo học sinh chuyển hẳn sang Classroom module).
+- **Endpoint cầu nối mới** `GET /classroom/by-source-group/:groupId` (`getClassroomIdForSourceGroup`) — chỉ để tra `classroomId` tương ứng cho mục đích redirect UI, không thuộc bề mặt tính năng Classroom, sẽ xóa cùng lúc dọn trang admin cũ ở C8.
+- **UI "redirect"**: triển khai như **banner liên kết**, không phải điều hướng ép buộc — quyết định có chủ đích khác với chữ dùng gốc trong kế hoạch ("redirect"), vì tính năng tạo học sinh/mã đăng nhập/báo cáo tiến độ **chưa được port sang Classroom module** (đó là phạm vi C3–C6); ép điều hướng ngay bây giờ sẽ làm giáo viên mất đường vào chức năng duy nhất còn hoạt động. `ChessClassManagement.page.tsx` hiện banner "đang được thay thế" + nút "Xem lớp học tương ứng" khi backfill đã có lớp khớp; `EditGroup.page.tsx` thêm nút thứ hai cạnh "Manage chess class" với cùng điều kiện. Điều hướng ép buộc thật sẽ làm ở C8 khi trang cũ bị xóa hẳn.
+- 2 khóa locale mới (`chessClass.deprecatedBanner.text`/`.link`) chỉ thêm vào **en/vi** — theo đúng hiện trạng namespace `chessClass` (vốn đã chỉ tồn tại ở 2 locale này từ Đợt L5, `pl`/`de`/`lt`/`cs`/`es` chưa từng có namespace này; đây là nợ kỹ thuật có sẵn, không phải do đợt này tạo ra, và nằm ngoài phạm vi `classroomLocaleKeyParity.spec.ts` vốn chỉ kiểm namespace `classroom.*` mới).
+
 ## Test Evidence
 
 ### Đợt C1
@@ -112,8 +121,19 @@ _(Mục này được bổ sung dần theo từng đợt C1–C8 — xem lịch 
 
 **Giới hạn đã biết**: chưa kiểm tra qua trình duyệt thật (Playwright/thao tác chuột) trong đợt này — chỉ xác minh UI qua `tsc`/eslint/Vitest sạch và luồng API thật qua HTTP trực tiếp (không qua Caddy, vì máy dev không có domain `*.lms.localhost` trỏ Caddy sẵn sàng trong phiên này — gọi thẳng `localhost:3000` kèm header `x-forwarded-host`/`x-forwarded-proto` giả lập đúng tenant). Chưa kiểm tra lại luồng kid-mode DM qua tầng API/service đầy đủ với tài khoản managed thật (managed account chỉ tạo được từ Đợt C3 trở đi) — chỉ xác minh câu SQL cốt lõi trực tiếp trên DB thật; sẽ kiểm tra lại toàn luồng khi C3 có endpoint tạo học sinh managed.
 
+### Đợt C2
+
+- Backend: `pnpm --filter=api exec tsc --noEmit` sạch; eslint sạch; `pnpm --filter=api test` — 80/80 test suite, 627/627 test pass (không hồi quy so với C1; `chess-class.service.spec.ts` vẫn xanh nguyên vẹn — xác nhận thêm `@ApiOperation` không đổi hành vi runtime).
+- Frontend: `pnpm --filter=web exec tsc --noEmit` sạch; eslint sạch; `pnpm --filter=web test` — 51/51 test suite, 264/264 test pass.
+- `pnpm --filter=api db:migrate` chạy thật trên Postgres dev (Docker), áp dụng `0203`/`0204` thành công. Xác nhận trên DB dev thật: 0 dòng backfill (đúng — dev DB hiện chưa có tài khoản managed nào, `is_managed_account = true` đếm được 0 dòng, không phải lỗi).
+- **Xác minh logic backfill với dữ liệu thật** (transaction `ROLLBACK`, không ghi dữ liệu thật): tạo 1 group test + 2 user managed (cùng `managed_by_user_id`) + 2 dòng `group_users`, chạy nguyên văn 3 câu lệnh của migration `0204` → xác nhận đúng 1 `classrooms` (tên lấy đúng từ `groups.name->>'en'`, `owner_id` đúng giáo viên), đúng 1 `classroom_teachers`, đúng 2 `classroom_students` (tên thật lấy đúng từ `users.real_name`) — khớp 100% kỳ vọng.
+- `pnpm generate:client` chạy lại thật sau khi thêm endpoint cầu nối — xác nhận `apps/api/src/swagger/api-schema.json` có đúng 5 endpoint `deprecated: true`; `classroomControllerGetClassroomIdForSourceGroup` sinh đúng tên, không trùng.
+- Smoke test HTTP thật: `GET /api/classroom/by-source-group/:groupId` với group không tồn tại trong bảng backfill → trả `{ classroomId: null }`, HTTP 200 (không lỗi) — đúng hành vi mong đợi cho trang cũ khi chưa có lớp tương ứng.
+
 ## Follow-up Work (explicitly not done in this pass)
 
-- C2–C8 chưa triển khai tại thời điểm C1 kết thúc.
+- C3–C8 chưa triển khai tại thời điểm C2 kết thúc.
 - Kiểm tra kid-mode DM đầy đủ qua tầng API (không chỉ SQL) — cần tài khoản managed, hoãn tới sau C3.
 - Kiểm tra UI bằng trình duyệt thật/Playwright — hoãn tới C8 (đợt E2E).
+- Backfill data thật (không phải test data rolled-back) chưa từng chạy trên một dev DB có tài khoản managed thật — sẽ xác nhận lại khi tenant nào đó thực sự có dữ liệu L5 cũ trong quá trình vận hành.
+- Namespace `chessClass.*` vẫn thiếu hoàn toàn ở `pl`/`de`/`lt`/`cs`/`es` (nợ kỹ thuật có từ Đợt L5, không phải do C2 tạo ra) — không backfill toàn bộ namespace trong đợt này vì ngoài phạm vi.

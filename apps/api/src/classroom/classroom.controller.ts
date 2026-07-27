@@ -11,6 +11,7 @@ import { ClassroomService } from "./classroom.service";
 import {
   addClassroomTeacherBodySchema,
   classroomDetailSchema,
+  classroomIdForSourceGroupResponseSchema,
   classroomListSchema,
   classroomSchema,
   classroomTeacherListSchema,
@@ -35,6 +36,20 @@ export class ClassroomController {
   })
   async createClassroom(@Body() body: CreateClassroomBody, @CurrentUser() user: CurrentUserType) {
     return new BaseResponse(await this.classroomService.createClassroom(user, body));
+  }
+
+  // Đợt C2 backward-compat bridge: lets the old /admin/chess/classes/:groupId page link to
+  // its corresponding new classroom, if the group was backfilled into one. Not part of the
+  // Classroom feature surface — removed alongside the old page in Đợt C8.
+  @Get("by-source-group/:groupId")
+  @RequirePermission(PERMISSIONS.CLASSROOM_READ)
+  @Validate({
+    request: [{ type: "param", name: "groupId", schema: UUIDSchema }],
+    response: baseResponse(classroomIdForSourceGroupResponseSchema),
+  })
+  async getClassroomIdForSourceGroup(@Param("groupId") groupId: UUIDType) {
+    const classroomId = await this.classroomService.findClassroomIdForSourceGroup(groupId);
+    return new BaseResponse({ classroomId });
   }
 
   @Get("teaching")

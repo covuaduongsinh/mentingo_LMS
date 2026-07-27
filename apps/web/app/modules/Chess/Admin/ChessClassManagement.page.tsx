@@ -1,4 +1,4 @@
-import { useParams } from "@remix-run/react";
+import { Link, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -7,7 +7,9 @@ import { useGenerateChessClassLoginCodes } from "~/api/mutations/useGenerateChes
 import { useReleaseChessClassStudentAccount } from "~/api/mutations/useReleaseChessClassStudentAccount";
 import { useResetChessClassStudentPassword } from "~/api/mutations/useResetChessClassStudentPassword";
 import { useChessClassProgress } from "~/api/queries/useChessClassProgress";
+import { useClassroomIdForSourceGroup } from "~/api/queries/useClassroomIdForSourceGroup";
 import { PageWrapper } from "~/components/PageWrapper";
+import { Alert, AlertDescription } from "~/components/ui/alert";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -95,6 +97,8 @@ export default function ChessClassManagementPage() {
   if (!groupId)
     throw new Error(t("chessClass.errors.groupNotFound", { defaultValue: "Group not found" }));
 
+  const { data: linkedClassroomId } = useClassroomIdForSourceGroup(groupId);
+
   const [namesText, setNamesText] = useState("");
   const [createdStudents, setCreatedStudents] = useState<
     Array<{ userId: string; username: string; temporaryPassword: string; realName: string }>
@@ -156,6 +160,25 @@ export default function ChessClassManagementPage() {
   return (
     <PageWrapper breadcrumbs={breadcrumbs}>
       <div className="space-y-6">
+        {linkedClassroomId && (
+          <Alert>
+            <AlertDescription className="flex flex-wrap items-center justify-between gap-2">
+              <span>
+                {t("chessClass.deprecatedBanner.text", {
+                  defaultValue: "This page is being replaced by the new Classroom module.",
+                })}
+              </span>
+              <Button asChild variant="outline" size="sm">
+                <Link to={`/classrooms/${linkedClassroomId}`}>
+                  {t("chessClass.deprecatedBanner.link", {
+                    defaultValue: "View corresponding classroom",
+                  })}
+                </Link>
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle>
