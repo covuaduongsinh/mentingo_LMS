@@ -216,6 +216,76 @@ export class ClassroomRepository {
   }
 
   // ---------------------------------------------------------------------------------------
+  // Auto-archive cron (Đợt C4)
+  // ---------------------------------------------------------------------------------------
+
+  /** Candidates for the auto-archive cron — no teacher has opened the classroom since
+   * `cutoffIso`. Always computed (even in dry-run mode) so the cron can log a candidate
+   * count before any write happens. */
+  async findInactiveClassroomIds(cutoffIso: string): Promise<UUIDType[]> {
+    const rows = await this.db
+      .select({ id: classrooms.id })
+      .from(classrooms)
+      .where(and(isNull(classrooms.archivedAt), sql`${classrooms.viewedAt} < ${cutoffIso}`));
+
+    return rows.map((row) => row.id);
+  }
+
+  /** Bulk system archive — `archivedBy` stays null (unlike a teacher-initiated archive) so the
+   * admin list can tell the two apart. */
+  async archiveClassroomsByIds(classroomIds: UUIDType[]) {
+    if (!classroomIds.length) return [];
+
+    return this.db
+      .update(classrooms)
+      .set({ archivedAt: new Date().toISOString() })
+      .where(and(inArray(classrooms.id, classroomIds), isNull(classrooms.archivedAt)))
+      .returning({ id: classrooms.id });
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Admin oversight (Đợt C4)
+  // ---------------------------------------------------------------------------------------
+
+  async listAllClassroomsForAdmin(includeArchived: boolean) {
+    const teacherCounts = this.db
+      .select({
+        classroomId: classroomTeachers.classroomId,
+        count: sql<number>`count(*)::int`.as("teacher_count"),
+      })
+      .from(classroomTeachers)
+      .groupBy(classroomTeachers.classroomId)
+      .as("teacher_counts");
+
+    const studentCounts = this.db
+      .select({
+        classroomId: classroomStudents.classroomId,
+        count: sql<number>`count(*)::int`.as("student_count"),
+      })
+      .from(classroomStudents)
+      .where(isNull(classroomStudents.archivedAt))
+      .groupBy(classroomStudents.classroomId)
+      .as("student_counts");
+
+    return this.db
+      .select({
+        id: classrooms.id,
+        name: classrooms.name,
+        ownerId: classrooms.ownerId,
+        teacherCount: sql<number>`coalesce(${teacherCounts.count}, 0)::int`,
+        activeStudentCount: sql<number>`coalesce(${studentCounts.count}, 0)::int`,
+        viewedAt: classrooms.viewedAt,
+        archivedAt: classrooms.archivedAt,
+        createdAt: classrooms.createdAt,
+      })
+      .from(classrooms)
+      .leftJoin(teacherCounts, eq(teacherCounts.classroomId, classrooms.id))
+      .leftJoin(studentCounts, eq(studentCounts.classroomId, classrooms.id))
+      .where(includeArchived ? undefined : isNull(classrooms.archivedAt))
+      .orderBy(asc(classrooms.name));
+  }
+
+  // ---------------------------------------------------------------------------------------
   // Students (Đợt C3)
   // ---------------------------------------------------------------------------------------
 
@@ -371,17 +441,22 @@ export class ClassroomRepository {
   }
 
   async findStudentRoleId(tenantId: UUIDType): Promise<UUIDType | null> {
+    return this.findRoleIdBySlug(tenantId, SYSTEM_ROLE_SLUGS.STUDENT);
+  }
+
+  async findRoleIdBySlug(tenantId: UUIDType, slug: string): Promise<UUIDType | null> {
     const [role] = await this.db
       .select({ id: permissionRoles.id })
       .from(permissionRoles)
-      .where(
-        and(
-          eq(permissionRoles.tenantId, tenantId),
-          eq(permissionRoles.slug, SYSTEM_ROLE_SLUGS.STUDENT),
-        ),
-      );
+      .where(and(eq(permissionRoles.tenantId, tenantId), eq(permissionRoles.slug, slug)));
 
     return role?.id ?? null;
+  }
+
+  /** Additive role grant — unlike UserService's role-replace flow, this never touches the
+   * user's other roles (Đợt C4 teacher self-registration only ever adds trainer). */
+  async addUserRole(userId: UUIDType, roleId: UUIDType) {
+    await this.db.insert(permissionUserRoles).values({ userId, roleId }).onConflictDoNothing();
   }
 
   async insertManagedUsers(rows: NewClassroomManagedUserRow[], trx: DatabasePg) {

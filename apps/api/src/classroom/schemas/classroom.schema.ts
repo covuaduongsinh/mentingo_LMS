@@ -1,5 +1,7 @@
+import { CLASSROOM_ANNOUNCEMENT_MAX_LENGTH, CLASSROOM_ANNOUNCEMENT_MIN_LENGTH } from "@repo/shared";
 import { Type, type Static } from "@sinclair/typebox";
 
+import { announcementLanguageSchema } from "src/announcements/schemas/announcement.schema";
 import { UUIDSchema } from "src/common";
 
 export const createClassroomBodySchema = Type.Object({
@@ -12,6 +14,7 @@ export const updateClassroomBodySchema = Type.Object({
   name: Type.Optional(Type.String({ minLength: 3, maxLength: 100 })),
   description: Type.Optional(Type.String({ maxLength: 2000 })),
   canMsg: Type.Optional(Type.Boolean()),
+  wall: Type.Optional(Type.String({ maxLength: 20000 })),
 });
 
 export const setClassroomArchivedBodySchema = Type.Object({
@@ -178,6 +181,35 @@ export const myClassroomInviteSchema = Type.Object({
 
 export const myClassroomInviteListSchema = Type.Array(myClassroomInviteSchema);
 
+// ---------------------------------------------------------------------------------------
+// Bulletin & announcements (Đợt C4)
+// ---------------------------------------------------------------------------------------
+
+export const sendClassroomAnnouncementBodySchema = Type.Object({
+  message: Type.String({
+    minLength: CLASSROOM_ANNOUNCEMENT_MIN_LENGTH,
+    maxLength: CLASSROOM_ANNOUNCEMENT_MAX_LENGTH,
+  }),
+  language: announcementLanguageSchema,
+});
+
+// ---------------------------------------------------------------------------------------
+// Admin oversight (Đợt C4)
+// ---------------------------------------------------------------------------------------
+
+export const adminClassroomSchema = Type.Object({
+  id: UUIDSchema,
+  name: Type.String(),
+  ownerId: Type.Union([UUIDSchema, Type.Null()]),
+  teacherCount: Type.Number(),
+  activeStudentCount: Type.Number(),
+  viewedAt: Type.String(),
+  archivedAt: Type.Union([Type.String(), Type.Null()]),
+  createdAt: Type.String(),
+});
+
+export const adminClassroomListSchema = Type.Array(adminClassroomSchema);
+
 export type CreateClassroomBody = Static<typeof createClassroomBodySchema>;
 export type UpdateClassroomBody = Static<typeof updateClassroomBodySchema>;
 export type SetClassroomArchivedBody = Static<typeof setClassroomArchivedBodySchema>;
@@ -190,3 +222,4 @@ export type ReleaseClassroomStudentBody = Static<typeof releaseClassroomStudentB
 export type MoveClassroomStudentBody = Static<typeof moveClassroomStudentBodySchema>;
 export type RunClassroomBulkActionBody = Static<typeof runClassroomBulkActionBodySchema>;
 export type InviteClassroomStudentBody = Static<typeof inviteClassroomStudentBodySchema>;
+export type SendClassroomAnnouncementBody = Static<typeof sendClassroomAnnouncementBodySchema>;

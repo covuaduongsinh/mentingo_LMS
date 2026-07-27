@@ -8,6 +8,9 @@ import {
 import {
   ACTIVITY_LOG_ACTION_TYPES,
   ACTIVITY_LOG_RESOURCE_TYPES,
+  ANNOUNCEMENT_EMAIL_TEMPLATES,
+  ANNOUNCEMENT_SOURCE_TYPES,
+  CLASSROOM_AUTO_ARCHIVE_INACTIVE_DAYS,
   CLASSROOM_BULK_ACTIONS,
   CLASSROOM_DEFAULTS,
   CLASSROOM_INVITE_STATUSES,
@@ -17,6 +20,7 @@ import {
 import { nanoid } from "nanoid";
 
 import { ActivityLogsService } from "src/activity-logs/activity-logs.service";
+import { AnnouncementsSchedulerService } from "src/announcements/announcements-scheduler.service";
 import { hashToken } from "src/auth/utils/hash-auth-token";
 import {
   generateManagedAccountEmail,
@@ -26,8 +30,10 @@ import {
 } from "src/chess-class/utils/safe-code.utils";
 import { DatabasePg } from "src/common";
 import hashPassword from "src/common/helpers/hashPassword";
+import { resolveTenantOrigin } from "src/common/helpers/resolveTenantOrigin";
 import { hasPermission } from "src/common/permissions/permission.utils";
 import { SettingsService } from "src/settings/settings.service";
+import { DB_ADMIN } from "src/storage/db/db.providers";
 import { UserService } from "src/user/user.service";
 
 import { ClassroomRepository, type NewClassroomManagedUserRow } from "./classroom.repository";
@@ -38,22 +44,26 @@ import type {
   UpdateClassroomInput,
   UpdateClassroomStudentInput,
 } from "./classroom.types";
-import type { ClassroomBulkAction } from "@repo/shared";
+import type { ClassroomBulkAction, SupportedLanguages } from "@repo/shared";
 import type { UUIDType } from "src/common";
 import type { CurrentUserType } from "src/common/types/current-user.type";
 
 const TEMP_PASSWORD_LENGTH = 10;
 const USERNAME_GENERATION_MAX_ATTEMPTS = 5;
 const CREATE_TOKEN_EXPIRATION_YEARS = 1;
+const CLASSROOM_AUTO_ARCHIVE_INACTIVE_MS =
+  CLASSROOM_AUTO_ARCHIVE_INACTIVE_DAYS * 24 * 60 * 60 * 1000;
 
 @Injectable()
 export class ClassroomService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
+    @Inject(DB_ADMIN) private readonly dbAdmin: DatabasePg,
     private readonly repository: ClassroomRepository,
     private readonly settingsService: SettingsService,
     private readonly activityLogsService: ActivityLogsService,
     private readonly userService: UserService,
+    private readonly announcementsSchedulerService: AnnouncementsSchedulerService,
   ) {}
 
   private canManageAny(user: CurrentUserType): boolean {
@@ -660,5 +670,115 @@ export class ClassroomService {
       return invite;
     }
     return this.repository.setInviteStatus(inviteId, CLASSROOM_INVITE_STATUSES.DECLINED);
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Bulletin & announcements (Đợt C4)
+  // ---------------------------------------------------------------------------------------
+
+  /** Broadcasts a short message to every teacher and active student of the classroom, via the
+   * existing generic announcements pipeline (in-app only — `sendEmail: false` — the classroom
+   * link is auto-appended so recipients can jump straight to the class). */
+  async sendAnnouncement(
+    classroomId: UUIDType,
+    user: CurrentUserType,
+    message: string,
+    language: SupportedLanguages,
+  ) {
+    const classroom = await this.getClassroomOrThrow(classroomId);
+    await this.assertCanManage(classroomId, user);
+
+    const activeStudentCount = await this.repository.countActiveStudents(classroomId);
+    if (activeStudentCount > classroom.maxStudents) {
+      throw new BadRequestException("classroom.error.tooManyStudentsForAnnouncement");
+    }
+
+    const tenantOrigin = await resolveTenantOrigin(this.dbAdmin, user.tenantId);
+    const classroomLink = `${tenantOrigin}/classrooms/${classroomId}`;
+    const content = `${message}\n\n${classroomLink}`;
+
+    const announcement = await this.announcementsSchedulerService.createSystemAnnouncement({
+      translations: [{ language, title: classroom.name, content }],
+      baseLanguage: language,
+      authorId: user.userId,
+      scheduledAt: null,
+      sendEmail: false,
+      emailTemplate: ANNOUNCEMENT_EMAIL_TEMPLATES.DEFAULT,
+      sourceType: ANNOUNCEMENT_SOURCE_TYPES.CLASSROOM,
+      sourceId: classroomId,
+    });
+
+    await this.activityLogsService.recordActivity({
+      actor: user,
+      operation: ACTIVITY_LOG_ACTION_TYPES.CREATE,
+      resourceType: ACTIVITY_LOG_RESOURCE_TYPES.ANNOUNCEMENT,
+      resourceId: announcement.id,
+      context: { classroomId },
+    });
+
+    return announcement;
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Auto-archive cron (Đợt C4)
+  // ---------------------------------------------------------------------------------------
+
+  /** Always computes the candidate list (so a dry run still logs a meaningful count); only
+   * writes when CLASSROOM_AUTO_ARCHIVE_ENABLED=true. Off by default on purpose — the cron
+   * ships in dry-run mode until an operator has watched a few days of log output. */
+  async autoArchiveInactiveClassrooms(): Promise<{ candidateCount: number }> {
+    const cutoffIso = new Date(Date.now() - CLASSROOM_AUTO_ARCHIVE_INACTIVE_MS).toISOString();
+    const candidateIds = await this.repository.findInactiveClassroomIds(cutoffIso);
+
+    if (!candidateIds.length) return { candidateCount: 0 };
+
+    if (process.env.CLASSROOM_AUTO_ARCHIVE_ENABLED === "true") {
+      await this.repository.archiveClassroomsByIds(candidateIds);
+    }
+
+    return { candidateCount: candidateIds.length };
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Teacher self-registration (Đợt C4)
+  // ---------------------------------------------------------------------------------------
+
+  /** Lets a user without classroom.create grant themselves the trainer role, additively (their
+   * existing roles are untouched) — off by default, an admin must opt the tenant in via
+   * CLASSROOM_TEACHER_SELF_REGISTRATION_ENABLED. */
+  async becomeTeacher(user: CurrentUserType): Promise<void> {
+    if (process.env.CLASSROOM_TEACHER_SELF_REGISTRATION_ENABLED !== "true") {
+      throw new BadRequestException("classroom.error.selfRegistrationDisabled");
+    }
+
+    if (hasPermission(user.permissions, PERMISSIONS.CLASSROOM_CREATE)) {
+      throw new BadRequestException("classroom.error.alreadyTeacher");
+    }
+
+    const trainerRoleId = await this.repository.findRoleIdBySlug(
+      user.tenantId,
+      SYSTEM_ROLE_SLUGS.TRAINER,
+    );
+    if (!trainerRoleId) {
+      throw new BadRequestException("classroom.error.trainerRoleUnavailable");
+    }
+
+    await this.repository.addUserRole(user.userId, trainerRoleId);
+
+    await this.activityLogsService.recordActivity({
+      actor: user,
+      operation: ACTIVITY_LOG_ACTION_TYPES.UPDATE,
+      resourceType: ACTIVITY_LOG_RESOURCE_TYPES.USER,
+      resourceId: user.userId,
+      context: { action: "classroom-self-register-teacher" },
+    });
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Admin oversight (Đợt C4)
+  // ---------------------------------------------------------------------------------------
+
+  async listAllClassroomsForAdmin(includeArchived: boolean) {
+    return this.repository.listAllClassroomsForAdmin(includeArchived);
   }
 }

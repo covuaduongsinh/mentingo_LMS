@@ -16,6 +16,15 @@ export const CLASSROOM_LOGIN_CODE_EXPIRATION_MS = 15 * 60 * 1000;
 
 export const CLASSROOM_LOGIN_CODE_LENGTH = 5;
 
+/** Bounds for a class-wide announcement message (Đợt C4) — the classroom link is appended
+ * server-side and does not count toward this limit. */
+export const CLASSROOM_ANNOUNCEMENT_MIN_LENGTH = 10;
+export const CLASSROOM_ANNOUNCEMENT_MAX_LENGTH = 300;
+
+/** A classroom not opened by any of its teachers for this many days is a candidate for the
+ * auto-archive cron (Đợt C4) — see CLASSROOM_AUTO_ARCHIVE_ENABLED env var for the dry-run gate. */
+export const CLASSROOM_AUTO_ARCHIVE_INACTIVE_DAYS = 30;
+
 export const CLASSROOM_INVITE_STATUSES = {
   PENDING: "pending",
   ACCEPTED: "accepted",

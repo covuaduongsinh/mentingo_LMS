@@ -11,6 +11,7 @@ import { CurrentUserType } from "src/common/types/current-user.type";
 import { ClassroomService } from "./classroom.service";
 import {
   addClassroomTeacherBodySchema,
+  adminClassroomListSchema,
   bulkCreateClassroomStudentsBodySchema,
   bulkCreateClassroomStudentsResponseSchema,
   classroomDetailSchema,
@@ -32,6 +33,7 @@ import {
   releaseClassroomStudentResponseSchema,
   resetClassroomStudentPasswordResponseSchema,
   runClassroomBulkActionBodySchema,
+  sendClassroomAnnouncementBodySchema,
   setClassroomArchivedBodySchema,
   setClassroomStudentArchivedBodySchema,
   updateClassroomBodySchema,
@@ -44,6 +46,7 @@ import {
   type MoveClassroomStudentBody,
   type ReleaseClassroomStudentBody,
   type RunClassroomBulkActionBody,
+  type SendClassroomAnnouncementBody,
   type SetClassroomArchivedBody,
   type SetClassroomStudentArchivedBody,
   type UpdateClassroomBody,
@@ -90,6 +93,29 @@ export class ClassroomController {
   @Validate({ response: baseResponse(classroomListSchema) })
   async listLearningClassrooms(@CurrentUser() user: CurrentUserType) {
     return new BaseResponse(await this.classroomService.listLearningClassrooms(user));
+  }
+
+  // Đợt C4 — self-service, deliberately has no @RequirePermission: this is exactly how a user
+  // *without* classroom.create is meant to reach it (gated instead by an env flag + eligibility
+  // checks inside the service).
+  @Post("become-teacher")
+  async becomeClassroomTeacher(@CurrentUser() user: CurrentUserType) {
+    await this.classroomService.becomeTeacher(user);
+  }
+
+  // Đợt C4 — admin-only cross-tenant oversight list, gated by CLASSROOM_MANAGE (not the
+  // coarser CLASSROOM_READ every other route uses) since it exposes every classroom regardless
+  // of teaching/learning relationship.
+  @Get("admin/classrooms")
+  @RequirePermission(PERMISSIONS.CLASSROOM_MANAGE)
+  @Validate({
+    request: [{ type: "query", name: "includeArchived", schema: Type.Optional(Type.String()) }],
+    response: baseResponse(adminClassroomListSchema),
+  })
+  async listAllClassroomsForAdmin(@Query("includeArchived") includeArchived: string | undefined) {
+    return new BaseResponse(
+      await this.classroomService.listAllClassroomsForAdmin(includeArchived === "true"),
+    );
   }
 
   @Get("invites/mine")
@@ -200,6 +226,26 @@ export class ClassroomController {
     @CurrentUser() user: CurrentUserType,
   ) {
     return new BaseResponse(await this.classroomService.removeTeacher(classroomId, user, userId));
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Bulletin & announcements (Đợt C4)
+  // ---------------------------------------------------------------------------------------
+
+  @Post(":classroomId/announcements")
+  @RequirePermission(PERMISSIONS.CLASSROOM_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "classroomId", schema: UUIDSchema },
+      { type: "body", schema: sendClassroomAnnouncementBodySchema },
+    ],
+  })
+  async sendClassroomAnnouncement(
+    @Param("classroomId") classroomId: UUIDType,
+    @Body() body: SendClassroomAnnouncementBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    await this.classroomService.sendAnnouncement(classroomId, user, body.message, body.language);
   }
 
   // ---------------------------------------------------------------------------------------

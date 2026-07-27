@@ -50,9 +50,13 @@ const AdminGuard = ({ children }: PropsWithChildren) => {
       PERMISSIONS.LEARNING_PATH_EXPORT,
     ],
   });
+  const { hasAccess: canManageClassrooms } = usePermissions({
+    required: PERMISSIONS.CLASSROOM_MANAGE,
+  });
   const navigate = useNavigate();
 
-  const isAllowed = canManageUsers || canManageOwnCourses || canAccessLearningPathAdmin;
+  const isAllowed =
+    canManageUsers || canManageOwnCourses || canAccessLearningPathAdmin || canManageClassrooms;
 
   useLayoutEffect(() => {
     if (!isAllowed) {

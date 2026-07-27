@@ -11,7 +11,8 @@
       "createButton": "Nowa klasa",
       "pendingInvitesHeading": "Oczekujące zaproszenia",
       "declineInvite": "Odrzuć",
-      "acceptInvite": "Akceptuj"
+      "acceptInvite": "Akceptuj",
+      "adminLink": "Wszystkie klasy (admin)"
     },
     "students": {
       "title": "Uczniowie",
@@ -149,7 +150,33 @@
       "targetClassroomRequired": "Wybierz klasę, do której przenieść uczniów",
       "userNotFound": "Nie znaleziono tej nazwy użytkownika",
       "cannotInviteTeacher": "Nie możesz zaprosić nauczyciela tej klasy jako ucznia",
-      "inviteNotFound": "Nie znaleziono zaproszenia"
+      "inviteNotFound": "Nie znaleziono zaproszenia",
+      "tooManyStudentsForAnnouncement": "Ta klasa ma więcej aktywnych uczniów niż dopuszcza limit ogłoszeń",
+      "selfRegistrationDisabled": "Samodzielna rejestracja nauczycieli nie jest włączona dla tej instancji",
+      "alreadyTeacher": "Masz już uprawnienia nauczyciela",
+      "trainerRoleUnavailable": "Rola trenera nie jest dostępna dla tej instancji"
+    },
+    "wall": {
+      "editLabel": "Tablica ogłoszeń (Markdown)",
+      "heading": "Tablica ogłoszeń"
+    },
+    "announcement": {
+      "sendButton": "Wyślij ogłoszenie",
+      "dialogTitle": "Wyślij ogłoszenie do klasy",
+      "placeholder": "Co chcesz przekazać klasie?",
+      "lengthHint": "{{count}}/{{max}} znaków",
+      "toast": {
+        "sent": "Ogłoszenie wysłane do klasy",
+        "sendFailed": "Nie udało się wysłać ogłoszenia"
+      }
+    },
+    "becomeTeacher": {
+      "prompt": "Chcesz prowadzić własną klasę? Zarejestruj się jako nauczyciel.",
+      "button": "Zostań nauczycielem",
+      "toast": {
+        "success": "Jesteś już nauczycielem — zaloguj się ponownie, aby aktywować",
+        "failed": "Nie udało się zarejestrować Cię jako nauczyciela"
+      }
     }
   },
   "common": {
@@ -4580,7 +4607,8 @@
     "tenant": "Szczegóły organizacji",
     "createTenant": "Utwórz organizację",
     "tenants": "Organizacje",
-    "assignmentGrading": "Ocenianie zadań"
+    "assignmentGrading": "Ocenianie zadań",
+    "adminClassrooms": "Wszystkie klasy"
   },
   "lessonPreview": {
     "breadcrumbs": {
@@ -5189,6 +5217,23 @@
       "liveKitNotConfigured": "LiveKit nie jest skonfigurowany.",
       "maxParticipantsReached": "Osiągnięto maksymalną liczbę uczestników.",
       "maxParallelSessionsReached": "Osiągnięto maksymalną liczbę aktywnych sesji szkoleń na żywo."
+    }
+  },
+  "adminClassrooms": {
+    "title": "Klasy",
+    "heading": "Wszystkie klasy",
+    "includeArchived": "Uwzględnij zarchiwizowane",
+    "columns": {
+      "name": "Nazwa",
+      "teachers": "Nauczyciele",
+      "students": "Aktywni uczniowie",
+      "status": "Status",
+      "lastViewed": "Ostatnio wyświetlone"
+    },
+    "empty": "Nie znaleziono klas",
+    "status": {
+      "archived": "Zarchiwizowana",
+      "active": "Aktywna"
     }
   }
 }

@@ -16612,6 +16612,43 @@
         }
       }
     },
+    "/api/classroom/become-teacher": {
+      "post": {
+        "operationId": "ClassroomController_becomeClassroomTeacher",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/classroom/admin/classrooms": {
+      "get": {
+        "operationId": "ClassroomController_listAllClassroomsForAdmin",
+        "parameters": [
+          {
+            "name": "includeArchived",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListAllClassroomsForAdminResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/classroom/invites/mine": {
       "get": {
         "operationId": "ClassroomController_listMyClassroomInvites",
@@ -16839,6 +16876,37 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/announcements": {
+      "post": {
+        "operationId": "ClassroomController_sendClassroomAnnouncement",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendClassroomAnnouncementBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
           }
         }
       }
@@ -66899,6 +66967,72 @@
           "data"
         ]
       },
+      "ListAllClassroomsForAdminResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ownerId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "teacherCount": {
+                  "type": "number"
+                },
+                "activeStudentCount": {
+                  "type": "number"
+                },
+                "viewedAt": {
+                  "type": "string"
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "ownerId",
+                "teacherCount",
+                "activeStudentCount",
+                "viewedAt",
+                "archivedAt",
+                "createdAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "ListMyClassroomInvitesResponse": {
         "type": "object",
         "properties": {
@@ -67104,6 +67238,10 @@
           },
           "canMsg": {
             "type": "boolean"
+          },
+          "wall": {
+            "maxLength": 20000,
+            "type": "string"
           }
         }
       },
@@ -67402,6 +67540,52 @@
         },
         "required": [
           "data"
+        ]
+      },
+      "SendClassroomAnnouncementBody": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "minLength": 10,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "const": "en",
+                "type": "string"
+              },
+              {
+                "const": "pl",
+                "type": "string"
+              },
+              {
+                "const": "de",
+                "type": "string"
+              },
+              {
+                "const": "lt",
+                "type": "string"
+              },
+              {
+                "const": "cs",
+                "type": "string"
+              },
+              {
+                "const": "es",
+                "type": "string"
+              },
+              {
+                "const": "vi",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "language"
         ]
       },
       "ListClassroomStudentsResponse": {

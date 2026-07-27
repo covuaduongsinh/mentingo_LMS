@@ -129,6 +129,7 @@ export const routes: (
           route("groups", "modules/Admin/Groups/Groups.page.tsx");
           route("groups/new", "modules/Admin/Groups/CreateGroup.page.tsx");
           route("groups/:id", "modules/Admin/Groups/EditGroup.page.tsx");
+          route("classrooms", "modules/Admin/Classroom/AdminClassroomList.page.tsx");
           route("promotion-codes", "modules/Admin/PromotionCodes/PromotionCodes.page.tsx");
           route("promotion-codes/new", "modules/Admin/PromotionCodes/CreatePromotionCode.page.tsx");
           route(

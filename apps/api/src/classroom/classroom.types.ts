@@ -32,6 +32,7 @@ export type UpdateClassroomInput = {
   name?: string;
   description?: string;
   canMsg?: boolean;
+  wall?: string;
 };
 
 export type CreatedClassroomStudent = {

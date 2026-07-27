@@ -11,7 +11,8 @@
       "createButton": "Nauja klasė",
       "pendingInvitesHeading": "Laukiantys kvietimai",
       "declineInvite": "Atmesti",
-      "acceptInvite": "Priimti"
+      "acceptInvite": "Priimti",
+      "adminLink": "Visos klasės (administravimas)"
     },
     "students": {
       "title": "Mokiniai",
@@ -149,7 +150,33 @@
       "targetClassroomRequired": "Pasirinkite klasę, į kurią perkelti mokinius",
       "userNotFound": "Šis naudotojo vardas nerastas",
       "cannotInviteTeacher": "Negalite pakviesti šios klasės mokytojo kaip mokinio",
-      "inviteNotFound": "Kvietimas nerastas"
+      "inviteNotFound": "Kvietimas nerastas",
+      "tooManyStudentsForAnnouncement": "Šioje klasėje daugiau aktyvių mokinių, nei leidžia pranešimų riba",
+      "selfRegistrationDisabled": "Šiam nuomininkui savarankiška mokytojų registracija neįjungta",
+      "alreadyTeacher": "Jūs jau turite mokytojo teises",
+      "trainerRoleUnavailable": "Trenerio vaidmuo šiam nuomininkui nepasiekiamas"
+    },
+    "wall": {
+      "editLabel": "Skelbimų lenta (Markdown)",
+      "heading": "Skelbimų lenta"
+    },
+    "announcement": {
+      "sendButton": "Siųsti pranešimą",
+      "dialogTitle": "Siųsti pranešimą klasei",
+      "placeholder": "Ką norite pranešti klasei?",
+      "lengthHint": "{{count}}/{{max}} simbolių",
+      "toast": {
+        "sent": "Pranešimas išsiųstas klasei",
+        "sendFailed": "Nepavyko išsiųsti pranešimo"
+      }
+    },
+    "becomeTeacher": {
+      "prompt": "Norite vadovauti savo klasei? Užsiregistruokite kaip mokytojas.",
+      "button": "Tapti mokytoju",
+      "toast": {
+        "success": "Dabar esate mokytojas — prisijunkite iš naujo, kad aktyvuotumėte",
+        "failed": "Nepavyko užregistruoti jūsų kaip mokytojo"
+      }
     }
   },
   "common": {
@@ -4234,7 +4261,8 @@
     "learningPaths": "Tobulėjimo keliai",
     "adminLearningPaths": "Tobulėjimo keliai",
     "adminLearningPathEditor": "Tobulėjimo kelio redaktorius",
-    "assignmentGrading": "Užduočių vertinimas"
+    "assignmentGrading": "Užduočių vertinimas",
+    "adminClassrooms": "Visos klasės"
   },
   "masterCourse": {
     "error": {
@@ -5067,6 +5095,23 @@
       "liveKitNotConfigured": "LiveKit nėra sukonfigūruotas.",
       "maxParticipantsReached": "Pasiektas maksimalus dalyvių skaičius.",
       "maxParallelSessionsReached": "Pasiektas maksimalus aktyvių Tiesioginiai mokymai sesijų skaičius."
+    }
+  },
+  "adminClassrooms": {
+    "title": "Klasės",
+    "heading": "Visos klasės",
+    "includeArchived": "Įtraukti archyvuotas",
+    "columns": {
+      "name": "Pavadinimas",
+      "teachers": "Mokytojai",
+      "students": "Aktyvūs mokiniai",
+      "status": "Būsena",
+      "lastViewed": "Paskutinį kartą peržiūrėta"
+    },
+    "empty": "Klasių nerasta",
+    "status": {
+      "archived": "Archyvuota",
+      "active": "Aktyvi"
     }
   }
 }
