@@ -32,6 +32,7 @@ import { CalendarModule } from "./calendar/calendar.module";
 import { CategoryModule } from "./category/category.module";
 import { CertificatesModule } from "./certificates/certificates.module";
 import { ChessModule } from "./chess/chess.module";
+import { ChessBroadcastModule } from "./chess-broadcast/chess-broadcast.module";
 import { ChessClassModule } from "./chess-class/chess-class.module";
 import { ChessLearnModule } from "./chess-learn/chess-learn.module";
 import { ChessTournamentModule } from "./chess-tournament/chess-tournament.module";
@@ -185,6 +186,7 @@ import type { RedisClient } from "src/redis";
     ChessClassModule,
     ChessTournamentModule,
     ChessLearnModule,
+    ChessBroadcastModule,
     AssignmentsModule,
     AnnouncementsModule,
     IngestionModule,

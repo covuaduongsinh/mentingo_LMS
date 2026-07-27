@@ -66,6 +66,9 @@ export const routes: (
           route("chess/learn", "modules/Chess/Learn/ChessLearnStages.page.tsx");
           route("chess/learn/:stageId/:levelId", "modules/Chess/Learn/ChessLearnLevel.page.tsx");
           route("chess/coordinate-trainer", "modules/Chess/Learn/ChessCoordinateTrainer.page.tsx");
+          route("chess/broadcast", "modules/Chess/Broadcast/ChessBroadcastList.page.tsx");
+          route("chess/broadcast/games/:id", "modules/Chess/Broadcast/ChessBroadcastGame.page.tsx");
+          route("chess/broadcast/:id", "modules/Chess/Broadcast/ChessBroadcastDetail.page.tsx");
         });
         route("", "modules/Dashboard/UserDashboard.layout.tsx", () => {
           route("", "modules/Dashboard/IndexRedirect.page.tsx", { index: true });

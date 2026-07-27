@@ -38,6 +38,7 @@ import {
   CHESS_SEEK_STATUSES,
   CHESS_MATCH_STATUSES,
   CHESS_TOURNAMENT_STATUSES,
+  CHESS_BROADCAST_STATUSES,
 } from "@repo/shared";
 import { sql } from "drizzle-orm";
 import {
@@ -136,6 +137,7 @@ import type {
   ChessGamePhase,
   ChessPieceType,
   ChessMoveQuality,
+  ChessBroadcastStatus,
   AssignmentGradingType,
   AssignmentTaskType,
   AssignmentSubmissionStatus,
@@ -3592,6 +3594,127 @@ export const chessGameInsights = pgTable(
     userOpeningIdx: index("chess_game_insights_user_opening_key_idx").on(
       table.userId,
       table.openingKey,
+    ),
+  }),
+);
+
+/** L10 — tường thuật một giải đấu diễn ra ngoài đời, không phải ván chơi trong mentingo. */
+export const chessBroadcasts = pgTable(
+  "chess_broadcasts",
+  {
+    ...id,
+    ...timestamps,
+    name: text("name").notNull(),
+    description: text("description"),
+    status: text("status")
+      .$type<ChessBroadcastStatus>()
+      .notNull()
+      .default(CHESS_BROADCAST_STATUSES.UPCOMING),
+    delayMinutes: integer("delay_minutes").notNull().default(15),
+    createdByUserId: uuid("created_by_user_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_broadcasts")(table),
+    statusIdx: index("chess_broadcasts_status_idx").on(table.status),
+  }),
+);
+
+export const chessBroadcastRounds = pgTable(
+  "chess_broadcast_rounds",
+  {
+    ...id,
+    ...timestamps,
+    broadcastId: uuid("broadcast_id")
+      .references(() => chessBroadcasts.id, { onDelete: "cascade" })
+      .notNull(),
+    name: text("name").notNull(),
+    displayOrder: integer("display_order").notNull().default(0),
+    startsAt: timestamp("starts_at", { withTimezone: true, mode: "string" }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_broadcast_rounds")(table),
+    broadcastIdx: index("chess_broadcast_rounds_broadcast_id_idx").on(table.broadcastId),
+  }),
+);
+
+export const chessBroadcastTeams = pgTable(
+  "chess_broadcast_teams",
+  {
+    ...id,
+    ...timestamps,
+    broadcastId: uuid("broadcast_id")
+      .references(() => chessBroadcasts.id, { onDelete: "cascade" })
+      .notNull(),
+    name: text("name").notNull(),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_broadcast_teams")(table),
+    broadcastIdx: index("chess_broadcast_teams_broadcast_id_idx").on(table.broadcastId),
+  }),
+);
+
+export const chessBroadcastGames = pgTable(
+  "chess_broadcast_games",
+  {
+    ...id,
+    ...timestamps,
+    roundId: uuid("round_id")
+      .references(() => chessBroadcastRounds.id, { onDelete: "cascade" })
+      .notNull(),
+    boardNumber: integer("board_number").notNull(),
+    /** Real-world player names (free text) — these people don't necessarily have mentingo accounts. */
+    whiteName: text("white_name").notNull(),
+    blackName: text("black_name").notNull(),
+    whiteTeamId: uuid("white_team_id").references(() => chessBroadcastTeams.id, {
+      onDelete: "set null",
+    }),
+    blackTeamId: uuid("black_team_id").references(() => chessBroadcastTeams.id, {
+      onDelete: "set null",
+    }),
+    result: varchar("result", { length: 10 }),
+    currentFen: varchar("current_fen", { length: 100 })
+      .notNull()
+      .default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
+    pgnSourceUrl: text("pgn_source_url"),
+    lastFetchedAt: timestamp("last_fetched_at", { withTimezone: true, mode: "string" }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_broadcast_games")(table),
+    roundIdx: index("chess_broadcast_games_round_id_idx").on(table.roundId),
+    whiteTeamIdx: index("chess_broadcast_games_white_team_id_idx").on(table.whiteTeamId),
+    blackTeamIdx: index("chess_broadcast_games_black_team_id_idx").on(table.blackTeamId),
+  }),
+);
+
+/** `ingestedAt` is when mentingo recorded the move — the sole basis for the broadcast delay,
+ * distinct from whenever the move actually happened at the real board. */
+export const chessBroadcastGameMoves = pgTable(
+  "chess_broadcast_game_moves",
+  {
+    ...id,
+    gameId: uuid("game_id")
+      .references(() => chessBroadcastGames.id, { onDelete: "cascade" })
+      .notNull(),
+    ply: integer("ply").notNull(),
+    uci: varchar("uci", { length: 10 }).notNull(),
+    san: varchar("san", { length: 20 }).notNull(),
+    fenAfter: varchar("fen_after", { length: 100 }).notNull(),
+    ingestedAt: timestamp("ingested_at", { withTimezone: true, mode: "string" })
+      .notNull()
+      .defaultNow(),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_broadcast_game_moves")(table),
+    gamePlyUniqueIdx: uniqueIndex("chess_broadcast_game_moves_game_ply_unique_idx").on(
+      table.gameId,
+      table.ply,
     ),
   }),
 );

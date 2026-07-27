@@ -517,6 +517,79 @@
       "notFound": "Không tìm thấy giải đấu"
     }
   },
+  "chessBroadcast": {
+    "nav": {
+      "title": "Tường thuật"
+    },
+    "list": {
+      "title": "Tường thuật giải đấu",
+      "subtitle": "Theo dõi diễn biến các giải đấu ngoài đời thực.",
+      "create": "Tạo buổi tường thuật",
+      "empty": "Chưa có buổi tường thuật nào.",
+      "delay": "Trễ {{minutes}} phút"
+    },
+    "form": {
+      "name": "Tên",
+      "description": "Mô tả",
+      "delayMinutes": "Độ trễ phát sóng (phút)",
+      "teamName": "Tên đội",
+      "roundName": "Tên vòng đấu",
+      "whiteName": "Trắng",
+      "blackName": "Đen",
+      "whiteTeam": "Đội bên Trắng",
+      "blackTeam": "Đội bên Đen"
+    },
+    "status": {
+      "upcoming": "Sắp diễn ra",
+      "live": "Đang diễn ra",
+      "finished": "Đã kết thúc"
+    },
+    "detail": {
+      "teams": "Đội thi đấu",
+      "addTeam": "Thêm đội",
+      "noTeams": "Chưa cấu hình đội nào.",
+      "standings": "Bảng xếp hạng đội",
+      "rounds": "Vòng đấu",
+      "addRound": "Thêm vòng",
+      "noRounds": "Chưa có vòng đấu nào.",
+      "addGame": "Thêm bàn",
+      "noGames": "Chưa có bàn nào.",
+      "watch": "Xem"
+    },
+    "table": {
+      "board": "Bàn",
+      "white": "Trắng",
+      "black": "Đen",
+      "result": "Kết quả",
+      "team": "Đội",
+      "score": "Điểm",
+      "gamesPlayed": "Số ván"
+    },
+    "game": {
+      "pastePgn": "Dán PGN cập nhật",
+      "applyPgn": "Áp dụng",
+      "movesAdded": "Đã thêm {{count}} nước mới",
+      "pgnSourceUrl": "URL nguồn kéo PGN tự động",
+      "result": "Kết quả",
+      "delayed": "Xem có độ trễ",
+      "liveView": "Xem trực tiếp (không trễ)",
+      "moves": "Các nước đi",
+      "noMoves": "Chưa có nước đi nào hiển thị."
+    },
+    "toast": {
+      "createBroadcastFailed": "Không thể tạo buổi tường thuật",
+      "updateBroadcastFailed": "Không thể cập nhật buổi tường thuật",
+      "createRoundFailed": "Không thể thêm vòng đấu",
+      "createTeamFailed": "Không thể thêm đội",
+      "createGameFailed": "Không thể thêm bàn",
+      "updateGameFailed": "Không thể cập nhật bàn",
+      "pastePgnFailed": "Không thể áp dụng PGN"
+    },
+    "errors": {
+      "notFound": "Không tìm thấy buổi tường thuật",
+      "gameNotFound": "Không tìm thấy bàn đấu"
+    }
+  },
   "chessLearn": {
     "nav": {
       "title": "Nhập môn cờ vua"
@@ -4723,6 +4796,9 @@
     "chessLearnStages": "Nhập môn cờ vua",
     "chessLearnLevel": "Bài học",
     "chessCoordinateTrainer": "Luyện tọa độ",
+    "chessBroadcast": "Tường thuật",
+    "chessBroadcastDetail": "Buổi tường thuật",
+    "chessBroadcastGame": "Bàn đấu tường thuật",
     "chessAnalysisRoom": "Phòng phân tích cờ",
     "chessEditor": "Dựng thế cờ",
     "dashboard": "Bảng điều khiển",

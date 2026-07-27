@@ -517,6 +517,79 @@
       "notFound": "Tournament not found"
     }
   },
+  "chessBroadcast": {
+    "nav": {
+      "title": "Broadcasts"
+    },
+    "list": {
+      "title": "Tournament broadcasts",
+      "subtitle": "Follow live coverage of real-world tournaments.",
+      "create": "New broadcast",
+      "empty": "No broadcasts yet.",
+      "delay": "{{minutes}} min delay"
+    },
+    "form": {
+      "name": "Name",
+      "description": "Description",
+      "delayMinutes": "Broadcast delay (minutes)",
+      "teamName": "Team name",
+      "roundName": "Round name",
+      "whiteName": "White",
+      "blackName": "Black",
+      "whiteTeam": "White team",
+      "blackTeam": "Black team"
+    },
+    "status": {
+      "upcoming": "Upcoming",
+      "live": "Live",
+      "finished": "Finished"
+    },
+    "detail": {
+      "teams": "Teams",
+      "addTeam": "Add team",
+      "noTeams": "No teams configured.",
+      "standings": "Team standings",
+      "rounds": "Rounds",
+      "addRound": "Add round",
+      "noRounds": "No rounds yet.",
+      "addGame": "Add board",
+      "noGames": "No boards yet.",
+      "watch": "Watch"
+    },
+    "table": {
+      "board": "Board",
+      "white": "White",
+      "black": "Black",
+      "result": "Result",
+      "team": "Team",
+      "score": "Score",
+      "gamesPlayed": "Games"
+    },
+    "game": {
+      "pastePgn": "Paste updated PGN",
+      "applyPgn": "Apply",
+      "movesAdded": "{{count}} new move(s) added",
+      "pgnSourceUrl": "Auto-pull PGN source URL",
+      "result": "Result",
+      "delayed": "Delayed view",
+      "liveView": "Live view (no delay)",
+      "moves": "Moves",
+      "noMoves": "No moves visible yet."
+    },
+    "toast": {
+      "createBroadcastFailed": "Could not create the broadcast",
+      "updateBroadcastFailed": "Could not update the broadcast",
+      "createRoundFailed": "Could not add the round",
+      "createTeamFailed": "Could not add the team",
+      "createGameFailed": "Could not add the board",
+      "updateGameFailed": "Could not update the board",
+      "pastePgnFailed": "Could not apply the PGN"
+    },
+    "errors": {
+      "notFound": "Broadcast not found",
+      "gameNotFound": "Board not found"
+    }
+  },
   "chessLearn": {
     "nav": {
       "title": "Learn chess"
@@ -4725,6 +4798,9 @@
     "chessLearnStages": "Learn Chess",
     "chessLearnLevel": "Lesson",
     "chessCoordinateTrainer": "Coordinate Trainer",
+    "chessBroadcast": "Broadcasts",
+    "chessBroadcastDetail": "Broadcast",
+    "chessBroadcastGame": "Broadcast Board",
     "dashboard": "Dashboard",
     "settings": "Settings",
     "providerInformation": "Provider Information",
