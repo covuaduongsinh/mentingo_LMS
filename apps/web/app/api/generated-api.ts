@@ -329,6 +329,8 @@ export interface CurrentUserResponse {
       | "chess.learn.read"
       | "chess.insight.read"
       | "chess.insight.read_all"
+      | "chess.broadcast.read"
+      | "chess.broadcast.manage"
       | "assignment.read"
       | "assignment.manage"
       | "assignment.manage_own"
@@ -8751,6 +8753,309 @@ export interface SubmitLearnAttemptBody {
 export interface SubmitLearnAttemptResponse {
   data: {
     correct: boolean;
+  };
+}
+
+export interface CreateBroadcastBody {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  /** @maxLength 2000 */
+  description?: string;
+  /**
+   * @min 0
+   * @max 1440
+   */
+  delayMinutes?: number;
+}
+
+export interface CreateBroadcastResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    description: string | null;
+    status: string;
+    delayMinutes: number;
+    createdByUserId: string | null;
+    createdAt: string;
+  };
+}
+
+export interface ListBroadcastsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    description: string | null;
+    status: string;
+    delayMinutes: number;
+    createdByUserId: string | null;
+    createdAt: string;
+  }[];
+}
+
+export interface GetBroadcastDetailResponse {
+  data: {
+    broadcast: {
+      /** @format uuid */
+      id: string;
+      name: string;
+      description: string | null;
+      status: string;
+      delayMinutes: number;
+      createdByUserId: string | null;
+      createdAt: string;
+    };
+    teams: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      broadcastId: string;
+      name: string;
+    }[];
+    rounds: {
+      round: {
+        /** @format uuid */
+        id: string;
+        /** @format uuid */
+        broadcastId: string;
+        name: string;
+        displayOrder: number;
+        startsAt: string | null;
+      };
+      games: {
+        /** @format uuid */
+        id: string;
+        /** @format uuid */
+        roundId: string;
+        boardNumber: number;
+        whiteName: string;
+        blackName: string;
+        whiteTeamId: string | null;
+        blackTeamId: string | null;
+        result: string | null;
+        currentFen: string;
+        pgnSourceUrl: string | null;
+        lastFetchedAt: string | null;
+      }[];
+    }[];
+  };
+}
+
+export interface UpdateBroadcastBody {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name?: string;
+  description?: string | null;
+  /**
+   * @min 0
+   * @max 1440
+   */
+  delayMinutes?: number;
+  status?: "upcoming" | "live" | "finished";
+}
+
+export interface UpdateBroadcastResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    description: string | null;
+    status: string;
+    delayMinutes: number;
+    createdByUserId: string | null;
+    createdAt: string;
+  };
+}
+
+export interface CreateRoundBody {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  /** @min 0 */
+  displayOrder?: number;
+}
+
+export interface CreateRoundResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    broadcastId: string;
+    name: string;
+    displayOrder: number;
+    startsAt: string | null;
+  };
+}
+
+export interface CreateTeamBody {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+}
+
+export interface CreateTeamResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    broadcastId: string;
+    name: string;
+  };
+}
+
+export interface GetBroadcastStandingsResponse {
+  data: {
+    standings: {
+      /** @format uuid */
+      teamId: string;
+      teamName: string;
+      score: number;
+      gamesPlayed: number;
+    }[];
+  };
+}
+
+export interface CreateBroadcastGameBody {
+  /** @min 1 */
+  boardNumber: number;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  whiteName: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  blackName: string;
+  /** @format uuid */
+  whiteTeamId?: string;
+  /** @format uuid */
+  blackTeamId?: string;
+  /**
+   * @minLength 1
+   * @maxLength 2000
+   */
+  pgnSourceUrl?: string;
+}
+
+export interface CreateBroadcastGameResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    roundId: string;
+    boardNumber: number;
+    whiteName: string;
+    blackName: string;
+    whiteTeamId: string | null;
+    blackTeamId: string | null;
+    result: string | null;
+    currentFen: string;
+    pgnSourceUrl: string | null;
+    lastFetchedAt: string | null;
+  };
+}
+
+export interface UpdateBroadcastGameBody {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  whiteName?: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  blackName?: string;
+  whiteTeamId?: string | null;
+  blackTeamId?: string | null;
+  pgnSourceUrl?: string | null;
+  result?: ("1-0" | "0-1" | "1/2-1/2") | null;
+}
+
+export interface UpdateBroadcastGameResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    /** @format uuid */
+    roundId: string;
+    boardNumber: number;
+    whiteName: string;
+    blackName: string;
+    whiteTeamId: string | null;
+    blackTeamId: string | null;
+    result: string | null;
+    currentFen: string;
+    pgnSourceUrl: string | null;
+    lastFetchedAt: string | null;
+  };
+}
+
+export interface PastePgnBody {
+  /** @minLength 1 */
+  pgn: string;
+}
+
+export interface PastePgnResponse {
+  data: {
+    game: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      roundId: string;
+      boardNumber: number;
+      whiteName: string;
+      blackName: string;
+      whiteTeamId: string | null;
+      blackTeamId: string | null;
+      result: string | null;
+      currentFen: string;
+      pgnSourceUrl: string | null;
+      lastFetchedAt: string | null;
+    };
+    insertedMoveCount: number;
+  };
+}
+
+export interface GetGameViewResponse {
+  data: {
+    game: {
+      /** @format uuid */
+      id: string;
+      /** @format uuid */
+      roundId: string;
+      boardNumber: number;
+      whiteName: string;
+      blackName: string;
+      whiteTeamId: string | null;
+      blackTeamId: string | null;
+      result: string | null;
+      currentFen: string;
+      pgnSourceUrl: string | null;
+      lastFetchedAt: string | null;
+    };
+    /** @format uuid */
+    broadcastId: string;
+    moves: {
+      ply: number;
+      uci: string;
+      san: string;
+      fenAfter: string;
+      ingestedAt: string;
+    }[];
+    fen: string;
+    delayed: boolean;
   };
 }
 
@@ -19078,6 +19383,208 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<SubmitLearnAttemptResponse, any>({
         path: `/api/chess-learn/stages/${stageId}/levels/${levelId}/attempt`,
         method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerCreateBroadcast
+     * @request POST:/api/chess/broadcast
+     */
+    chessBroadcastControllerCreateBroadcast: (
+      data: CreateBroadcastBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateBroadcastResponse, any>({
+        path: `/api/chess/broadcast`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerListBroadcasts
+     * @request GET:/api/chess/broadcast
+     */
+    chessBroadcastControllerListBroadcasts: (params: RequestParams = {}) =>
+      this.request<ListBroadcastsResponse, any>({
+        path: `/api/chess/broadcast`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerGetBroadcastDetail
+     * @request GET:/api/chess/broadcast/{id}
+     */
+    chessBroadcastControllerGetBroadcastDetail: (id: string, params: RequestParams = {}) =>
+      this.request<GetBroadcastDetailResponse, any>({
+        path: `/api/chess/broadcast/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerUpdateBroadcast
+     * @request PATCH:/api/chess/broadcast/{id}
+     */
+    chessBroadcastControllerUpdateBroadcast: (
+      id: string,
+      data: UpdateBroadcastBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateBroadcastResponse, any>({
+        path: `/api/chess/broadcast/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerCreateRound
+     * @request POST:/api/chess/broadcast/{id}/rounds
+     */
+    chessBroadcastControllerCreateRound: (
+      id: string,
+      data: CreateRoundBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateRoundResponse, any>({
+        path: `/api/chess/broadcast/${id}/rounds`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerCreateTeam
+     * @request POST:/api/chess/broadcast/{id}/teams
+     */
+    chessBroadcastControllerCreateTeam: (
+      id: string,
+      data: CreateTeamBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateTeamResponse, any>({
+        path: `/api/chess/broadcast/${id}/teams`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerGetBroadcastStandings
+     * @request GET:/api/chess/broadcast/{id}/standings
+     */
+    chessBroadcastControllerGetBroadcastStandings: (id: string, params: RequestParams = {}) =>
+      this.request<GetBroadcastStandingsResponse, any>({
+        path: `/api/chess/broadcast/${id}/standings`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerCreateBroadcastGame
+     * @request POST:/api/chess/broadcast/rounds/{roundId}/games
+     */
+    chessBroadcastControllerCreateBroadcastGame: (
+      roundId: string,
+      data: CreateBroadcastGameBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateBroadcastGameResponse, any>({
+        path: `/api/chess/broadcast/rounds/${roundId}/games`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerUpdateBroadcastGame
+     * @request PATCH:/api/chess/broadcast/games/{id}
+     */
+    chessBroadcastControllerUpdateBroadcastGame: (
+      id: string,
+      data: UpdateBroadcastGameBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateBroadcastGameResponse, any>({
+        path: `/api/chess/broadcast/games/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerGetGameView
+     * @request GET:/api/chess/broadcast/games/{id}
+     */
+    chessBroadcastControllerGetGameView: (
+      id: string,
+      query?: {
+        live?: boolean | "true" | "false";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetGameViewResponse, any>({
+        path: `/api/chess/broadcast/games/${id}`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChessBroadcastControllerPastePgn
+     * @request PATCH:/api/chess/broadcast/games/{id}/pgn
+     */
+    chessBroadcastControllerPastePgn: (
+      id: string,
+      data: PastePgnBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<PastePgnResponse, any>({
+        path: `/api/chess/broadcast/games/${id}/pgn`,
+        method: "PATCH",
         body: data,
         type: ContentType.Json,
         format: "json",

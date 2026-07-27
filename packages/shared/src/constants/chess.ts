@@ -538,3 +538,28 @@ export const CHESS_OPENING_LABELS: Record<string, string> = {
   ...Object.fromEntries(CHESS_OPENING_BOOK.map((entry) => [entry.key, entry.nameVi])),
   unclassified: "Chưa phân loại",
 };
+
+/** Broadcast/relay (L10) — a tournament happening in the real world, not a mentingo match. */
+export const CHESS_BROADCAST_STATUSES = {
+  UPCOMING: "upcoming",
+  LIVE: "live",
+  FINISHED: "finished",
+} as const;
+
+export type ChessBroadcastStatus =
+  (typeof CHESS_BROADCAST_STATUSES)[keyof typeof CHESS_BROADCAST_STATUSES];
+
+export const CHESS_BROADCAST_STATUS_LABELS: Record<ChessBroadcastStatus, string> = {
+  [CHESS_BROADCAST_STATUSES.UPCOMING]: "Sắp diễn ra",
+  [CHESS_BROADCAST_STATUSES.LIVE]: "Đang diễn ra",
+  [CHESS_BROADCAST_STATUSES.FINISHED]: "Đã kết thúc",
+};
+
+export const CHESS_BROADCAST_GAME_RESULTS = {
+  WHITE_WIN: "1-0",
+  BLACK_WIN: "0-1",
+  DRAW: "1/2-1/2",
+} as const;
+
+export type ChessBroadcastGameResult =
+  (typeof CHESS_BROADCAST_GAME_RESULTS)[keyof typeof CHESS_BROADCAST_GAME_RESULTS];

@@ -182,6 +182,14 @@ export const getNavigationConfig = (
           },
         },
         {
+          label: t("chessBroadcast.nav.title", { defaultValue: "Broadcasts" }),
+          path: "chess/broadcast",
+          iconName: "Share",
+          accessRequirement: {
+            anyOf: [PERMISSIONS.CHESS_BROADCAST_READ],
+          },
+        },
+        {
           label: t("communityView.messages.title", { defaultValue: "Messages" }),
           path: "community/messages",
           iconName: "Quiz",

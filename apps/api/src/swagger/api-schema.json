@@ -16153,6 +16153,367 @@
         }
       }
     },
+    "/api/chess/broadcast": {
+      "post": {
+        "operationId": "ChessBroadcastController_createBroadcast",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBroadcastBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBroadcastResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "ChessBroadcastController_listBroadcasts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListBroadcastsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/broadcast/{id}": {
+      "get": {
+        "operationId": "ChessBroadcastController_getBroadcastDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBroadcastDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "ChessBroadcastController_updateBroadcast",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBroadcastBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateBroadcastResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/broadcast/{id}/rounds": {
+      "post": {
+        "operationId": "ChessBroadcastController_createRound",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoundBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateRoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/broadcast/{id}/teams": {
+      "post": {
+        "operationId": "ChessBroadcastController_createTeam",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTeamBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTeamResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/broadcast/{id}/standings": {
+      "get": {
+        "operationId": "ChessBroadcastController_getBroadcastStandings",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBroadcastStandingsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/broadcast/rounds/{roundId}/games": {
+      "post": {
+        "operationId": "ChessBroadcastController_createBroadcastGame",
+        "parameters": [
+          {
+            "name": "roundId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBroadcastGameBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBroadcastGameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/broadcast/games/{id}": {
+      "patch": {
+        "operationId": "ChessBroadcastController_updateBroadcastGame",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBroadcastGameBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateBroadcastGameResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "ChessBroadcastController_getGameView",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "live",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "const": "true",
+                  "type": "string"
+                },
+                {
+                  "const": "false",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGameViewResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/broadcast/games/{id}/pgn": {
+      "patch": {
+        "operationId": "ChessBroadcastController_pastePgn",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PastePgnBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PastePgnResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/assignments/lessons": {
       "post": {
         "operationId": "AssignmentsController_createAssignmentLesson",
@@ -21774,6 +22135,14 @@
                         },
                         {
                           "const": "chess.insight.read_all",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.broadcast.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess.broadcast.manage",
                           "type": "string"
                         },
                         {
@@ -64123,6 +64492,1206 @@
             },
             "required": [
               "correct"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateBroadcastBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "delayMinutes": {
+            "minimum": 0,
+            "maximum": 1440,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateBroadcastResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "status": {
+                "type": "string"
+              },
+              "delayMinutes": {
+                "type": "number"
+              },
+              "createdByUserId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "description",
+              "status",
+              "delayMinutes",
+              "createdByUserId",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListBroadcastsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "status": {
+                  "type": "string"
+                },
+                "delayMinutes": {
+                  "type": "number"
+                },
+                "createdByUserId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "status",
+                "delayMinutes",
+                "createdByUserId",
+                "createdAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetBroadcastDetailResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "broadcast": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "delayMinutes": {
+                    "type": "number"
+                  },
+                  "createdByUserId": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "description",
+                  "status",
+                  "delayMinutes",
+                  "createdByUserId",
+                  "createdAt"
+                ]
+              },
+              "teams": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "broadcastId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "broadcastId",
+                    "name"
+                  ]
+                }
+              },
+              "rounds": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "round": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "broadcastId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "displayOrder": {
+                          "type": "number"
+                        },
+                        "startsAt": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "broadcastId",
+                        "name",
+                        "displayOrder",
+                        "startsAt"
+                      ]
+                    },
+                    "games": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "roundId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "boardNumber": {
+                            "type": "number"
+                          },
+                          "whiteName": {
+                            "type": "string"
+                          },
+                          "blackName": {
+                            "type": "string"
+                          },
+                          "whiteTeamId": {
+                            "anyOf": [
+                              {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "blackTeamId": {
+                            "anyOf": [
+                              {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "result": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "currentFen": {
+                            "type": "string"
+                          },
+                          "pgnSourceUrl": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "lastFetchedAt": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "roundId",
+                          "boardNumber",
+                          "whiteName",
+                          "blackName",
+                          "whiteTeamId",
+                          "blackTeamId",
+                          "result",
+                          "currentFen",
+                          "pgnSourceUrl",
+                          "lastFetchedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "round",
+                    "games"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "broadcast",
+              "teams",
+              "rounds"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateBroadcastBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "delayMinutes": {
+            "minimum": 0,
+            "maximum": 1440,
+            "type": "integer"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "const": "upcoming",
+                "type": "string"
+              },
+              {
+                "const": "live",
+                "type": "string"
+              },
+              {
+                "const": "finished",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "UpdateBroadcastResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "status": {
+                "type": "string"
+              },
+              "delayMinutes": {
+                "type": "number"
+              },
+              "createdByUserId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "description",
+              "status",
+              "delayMinutes",
+              "createdByUserId",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateRoundBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          },
+          "displayOrder": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateRoundResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "broadcastId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "displayOrder": {
+                "type": "number"
+              },
+              "startsAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "broadcastId",
+              "name",
+              "displayOrder",
+              "startsAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateTeamBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateTeamResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "broadcastId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "broadcastId",
+              "name"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetBroadcastStandingsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "standings": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "teamId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "teamName": {
+                      "type": "string"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "gamesPlayed": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "teamId",
+                    "teamName",
+                    "score",
+                    "gamesPlayed"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "standings"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateBroadcastGameBody": {
+        "type": "object",
+        "properties": {
+          "boardNumber": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "whiteName": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          },
+          "blackName": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          },
+          "whiteTeamId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "blackTeamId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "pgnSourceUrl": {
+            "minLength": 1,
+            "maxLength": 2000,
+            "type": "string"
+          }
+        },
+        "required": [
+          "boardNumber",
+          "whiteName",
+          "blackName"
+        ]
+      },
+      "CreateBroadcastGameResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "roundId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "boardNumber": {
+                "type": "number"
+              },
+              "whiteName": {
+                "type": "string"
+              },
+              "blackName": {
+                "type": "string"
+              },
+              "whiteTeamId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "blackTeamId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "result": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "currentFen": {
+                "type": "string"
+              },
+              "pgnSourceUrl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastFetchedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "roundId",
+              "boardNumber",
+              "whiteName",
+              "blackName",
+              "whiteTeamId",
+              "blackTeamId",
+              "result",
+              "currentFen",
+              "pgnSourceUrl",
+              "lastFetchedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateBroadcastGameBody": {
+        "type": "object",
+        "properties": {
+          "whiteName": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          },
+          "blackName": {
+            "minLength": 1,
+            "maxLength": 200,
+            "type": "string"
+          },
+          "whiteTeamId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "blackTeamId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pgnSourceUrl": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "result": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "const": "1-0",
+                    "type": "string"
+                  },
+                  {
+                    "const": "0-1",
+                    "type": "string"
+                  },
+                  {
+                    "const": "1/2-1/2",
+                    "type": "string"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "UpdateBroadcastGameResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "roundId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "boardNumber": {
+                "type": "number"
+              },
+              "whiteName": {
+                "type": "string"
+              },
+              "blackName": {
+                "type": "string"
+              },
+              "whiteTeamId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "blackTeamId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "result": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "currentFen": {
+                "type": "string"
+              },
+              "pgnSourceUrl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastFetchedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "roundId",
+              "boardNumber",
+              "whiteName",
+              "blackName",
+              "whiteTeamId",
+              "blackTeamId",
+              "result",
+              "currentFen",
+              "pgnSourceUrl",
+              "lastFetchedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "PastePgnBody": {
+        "type": "object",
+        "properties": {
+          "pgn": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "pgn"
+        ]
+      },
+      "PastePgnResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "game": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "roundId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "boardNumber": {
+                    "type": "number"
+                  },
+                  "whiteName": {
+                    "type": "string"
+                  },
+                  "blackName": {
+                    "type": "string"
+                  },
+                  "whiteTeamId": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "blackTeamId": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "result": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "currentFen": {
+                    "type": "string"
+                  },
+                  "pgnSourceUrl": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "lastFetchedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "roundId",
+                  "boardNumber",
+                  "whiteName",
+                  "blackName",
+                  "whiteTeamId",
+                  "blackTeamId",
+                  "result",
+                  "currentFen",
+                  "pgnSourceUrl",
+                  "lastFetchedAt"
+                ]
+              },
+              "insertedMoveCount": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "game",
+              "insertedMoveCount"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetGameViewResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "game": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "roundId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "boardNumber": {
+                    "type": "number"
+                  },
+                  "whiteName": {
+                    "type": "string"
+                  },
+                  "blackName": {
+                    "type": "string"
+                  },
+                  "whiteTeamId": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "blackTeamId": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "result": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "currentFen": {
+                    "type": "string"
+                  },
+                  "pgnSourceUrl": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "lastFetchedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "roundId",
+                  "boardNumber",
+                  "whiteName",
+                  "blackName",
+                  "whiteTeamId",
+                  "blackTeamId",
+                  "result",
+                  "currentFen",
+                  "pgnSourceUrl",
+                  "lastFetchedAt"
+                ]
+              },
+              "broadcastId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "moves": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ply": {
+                      "type": "number"
+                    },
+                    "uci": {
+                      "type": "string"
+                    },
+                    "san": {
+                      "type": "string"
+                    },
+                    "fenAfter": {
+                      "type": "string"
+                    },
+                    "ingestedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ply",
+                    "uci",
+                    "san",
+                    "fenAfter",
+                    "ingestedAt"
+                  ]
+                }
+              },
+              "fen": {
+                "type": "string"
+              },
+              "delayed": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "game",
+              "broadcastId",
+              "moves",
+              "fen",
+              "delayed"
             ]
           }
         },

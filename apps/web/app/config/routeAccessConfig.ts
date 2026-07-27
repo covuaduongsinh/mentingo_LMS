@@ -222,6 +222,15 @@ export const routeAccessConfig = createRouteConfig({
   "chess/insight": {
     anyOf: [PERMISSIONS.CHESS_INSIGHT_READ],
   },
+  "chess/broadcast": {
+    anyOf: [PERMISSIONS.CHESS_BROADCAST_READ],
+  },
+  "chess/broadcast/:id": {
+    anyOf: [PERMISSIONS.CHESS_BROADCAST_READ],
+  },
+  "chess/broadcast/games/:id": {
+    anyOf: [PERMISSIONS.CHESS_BROADCAST_READ],
+  },
   "community/messages": {
     anyOf: [PERMISSIONS.COMMUNITY_MESSAGE_SEND],
   },

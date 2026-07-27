@@ -1394,6 +1394,20 @@
       "when": 1785099894419,
       "tag": "0198_enable_community_social_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 199,
+      "version": "7",
+      "when": 1785103867298,
+      "tag": "0199_add_chess_broadcast",
+      "breakpoints": true
+    },
+    {
+      "idx": 200,
+      "version": "7",
+      "when": 1785103867299,
+      "tag": "0200_enable_chess_broadcast_rls",
+      "breakpoints": true
     }
   ]
 }
