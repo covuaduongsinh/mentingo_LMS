@@ -186,7 +186,27 @@ Bảng mới: `chess_broadcasts`, `chess_broadcast_rounds`, `chess_broadcast_tea
 
 ## Roadmap đã hoàn tất (L0–L10)
 
-Không còn đợt nào theo kế hoạch đã duyệt. Các mục còn lại trong [03-feature-matrix.md](./03-feature-matrix.md) đều đã được xếp vào "Follow-up Work" của đợt tương ứng — là quyết định phạm vi có ghi chú rõ trong spec từng đợt, không phải việc bị bỏ sót.
+Không còn đợt nào theo kế hoạch đã duyệt cho phần "còn thiếu so với lila" nói chung. Các mục còn lại trong [03-feature-matrix.md](./03-feature-matrix.md) đều đã được xếp vào "Follow-up Work" của đợt tương ứng — là quyết định phạm vi có ghi chú rõ trong spec từng đợt, không phải việc bị bỏ sót.
+
+## Roadmap phụ: Classroom (C0–C8) — mở rộng sâu module `clas`
+
+Sau khi L0–L10 đóng, một khảo sát riêng đào sâu module `clas` (lớp học) của lila — vốn ở L5 chỉ được port một lát mỏng 5 endpoint dựng tạm trên `groups` — cho thấy khoảng cách còn rất lớn (41 route so với 5). Roadmap con này (C0–C8) xây một module **Classroom** độc lập, đầy đủ tính năng ngang lila `clas`, cộng phần mở rộng riêng của mentingo (nối lớp với khóa học/bài tập/chứng chỉ — lila không có). Xem `docs/research/lila/06-clas-teardown.md` (đặc tả clean-room chi tiết) và `docs/specs/classroom-business-spec.md` (đặc tả nghiệp vụ mentingo, nguồn sự thật cho C1–C8). `docs/specs/chess-class-management-business-spec.md` (L5) được đánh dấu superseded bởi tài liệu mới.
+
+Cùng quy tắc tự động hoá như L0–L10: mỗi đợt verify sạch rồi commit + push + PR + merge, tự động sang đợt tiếp theo.
+
+| Đợt    | Nội dung                                                                                                                                                                                                     |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **C0** | Tài liệu: `06-clas-teardown.md` + `classroom-business-spec.md`, đánh dấu spec L5 superseded                                                                                                                  |
+| **C1** | Nền tảng: entity `classrooms`/`classroom_teachers`/`classroom_students`, CRUD, archive/reopen, bất biến bảo mật (trần HS/GV, kid mode, quy tắc 404), sửa `shareGroup()` thành UNION với `classroom_students` |
+| **C2** | Di trú dữ liệu từ `groups` (backfill idempotent) + alias tương thích ngược cho 5 endpoint `chess-class` cũ                                                                                                   |
+| **C3** | Học sinh trong lớp: mời/accept/decline, tạo đơn/hàng loạt, hồ sơ, archive/reset mật khẩu/graduate/đóng/chuyển lớp, thao tác hàng loạt                                                                        |
+| **C4** | Bảng tin, thông báo toàn lớp, tự đăng ký giáo viên, trang admin, cron auto-archive 30 ngày                                                                                                                   |
+| **C5** | Nối lớp với LMS: gán khóa học, giao bài tập, giao study/puzzle cờ, mời hàng loạt vào giải đấu                                                                                                                |
+| **C6** | Báo cáo tiến độ nâng cao (perf×ngày, learn, khóa học)                                                                                                                                                        |
+| **C7** | Quyền riêng tư, GDPR, kiểm toán                                                                                                                                                                              |
+| **C8** | E2E, i18n hoàn thiện, dọn dẹp alias/cột cũ                                                                                                                                                                   |
+
+Trạng thái từng đợt được ghi lại trong `docs/specs/classroom-business-spec.md` (mục "Test Evidence"/"Key Technical Context") và `HANDOVER.md` khi đợt đó merge.
 
 ## Loại khỏi phạm vi (đã cân nhắc, quyết định không làm)
 
