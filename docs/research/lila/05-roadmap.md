@@ -194,17 +194,17 @@ Sau khi L0–L10 đóng, một khảo sát riêng đào sâu module `clas` (lớ
 
 Cùng quy tắc tự động hoá như L0–L10: mỗi đợt verify sạch rồi commit + push + PR + merge, tự động sang đợt tiếp theo.
 
-| Đợt    | Nội dung                                                                                                                                                                                                     |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **C0** | Tài liệu: `06-clas-teardown.md` + `classroom-business-spec.md`, đánh dấu spec L5 superseded                                                                                                                  |
-| **C1** | Nền tảng: entity `classrooms`/`classroom_teachers`/`classroom_students`, CRUD, archive/reopen, bất biến bảo mật (trần HS/GV, kid mode, quy tắc 404), sửa `shareGroup()` thành UNION với `classroom_students` |
-| **C2** | Di trú dữ liệu từ `groups` (backfill idempotent) + alias tương thích ngược cho 5 endpoint `chess-class` cũ                                                                                                   |
-| **C3** | Học sinh trong lớp: mời/accept/decline, tạo đơn/hàng loạt, hồ sơ, archive/reset mật khẩu/graduate/đóng/chuyển lớp, thao tác hàng loạt                                                                        |
-| **C4** | Bảng tin, thông báo toàn lớp, tự đăng ký giáo viên, trang admin, cron auto-archive 30 ngày                                                                                                                   |
-| **C5** | Nối lớp với LMS: gán khóa học, giao bài tập, giao study/puzzle cờ, mời hàng loạt vào giải đấu                                                                                                                |
-| **C6** | Báo cáo tiến độ nâng cao (perf×ngày, learn, khóa học)                                                                                                                                                        |
-| **C7** | Quyền riêng tư, GDPR, kiểm toán                                                                                                                                                                              |
-| **C8** | E2E, i18n hoàn thiện, dọn dẹp alias/cột cũ                                                                                                                                                                   |
+| Đợt    | PR         | Nội dung                                                                                                                                                                                                     |
+| ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **C0** | #31 merged | Tài liệu: `06-clas-teardown.md` + `classroom-business-spec.md`, đánh dấu spec L5 superseded                                                                                                                  |
+| **C1** | #32 merged | Nền tảng: entity `classrooms`/`classroom_teachers`/`classroom_students`, CRUD, archive/reopen, bất biến bảo mật (trần HS/GV, kid mode, quy tắc 404), sửa `shareGroup()` thành UNION với `classroom_students` |
+| **C2** |            | Di trú dữ liệu từ `groups` (backfill idempotent) + alias tương thích ngược cho 5 endpoint `chess-class` cũ                                                                                                   |
+| **C3** |            | Học sinh trong lớp: mời/accept/decline, tạo đơn/hàng loạt, hồ sơ, archive/reset mật khẩu/graduate/đóng/chuyển lớp, thao tác hàng loạt                                                                        |
+| **C4** |            | Bảng tin, thông báo toàn lớp, tự đăng ký giáo viên, trang admin, cron auto-archive 30 ngày                                                                                                                   |
+| **C5** |            | Nối lớp với LMS: gán khóa học, giao bài tập, giao study/puzzle cờ, mời hàng loạt vào giải đấu                                                                                                                |
+| **C6** |            | Báo cáo tiến độ nâng cao (perf×ngày, learn, khóa học)                                                                                                                                                        |
+| **C7** |            | Quyền riêng tư, GDPR, kiểm toán                                                                                                                                                                              |
+| **C8** |            | E2E, i18n hoàn thiện, dọn dẹp alias/cột cũ                                                                                                                                                                   |
 
 Trạng thái từng đợt được ghi lại trong `docs/specs/classroom-business-spec.md` (mục "Test Evidence"/"Key Technical Context") và `HANDOVER.md` khi đợt đó merge.
 
