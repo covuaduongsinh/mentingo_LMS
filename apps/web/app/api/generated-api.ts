@@ -336,6 +336,10 @@ export interface CurrentUserResponse {
       | "assignment.manage_own"
       | "assignment.grade"
       | "assignment.submit"
+      | "classroom.read"
+      | "classroom.create"
+      | "classroom.manage"
+      | "classroom.manage_own"
     )[];
     shouldVerifyMFA: boolean;
     requiresPasswordChange: boolean;
@@ -9057,6 +9061,173 @@ export interface GetGameViewResponse {
     fen: string;
     delayed: boolean;
   };
+}
+
+export interface CreateClassroomBody {
+  /**
+   * @minLength 3
+   * @maxLength 100
+   */
+  name: string;
+  /** @maxLength 2000 */
+  description?: string;
+  canMsg?: boolean;
+}
+
+export interface CreateClassroomResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    description: string | null;
+    wall: string;
+    ownerId: string | null;
+    canMsg: boolean;
+    maxStudents: number;
+    viewedAt: string;
+    archivedAt: string | null;
+    archivedBy: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface ListTeachingClassroomsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    description: string | null;
+    wall: string;
+    ownerId: string | null;
+    canMsg: boolean;
+    maxStudents: number;
+    viewedAt: string;
+    archivedAt: string | null;
+    archivedBy: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+}
+
+export interface ListLearningClassroomsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    description: string | null;
+    wall: string;
+    ownerId: string | null;
+    canMsg: boolean;
+    maxStudents: number;
+    viewedAt: string;
+    archivedAt: string | null;
+    archivedBy: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+}
+
+export interface GetClassroomDetailResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    description: string | null;
+    wall: string;
+    ownerId: string | null;
+    canMsg: boolean;
+    maxStudents: number;
+    viewedAt: string;
+    archivedAt: string | null;
+    archivedBy: string | null;
+    createdAt: string;
+    updatedAt: string;
+    teachers: {
+      /** @format uuid */
+      userId: string;
+      firstName: string;
+      lastName: string;
+      addedBy: string | null;
+    }[];
+    isTeacher: boolean;
+  };
+}
+
+export interface UpdateClassroomBody {
+  /**
+   * @minLength 3
+   * @maxLength 100
+   */
+  name?: string;
+  /** @maxLength 2000 */
+  description?: string;
+  canMsg?: boolean;
+}
+
+export interface UpdateClassroomResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    description: string | null;
+    wall: string;
+    ownerId: string | null;
+    canMsg: boolean;
+    maxStudents: number;
+    viewedAt: string;
+    archivedAt: string | null;
+    archivedBy: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface SetClassroomArchivedBody {
+  archived: boolean;
+}
+
+export interface SetClassroomArchivedResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    description: string | null;
+    wall: string;
+    ownerId: string | null;
+    canMsg: boolean;
+    maxStudents: number;
+    viewedAt: string;
+    archivedAt: string | null;
+    archivedBy: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface AddClassroomTeacherBody {
+  /** @format uuid */
+  userId: string;
+}
+
+export interface AddClassroomTeacherResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    firstName: string;
+    lastName: string;
+    addedBy: string | null;
+  }[];
+}
+
+export interface RemoveClassroomTeacherResponse {
+  data: {
+    /** @format uuid */
+    userId: string;
+    firstName: string;
+    lastName: string;
+    addedBy: string | null;
+  }[];
 }
 
 export interface CreateAssignmentLessonBody {
@@ -19587,6 +19758,142 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "PATCH",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerCreateClassroom
+     * @request POST:/api/classroom
+     */
+    classroomControllerCreateClassroom: (data: CreateClassroomBody, params: RequestParams = {}) =>
+      this.request<CreateClassroomResponse, any>({
+        path: `/api/classroom`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerListTeachingClassrooms
+     * @request GET:/api/classroom/teaching
+     */
+    classroomControllerListTeachingClassrooms: (params: RequestParams = {}) =>
+      this.request<ListTeachingClassroomsResponse, any>({
+        path: `/api/classroom/teaching`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerListLearningClassrooms
+     * @request GET:/api/classroom/learning
+     */
+    classroomControllerListLearningClassrooms: (params: RequestParams = {}) =>
+      this.request<ListLearningClassroomsResponse, any>({
+        path: `/api/classroom/learning`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerGetClassroomDetail
+     * @request GET:/api/classroom/{classroomId}
+     */
+    classroomControllerGetClassroomDetail: (classroomId: string, params: RequestParams = {}) =>
+      this.request<GetClassroomDetailResponse, any>({
+        path: `/api/classroom/${classroomId}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerUpdateClassroom
+     * @request PATCH:/api/classroom/{classroomId}
+     */
+    classroomControllerUpdateClassroom: (
+      classroomId: string,
+      data: UpdateClassroomBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateClassroomResponse, any>({
+        path: `/api/classroom/${classroomId}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerSetClassroomArchived
+     * @request POST:/api/classroom/{classroomId}/archive
+     */
+    classroomControllerSetClassroomArchived: (
+      classroomId: string,
+      data: SetClassroomArchivedBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<SetClassroomArchivedResponse, any>({
+        path: `/api/classroom/${classroomId}/archive`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerAddClassroomTeacher
+     * @request POST:/api/classroom/{classroomId}/teachers
+     */
+    classroomControllerAddClassroomTeacher: (
+      classroomId: string,
+      data: AddClassroomTeacherBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<AddClassroomTeacherResponse, any>({
+        path: `/api/classroom/${classroomId}/teachers`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerRemoveClassroomTeacher
+     * @request DELETE:/api/classroom/{classroomId}/teachers/{userId}
+     */
+    classroomControllerRemoveClassroomTeacher: (
+      classroomId: string,
+      userId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<RemoveClassroomTeacherResponse, any>({
+        path: `/api/classroom/${classroomId}/teachers/${userId}`,
+        method: "DELETE",
         format: "json",
         ...params,
       }),

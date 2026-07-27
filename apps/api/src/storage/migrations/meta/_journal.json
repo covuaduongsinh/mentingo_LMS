@@ -1408,6 +1408,20 @@
       "when": 1785103867299,
       "tag": "0200_enable_chess_broadcast_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 201,
+      "version": "7",
+      "when": 1785175998415,
+      "tag": "0201_add_classrooms",
+      "breakpoints": true
+    },
+    {
+      "idx": 202,
+      "version": "7",
+      "when": 1785176015617,
+      "tag": "0202_enable_classrooms_rls",
+      "breakpoints": true
     }
   ]
 }

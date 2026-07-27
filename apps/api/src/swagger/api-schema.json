@@ -16514,6 +16514,239 @@
         }
       }
     },
+    "/api/classroom": {
+      "post": {
+        "operationId": "ClassroomController_createClassroom",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClassroomBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClassroomResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/teaching": {
+      "get": {
+        "operationId": "ClassroomController_listTeachingClassrooms",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTeachingClassroomsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/learning": {
+      "get": {
+        "operationId": "ClassroomController_listLearningClassrooms",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListLearningClassroomsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}": {
+      "get": {
+        "operationId": "ClassroomController_getClassroomDetail",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClassroomDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "ClassroomController_updateClassroom",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClassroomBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateClassroomResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/archive": {
+      "post": {
+        "operationId": "ClassroomController_setClassroomArchived",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetClassroomArchivedBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetClassroomArchivedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/teachers": {
+      "post": {
+        "operationId": "ClassroomController_addClassroomTeacher",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddClassroomTeacherBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddClassroomTeacherResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/teachers/{userId}": {
+      "delete": {
+        "operationId": "ClassroomController_removeClassroomTeacher",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveClassroomTeacherResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/assignments/lessons": {
       "post": {
         "operationId": "AssignmentsController_createAssignmentLesson",
@@ -22163,6 +22396,22 @@
                         },
                         {
                           "const": "assignment.submit",
+                          "type": "string"
+                        },
+                        {
+                          "const": "classroom.read",
+                          "type": "string"
+                        },
+                        {
+                          "const": "classroom.create",
+                          "type": "string"
+                        },
+                        {
+                          "const": "classroom.manage",
+                          "type": "string"
+                        },
+                        {
+                          "const": "classroom.manage_own",
                           "type": "string"
                         }
                       ]
@@ -65693,6 +65942,762 @@
               "fen",
               "delayed"
             ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateClassroomBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 3,
+            "maxLength": 100,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "canMsg": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateClassroomResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "wall": {
+                "type": "string"
+              },
+              "ownerId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "canMsg": {
+                "type": "boolean"
+              },
+              "maxStudents": {
+                "type": "number"
+              },
+              "viewedAt": {
+                "type": "string"
+              },
+              "archivedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "archivedBy": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "description",
+              "wall",
+              "ownerId",
+              "canMsg",
+              "maxStudents",
+              "viewedAt",
+              "archivedAt",
+              "archivedBy",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListTeachingClassroomsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "wall": {
+                  "type": "string"
+                },
+                "ownerId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "canMsg": {
+                  "type": "boolean"
+                },
+                "maxStudents": {
+                  "type": "number"
+                },
+                "viewedAt": {
+                  "type": "string"
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "archivedBy": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "wall",
+                "ownerId",
+                "canMsg",
+                "maxStudents",
+                "viewedAt",
+                "archivedAt",
+                "archivedBy",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ListLearningClassroomsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "wall": {
+                  "type": "string"
+                },
+                "ownerId": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "canMsg": {
+                  "type": "boolean"
+                },
+                "maxStudents": {
+                  "type": "number"
+                },
+                "viewedAt": {
+                  "type": "string"
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "archivedBy": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "wall",
+                "ownerId",
+                "canMsg",
+                "maxStudents",
+                "viewedAt",
+                "archivedAt",
+                "archivedBy",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetClassroomDetailResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "wall": {
+                "type": "string"
+              },
+              "ownerId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "canMsg": {
+                "type": "boolean"
+              },
+              "maxStudents": {
+                "type": "number"
+              },
+              "viewedAt": {
+                "type": "string"
+              },
+              "archivedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "archivedBy": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "teachers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "firstName": {
+                      "type": "string"
+                    },
+                    "lastName": {
+                      "type": "string"
+                    },
+                    "addedBy": {
+                      "anyOf": [
+                        {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "firstName",
+                    "lastName",
+                    "addedBy"
+                  ]
+                }
+              },
+              "isTeacher": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "description",
+              "wall",
+              "ownerId",
+              "canMsg",
+              "maxStudents",
+              "viewedAt",
+              "archivedAt",
+              "archivedBy",
+              "createdAt",
+              "updatedAt",
+              "teachers",
+              "isTeacher"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateClassroomBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 3,
+            "maxLength": 100,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "canMsg": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateClassroomResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "wall": {
+                "type": "string"
+              },
+              "ownerId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "canMsg": {
+                "type": "boolean"
+              },
+              "maxStudents": {
+                "type": "number"
+              },
+              "viewedAt": {
+                "type": "string"
+              },
+              "archivedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "archivedBy": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "description",
+              "wall",
+              "ownerId",
+              "canMsg",
+              "maxStudents",
+              "viewedAt",
+              "archivedAt",
+              "archivedBy",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SetClassroomArchivedBody": {
+        "type": "object",
+        "properties": {
+          "archived": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "archived"
+        ]
+      },
+      "SetClassroomArchivedResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "wall": {
+                "type": "string"
+              },
+              "ownerId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "canMsg": {
+                "type": "boolean"
+              },
+              "maxStudents": {
+                "type": "number"
+              },
+              "viewedAt": {
+                "type": "string"
+              },
+              "archivedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "archivedBy": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "description",
+              "wall",
+              "ownerId",
+              "canMsg",
+              "maxStudents",
+              "viewedAt",
+              "archivedAt",
+              "archivedBy",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AddClassroomTeacherBody": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId"
+        ]
+      },
+      "AddClassroomTeacherResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "addedBy": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "userId",
+                "firstName",
+                "lastName",
+                "addedBy"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RemoveClassroomTeacherResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "addedBy": {
+                  "anyOf": [
+                    {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "userId",
+                "firstName",
+                "lastName",
+                "addedBy"
+              ]
+            }
           }
         },
         "required": [

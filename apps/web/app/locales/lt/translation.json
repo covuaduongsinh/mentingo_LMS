@@ -1,4 +1,56 @@
 {
+  "classroom": {
+    "nav": {
+      "title": "Klasės"
+    },
+    "list": {
+      "teachingHeading": "Klasės, kurias mokote",
+      "learningHeading": "Jūsų klasės",
+      "empty": "Kol kas nėra klasių.",
+      "archivedToggle": "Rodyti archyvuotas",
+      "createButton": "Nauja klasė"
+    },
+    "form": {
+      "createTitle": "Nauja klasė",
+      "editTitle": "Redaguoti klasę",
+      "nameLabel": "Pavadinimas",
+      "descriptionLabel": "Aprašymas",
+      "canMsgLabel": "Leisti mokiniams rašyti vieni kitiems žinutes",
+      "canMsgHelp": "Taikoma tik mokiniams, naudojantiems mokytojo valdomą paskyrą.",
+      "submit": "Išsaugoti",
+      "cancel": "Atšaukti"
+    },
+    "detail": {
+      "teachersHeading": "Mokytojai",
+      "addTeacherPlaceholder": "Pridėti mokytoją pagal naudotojo ID",
+      "addTeacherButton": "Pridėti mokytoją",
+      "removeTeacherButton": "Pašalinti",
+      "archiveButton": "Archyvuoti klasę",
+      "reopenButton": "Atkurti klasę",
+      "archivedBanner": "Ši klasė archyvuota.",
+      "confirmArchive": "Archyvuoti šią klasę? Mokiniai jos nebematys, tačiau jokie duomenys nebus ištrinti."
+    },
+    "toast": {
+      "created": "Klasė sukurta",
+      "createFailed": "Nepavyko sukurti klasės",
+      "updated": "Klasė atnaujinta",
+      "updateFailed": "Nepavyko atnaujinti klasės",
+      "archived": "Klasė archyvuota",
+      "reopened": "Klasė atkurta",
+      "archiveFailed": "Nepavyko pakeisti klasės archyvavimo būsenos",
+      "teacherAdded": "Mokytojas pridėtas",
+      "teacherAddFailed": "Nepavyko pridėti mokytojo",
+      "teacherRemoved": "Mokytojas pašalintas",
+      "teacherRemoveFailed": "Nepavyko pašalinti mokytojo"
+    },
+    "error": {
+      "notFound": "Klasė nerasta",
+      "notTeacher": "Tai gali atlikti tik šios klasės mokytojas",
+      "teacherNotFound": "Šis naudotojas nerastas",
+      "tooManyTeachers": "Klasėje gali būti ne daugiau kaip 10 mokytojų",
+      "lastTeacher": "Klasėje turi likti bent vienas mokytojas"
+    }
+  },
   "common": {
     "button": {
       "save": "Išsaugoti",
@@ -4031,6 +4083,8 @@
     }
   },
   "pages": {
+    "classrooms": "Klasės",
+    "classroomDetail": "Klasė",
     "dashboard": "Prietaisų skydelis",
     "settings": "Nustatymai",
     "providerInformation": "Teikėjo informacija",

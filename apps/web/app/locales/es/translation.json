@@ -1,4 +1,56 @@
 {
+  "classroom": {
+    "nav": {
+      "title": "Clases"
+    },
+    "list": {
+      "teachingHeading": "Clases que impartes",
+      "learningHeading": "Tus clases",
+      "empty": "Todavía no hay clases.",
+      "archivedToggle": "Mostrar archivadas",
+      "createButton": "Nueva clase"
+    },
+    "form": {
+      "createTitle": "Nueva clase",
+      "editTitle": "Editar clase",
+      "nameLabel": "Nombre",
+      "descriptionLabel": "Descripción",
+      "canMsgLabel": "Permitir que los estudiantes se envíen mensajes entre sí",
+      "canMsgHelp": "Solo se aplica a estudiantes con una cuenta gestionada por el profesor.",
+      "submit": "Guardar",
+      "cancel": "Cancelar"
+    },
+    "detail": {
+      "teachersHeading": "Profesores",
+      "addTeacherPlaceholder": "Añadir profesor por ID de usuario",
+      "addTeacherButton": "Añadir profesor",
+      "removeTeacherButton": "Quitar",
+      "archiveButton": "Archivar clase",
+      "reopenButton": "Reabrir clase",
+      "archivedBanner": "Esta clase está archivada.",
+      "confirmArchive": "¿Archivar esta clase? Los estudiantes dejarán de verla, pero no se eliminará ningún dato."
+    },
+    "toast": {
+      "created": "Clase creada",
+      "createFailed": "No se pudo crear la clase",
+      "updated": "Clase actualizada",
+      "updateFailed": "No se pudo actualizar la clase",
+      "archived": "Clase archivada",
+      "reopened": "Clase reabierta",
+      "archiveFailed": "No se pudo cambiar el estado de archivado de la clase",
+      "teacherAdded": "Profesor añadido",
+      "teacherAddFailed": "No se pudo añadir al profesor",
+      "teacherRemoved": "Profesor eliminado",
+      "teacherRemoveFailed": "No se pudo eliminar al profesor"
+    },
+    "error": {
+      "notFound": "Clase no encontrada",
+      "notTeacher": "Solo un profesor de esta clase puede hacer eso",
+      "teacherNotFound": "No se encontró ese usuario",
+      "tooManyTeachers": "Una clase puede tener como máximo 10 profesores",
+      "lastTeacher": "Una clase debe mantener al menos un profesor"
+    }
+  },
   "common": {
     "button": {
       "save": "Guardar",
@@ -4105,6 +4157,8 @@
     }
   },
   "pages": {
+    "classrooms": "Clases",
+    "classroomDetail": "Clase",
     "dashboard": "Panel de control",
     "settings": "Configuración",
     "providerInformation": "Información del proveedor",

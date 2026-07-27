@@ -37,12 +37,26 @@ export class CommunitySocialRepository {
     return row?.isManagedAccount ?? false;
   }
 
-  async shareGroup(userIdA: UUIDType, userIdB: UUIDType) {
+  /** True if the two users share an HR/L&D group (`groups`) OR are both active members of the
+   * same classroom (`classroom_students` — independent of `groups` since the Classroom module,
+   * see docs/specs/classroom-business-spec.md). Kid-mode messaging/follow checks call this to
+   * decide whether two managed accounts are classmates — a fix here that misses either source
+   * fails silently (no exception, just an unexpectedly empty result), so both are covered by
+   * one query rather than two call sites that could drift apart. */
+  async sharesClassmateRelationship(userIdA: UUIDType, userIdB: UUIDType) {
     const [row] = await this.db.execute(sql`
       SELECT 1
       FROM group_users gu1
       JOIN group_users gu2 ON gu1.group_id = gu2.group_id
       WHERE gu1.user_id = ${userIdA} AND gu2.user_id = ${userIdB}
+      UNION ALL
+      SELECT 1
+      FROM classroom_students cs1
+      JOIN classroom_students cs2 ON cs1.classroom_id = cs2.classroom_id
+      WHERE cs1.user_id = ${userIdA}
+        AND cs2.user_id = ${userIdB}
+        AND cs1.archived_at IS NULL
+        AND cs2.archived_at IS NULL
       LIMIT 1
     `);
 

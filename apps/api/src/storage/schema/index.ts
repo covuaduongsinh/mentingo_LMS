@@ -39,6 +39,7 @@ import {
   CHESS_MATCH_STATUSES,
   CHESS_TOURNAMENT_STATUSES,
   CHESS_BROADCAST_STATUSES,
+  CLASSROOM_DEFAULTS,
 } from "@repo/shared";
 import { sql } from "drizzle-orm";
 import {
@@ -3716,5 +3717,91 @@ export const chessBroadcastGameMoves = pgTable(
       table.gameId,
       table.ply,
     ),
+  }),
+);
+
+/** Classroom module (independent of `groups`, the HR/L&D cohort concept) — see
+ * docs/specs/classroom-business-spec.md. Every teacher in `classroomTeachers` has equal
+ * standing on the classroom; `ownerId` is a display-only "created by" reference, not a
+ * privilege tier. */
+export const classrooms = pgTable(
+  "classrooms",
+  {
+    ...id,
+    ...timestamps,
+    name: text("name").notNull(),
+    description: text("description"),
+    wall: text("wall").notNull().default(""),
+    ownerId: uuid("owner_id").references(() => users.id, { onDelete: "set null" }),
+    canMsg: boolean("can_msg").notNull().default(false),
+    maxStudents: integer("max_students").notNull().default(CLASSROOM_DEFAULTS.MAX_STUDENTS),
+    viewedAt: timestampWithTimezone({ name: "viewed_at" })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    archivedAt: timestampWithTimezone({ name: "archived_at" }),
+    archivedBy: uuid("archived_by").references(() => users.id, { onDelete: "set null" }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("classrooms")(table),
+    ownerIdx: index("classrooms_owner_id_idx").on(table.ownerId),
+    viewedAtIdx: index("classrooms_viewed_at_idx").on(table.viewedAt),
+  }),
+);
+
+export const classroomTeachers = pgTable(
+  "classroom_teachers",
+  {
+    ...id,
+    ...timestamps,
+    classroomId: uuid("classroom_id")
+      .references(() => classrooms.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    addedBy: uuid("added_by").references(() => users.id, { onDelete: "set null" }),
+    tenantId,
+  },
+  withTenantIdIndex("classroom_teachers", (table) => ({
+    classroomUserUniqueIdx: uniqueIndex("classroom_teachers_classroom_user_unique_idx").on(
+      table.classroomId,
+      table.userId,
+    ),
+    userIdx: index("classroom_teachers_user_id_idx").on(table.userId),
+  })),
+);
+
+/** A student's membership record in one classroom — not the user account itself.
+ * `realName`/`notes` are private to that classroom's teachers, never shown publicly. */
+export const classroomStudents = pgTable(
+  "classroom_students",
+  {
+    ...id,
+    ...timestamps,
+    classroomId: uuid("classroom_id")
+      .references(() => classrooms.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    realName: text("real_name").notNull(),
+    notes: text("notes").notNull().default(""),
+    isManaged: boolean("is_managed").notNull().default(false),
+    addedBy: uuid("added_by").references(() => users.id, { onDelete: "set null" }),
+    archivedAt: timestampWithTimezone({ name: "archived_at" }),
+    archivedBy: uuid("archived_by").references(() => users.id, { onDelete: "set null" }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("classroom_students")(table),
+    classroomUserUniqueIdx: uniqueIndex("classroom_students_classroom_user_unique_idx").on(
+      table.classroomId,
+      table.userId,
+    ),
+    userIdx: index("classroom_students_user_id_idx").on(table.userId),
+    activeIdx: index("classroom_students_classroom_id_active_idx")
+      .on(table.classroomId)
+      .where(sql`${table.archivedAt} IS NULL`),
   }),
 );

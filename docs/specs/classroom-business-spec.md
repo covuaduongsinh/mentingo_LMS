@@ -79,20 +79,41 @@ Giáo viên (đã có quyền, hoặc tự đăng ký nếu đủ điều kiện
 
 ## Key Technical Context
 
-_(Mục này được bổ sung dần theo từng đợt C1–C8 — xem lịch sử git của file này để biết trạng thái tại một thời điểm cụ thể trong roadmap. Tại thời điểm C0, chưa có dòng code nào được viết.)_
+_(Mục này được bổ sung dần theo từng đợt C1–C8 — xem lịch sử git của file này để biết trạng thái tại một thời điểm cụ thể trong roadmap.)_
 
-- Bảng dự kiến: `classrooms`, `classroom_teachers`, `classroom_students`, `classroom_invites`, `classroom_announcements`, `classroom_courses`, `classroom_assignments` — tất cả độc lập với `groups` (không phụ thuộc, không mở rộng bảng đó).
-- Bốn điểm neo `groupId` ẩn cần xử lý khi tách sạch khỏi `groups`: `community-social.repository.ts` (`shareGroup()` — kid-mode DM, sửa thành UNION với `classroom_students`), `group_announcements`, `group_courses`, `student_courses.enrolled_by_group_id`.
+- Bảng dự kiến toàn roadmap: `classrooms`, `classroom_teachers`, `classroom_students`, `classroom_invites`, `classroom_announcements`, `classroom_courses`, `classroom_assignments` — tất cả độc lập với `groups` (không phụ thuộc, không mở rộng bảng đó).
+- Bốn điểm neo `groupId` ẩn cần xử lý khi tách sạch khỏi `groups`: `community-social.repository.ts` (kid-mode DM), `group_announcements`, `group_courses`, `student_courses.enrolled_by_group_id`.
 - Module backend: `apps/api/src/classroom/`. Mọi method controller prefix `classroom` (tránh trùng tên với `swagger-typescript-api` — đã có tiền lệ vấp lỗi này ở Đợt L2/L7/L10 và ở chính module `chess-class`).
-- Permission mới: `classroom.read`, `classroom.create`, `classroom.manage`, `classroom.manage_own` (C1), mở rộng thêm theo từng đợt sau.
 - 5 endpoint `chess-class` cũ (Đợt L5) giữ làm alias deprecated trong C2, xóa hẳn ở C8 sau khi UI mới đã thay thế.
+
+### Đợt C1 (hoàn tất)
+
+- 3 bảng mới (`classrooms`, `classroom_teachers`, `classroom_students`) — migration `0201_add_classrooms` (drizzle-kit) + `0202_enable_classrooms_rls` (custom, RLS theo tenant). `classroom_students.classroom_id` có partial index `WHERE archived_at IS NULL` để tối ưu truy vấn "học sinh đang hoạt động" — bảng này chưa có ghi nào ở C1 (chưa có endpoint tạo học sinh, đó là phạm vi C3), nhưng schema đã sẵn sàng để `assertCanRead`/kid-mode dùng ngay.
+- Module `apps/api/src/classroom/` (`classroom.controller.ts` + `.service.ts` + `.repository.ts` + `.module.ts` + `schemas/classroom.schema.ts` + `classroom.types.ts` + `__tests__/`), đăng ký vào `app.module.ts`.
+- 8 endpoint: `createClassroom`, `listTeachingClassrooms`, `listLearningClassrooms`, `getClassroomDetail`, `updateClassroom`, `setClassroomArchived`, `addClassroomTeacher`, `removeClassroomTeacher` — không method nào trùng tên với method có sẵn trong `apps/api/src` (xác minh bằng test tự động, xem dưới).
+- Permission mới: `classroom.read` (student/trainer/admin), `classroom.create` (trainer/admin), `classroom.manage` (admin — bỏ qua kiểm tra quan hệ, quản lý mọi lớp), `classroom.manage_own` (trainer — chỉ lớp mình dạy).
+- Bất biến bảo mật đã cài đặt: gate ở controller bằng `classroom.read` (thô nhất), service tự quyết theo resource qua `assertCanRead`/`assertCanManage`; **luôn 404** cho người lạ (không phải giáo viên/học sinh của lớp), **403** cho học sinh-thành-viên cố sửa lớp (họ biết lớp tồn tại, chỉ không đủ quyền); trần 10 giáo viên/lớp (`CLASSROOM_DEFAULTS.MAX_TEACHERS`, `packages/shared/src/constants/classroom.ts`); không cho xóa giáo viên cuối cùng của lớp; `viewedAt` chỉ cập nhật khi **giáo viên** (không phải học sinh) mở trang lớp — cơ sở cho auto-archive ở C4.
+- **Sửa `CommunitySocialRepository.shareGroup()` → đổi tên `sharesClassmateRelationship()`**, mở rộng raw SQL thành `UNION ALL` giữa `group_users` (giữ nguyên hành vi cũ) và `classroom_students` (active-only, mới thêm) — theo đúng yêu cầu bắt buộc của kế hoạch. Cập nhật `community-social.service.ts` (`assertCanInteract`) và toàn bộ mock trong `community-social.service.spec.ts`.
+- CI check tự động: `apps/api/src/__tests__/no-duplicate-controller-method-names.spec.ts` — quét mọi `*.controller.ts`, chặn **method mới** trùng tên xuyên suốt `apps/api/src` (không chặn ~20 trùng tên đã tồn tại từ trước, liệt kê rõ trong file làm baseline).
+- Test key-parity locale: `apps/web/app/locales/__tests__/classroomLocaleKeyParity.spec.ts` — đảm bảo namespace `classroom.*` giống hệt nhau ở cả 7 file locale (không cố sửa phần drift có sẵn từ trước ở các namespace khác — đó là nợ kỹ thuật không liên quan tới đợt này).
+- Frontend: `apps/web/app/modules/Classroom/{ClassroomList,ClassroomDetail}.page.tsx`, route `classrooms` + `classrooms/:classroomId` (trong `PublicDashboard.layout` — không phải `Admin.layout`, vì học sinh cũng cần truy cập), `routeAccessConfig.ts` cập nhật, 8 hook TanStack Query (`api/queries/use{Teaching,Learning}Classrooms.ts`, `useClassroomDetail.ts`; `api/mutations/use{Create,Update,SetArchived,AddTeacher,RemoveTeacher}Classroom*.ts`).
+- Chuỗi UI mới thêm vào đủ 7 file locale (`classroom.*` + 2 khóa `pages.classrooms`/`pages.classroomDetail`), dịch thật (không machine-copy).
 
 ## Test Evidence
 
-_(Cập nhật cuối mỗi đợt.)_
+### Đợt C1
 
-- C0: không có code — chỉ tài liệu. Không có test evidence.
+- Backend: `pnpm --filter=api exec tsc --noEmit` sạch; eslint sạch trên toàn bộ file mới/sửa; `pnpm --filter=api test` — 80/80 test suite, 627/627 test pass (bao gồm `classroom.service.spec.ts` — 15 test case cho `assertCanRead`/`assertCanManage`/trần giáo viên/guard giáo viên cuối cùng; `no-duplicate-controller-method-names.spec.ts`; `community-social.service.spec.ts` sau khi đổi tên `shareGroup`→`sharesClassmateRelationship`).
+- Frontend: `pnpm --filter=web exec tsc --noEmit` sạch; eslint sạch; `pnpm --filter=web test` — 51/51 test suite, 264/264 test pass (bao gồm `classroomLocaleKeyParity.spec.ts` — 7/7).
+- **Xác minh qua HTTP thật** (Postgres + Redis thật qua Docker, API chạy `nest start` thật, đăng nhập bằng 2 tài khoản trainer đã seed sẵn của `tenant1.lms.localhost`): tạo lớp → xem chi tiết (xác nhận `viewedAt` cập nhật) → sửa tên → thêm giáo viên thứ 2 → giáo viên đầu tự rời lớp → xác nhận giáo viên đã rời nhận **404** khi xem/sửa lớp (không phải 403 — đúng quy tắc "không lộ tồn tại") → giáo viên còn lại thử tự xóa mình (giáo viên cuối cùng) → nhận đúng lỗi `classroom.error.lastTeacher` (400) → archive → reopen — toàn bộ đúng như kỳ vọng. Dữ liệu test đã dọn sau khi xác minh xong.
+- **Xác minh riêng cho điểm rủi ro cao nhất của kế hoạch** (sửa `shareGroup`): chạy trực tiếp câu SQL `UNION ALL` mới trong một transaction `ROLLBACK` (không ghi dữ liệu thật) trên Postgres thật — xác nhận trả về 1 dòng khi 2 user cùng là thành viên **đang hoạt động** của một `classroom`, và trả về 0 dòng khi một trong hai đã bị archive khỏi lớp (`archived_at IS NOT NULL`) — đúng ngữ nghĩa "chỉ tính bạn cùng lớp đang học".
+- `pnpm --filter=api db:migrate` chạy thật trên Postgres dev (Docker), áp dụng `0201`/`0202` thành công, không lỗi.
+- `pnpm generate:client` chạy thật (API dev server sống, sinh `api-schema.json` qua Swagger, sinh `generated-api.ts` qua `swagger-typescript-api`) — xác nhận 8 method `classroomController*` được đặt tên đúng, không ghi đè type của method nào khác.
+
+**Giới hạn đã biết**: chưa kiểm tra qua trình duyệt thật (Playwright/thao tác chuột) trong đợt này — chỉ xác minh UI qua `tsc`/eslint/Vitest sạch và luồng API thật qua HTTP trực tiếp (không qua Caddy, vì máy dev không có domain `*.lms.localhost` trỏ Caddy sẵn sàng trong phiên này — gọi thẳng `localhost:3000` kèm header `x-forwarded-host`/`x-forwarded-proto` giả lập đúng tenant). Chưa kiểm tra lại luồng kid-mode DM qua tầng API/service đầy đủ với tài khoản managed thật (managed account chỉ tạo được từ Đợt C3 trở đi) — chỉ xác minh câu SQL cốt lõi trực tiếp trên DB thật; sẽ kiểm tra lại toàn luồng khi C3 có endpoint tạo học sinh managed.
 
 ## Follow-up Work (explicitly not done in this pass)
 
-- Toàn bộ C1–C8 chưa triển khai tại thời điểm viết tài liệu này (C0). Roadmap chi tiết theo từng đợt nằm trong kế hoạch triển khai nội bộ (không phải file này) và trong `docs/research/lila/05-roadmap.md` sau khi mục roadmap mới được mở.
+- C2–C8 chưa triển khai tại thời điểm C1 kết thúc.
+- Kiểm tra kid-mode DM đầy đủ qua tầng API (không chỉ SQL) — cần tài khoản managed, hoãn tới sau C3.
+- Kiểm tra UI bằng trình duyệt thật/Playwright — hoãn tới C8 (đợt E2E).
