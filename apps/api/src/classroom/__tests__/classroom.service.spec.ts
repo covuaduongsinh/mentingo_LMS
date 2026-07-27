@@ -5,10 +5,15 @@ import { ClassroomService } from "../classroom.service";
 
 import type { ClassroomRepository } from "../classroom.repository";
 import type { ActivityLogsService } from "src/activity-logs/activity-logs.service";
+import type { AnnouncementsSchedulerService } from "src/announcements/announcements-scheduler.service";
 import type { DatabasePg } from "src/common";
 import type { CurrentUserType } from "src/common/types/current-user.type";
 import type { SettingsService } from "src/settings/settings.service";
 import type { UserService } from "src/user/user.service";
+
+jest.mock("src/common/helpers/resolveTenantOrigin", () => ({
+  resolveTenantOrigin: jest.fn().mockResolvedValue("https://tenant.example.com"),
+}));
 
 const TEACHER_ID = "teacher-1";
 const OTHER_TEACHER_ID = "teacher-2";
@@ -85,6 +90,11 @@ describe("ClassroomService", () => {
       getInviteById: jest.fn().mockResolvedValue(null),
       setInviteStatus: jest.fn().mockResolvedValue({ id: "invite-1", status: "accepted" }),
       deleteInvite: jest.fn().mockResolvedValue(undefined),
+      findInactiveClassroomIds: jest.fn().mockResolvedValue([]),
+      archiveClassroomsByIds: jest.fn().mockResolvedValue([]),
+      findRoleIdBySlug: jest.fn().mockResolvedValue("role-trainer"),
+      addUserRole: jest.fn().mockResolvedValue(undefined),
+      listAllClassroomsForAdmin: jest.fn().mockResolvedValue([]),
       ...repositoryOverrides,
     } as unknown as ClassroomRepository;
 
@@ -92,6 +102,7 @@ describe("ClassroomService", () => {
     const db = {
       transaction: jest.fn((callback: (trx: unknown) => unknown) => callback(trx)),
     } as unknown as DatabasePg;
+    const dbAdmin = {} as unknown as DatabasePg;
 
     const settingsService = {
       createSettingsForUsers: jest.fn().mockResolvedValue(undefined),
@@ -105,18 +116,25 @@ describe("ClassroomService", () => {
       bulkArchiveUsers: jest.fn().mockResolvedValue(undefined),
     } as unknown as UserService;
 
+    const announcementsSchedulerService = {
+      createSystemAnnouncement: jest.fn().mockResolvedValue({ id: "announcement-1" }),
+    } as unknown as AnnouncementsSchedulerService;
+
     return {
       service: new ClassroomService(
         db,
+        dbAdmin,
         repository,
         settingsService,
         activityLogsService,
         userService,
+        announcementsSchedulerService,
       ),
       repository,
       settingsService,
       activityLogsService,
       userService,
+      announcementsSchedulerService,
     };
   };
 
@@ -520,6 +538,169 @@ describe("ClassroomService", () => {
 
       await service.acceptInvite("invite-1", buildUser(STUDENT_ID));
       expect(repository.setInviteStatus).toHaveBeenCalledWith("invite-1", "accepted");
+    });
+  });
+
+  describe("updateClassroom wall (Đợt C4)", () => {
+    it("passes wall through to the repository like any other field, teacher-gated", async () => {
+      const { service, repository } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+      });
+
+      await service.updateClassroom(CLASSROOM_ID, buildUser(TEACHER_ID), { wall: "# Bảng tin" });
+      expect(repository.updateClassroom).toHaveBeenCalledWith(CLASSROOM_ID, {
+        wall: "# Bảng tin",
+      });
+    });
+
+    it("still throws Forbidden for a student trying to edit the wall", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(false),
+        isActiveStudent: jest.fn().mockResolvedValue(true),
+      });
+
+      await expect(
+        service.updateClassroom(CLASSROOM_ID, buildUser(STUDENT_ID), { wall: "hijack" }),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+  });
+
+  describe("sendAnnouncement (Đợt C4)", () => {
+    it("refuses a non-teacher", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(false),
+        isActiveStudent: jest.fn().mockResolvedValue(true),
+      });
+
+      await expect(
+        service.sendAnnouncement(CLASSROOM_ID, buildUser(STUDENT_ID), "Nghỉ học thứ Sáu này", "vi"),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+
+    it("refuses to send once active students exceed the classroom's cap", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        getClassroomById: jest.fn().mockResolvedValue(buildClassroomRow({ maxStudents: 5 })),
+        countActiveStudents: jest.fn().mockResolvedValue(6),
+      });
+
+      await expect(
+        service.sendAnnouncement(CLASSROOM_ID, buildUser(TEACHER_ID), "Nghỉ học thứ Sáu này", "vi"),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it("creates a CLASSROOM-sourced system announcement with the link appended", async () => {
+      const { service, announcementsSchedulerService, activityLogsService } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+      });
+
+      await service.sendAnnouncement(
+        CLASSROOM_ID,
+        buildUser(TEACHER_ID),
+        "Nghỉ học thứ Sáu này",
+        "vi",
+      );
+
+      expect(announcementsSchedulerService.createSystemAnnouncement).toHaveBeenCalledWith(
+        expect.objectContaining({
+          baseLanguage: "vi",
+          sourceType: "classroom",
+          sourceId: CLASSROOM_ID,
+          sendEmail: false,
+          translations: [
+            expect.objectContaining({
+              language: "vi",
+              content: expect.stringContaining("Nghỉ học thứ Sáu này"),
+            }),
+          ],
+        }),
+      );
+      expect(activityLogsService.recordActivity).toHaveBeenCalled();
+    });
+  });
+
+  describe("autoArchiveInactiveClassrooms (Đợt C4)", () => {
+    const originalEnv = process.env.CLASSROOM_AUTO_ARCHIVE_ENABLED;
+
+    afterEach(() => {
+      process.env.CLASSROOM_AUTO_ARCHIVE_ENABLED = originalEnv;
+    });
+
+    it("does nothing when there are no inactive candidates", async () => {
+      const { service, repository } = buildService({
+        findInactiveClassroomIds: jest.fn().mockResolvedValue([]),
+      });
+
+      const result = await service.autoArchiveInactiveClassrooms();
+      expect(result.candidateCount).toBe(0);
+      expect(repository.archiveClassroomsByIds).not.toHaveBeenCalled();
+    });
+
+    it("dry-runs (counts but does not write) when the env flag is unset", async () => {
+      delete process.env.CLASSROOM_AUTO_ARCHIVE_ENABLED;
+      const { service, repository } = buildService({
+        findInactiveClassroomIds: jest.fn().mockResolvedValue(["c1", "c2"]),
+      });
+
+      const result = await service.autoArchiveInactiveClassrooms();
+      expect(result.candidateCount).toBe(2);
+      expect(repository.archiveClassroomsByIds).not.toHaveBeenCalled();
+    });
+
+    it("actually archives when CLASSROOM_AUTO_ARCHIVE_ENABLED=true", async () => {
+      process.env.CLASSROOM_AUTO_ARCHIVE_ENABLED = "true";
+      const { service, repository } = buildService({
+        findInactiveClassroomIds: jest.fn().mockResolvedValue(["c1", "c2"]),
+      });
+
+      const result = await service.autoArchiveInactiveClassrooms();
+      expect(result.candidateCount).toBe(2);
+      expect(repository.archiveClassroomsByIds).toHaveBeenCalledWith(["c1", "c2"]);
+    });
+  });
+
+  describe("becomeTeacher (Đợt C4)", () => {
+    const originalEnv = process.env.CLASSROOM_TEACHER_SELF_REGISTRATION_ENABLED;
+
+    afterEach(() => {
+      process.env.CLASSROOM_TEACHER_SELF_REGISTRATION_ENABLED = originalEnv;
+    });
+
+    it("refuses when the tenant hasn't opted into self-registration", async () => {
+      delete process.env.CLASSROOM_TEACHER_SELF_REGISTRATION_ENABLED;
+      const { service } = buildService();
+
+      await expect(service.becomeTeacher(buildUser(STUDENT_ID))).rejects.toBeInstanceOf(
+        BadRequestException,
+      );
+    });
+
+    it("refuses a user who already has classroom.create", async () => {
+      process.env.CLASSROOM_TEACHER_SELF_REGISTRATION_ENABLED = "true";
+      const { service } = buildService();
+
+      await expect(
+        service.becomeTeacher(buildUser(TEACHER_ID, [PERMISSIONS.CLASSROOM_CREATE])),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it("grants the trainer role additively without touching other roles", async () => {
+      process.env.CLASSROOM_TEACHER_SELF_REGISTRATION_ENABLED = "true";
+      const { service, repository } = buildService();
+
+      await service.becomeTeacher(buildUser(STUDENT_ID));
+
+      expect(repository.findRoleIdBySlug).toHaveBeenCalledWith(TENANT_ID, "trainer");
+      expect(repository.addUserRole).toHaveBeenCalledWith(STUDENT_ID, "role-trainer");
+    });
+  });
+
+  describe("listAllClassroomsForAdmin (Đợt C4)", () => {
+    it("delegates to the repository with the includeArchived flag", async () => {
+      const { service, repository } = buildService();
+
+      await service.listAllClassroomsForAdmin(true);
+      expect(repository.listAllClassroomsForAdmin).toHaveBeenCalledWith(true);
     });
   });
 });

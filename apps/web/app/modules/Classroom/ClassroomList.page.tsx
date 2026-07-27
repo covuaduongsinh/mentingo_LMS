@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAcceptClassroomInvite } from "~/api/mutations/useAcceptClassroomInvite";
+import { useBecomeClassroomTeacher } from "~/api/mutations/useBecomeClassroomTeacher";
 import { useCreateClassroom } from "~/api/mutations/useCreateClassroom";
 import { useDeclineClassroomInvite } from "~/api/mutations/useDeclineClassroomInvite";
 import { useLearningClassrooms } from "~/api/queries/useLearningClassrooms";
@@ -159,9 +160,39 @@ function PendingInvites() {
   );
 }
 
+function BecomeTeacherBanner() {
+  const { t } = useTranslation();
+  const { mutateAsync: becomeTeacher, isPending, isSuccess } = useBecomeClassroomTeacher();
+
+  if (isSuccess) return null;
+
+  return (
+    <Card>
+      <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
+        <span className="body-sm text-neutral-700">
+          {t("classroom.becomeTeacher.prompt", {
+            defaultValue: "Want to run your own classroom? Register as a teacher.",
+          })}
+        </span>
+        <Button
+          variant="outline"
+          onClick={() => becomeTeacher()}
+          disabled={isPending}
+          data-testid="classroom-become-teacher-button"
+        >
+          {t("classroom.becomeTeacher.button", { defaultValue: "Become a teacher" })}
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function ClassroomListPage() {
   const { t } = useTranslation();
   const { hasAccess: canCreate } = usePermissions({ required: PERMISSIONS.CLASSROOM_CREATE });
+  const { hasAccess: canManageAllClassrooms } = usePermissions({
+    required: PERMISSIONS.CLASSROOM_MANAGE,
+  });
   const { data: teaching, isLoading: isLoadingTeaching } = useTeachingClassrooms();
   const { data: learning, isLoading: isLoadingLearning } = useLearningClassrooms();
 
@@ -176,8 +207,19 @@ export default function ClassroomListPage() {
           <h1 className="h4 text-neutral-950">
             {t("classroom.nav.title", { defaultValue: "Classrooms" })}
           </h1>
-          {canCreate && <CreateClassroomDialog />}
+          <div className="flex gap-2">
+            {canManageAllClassrooms && (
+              <Button variant="outline" asChild>
+                <Link to="/admin/classrooms">
+                  {t("classroom.list.adminLink", { defaultValue: "All classrooms (admin)" })}
+                </Link>
+              </Button>
+            )}
+            {canCreate && <CreateClassroomDialog />}
+          </div>
         </div>
+
+        {!canCreate && <BecomeTeacherBanner />}
 
         <PendingInvites />
 

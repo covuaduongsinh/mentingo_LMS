@@ -640,7 +640,8 @@
       "createButton": "New classroom",
       "pendingInvitesHeading": "Pending invitations",
       "declineInvite": "Decline",
-      "acceptInvite": "Accept"
+      "acceptInvite": "Accept",
+      "adminLink": "All classrooms (admin)"
     },
     "students": {
       "title": "Students",
@@ -778,7 +779,33 @@
       "targetClassroomRequired": "Choose a classroom to move students to",
       "userNotFound": "That username could not be found",
       "cannotInviteTeacher": "You can't invite one of this classroom's teachers as a student",
-      "inviteNotFound": "Invitation not found"
+      "inviteNotFound": "Invitation not found",
+      "tooManyStudentsForAnnouncement": "This classroom has more active students than its cap allows announcements for",
+      "selfRegistrationDisabled": "Teacher self-registration is not enabled for this tenant",
+      "alreadyTeacher": "You already have teacher access",
+      "trainerRoleUnavailable": "The trainer role is not available for this tenant"
+    },
+    "wall": {
+      "editLabel": "Bulletin board (Markdown)",
+      "heading": "Bulletin board"
+    },
+    "announcement": {
+      "sendButton": "Send announcement",
+      "dialogTitle": "Send announcement to the classroom",
+      "placeholder": "What do you want to tell the class?",
+      "lengthHint": "{{count}}/{{max}} characters",
+      "toast": {
+        "sent": "Announcement sent to the classroom",
+        "sendFailed": "Could not send the announcement"
+      }
+    },
+    "becomeTeacher": {
+      "prompt": "Want to run your own classroom? Register as a teacher.",
+      "button": "Become a teacher",
+      "toast": {
+        "success": "You're now a teacher — sign in again to activate it",
+        "failed": "Could not register you as a teacher"
+      }
     }
   },
   "common": {
@@ -5008,7 +5035,8 @@
     "learningPaths": "Development Paths",
     "adminLearningPaths": "Development Paths",
     "adminLearningPathEditor": "Development Path Editor",
-    "assignmentGrading": "Grade Assignments"
+    "assignmentGrading": "Grade Assignments",
+    "adminClassrooms": "All Classrooms"
   },
   "learningPathsView": {
     "title": "Development Paths",
@@ -5842,6 +5870,23 @@
       "liveKitNotConfigured": "LiveKit is not configured.",
       "maxParticipantsReached": "The maximum number of participants has been reached.",
       "maxParallelSessionsReached": "The maximum number of active Live Training sessions has been reached."
+    }
+  },
+  "adminClassrooms": {
+    "title": "Classrooms",
+    "heading": "All classrooms",
+    "includeArchived": "Include archived",
+    "columns": {
+      "name": "Name",
+      "teachers": "Teachers",
+      "students": "Active students",
+      "status": "Status",
+      "lastViewed": "Last viewed"
+    },
+    "empty": "No classrooms found",
+    "status": {
+      "archived": "Archived",
+      "active": "Active"
     }
   }
 }

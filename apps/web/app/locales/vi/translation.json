@@ -640,7 +640,8 @@
       "createButton": "Tạo lớp mới",
       "pendingInvitesHeading": "Lời mời đang chờ",
       "declineInvite": "Từ chối",
-      "acceptInvite": "Chấp nhận"
+      "acceptInvite": "Chấp nhận",
+      "adminLink": "Tất cả lớp học (quản trị)"
     },
     "students": {
       "title": "Học sinh",
@@ -778,7 +779,33 @@
       "targetClassroomRequired": "Chọn lớp muốn chuyển học sinh đến",
       "userNotFound": "Không tìm thấy tên đăng nhập này",
       "cannotInviteTeacher": "Không thể mời một giáo viên của lớp này làm học sinh",
-      "inviteNotFound": "Không tìm thấy lời mời"
+      "inviteNotFound": "Không tìm thấy lời mời",
+      "tooManyStudentsForAnnouncement": "Lớp học này có nhiều học sinh đang hoạt động hơn mức cho phép gửi thông báo",
+      "selfRegistrationDisabled": "Tự đăng ký làm giáo viên chưa được bật cho đơn vị này",
+      "alreadyTeacher": "Bạn đã có quyền giáo viên",
+      "trainerRoleUnavailable": "Vai trò giáo viên chưa khả dụng cho đơn vị này"
+    },
+    "wall": {
+      "editLabel": "Bảng tin (Markdown)",
+      "heading": "Bảng tin"
+    },
+    "announcement": {
+      "sendButton": "Gửi thông báo",
+      "dialogTitle": "Gửi thông báo đến lớp học",
+      "placeholder": "Bạn muốn nhắn gì với lớp?",
+      "lengthHint": "{{count}}/{{max}} ký tự",
+      "toast": {
+        "sent": "Đã gửi thông báo đến lớp học",
+        "sendFailed": "Không thể gửi thông báo"
+      }
+    },
+    "becomeTeacher": {
+      "prompt": "Muốn tự quản lý một lớp học? Hãy đăng ký làm giáo viên.",
+      "button": "Trở thành giáo viên",
+      "toast": {
+        "success": "Bạn đã là giáo viên — hãy đăng nhập lại để kích hoạt",
+        "failed": "Không thể đăng ký bạn làm giáo viên"
+      }
     }
   },
   "common": {
@@ -5008,7 +5035,8 @@
     "learningPaths": "Lộ trình phát triển",
     "adminLearningPaths": "Lộ trình phát triển",
     "adminLearningPathEditor": "Trình soạn thảo lộ trình phát triển",
-    "assignmentGrading": "Chấm bài tập"
+    "assignmentGrading": "Chấm bài tập",
+    "adminClassrooms": "Tất cả lớp học"
   },
   "learningPathsView": {
     "title": "Lộ trình phát triển",
@@ -5842,6 +5870,23 @@
       "liveKitNotConfigured": "LiveKit chưa được cấu hình.",
       "maxParticipantsReached": "Đã đạt số lượng người tham gia tối đa.",
       "maxParallelSessionsReached": "Đã đạt số lượng buổi Đào tạo trực tiếp đang hoạt động tối đa."
+    }
+  },
+  "adminClassrooms": {
+    "title": "Lớp học",
+    "heading": "Tất cả lớp học",
+    "includeArchived": "Bao gồm lớp đã lưu trữ",
+    "columns": {
+      "name": "Tên",
+      "teachers": "Giáo viên",
+      "students": "Học sinh đang hoạt động",
+      "status": "Trạng thái",
+      "lastViewed": "Lần xem gần nhất"
+    },
+    "empty": "Không tìm thấy lớp học nào",
+    "status": {
+      "archived": "Đã lưu trữ",
+      "active": "Đang hoạt động"
     }
   }
 }

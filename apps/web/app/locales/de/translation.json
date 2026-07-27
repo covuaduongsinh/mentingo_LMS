@@ -11,7 +11,8 @@
       "createButton": "Neue Klasse",
       "pendingInvitesHeading": "Ausstehende Einladungen",
       "declineInvite": "Ablehnen",
-      "acceptInvite": "Annehmen"
+      "acceptInvite": "Annehmen",
+      "adminLink": "Alle Klassenräume (Admin)"
     },
     "students": {
       "title": "Schüler",
@@ -149,7 +150,33 @@
       "targetClassroomRequired": "Wählen Sie eine Klasse, in die die Schüler verschoben werden sollen",
       "userNotFound": "Dieser Benutzername wurde nicht gefunden",
       "cannotInviteTeacher": "Sie können keinen Lehrer dieser Klasse als Schüler einladen",
-      "inviteNotFound": "Einladung nicht gefunden"
+      "inviteNotFound": "Einladung nicht gefunden",
+      "tooManyStudentsForAnnouncement": "Diese Klasse hat mehr aktive Schüler als das Limit für Ankündigungen erlaubt",
+      "selfRegistrationDisabled": "Die Selbstregistrierung als Lehrkraft ist für diesen Mandanten nicht aktiviert",
+      "alreadyTeacher": "Du hast bereits Lehrkraft-Zugriff",
+      "trainerRoleUnavailable": "Die Trainer-Rolle ist für diesen Mandanten nicht verfügbar"
+    },
+    "wall": {
+      "editLabel": "Anschlagtafel (Markdown)",
+      "heading": "Anschlagtafel"
+    },
+    "announcement": {
+      "sendButton": "Ankündigung senden",
+      "dialogTitle": "Ankündigung an die Klasse senden",
+      "placeholder": "Was möchtest du der Klasse mitteilen?",
+      "lengthHint": "{{count}}/{{max}} Zeichen",
+      "toast": {
+        "sent": "Ankündigung an die Klasse gesendet",
+        "sendFailed": "Ankündigung konnte nicht gesendet werden"
+      }
+    },
+    "becomeTeacher": {
+      "prompt": "Möchtest du eine eigene Klasse leiten? Registriere dich als Lehrkraft.",
+      "button": "Lehrkraft werden",
+      "toast": {
+        "success": "Du bist jetzt Lehrkraft — melde dich erneut an, um es zu aktivieren",
+        "failed": "Registrierung als Lehrkraft fehlgeschlagen"
+      }
     }
   },
   "common": {
@@ -4230,7 +4257,8 @@
     "learningPaths": "Entwicklungspfade",
     "adminLearningPaths": "Entwicklungspfade",
     "adminLearningPathEditor": "Entwicklungspfad Editor",
-    "assignmentGrading": "Aufgaben bewerten"
+    "assignmentGrading": "Aufgaben bewerten",
+    "adminClassrooms": "Alle Klassenräume"
   },
   "masterCourse": {
     "error": {
@@ -5062,6 +5090,23 @@
       "liveKitNotConfigured": "LiveKit ist nicht konfiguriert.",
       "maxParticipantsReached": "Die maximale Teilnehmerzahl wurde erreicht.",
       "maxParallelSessionsReached": "Die maximale Anzahl aktiver Live-Schulungssitzungen wurde erreicht."
+    }
+  },
+  "adminClassrooms": {
+    "title": "Klassenräume",
+    "heading": "Alle Klassenräume",
+    "includeArchived": "Archivierte einschließen",
+    "columns": {
+      "name": "Name",
+      "teachers": "Lehrkräfte",
+      "students": "Aktive Schüler",
+      "status": "Status",
+      "lastViewed": "Zuletzt angesehen"
+    },
+    "empty": "Keine Klassenräume gefunden",
+    "status": {
+      "archived": "Archiviert",
+      "active": "Aktiv"
     }
   }
 }

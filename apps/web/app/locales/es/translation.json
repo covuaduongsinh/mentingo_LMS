@@ -11,7 +11,8 @@
       "createButton": "Nueva clase",
       "pendingInvitesHeading": "Invitaciones pendientes",
       "declineInvite": "Rechazar",
-      "acceptInvite": "Aceptar"
+      "acceptInvite": "Aceptar",
+      "adminLink": "Todas las aulas (admin)"
     },
     "students": {
       "title": "Estudiantes",
@@ -149,7 +150,33 @@
       "targetClassroomRequired": "Elige una clase a la que mover a los estudiantes",
       "userNotFound": "No se encontró ese nombre de usuario",
       "cannotInviteTeacher": "No puedes invitar a un profesor de esta clase como estudiante",
-      "inviteNotFound": "Invitación no encontrada"
+      "inviteNotFound": "Invitación no encontrada",
+      "tooManyStudentsForAnnouncement": "Esta aula tiene más estudiantes activos de los que permite el límite para anuncios",
+      "selfRegistrationDisabled": "El autorregistro de profesores no está habilitado para este tenant",
+      "alreadyTeacher": "Ya tienes acceso de profesor",
+      "trainerRoleUnavailable": "El rol de formador no está disponible para este tenant"
+    },
+    "wall": {
+      "editLabel": "Tablón de anuncios (Markdown)",
+      "heading": "Tablón de anuncios"
+    },
+    "announcement": {
+      "sendButton": "Enviar anuncio",
+      "dialogTitle": "Enviar anuncio al aula",
+      "placeholder": "¿Qué quieres decirle a la clase?",
+      "lengthHint": "{{count}}/{{max}} caracteres",
+      "toast": {
+        "sent": "Anuncio enviado al aula",
+        "sendFailed": "No se pudo enviar el anuncio"
+      }
+    },
+    "becomeTeacher": {
+      "prompt": "¿Quieres dirigir tu propia aula? Regístrate como profesor.",
+      "button": "Conviértete en profesor",
+      "toast": {
+        "success": "Ya eres profesor — vuelve a iniciar sesión para activarlo",
+        "failed": "No se pudo registrarte como profesor"
+      }
     }
   },
   "common": {
@@ -4308,7 +4335,8 @@
     "learningPaths": "Rutas de desarrollo",
     "adminLearningPaths": "Rutas de desarrollo",
     "adminLearningPathEditor": "Editor de ruta de desarrollo",
-    "assignmentGrading": "Calificar tareas"
+    "assignmentGrading": "Calificar tareas",
+    "adminClassrooms": "Todas las aulas"
   },
   "learningPathsView": {
     "title": "Rutas de desarrollo",
@@ -5142,6 +5170,23 @@
       "liveKitNotConfigured": "LiveKit no está configurado.",
       "maxParticipantsReached": "Se ha alcanzado el número máximo de participantes.",
       "maxParallelSessionsReached": "Se alcanzó el número máximo de sesiones de formación en vivo activas."
+    }
+  },
+  "adminClassrooms": {
+    "title": "Aulas",
+    "heading": "Todas las aulas",
+    "includeArchived": "Incluir archivadas",
+    "columns": {
+      "name": "Nombre",
+      "teachers": "Profesores",
+      "students": "Estudiantes activos",
+      "status": "Estado",
+      "lastViewed": "Última visualización"
+    },
+    "empty": "No se encontraron aulas",
+    "status": {
+      "archived": "Archivada",
+      "active": "Activa"
     }
   }
 }

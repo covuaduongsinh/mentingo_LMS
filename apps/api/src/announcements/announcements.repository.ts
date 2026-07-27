@@ -23,6 +23,7 @@ import {
   type SQL,
   lte,
 } from "drizzle-orm";
+import { union } from "drizzle-orm/pg-core";
 
 import { DatabasePg } from "src/common";
 import { buildJsonbFieldWithMultipleEntries } from "src/common/helpers/sqlHelpers";
@@ -33,6 +34,8 @@ import { DEFAULT_STUDENT_SETTINGS } from "src/settings/constants/settings.consta
 import { DB, DB_ADMIN } from "src/storage/db/db.providers";
 import {
   announcements,
+  classroomStudents,
+  classroomTeachers,
   groupAnnouncements,
   groupUsers,
   liveLessons,
@@ -370,6 +373,17 @@ export class AnnouncementsRepository {
       return;
     }
 
+    if (announcement.sourceType === ANNOUNCEMENT_SOURCE_TYPES.CLASSROOM && announcement.sourceId) {
+      const recipientIds = await this.getClassroomAnnouncementRecipientIds(
+        announcement.sourceId,
+        announcement.authorId,
+      );
+
+      await this.createUserAnnouncementRecords(recipientIds, announcement.id);
+
+      return;
+    }
+
     const allUserIds = await this.db
       .select({ id: users.id })
       .from(users)
@@ -411,6 +425,24 @@ export class AnnouncementsRepository {
         ),
       )
       .where(and(not(eq(users.id, authorId)), isNull(users.deletedAt)));
+  }
+
+  /** Teachers ∪ active students of the classroom, excluding the sending teacher — Đợt C4. */
+  private async getClassroomAnnouncementRecipientIds(classroomId: UUIDType, authorId: UUIDType) {
+    const teacherIds = this.db
+      .select({ id: classroomTeachers.userId })
+      .from(classroomTeachers)
+      .where(eq(classroomTeachers.classroomId, classroomId));
+
+    const studentIds = this.db
+      .select({ id: classroomStudents.userId })
+      .from(classroomStudents)
+      .where(
+        and(eq(classroomStudents.classroomId, classroomId), isNull(classroomStudents.archivedAt)),
+      );
+
+    const rows = await union(teacherIds, studentIds);
+    return rows.map((row) => row.id).filter((id) => id !== authorId);
   }
 
   async findTenantsWithDueScheduledAnnouncements(

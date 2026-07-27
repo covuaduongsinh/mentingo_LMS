@@ -144,6 +144,9 @@ export const routeAccessConfig = createRouteConfig({
   "admin/groups/*": {
     allOf: [PERMISSIONS.GROUP_MANAGE],
   },
+  "admin/classrooms": {
+    allOf: [PERMISSIONS.CLASSROOM_MANAGE],
+  },
   "admin/categories/*": {
     allOf: [PERMISSIONS.CATEGORY_MANAGE],
   },

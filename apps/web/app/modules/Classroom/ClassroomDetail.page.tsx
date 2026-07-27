@@ -1,9 +1,16 @@
 import { Link, useParams } from "@remix-run/react";
+import {
+  CLASSROOM_ANNOUNCEMENT_MAX_LENGTH,
+  CLASSROOM_ANNOUNCEMENT_MIN_LENGTH,
+  isSupportedLanguage,
+} from "@repo/shared";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import Markdown from "react-markdown";
 
 import { useAddClassroomTeacher } from "~/api/mutations/useAddClassroomTeacher";
 import { useRemoveClassroomTeacher } from "~/api/mutations/useRemoveClassroomTeacher";
+import { useSendClassroomAnnouncement } from "~/api/mutations/useSendClassroomAnnouncement";
 import { useSetClassroomArchived } from "~/api/mutations/useSetClassroomArchived";
 import { useUpdateClassroom } from "~/api/mutations/useUpdateClassroom";
 import { useClassroomDetail } from "~/api/queries/useClassroomDetail";
@@ -21,6 +28,14 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
@@ -32,7 +47,7 @@ import type { MetaFunction } from "@remix-run/react";
 export const meta: MetaFunction = ({ matches }) => setPageTitle(matches, "pages.classroomDetail");
 
 export default function ClassroomDetailPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { classroomId } = useParams<{ classroomId: string }>();
   const { data: classroom, isLoading } = useClassroomDetail(classroomId ?? "", {
     enabled: !!classroomId,
@@ -48,17 +63,23 @@ export default function ClassroomDetailPage() {
     classroomId ?? "",
   );
   const { mutateAsync: removeTeacher } = useRemoveClassroomTeacher(classroomId ?? "");
+  const { mutateAsync: sendAnnouncement, isPending: isSendingAnnouncement } =
+    useSendClassroomAnnouncement(classroomId ?? "");
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [canMsg, setCanMsg] = useState(false);
+  const [wall, setWall] = useState("");
   const [newTeacherId, setNewTeacherId] = useState("");
+  const [announcementMessage, setAnnouncementMessage] = useState("");
+  const [isAnnouncementDialogOpen, setIsAnnouncementDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!classroom) return;
     setName(classroom.name);
     setDescription(classroom.description ?? "");
     setCanMsg(classroom.canMsg);
+    setWall(classroom.wall);
   }, [classroom]);
 
   if (!classroomId) return null;
@@ -73,6 +94,7 @@ export default function ClassroomDetailPage() {
       name: name.trim(),
       description: description.trim() || undefined,
       canMsg,
+      wall,
     });
   };
 
@@ -80,6 +102,14 @@ export default function ClassroomDetailPage() {
     if (!newTeacherId.trim()) return;
     await addTeacher(newTeacherId.trim());
     setNewTeacherId("");
+  };
+
+  const announcementLanguage = isSupportedLanguage(i18n.language) ? i18n.language : "en";
+
+  const handleSendAnnouncement = async () => {
+    await sendAnnouncement({ message: announcementMessage.trim(), language: announcementLanguage });
+    setAnnouncementMessage("");
+    setIsAnnouncementDialogOpen(false);
   };
 
   if (isLoading || !classroom) {
@@ -103,6 +133,57 @@ export default function ClassroomDetailPage() {
                 {t("classroom.students.title", { defaultValue: "Students" })}
               </Link>
             </Button>
+            {classroom.isTeacher && !isArchived && (
+              <Dialog open={isAnnouncementDialogOpen} onOpenChange={setIsAnnouncementDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" data-testid="classroom-send-announcement-trigger">
+                    {t("classroom.announcement.sendButton", { defaultValue: "Send announcement" })}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
+                      {t("classroom.announcement.dialogTitle", {
+                        defaultValue: "Send announcement to the classroom",
+                      })}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-1">
+                    <Textarea
+                      value={announcementMessage}
+                      onChange={(event) => setAnnouncementMessage(event.target.value)}
+                      rows={4}
+                      maxLength={CLASSROOM_ANNOUNCEMENT_MAX_LENGTH}
+                      placeholder={t("classroom.announcement.placeholder", {
+                        defaultValue: "What do you want to tell the class?",
+                      })}
+                      data-testid="classroom-announcement-message"
+                    />
+                    <p className="details-sm text-neutral-500">
+                      {t("classroom.announcement.lengthHint", {
+                        defaultValue: "{{count}}/{{max}} characters",
+                        count: announcementMessage.trim().length,
+                        max: CLASSROOM_ANNOUNCEMENT_MAX_LENGTH,
+                      })}
+                    </p>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      onClick={handleSendAnnouncement}
+                      disabled={
+                        announcementMessage.trim().length < CLASSROOM_ANNOUNCEMENT_MIN_LENGTH ||
+                        isSendingAnnouncement
+                      }
+                      data-testid="classroom-send-announcement-submit"
+                    >
+                      {t("classroom.announcement.sendButton", {
+                        defaultValue: "Send announcement",
+                      })}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
             {classroom.isTeacher && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
@@ -198,6 +279,18 @@ export default function ClassroomDetailPage() {
                   defaultValue: "Only applies to students using a teacher-managed account.",
                 })}
               </p>
+              <div className="space-y-1">
+                <Label htmlFor="classroom-edit-wall">
+                  {t("classroom.wall.editLabel", { defaultValue: "Bulletin board (Markdown)" })}
+                </Label>
+                <Textarea
+                  id="classroom-edit-wall"
+                  value={wall}
+                  onChange={(event) => setWall(event.target.value)}
+                  rows={8}
+                  data-testid="classroom-edit-wall"
+                />
+              </div>
               <div>
                 <Button
                   onClick={handleSave}
@@ -213,6 +306,19 @@ export default function ClassroomDetailPage() {
           classroom.description && (
             <p className="body-base text-neutral-700">{classroom.description}</p>
           )
+        )}
+
+        {!classroom.isTeacher && classroom.wall && (
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {t("classroom.wall.heading", { defaultValue: "Bulletin board" })}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="prose prose-sm max-w-none">
+              <Markdown>{classroom.wall}</Markdown>
+            </CardContent>
+          </Card>
         )}
 
         <Card>

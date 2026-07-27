@@ -11,7 +11,8 @@
       "createButton": "Nová třída",
       "pendingInvitesHeading": "Čekající pozvánky",
       "declineInvite": "Odmítnout",
-      "acceptInvite": "Přijmout"
+      "acceptInvite": "Přijmout",
+      "adminLink": "Všechny třídy (administrace)"
     },
     "students": {
       "title": "Žáci",
@@ -149,7 +150,33 @@
       "targetClassroomRequired": "Vyberte třídu, do které chcete žáky přesunout",
       "userNotFound": "Toto uživatelské jméno nebylo nalezeno",
       "cannotInviteTeacher": "Nemůžete pozvat učitele této třídy jako žáka",
-      "inviteNotFound": "Pozvánka nenalezena"
+      "inviteNotFound": "Pozvánka nenalezena",
+      "tooManyStudentsForAnnouncement": "Tato třída má více aktivních studentů, než limit pro oznámení povoluje",
+      "selfRegistrationDisabled": "Samoregistrace učitelů není pro tohoto nájemce povolena",
+      "alreadyTeacher": "Již máte přístup učitele",
+      "trainerRoleUnavailable": "Role školitele není pro tohoto nájemce dostupná"
+    },
+    "wall": {
+      "editLabel": "Nástěnka (Markdown)",
+      "heading": "Nástěnka"
+    },
+    "announcement": {
+      "sendButton": "Odeslat oznámení",
+      "dialogTitle": "Odeslat oznámení třídě",
+      "placeholder": "Co chcete třídě sdělit?",
+      "lengthHint": "{{count}}/{{max}} znaků",
+      "toast": {
+        "sent": "Oznámení odesláno třídě",
+        "sendFailed": "Oznámení se nepodařilo odeslat"
+      }
+    },
+    "becomeTeacher": {
+      "prompt": "Chcete vést vlastní třídu? Zaregistrujte se jako učitel.",
+      "button": "Stát se učitelem",
+      "toast": {
+        "success": "Nyní jste učitel — přihlaste se znovu pro aktivaci",
+        "failed": "Nepodařilo se vás zaregistrovat jako učitele"
+      }
     }
   },
   "common": {
@@ -4237,7 +4264,8 @@
     "learningPaths": "Rozvojové cesty",
     "adminLearningPaths": "Rozvojové cesty",
     "adminLearningPathEditor": "Editor rozvojové cesty",
-    "assignmentGrading": "Hodnocení úkolů"
+    "assignmentGrading": "Hodnocení úkolů",
+    "adminClassrooms": "Všechny třídy"
   },
   "masterCourse": {
     "error": {
@@ -5070,6 +5098,23 @@
       "liveKitNotConfigured": "LiveKit není nakonfigurován.",
       "maxParticipantsReached": "Bylo dosaženo maximálního počtu účastníků.",
       "maxParallelSessionsReached": "Bylo dosaženo maximálního počtu aktivních relací Živé školení."
+    }
+  },
+  "adminClassrooms": {
+    "title": "Třídy",
+    "heading": "Všechny třídy",
+    "includeArchived": "Zahrnout archivované",
+    "columns": {
+      "name": "Název",
+      "teachers": "Učitelé",
+      "students": "Aktivní studenti",
+      "status": "Stav",
+      "lastViewed": "Naposledy zobrazeno"
+    },
+    "empty": "Nebyly nalezeny žádné třídy",
+    "status": {
+      "archived": "Archivováno",
+      "active": "Aktivní"
     }
   }
 }

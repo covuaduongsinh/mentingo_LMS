@@ -9134,6 +9134,20 @@ export interface ListLearningClassroomsResponse {
   }[];
 }
 
+export interface ListAllClassroomsForAdminResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    name: string;
+    ownerId: string | null;
+    teacherCount: number;
+    activeStudentCount: number;
+    viewedAt: string;
+    archivedAt: string | null;
+    createdAt: string;
+  }[];
+}
+
 export interface ListMyClassroomInvitesResponse {
   data: {
     /** @format uuid */
@@ -9182,6 +9196,8 @@ export interface UpdateClassroomBody {
   /** @maxLength 2000 */
   description?: string;
   canMsg?: boolean;
+  /** @maxLength 20000 */
+  wall?: string;
 }
 
 export interface UpdateClassroomResponse {
@@ -9247,6 +9263,15 @@ export interface RemoveClassroomTeacherResponse {
     lastName: string;
     addedBy: string | null;
   }[];
+}
+
+export interface SendClassroomAnnouncementBody {
+  /**
+   * @minLength 10
+   * @maxLength 300
+   */
+  message: string;
+  language: "en" | "pl" | "de" | "lt" | "cs" | "es" | "vi";
 }
 
 export interface ListClassroomStudentsResponse {
@@ -20038,6 +20063,39 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name ClassroomControllerBecomeClassroomTeacher
+     * @request POST:/api/classroom/become-teacher
+     */
+    classroomControllerBecomeClassroomTeacher: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/classroom/become-teacher`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerListAllClassroomsForAdmin
+     * @request GET:/api/classroom/admin/classrooms
+     */
+    classroomControllerListAllClassroomsForAdmin: (
+      query?: {
+        includeArchived?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ListAllClassroomsForAdminResponse, any>({
+        path: `/api/classroom/admin/classrooms`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name ClassroomControllerListMyClassroomInvites
      * @request GET:/api/classroom/invites/mine
      */
@@ -20164,6 +20222,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/classroom/${classroomId}/teachers/${userId}`,
         method: "DELETE",
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerSendClassroomAnnouncement
+     * @request POST:/api/classroom/{classroomId}/announcements
+     */
+    classroomControllerSendClassroomAnnouncement: (
+      classroomId: string,
+      data: SendClassroomAnnouncementBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/classroom/${classroomId}/announcements`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 
