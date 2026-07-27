@@ -624,6 +624,58 @@
       "notFound": "Level not found"
     }
   },
+  "classroom": {
+    "nav": {
+      "title": "Classrooms"
+    },
+    "list": {
+      "teachingHeading": "Classes you teach",
+      "learningHeading": "Classes you're in",
+      "empty": "No classrooms yet.",
+      "archivedToggle": "Show archived",
+      "createButton": "New classroom"
+    },
+    "form": {
+      "createTitle": "New classroom",
+      "editTitle": "Edit classroom",
+      "nameLabel": "Name",
+      "descriptionLabel": "Description",
+      "canMsgLabel": "Allow students to message each other",
+      "canMsgHelp": "Only applies to students using a teacher-managed account.",
+      "submit": "Save",
+      "cancel": "Cancel"
+    },
+    "detail": {
+      "teachersHeading": "Teachers",
+      "addTeacherPlaceholder": "Add a teacher by user ID",
+      "addTeacherButton": "Add teacher",
+      "removeTeacherButton": "Remove",
+      "archiveButton": "Archive classroom",
+      "reopenButton": "Reopen classroom",
+      "archivedBanner": "This classroom is archived.",
+      "confirmArchive": "Archive this classroom? Students will no longer see it, but nothing is deleted."
+    },
+    "toast": {
+      "created": "Classroom created",
+      "createFailed": "Could not create the classroom",
+      "updated": "Classroom updated",
+      "updateFailed": "Could not update the classroom",
+      "archived": "Classroom archived",
+      "reopened": "Classroom reopened",
+      "archiveFailed": "Could not change the classroom's archived status",
+      "teacherAdded": "Teacher added",
+      "teacherAddFailed": "Could not add the teacher",
+      "teacherRemoved": "Teacher removed",
+      "teacherRemoveFailed": "Could not remove the teacher"
+    },
+    "error": {
+      "notFound": "Classroom not found",
+      "notTeacher": "Only a teacher of this classroom can do that",
+      "teacherNotFound": "That user could not be found",
+      "tooManyTeachers": "A classroom can have at most 10 teachers",
+      "lastTeacher": "A classroom must keep at least one teacher"
+    }
+  },
   "common": {
     "button": {
       "save": "Save",
@@ -4780,6 +4832,8 @@
     }
   },
   "pages": {
+    "classrooms": "Classrooms",
+    "classroomDetail": "Classroom",
     "chessAnalysisRoom": "Chess Analysis Room",
     "chessEditor": "Chess Board Editor",
     "chessStudies": "Chess Studies",

@@ -1,4 +1,56 @@
 {
+  "classroom": {
+    "nav": {
+      "title": "Klassen"
+    },
+    "list": {
+      "teachingHeading": "Klassen, die Sie unterrichten",
+      "learningHeading": "Ihre Klassen",
+      "empty": "Noch keine Klassen.",
+      "archivedToggle": "Archivierte anzeigen",
+      "createButton": "Neue Klasse"
+    },
+    "form": {
+      "createTitle": "Neue Klasse",
+      "editTitle": "Klasse bearbeiten",
+      "nameLabel": "Name",
+      "descriptionLabel": "Beschreibung",
+      "canMsgLabel": "Schülern erlauben, sich gegenseitig Nachrichten zu senden",
+      "canMsgHelp": "Gilt nur für Schüler mit einem vom Lehrer verwalteten Konto.",
+      "submit": "Speichern",
+      "cancel": "Abbrechen"
+    },
+    "detail": {
+      "teachersHeading": "Lehrer",
+      "addTeacherPlaceholder": "Lehrer per Benutzer-ID hinzufügen",
+      "addTeacherButton": "Lehrer hinzufügen",
+      "removeTeacherButton": "Entfernen",
+      "archiveButton": "Klasse archivieren",
+      "reopenButton": "Klasse wieder öffnen",
+      "archivedBanner": "Diese Klasse ist archiviert.",
+      "confirmArchive": "Diese Klasse archivieren? Schüler sehen sie dann nicht mehr, es werden aber keine Daten gelöscht."
+    },
+    "toast": {
+      "created": "Klasse erstellt",
+      "createFailed": "Klasse konnte nicht erstellt werden",
+      "updated": "Klasse aktualisiert",
+      "updateFailed": "Klasse konnte nicht aktualisiert werden",
+      "archived": "Klasse archiviert",
+      "reopened": "Klasse wieder geöffnet",
+      "archiveFailed": "Archivierungsstatus der Klasse konnte nicht geändert werden",
+      "teacherAdded": "Lehrer hinzugefügt",
+      "teacherAddFailed": "Lehrer konnte nicht hinzugefügt werden",
+      "teacherRemoved": "Lehrer entfernt",
+      "teacherRemoveFailed": "Lehrer konnte nicht entfernt werden"
+    },
+    "error": {
+      "notFound": "Klasse nicht gefunden",
+      "notTeacher": "Nur ein Lehrer dieser Klasse kann das tun",
+      "teacherNotFound": "Dieser Benutzer wurde nicht gefunden",
+      "tooManyTeachers": "Eine Klasse kann höchstens 10 Lehrer haben",
+      "lastTeacher": "Eine Klasse muss mindestens einen Lehrer behalten"
+    }
+  },
   "common": {
     "button": {
       "save": "Speichern",
@@ -4027,6 +4079,8 @@
     }
   },
   "pages": {
+    "classrooms": "Klassen",
+    "classroomDetail": "Klasse",
     "dashboard": "Armaturenbrett",
     "settings": "Einstellungen",
     "providerInformation": "Anbieterinformationen",

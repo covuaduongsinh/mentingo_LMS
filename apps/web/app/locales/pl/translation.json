@@ -1,4 +1,56 @@
 {
+  "classroom": {
+    "nav": {
+      "title": "Klasy"
+    },
+    "list": {
+      "teachingHeading": "Klasy, których uczysz",
+      "learningHeading": "Twoje klasy",
+      "empty": "Brak klas.",
+      "archivedToggle": "Pokaż zarchiwizowane",
+      "createButton": "Nowa klasa"
+    },
+    "form": {
+      "createTitle": "Nowa klasa",
+      "editTitle": "Edytuj klasę",
+      "nameLabel": "Nazwa",
+      "descriptionLabel": "Opis",
+      "canMsgLabel": "Zezwól uczniom na wzajemne wiadomości",
+      "canMsgHelp": "Dotyczy tylko uczniów korzystających z konta zarządzanego przez nauczyciela.",
+      "submit": "Zapisz",
+      "cancel": "Anuluj"
+    },
+    "detail": {
+      "teachersHeading": "Nauczyciele",
+      "addTeacherPlaceholder": "Dodaj nauczyciela po ID użytkownika",
+      "addTeacherButton": "Dodaj nauczyciela",
+      "removeTeacherButton": "Usuń",
+      "archiveButton": "Zarchiwizuj klasę",
+      "reopenButton": "Przywróć klasę",
+      "archivedBanner": "Ta klasa jest zarchiwizowana.",
+      "confirmArchive": "Zarchiwizować tę klasę? Uczniowie przestaną ją widzieć, ale żadne dane nie zostaną usunięte."
+    },
+    "toast": {
+      "created": "Utworzono klasę",
+      "createFailed": "Nie udało się utworzyć klasy",
+      "updated": "Zaktualizowano klasę",
+      "updateFailed": "Nie udało się zaktualizować klasy",
+      "archived": "Zarchiwizowano klasę",
+      "reopened": "Przywrócono klasę",
+      "archiveFailed": "Nie udało się zmienić stanu archiwizacji klasy",
+      "teacherAdded": "Dodano nauczyciela",
+      "teacherAddFailed": "Nie udało się dodać nauczyciela",
+      "teacherRemoved": "Usunięto nauczyciela",
+      "teacherRemoveFailed": "Nie udało się usunąć nauczyciela"
+    },
+    "error": {
+      "notFound": "Nie znaleziono klasy",
+      "notTeacher": "Tylko nauczyciel tej klasy może to zrobić",
+      "teacherNotFound": "Nie znaleziono tego użytkownika",
+      "tooManyTeachers": "Klasa może mieć maksymalnie 10 nauczycieli",
+      "lastTeacher": "Klasa musi mieć co najmniej jednego nauczyciela"
+    }
+  },
   "common": {
     "button": {
       "save": "Zapisz",
@@ -4377,6 +4429,8 @@
     }
   },
   "pages": {
+    "classrooms": "Klasy",
+    "classroomDetail": "Klasa",
     "dashboard": "Panel główny",
     "settings": "Ustawienia",
     "providerInformation": "Informacje o dostawcy",

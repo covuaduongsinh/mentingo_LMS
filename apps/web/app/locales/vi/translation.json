@@ -624,6 +624,58 @@
       "notFound": "Không tìm thấy bài học"
     }
   },
+  "classroom": {
+    "nav": {
+      "title": "Lớp học"
+    },
+    "list": {
+      "teachingHeading": "Lớp bạn đang dạy",
+      "learningHeading": "Lớp bạn đang học",
+      "empty": "Chưa có lớp học nào.",
+      "archivedToggle": "Hiện lớp đã lưu trữ",
+      "createButton": "Tạo lớp mới"
+    },
+    "form": {
+      "createTitle": "Tạo lớp mới",
+      "editTitle": "Sửa lớp học",
+      "nameLabel": "Tên lớp",
+      "descriptionLabel": "Mô tả",
+      "canMsgLabel": "Cho phép học sinh nhắn tin cho nhau",
+      "canMsgHelp": "Chỉ áp dụng cho học sinh dùng tài khoản do giáo viên quản lý.",
+      "submit": "Lưu",
+      "cancel": "Hủy"
+    },
+    "detail": {
+      "teachersHeading": "Giáo viên",
+      "addTeacherPlaceholder": "Thêm giáo viên theo mã người dùng",
+      "addTeacherButton": "Thêm giáo viên",
+      "removeTeacherButton": "Xóa",
+      "archiveButton": "Lưu trữ lớp",
+      "reopenButton": "Mở lại lớp",
+      "archivedBanner": "Lớp này đã được lưu trữ.",
+      "confirmArchive": "Lưu trữ lớp này? Học sinh sẽ không còn thấy lớp, nhưng dữ liệu không bị xóa."
+    },
+    "toast": {
+      "created": "Đã tạo lớp học",
+      "createFailed": "Không thể tạo lớp học",
+      "updated": "Đã cập nhật lớp học",
+      "updateFailed": "Không thể cập nhật lớp học",
+      "archived": "Đã lưu trữ lớp học",
+      "reopened": "Đã mở lại lớp học",
+      "archiveFailed": "Không thể thay đổi trạng thái lưu trữ của lớp",
+      "teacherAdded": "Đã thêm giáo viên",
+      "teacherAddFailed": "Không thể thêm giáo viên",
+      "teacherRemoved": "Đã xóa giáo viên",
+      "teacherRemoveFailed": "Không thể xóa giáo viên"
+    },
+    "error": {
+      "notFound": "Không tìm thấy lớp học",
+      "notTeacher": "Chỉ giáo viên của lớp này mới thực hiện được thao tác đó",
+      "teacherNotFound": "Không tìm thấy người dùng này",
+      "tooManyTeachers": "Một lớp học tối đa có 10 giáo viên",
+      "lastTeacher": "Lớp học phải có ít nhất một giáo viên"
+    }
+  },
   "common": {
     "button": {
       "save": "Lưu",
@@ -4780,6 +4832,8 @@
     }
   },
   "pages": {
+    "classrooms": "Lớp học",
+    "classroomDetail": "Chi tiết lớp học",
     "chessStudies": "Bài giảng cờ vua",
     "chessPuzzlePractice": "Bài đố cờ vua",
     "chessPuzzleDashboard": "Tiến độ bài đố cờ vua",

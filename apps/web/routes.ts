@@ -69,6 +69,8 @@ export const routes: (
           route("chess/broadcast", "modules/Chess/Broadcast/ChessBroadcastList.page.tsx");
           route("chess/broadcast/games/:id", "modules/Chess/Broadcast/ChessBroadcastGame.page.tsx");
           route("chess/broadcast/:id", "modules/Chess/Broadcast/ChessBroadcastDetail.page.tsx");
+          route("classrooms", "modules/Classroom/ClassroomList.page.tsx");
+          route("classrooms/:classroomId", "modules/Classroom/ClassroomDetail.page.tsx");
         });
         route("", "modules/Dashboard/UserDashboard.layout.tsx", () => {
           route("", "modules/Dashboard/IndexRedirect.page.tsx", { index: true });

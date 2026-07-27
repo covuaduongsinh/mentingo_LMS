@@ -39,7 +39,8 @@ export class CommunitySocialService {
     };
   }
 
-  /** Kid mode: if either side is a managed (chess-class) account, they must share a class group. */
+  /** Kid mode: if either side is a managed (chess-class) account, they must be classmates —
+   * sharing an HR/L&D group or an active Classroom membership. */
   private async assertCanInteract(actorUserId: UUIDType, targetUserId: UUIDType) {
     const [actorManaged, targetManaged] = await Promise.all([
       this.repository.getManagedStatus(actorUserId),
@@ -48,8 +49,11 @@ export class CommunitySocialService {
 
     if (!actorManaged && !targetManaged) return;
 
-    const shareGroup = await this.repository.shareGroup(actorUserId, targetUserId);
-    if (!shareGroup) {
+    const areClassmates = await this.repository.sharesClassmateRelationship(
+      actorUserId,
+      targetUserId,
+    );
+    if (!areClassmates) {
       throw new ForbiddenException("communityView.errors.kidModeNotClassmates");
     }
   }

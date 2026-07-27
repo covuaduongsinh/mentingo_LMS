@@ -231,6 +231,12 @@ export const routeAccessConfig = createRouteConfig({
   "chess/broadcast/games/:id": {
     anyOf: [PERMISSIONS.CHESS_BROADCAST_READ],
   },
+  classrooms: {
+    anyOf: [PERMISSIONS.CLASSROOM_READ],
+  },
+  "classrooms/:classroomId": {
+    anyOf: [PERMISSIONS.CLASSROOM_READ],
+  },
   "community/messages": {
     anyOf: [PERMISSIONS.COMMUNITY_MESSAGE_SEND],
   },

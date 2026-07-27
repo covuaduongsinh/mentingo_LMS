@@ -1,4 +1,56 @@
 {
+  "classroom": {
+    "nav": {
+      "title": "Třídy"
+    },
+    "list": {
+      "teachingHeading": "Třídy, které učíte",
+      "learningHeading": "Vaše třídy",
+      "empty": "Zatím žádné třídy.",
+      "archivedToggle": "Zobrazit archivované",
+      "createButton": "Nová třída"
+    },
+    "form": {
+      "createTitle": "Nová třída",
+      "editTitle": "Upravit třídu",
+      "nameLabel": "Název",
+      "descriptionLabel": "Popis",
+      "canMsgLabel": "Povolit žákům posílat si zprávy navzájem",
+      "canMsgHelp": "Platí pouze pro žáky s účtem spravovaným učitelem.",
+      "submit": "Uložit",
+      "cancel": "Zrušit"
+    },
+    "detail": {
+      "teachersHeading": "Učitelé",
+      "addTeacherPlaceholder": "Přidat učitele podle ID uživatele",
+      "addTeacherButton": "Přidat učitele",
+      "removeTeacherButton": "Odebrat",
+      "archiveButton": "Archivovat třídu",
+      "reopenButton": "Obnovit třídu",
+      "archivedBanner": "Tato třída je archivována.",
+      "confirmArchive": "Archivovat tuto třídu? Žáci ji už neuvidí, ale žádná data se nesmažou."
+    },
+    "toast": {
+      "created": "Třída vytvořena",
+      "createFailed": "Třídu se nepodařilo vytvořit",
+      "updated": "Třída aktualizována",
+      "updateFailed": "Třídu se nepodařilo aktualizovat",
+      "archived": "Třída archivována",
+      "reopened": "Třída obnovena",
+      "archiveFailed": "Nepodařilo se změnit stav archivace třídy",
+      "teacherAdded": "Učitel přidán",
+      "teacherAddFailed": "Nepodařilo se přidat učitele",
+      "teacherRemoved": "Učitel odebrán",
+      "teacherRemoveFailed": "Nepodařilo se odebrat učitele"
+    },
+    "error": {
+      "notFound": "Třída nenalezena",
+      "notTeacher": "Toto může udělat pouze učitel této třídy",
+      "teacherNotFound": "Tento uživatel nebyl nalezen",
+      "tooManyTeachers": "Třída může mít nejvýše 10 učitelů",
+      "lastTeacher": "Třída musí mít alespoň jednoho učitele"
+    }
+  },
   "common": {
     "button": {
       "save": "Uložit",
@@ -4034,6 +4086,8 @@
     }
   },
   "pages": {
+    "classrooms": "Třídy",
+    "classroomDetail": "Třída",
     "dashboard": "Dashboard",
     "settings": "Nastavení",
     "providerInformation": "Informace o poskytovateli",
