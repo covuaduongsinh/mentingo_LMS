@@ -491,7 +491,9 @@
       "bulkPairingHelp": "Ghép cặp ngay tất cả thành viên trong nhóm theo rating hiện tại và bắt đầu ván ngay lập tức.",
       "simulHelp": "Bạn sẽ đấu một bàn riêng với từng thành viên trong nhóm này cùng lúc.",
       "pairNow": "Ghép cặp ngay",
-      "submit": "Tạo giải đấu"
+      "submit": "Tạo giải đấu",
+      "classroom": "Lớp học (tùy chọn)",
+      "selectClassroom": "Chọn một lớp học"
     },
     "detail": {
       "round": "Vòng {{current}} / {{total}}",
@@ -783,7 +785,10 @@
       "tooManyStudentsForAnnouncement": "Lớp học này có nhiều học sinh đang hoạt động hơn mức cho phép gửi thông báo",
       "selfRegistrationDisabled": "Tự đăng ký làm giáo viên chưa được bật cho đơn vị này",
       "alreadyTeacher": "Bạn đã có quyền giáo viên",
-      "trainerRoleUnavailable": "Vai trò giáo viên chưa khả dụng cho đơn vị này"
+      "trainerRoleUnavailable": "Vai trò giáo viên chưa khả dụng cho đơn vị này",
+      "courseNotFound": "Không tìm thấy khóa học",
+      "courseAssignNotAllowed": "Bạn cần quyền ghi danh khóa học hoặc là tác giả khóa học này để gán nó",
+      "courseNotAssigned": "Khóa học này chưa được gán cho lớp"
     },
     "wall": {
       "editLabel": "Bảng tin (Markdown)",
@@ -805,6 +810,35 @@
       "toast": {
         "success": "Bạn đã là giáo viên — hãy đăng nhập lại để kích hoạt",
         "failed": "Không thể đăng ký bạn làm giáo viên"
+      }
+    },
+    "courses": {
+      "heading": "Khóa học",
+      "assignButton": "Gán khóa học",
+      "dialogTitle": "Gán khóa học cho lớp",
+      "coursePickerLabel": "Khóa học",
+      "coursePickerPlaceholder": "Chọn một khóa học",
+      "mandatoryLabel": "Bắt buộc",
+      "mandatoryBadge": "Bắt buộc",
+      "dueDateLabel": "Hạn hoàn thành (tùy chọn)",
+      "unassignButton": "Gỡ bỏ",
+      "empty": "Chưa có khóa học nào được gán.",
+      "toast": {
+        "assigned": "Đã gán khóa học",
+        "assignFailed": "Không thể gán khóa học",
+        "unassigned": "Đã gỡ khóa học",
+        "unassignFailed": "Không thể gỡ khóa học"
+      }
+    },
+    "studies": {
+      "heading": "Bài giảng cờ vua (Study)",
+      "shareButton": "Chia sẻ bài giảng với lớp",
+      "dialogTitle": "Chia sẻ bài giảng",
+      "studyPickerLabel": "Bài giảng",
+      "studyPickerPlaceholder": "Chọn một bài giảng",
+      "toast": {
+        "assigned": "Đã chia sẻ bài giảng với {{count}} học sinh",
+        "assignFailed": "Không thể chia sẻ bài giảng"
       }
     }
   },

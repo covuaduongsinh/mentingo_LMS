@@ -154,7 +154,10 @@
       "tooManyStudentsForAnnouncement": "Ta klasa ma więcej aktywnych uczniów niż dopuszcza limit ogłoszeń",
       "selfRegistrationDisabled": "Samodzielna rejestracja nauczycieli nie jest włączona dla tej instancji",
       "alreadyTeacher": "Masz już uprawnienia nauczyciela",
-      "trainerRoleUnavailable": "Rola trenera nie jest dostępna dla tej instancji"
+      "trainerRoleUnavailable": "Rola trenera nie jest dostępna dla tej instancji",
+      "courseNotFound": "Nie znaleziono kursu",
+      "courseAssignNotAllowed": "Potrzebujesz uprawnień do zapisywania na kurs lub musisz być jego autorem, aby go przypisać",
+      "courseNotAssigned": "Ten kurs nie jest przypisany do klasy"
     },
     "wall": {
       "editLabel": "Tablica ogłoszeń (Markdown)",
@@ -176,6 +179,35 @@
       "toast": {
         "success": "Jesteś już nauczycielem — zaloguj się ponownie, aby aktywować",
         "failed": "Nie udało się zarejestrować Cię jako nauczyciela"
+      }
+    },
+    "courses": {
+      "heading": "Kursy",
+      "assignButton": "Przypisz kurs",
+      "dialogTitle": "Przypisz kurs do klasy",
+      "coursePickerLabel": "Kurs",
+      "coursePickerPlaceholder": "Wybierz kurs",
+      "mandatoryLabel": "Obowiązkowy",
+      "mandatoryBadge": "Obowiązkowy",
+      "dueDateLabel": "Termin (opcjonalnie)",
+      "unassignButton": "Usuń",
+      "empty": "Nie przypisano jeszcze żadnych kursów.",
+      "toast": {
+        "assigned": "Kurs przypisany",
+        "assignFailed": "Nie udało się przypisać kursu",
+        "unassigned": "Kurs usunięty",
+        "unassignFailed": "Nie udało się usunąć kursu"
+      }
+    },
+    "studies": {
+      "heading": "Studia szachowe",
+      "shareButton": "Udostępnij studium klasie",
+      "dialogTitle": "Udostępnij studium",
+      "studyPickerLabel": "Studium",
+      "studyPickerPlaceholder": "Wybierz studium",
+      "toast": {
+        "assigned": "Studium udostępnione {{count}} uczniom",
+        "assignFailed": "Nie udało się udostępnić studium"
       }
     }
   },

@@ -13,6 +13,7 @@ import {
   chessTournamentPairings,
   chessTournamentPlayers,
   chessTournaments,
+  classroomStudents,
   groupUsers,
   users,
 } from "src/storage/schema";
@@ -21,6 +22,7 @@ export type NewTournamentRow = {
   name: string;
   format: ChessTournamentFormat;
   groupId?: UUIDType;
+  classroomId?: UUIDType;
   timeControlId: string;
   rated: boolean;
   roundCount?: number;
@@ -118,6 +120,17 @@ export class ChessTournamentRepository {
       .select({ userId: groupUsers.userId })
       .from(groupUsers)
       .where(eq(groupUsers.groupId, groupId));
+    return rows.map((row) => row.userId);
+  }
+
+  /** Đợt C5 — classroom analog of getGroupMemberIds, active students only. */
+  async getClassroomStudentIds(classroomId: UUIDType) {
+    const rows = await this.db
+      .select({ userId: classroomStudents.userId })
+      .from(classroomStudents)
+      .where(
+        and(eq(classroomStudents.classroomId, classroomId), isNull(classroomStudents.archivedAt)),
+      );
     return rows.map((row) => row.userId);
   }
 

@@ -1252,6 +1252,10 @@ export const studentCourses = pgTable(
     status: varchar("status").notNull().default("enrolled"), // enrolled/not_enrolled
     paymentId: varchar("payment_id", { length: 50 }),
     enrolledByGroupId: uuid("enrolled_by_group_id").references(() => groups.id),
+    // Đợt C5 — same provenance idea as enrolledByGroupId, but for the independent
+    // Classroom entity (see classroomCourses below). A student can only ever be
+    // attributed to one of the two at a time in practice (classrooms don't touch groups).
+    enrolledByClassroomId: uuid("enrolled_by_classroom_id").references(() => classrooms.id),
     tenantId,
   },
   withTenantIdIndex("student_courses", (table) => ({
@@ -3447,6 +3451,9 @@ export const chessTournaments = pgTable(
     name: text("name").notNull(),
     format: text("format").$type<ChessTournamentFormat>().notNull(),
     groupId: uuid("group_id").references(() => groups.id, { onDelete: "cascade" }),
+    // Đợt C5 — same "bulk-invite, not auto-join" eligibility scoping as groupId
+    // (see assertEligible in chess-tournament.service.ts), for the Classroom entity.
+    classroomId: uuid("classroom_id").references(() => classrooms.id, { onDelete: "cascade" }),
     timeControlId: varchar("time_control_id", { length: 20 }).notNull(),
     rated: boolean("rated").notNull().default(true),
     roundCount: integer("round_count"),
@@ -3471,6 +3478,7 @@ export const chessTournaments = pgTable(
     ...withTenantIdIndex("chess_tournaments")(table),
     statusIdx: index("chess_tournaments_status_idx").on(table.status),
     groupIdx: index("chess_tournaments_group_id_idx").on(table.groupId),
+    classroomIdx: index("chess_tournaments_classroom_id_idx").on(table.classroomId),
   }),
 );
 
@@ -3846,5 +3854,31 @@ export const classroomInvites = pgTable(
     pendingUniqueIdx: uniqueIndex("classroom_invites_pending_unique_idx")
       .on(table.classroomId, table.userId)
       .where(sql`${table.status} = 'pending'`),
+  }),
+);
+
+// Đợt C5 — "Nối lớp với LMS", mentingo's own extension with no lila analog. Mirrors
+// groupCourses' shape (id/courseId/enrolledBy/isMandatory/dueDate/tenantId) but scoped to
+// classrooms instead of groups, and deliberately skips the calendar-event integration
+// groupCourses has (no dueDate reminder wiring in this pass — see classroom-business-spec.md).
+export const classroomCourses = pgTable(
+  "classroom_courses",
+  {
+    ...id,
+    ...timestamps,
+    classroomId: uuid("classroom_id")
+      .references(() => classrooms.id, { onDelete: "cascade" })
+      .notNull(),
+    courseId: uuid("course_id")
+      .references(() => courses.id, { onDelete: "cascade" })
+      .notNull(),
+    enrolledBy: uuid("enrolled_by").references(() => users.id, { onDelete: "set null" }),
+    isMandatory: boolean("is_mandatory").notNull().default(false),
+    dueDate: timestamp("due_date", { withTimezone: true }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("classroom_courses")(table),
+    unq: unique().on(table.classroomId, table.courseId),
   }),
 );

@@ -42,6 +42,9 @@ import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import { setPageTitle } from "~/utils/setPageTitle";
 
+import { ClassroomCourses } from "./components/ClassroomCourses";
+import { ClassroomStudies } from "./components/ClassroomStudies";
+
 import type { MetaFunction } from "@remix-run/react";
 
 export const meta: MetaFunction = ({ matches }) => setPageTitle(matches, "pages.classroomDetail");
@@ -375,6 +378,9 @@ export default function ClassroomDetailPage() {
             )}
           </CardContent>
         </Card>
+
+        <ClassroomCourses classroomId={classroomId} isTeacher={classroom.isTeacher} />
+        {classroom.isTeacher && <ClassroomStudies classroomId={classroomId} />}
       </div>
     </PageWrapper>
   );

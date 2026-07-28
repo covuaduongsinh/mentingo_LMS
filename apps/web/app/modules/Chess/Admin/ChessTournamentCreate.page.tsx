@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useBulkPairing } from "~/api/mutations/useBulkPairing";
 import { useCreateChessTournament } from "~/api/mutations/useCreateChessTournament";
 import { useGroupsQuery } from "~/api/queries/admin/useGroups";
+import { useTeachingClassrooms } from "~/api/queries/useTeachingClassrooms";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -34,11 +35,13 @@ export default function ChessTournamentCreatePage() {
   const navigate = useNavigate();
 
   const { data: groups } = useGroupsQuery();
+  const { data: teachingClassrooms } = useTeachingClassrooms();
 
   const [format, setFormat] = useState<ChessTournamentFormat>(
     CHESS_TOURNAMENT_FORMATS.BULK_PAIRING,
   );
   const [groupId, setGroupId] = useState<string>("");
+  const [classroomId, setClassroomId] = useState<string>("");
   const [name, setName] = useState("");
   const [timeControlId, setTimeControlId] = useState<string>(
     CHESS_MATCH_TIME_CONTROL_LIST[1]?.id ?? "5+0",
@@ -67,6 +70,7 @@ export default function ChessTournamentCreatePage() {
       name,
       format,
       groupId: groupId || undefined,
+      classroomId: classroomId || undefined,
       timeControlId: timeControlId as CreateTournamentBody["timeControlId"],
       rated,
       roundCount: format === CHESS_TOURNAMENT_FORMATS.SWISS ? roundCount : undefined,
@@ -106,6 +110,28 @@ export default function ChessTournamentCreatePage() {
                 {(groups ?? []).map((group) => (
                   <SelectItem key={group.id} value={group.id}>
                     {group.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label>
+              {t("chessTournament.create.classroom", { defaultValue: "Classroom (optional)" })}
+            </Label>
+            <Select value={classroomId} onValueChange={setClassroomId}>
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={t("chessTournament.create.selectClassroom", {
+                    defaultValue: "Select a classroom",
+                  })}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {(teachingClassrooms ?? []).map((classroom) => (
+                  <SelectItem key={classroom.id} value={classroom.id}>
+                    {classroom.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -190,7 +216,7 @@ export default function ChessTournamentCreatePage() {
                 />
               </div>
               <Button
-                disabled={isCreating || !name.trim() || !groupId}
+                disabled={isCreating || !name.trim() || (!groupId && !classroomId)}
                 onClick={() => void handleCreateTournament()}
               >
                 {t("chessTournament.create.submit", { defaultValue: "Create tournament" })}
@@ -220,7 +246,7 @@ export default function ChessTournamentCreatePage() {
                 />
               </div>
               <Button
-                disabled={isCreating || !name.trim() || !groupId}
+                disabled={isCreating || !name.trim() || (!groupId && !classroomId)}
                 onClick={() => void handleCreateTournament()}
               >
                 {t("chessTournament.create.submit", { defaultValue: "Create tournament" })}
@@ -240,7 +266,7 @@ export default function ChessTournamentCreatePage() {
                 })}
               </p>
               <Button
-                disabled={isCreating || !name.trim() || !groupId}
+                disabled={isCreating || !name.trim() || (!groupId && !classroomId)}
                 onClick={() => void handleCreateTournament()}
               >
                 {t("chessTournament.create.submit", { defaultValue: "Create tournament" })}

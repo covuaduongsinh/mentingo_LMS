@@ -1,17 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { SYSTEM_ROLE_SLUGS } from "@repo/shared";
-import { and, asc, desc, eq, inArray, isNull, sql } from "drizzle-orm";
+import { COURSE_ENROLLMENT, PERMISSIONS, SYSTEM_ROLE_SLUGS } from "@repo/shared";
+import { and, asc, desc, eq, inArray, isNull, not, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
+import { userHasAnyPermissionsCondition } from "src/common/permissions/permission-sql.utils";
 import {
+  classroomCourses,
   classroomInvites,
   classrooms,
   classroomStudents,
   classroomTeachers,
+  courses,
   createTokens,
   credentials,
   permissionRoles,
   permissionUserRoles,
+  studentCourses,
   userOnboarding,
   users,
 } from "src/storage/schema";
@@ -21,7 +25,7 @@ import type {
   UpdateClassroomInput,
   UpdateClassroomStudentInput,
 } from "./classroom.types";
-import type { ClassroomInviteStatus } from "@repo/shared";
+import type { ClassroomInviteStatus, LocalizedText } from "@repo/shared";
 
 export type NewClassroomManagedUserRow = {
   email: string;
@@ -610,5 +614,266 @@ export class ClassroomRepository {
 
   async deleteInvite(inviteId: UUIDType) {
     await this.db.delete(classroomInvites).where(eq(classroomInvites.id, inviteId));
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Nối lớp với LMS — course assignment (Đợt C5)
+  // ---------------------------------------------------------------------------------------
+
+  async getCourseAuthorId(courseId: UUIDType): Promise<UUIDType | null> {
+    const [course] = await this.db
+      .select({ authorId: courses.authorId })
+      .from(courses)
+      .where(eq(courses.id, courseId));
+
+    return course?.authorId ?? null;
+  }
+
+  /** Mirrors CourseService.enrollGroupsToCourse's two-pass shape (backfill provenance for
+   * students already enrolled some other way, then insert fresh rows for the rest), scoped to
+   * classroom_students/classroom_courses instead of group_users/group_courses — kept as an
+   * independent path rather than generalizing the group version, to avoid touching that
+   * well-exercised flow (see classroom-business-spec.md C5 rationale). No calendar-event
+   * integration in this pass (classroom_courses has no calendarEventId column). */
+  async assignCourse(
+    classroomId: UUIDType,
+    courseId: UUIDType,
+    data: { isMandatory: boolean; dueDate: string | null },
+    enrolledBy: UUIDType,
+  ): Promise<{ newStudentIds: UUIDType[] }> {
+    let newStudentIds: UUIDType[] = [];
+
+    await this.db.transaction(async (trx) => {
+      await trx
+        .insert(classroomCourses)
+        .values({
+          classroomId,
+          courseId,
+          enrolledBy,
+          isMandatory: data.isMandatory,
+          dueDate: data.dueDate ? new Date(data.dueDate) : null,
+        })
+        .onConflictDoUpdate({
+          target: [classroomCourses.classroomId, classroomCourses.courseId],
+          set: {
+            isMandatory: sql`EXCLUDED.is_mandatory`,
+            enrolledBy: sql`EXCLUDED.enrolled_by`,
+            dueDate: sql`EXCLUDED.due_date`,
+          },
+        });
+
+      const excludeCourseStaff = not(
+        userHasAnyPermissionsCondition(
+          this.db,
+          classroomStudents.userId,
+          classroomStudents.tenantId,
+          [PERMISSIONS.COURSE_UPDATE, PERMISSIONS.COURSE_UPDATE_OWN],
+        ),
+      );
+
+      const studentsToAttachProvenance = await trx
+        .select({ studentId: classroomStudents.userId })
+        .from(classroomStudents)
+        .innerJoin(
+          studentCourses,
+          and(
+            eq(studentCourses.studentId, classroomStudents.userId),
+            eq(studentCourses.courseId, courseId),
+            eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
+          ),
+        )
+        .where(
+          and(
+            eq(classroomStudents.classroomId, classroomId),
+            isNull(classroomStudents.archivedAt),
+            excludeCourseStaff,
+            isNull(studentCourses.enrolledByClassroomId),
+          ),
+        );
+
+      if (studentsToAttachProvenance.length) {
+        await trx
+          .update(studentCourses)
+          .set({ enrolledByClassroomId: classroomId })
+          .where(
+            and(
+              eq(studentCourses.courseId, courseId),
+              eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
+              isNull(studentCourses.enrolledByClassroomId),
+              inArray(
+                studentCourses.studentId,
+                studentsToAttachProvenance.map((row) => row.studentId),
+              ),
+            ),
+          );
+      }
+
+      const eligibleStudents = await trx
+        .select({ studentId: classroomStudents.userId })
+        .from(classroomStudents)
+        .leftJoin(
+          studentCourses,
+          and(
+            eq(studentCourses.studentId, classroomStudents.userId),
+            eq(studentCourses.courseId, courseId),
+            eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
+          ),
+        )
+        .where(
+          and(
+            eq(classroomStudents.classroomId, classroomId),
+            isNull(classroomStudents.archivedAt),
+            excludeCourseStaff,
+            isNull(studentCourses.id),
+          ),
+        );
+
+      if (eligibleStudents.length) {
+        const inserted = await trx
+          .insert(studentCourses)
+          .values(
+            eligibleStudents.map(({ studentId }) => ({
+              studentId,
+              courseId,
+              enrolledByClassroomId: classroomId,
+              status: COURSE_ENROLLMENT.ENROLLED,
+            })),
+          )
+          .onConflictDoUpdate({
+            target: [studentCourses.courseId, studentCourses.studentId],
+            set: {
+              enrolledAt: sql`EXCLUDED.enrolled_at`,
+              status: sql`EXCLUDED.status`,
+              enrolledByClassroomId: sql`EXCLUDED.enrolled_by_classroom_id`,
+            },
+          })
+          .returning({ studentId: studentCourses.studentId });
+
+        newStudentIds = inserted.map((row) => row.studentId);
+      }
+    });
+
+    return { newStudentIds };
+  }
+
+  /** Mirrors CourseService.unenrollGroupsFromCourse: removes the classroom_courses link, then
+   * for each student whose enrollment provenance was exactly this classroom — reassigns
+   * provenance to another still-assigned classroom for the same course if one exists, otherwise
+   * soft-unenrolls (status flip, row kept so progress history survives). */
+  async unassignCourse(classroomId: UUIDType, courseId: UUIDType) {
+    const [link] = await this.db
+      .select({ id: classroomCourses.id })
+      .from(classroomCourses)
+      .where(
+        and(eq(classroomCourses.classroomId, classroomId), eq(classroomCourses.courseId, courseId)),
+      );
+
+    if (!link) return null;
+
+    const studentsToUnenroll = await this.db
+      .select({ studentId: studentCourses.studentId })
+      .from(studentCourses)
+      .where(
+        and(
+          eq(studentCourses.courseId, courseId),
+          eq(studentCourses.enrolledByClassroomId, classroomId),
+          not(
+            userHasAnyPermissionsCondition(
+              this.db,
+              studentCourses.studentId,
+              studentCourses.tenantId,
+              [PERMISSIONS.COURSE_UPDATE, PERMISSIONS.COURSE_UPDATE_OWN],
+            ),
+          ),
+        ),
+      );
+    const studentIdsToUnenroll = studentsToUnenroll.map((row) => row.studentId);
+
+    await this.db.transaction(async (trx) => {
+      await trx
+        .delete(classroomCourses)
+        .where(
+          and(
+            eq(classroomCourses.classroomId, classroomId),
+            eq(classroomCourses.courseId, courseId),
+          ),
+        );
+
+      if (!studentIdsToUnenroll.length) return;
+
+      const studentsInOtherClassrooms = await trx
+        .select({
+          studentId: classroomStudents.userId,
+          classroomId: classroomCourses.classroomId,
+        })
+        .from(classroomStudents)
+        .innerJoin(
+          classroomCourses,
+          eq(classroomCourses.classroomId, classroomStudents.classroomId),
+        )
+        .where(
+          and(
+            inArray(classroomStudents.userId, studentIdsToUnenroll),
+            isNull(classroomStudents.archivedAt),
+            eq(classroomCourses.courseId, courseId),
+            not(eq(classroomCourses.classroomId, classroomId)),
+          ),
+        )
+        .orderBy(classroomStudents.createdAt);
+
+      const reassignments = new Map(
+        studentsInOtherClassrooms.map((row) => [row.studentId, row.classroomId]),
+      );
+
+      await Promise.all(
+        [...reassignments.entries()].map(([studentId, newClassroomId]) =>
+          trx
+            .update(studentCourses)
+            .set({ enrolledByClassroomId: newClassroomId })
+            .where(
+              and(eq(studentCourses.courseId, courseId), eq(studentCourses.studentId, studentId)),
+            ),
+        ),
+      );
+
+      const studentsToCompletelyUnenroll = studentIdsToUnenroll.filter(
+        (studentId) => !reassignments.has(studentId),
+      );
+
+      if (studentsToCompletelyUnenroll.length) {
+        await trx
+          .update(studentCourses)
+          .set({
+            status: COURSE_ENROLLMENT.NOT_ENROLLED,
+            enrolledAt: null,
+            enrolledByClassroomId: null,
+          })
+          .where(
+            and(
+              eq(studentCourses.courseId, courseId),
+              inArray(studentCourses.studentId, studentsToCompletelyUnenroll),
+            ),
+          );
+      }
+    });
+
+    return { unenrolledStudentIds: studentIdsToUnenroll };
+  }
+
+  async listClassroomCourses(classroomId: UUIDType) {
+    return this.db
+      .select({
+        courseId: classroomCourses.courseId,
+        title: sql<LocalizedText>`${courses.title}`,
+        isMandatory: classroomCourses.isMandatory,
+        dueDate: sql<
+          string | null
+        >`TO_CHAR(${classroomCourses.dueDate}, 'YYYY-MM-DD"T"HH24:MI:SS"Z"')`,
+        assignedAt: classroomCourses.createdAt,
+      })
+      .from(classroomCourses)
+      .innerJoin(courses, eq(courses.id, classroomCourses.courseId))
+      .where(eq(classroomCourses.classroomId, classroomId))
+      .orderBy(desc(classroomCourses.createdAt));
   }
 }

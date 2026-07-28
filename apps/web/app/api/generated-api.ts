@@ -8562,6 +8562,7 @@ export interface BulkPairingResponse {
       name: string;
       format: string;
       groupId: string | null;
+      classroomId: string | null;
       timeControlId: string;
       rated: boolean;
       roundCount: number | null;
@@ -8595,6 +8596,8 @@ export interface CreateTournamentBody {
   format: "bulk_pairing" | "swiss" | "arena" | "simul";
   /** @format uuid */
   groupId?: string;
+  /** @format uuid */
+  classroomId?: string;
   timeControlId: "1+0" | "5+0" | "10+0" | "15+10";
   rated?: boolean;
   /**
@@ -8621,6 +8624,7 @@ export interface CreateTournamentResponse {
     name: string;
     format: string;
     groupId: string | null;
+    classroomId: string | null;
     timeControlId: string;
     rated: boolean;
     roundCount: number | null;
@@ -8641,6 +8645,7 @@ export interface GetTournamentResponse {
     name: string;
     format: string;
     groupId: string | null;
+    classroomId: string | null;
     timeControlId: string;
     rated: boolean;
     roundCount: number | null;
@@ -8667,6 +8672,7 @@ export interface StartTournamentResponse {
     name: string;
     format: string;
     groupId: string | null;
+    classroomId: string | null;
     timeControlId: string;
     rated: boolean;
     roundCount: number | null;
@@ -8687,6 +8693,7 @@ export interface GenerateNextRoundResponse {
     name: string;
     format: string;
     groupId: string | null;
+    classroomId: string | null;
     timeControlId: string;
     rated: boolean;
     roundCount: number | null;
@@ -9272,6 +9279,58 @@ export interface SendClassroomAnnouncementBody {
    */
   message: string;
   language: "en" | "pl" | "de" | "lt" | "cs" | "es" | "vi";
+}
+
+export interface ListClassroomCoursesResponse {
+  data: {
+    /** @format uuid */
+    courseId: string;
+    title: object;
+    isMandatory: boolean;
+    dueDate: string | null;
+    assignedAt: string;
+  }[];
+}
+
+export interface AssignClassroomCourseBody {
+  /** @format uuid */
+  courseId: string;
+  /** @default false */
+  isMandatory?: boolean;
+  dueDate?: string | null;
+}
+
+export interface AssignClassroomCourseResponse {
+  data: {
+    /** @format uuid */
+    courseId: string;
+    title: object;
+    isMandatory: boolean;
+    dueDate: string | null;
+    assignedAt: string;
+  }[];
+}
+
+export interface UnassignClassroomCourseResponse {
+  data: {
+    /** @format uuid */
+    courseId: string;
+    title: object;
+    isMandatory: boolean;
+    dueDate: string | null;
+    assignedAt: string;
+  }[];
+}
+
+export interface AssignClassroomStudyBody {
+  /** @format uuid */
+  studyId: string;
+}
+
+export interface AssignClassroomStudyResponse {
+  data: {
+    studentCount: number;
+  };
 }
 
 export interface ListClassroomStudentsResponse {
@@ -20241,6 +20300,78 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: data,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerListClassroomCourses
+     * @request GET:/api/classroom/{classroomId}/courses
+     */
+    classroomControllerListClassroomCourses: (classroomId: string, params: RequestParams = {}) =>
+      this.request<ListClassroomCoursesResponse, any>({
+        path: `/api/classroom/${classroomId}/courses`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerAssignClassroomCourse
+     * @request POST:/api/classroom/{classroomId}/courses
+     */
+    classroomControllerAssignClassroomCourse: (
+      classroomId: string,
+      data: AssignClassroomCourseBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<AssignClassroomCourseResponse, any>({
+        path: `/api/classroom/${classroomId}/courses`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerUnassignClassroomCourse
+     * @request DELETE:/api/classroom/{classroomId}/courses/{courseId}
+     */
+    classroomControllerUnassignClassroomCourse: (
+      classroomId: string,
+      courseId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<UnassignClassroomCourseResponse, any>({
+        path: `/api/classroom/${classroomId}/courses/${courseId}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerAssignClassroomStudy
+     * @request POST:/api/classroom/{classroomId}/studies
+     */
+    classroomControllerAssignClassroomStudy: (
+      classroomId: string,
+      data: AssignClassroomStudyBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<AssignClassroomStudyResponse, any>({
+        path: `/api/classroom/${classroomId}/studies`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

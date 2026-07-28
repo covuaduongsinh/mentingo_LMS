@@ -92,6 +92,7 @@ export class ChessTournamentService {
       name: body.name,
       format: body.format,
       groupId: body.groupId,
+      classroomId: body.classroomId,
       timeControlId: body.timeControlId,
       rated: body.rated ?? true,
       roundCount: body.roundCount,
@@ -104,12 +105,14 @@ export class ChessTournamentService {
     });
 
     if (body.format === CHESS_TOURNAMENT_FORMATS.SIMUL) {
-      // Explicit invite list wins; otherwise default to every member of the chosen group.
-      const participantUserIds = body.participantUserIds?.length
-        ? body.participantUserIds
-        : body.groupId
-          ? await this.repository.getGroupMemberIds(body.groupId)
-          : [];
+      // Explicit invite list wins; otherwise default to every member of the chosen group/classroom.
+      let participantUserIds = body.participantUserIds?.length ? body.participantUserIds : [];
+      if (!participantUserIds.length && body.groupId) {
+        participantUserIds = await this.repository.getGroupMemberIds(body.groupId);
+      }
+      if (!participantUserIds.length && body.classroomId) {
+        participantUserIds = await this.repository.getClassroomStudentIds(body.classroomId);
+      }
 
       if (participantUserIds.length > MAX_SIMUL_PARTICIPANTS) {
         throw new BadRequestException("chess.tournament.errors.tooManySimulParticipants");
@@ -488,6 +491,7 @@ export class ChessTournamentService {
   private async assertEligible(
     tournament: {
       groupId: UUIDType | null;
+      classroomId: UUIDType | null;
       minRating: number | null;
       maxRating: number | null;
       minGamesPlayed: number | null;
@@ -499,6 +503,13 @@ export class ChessTournamentService {
       const memberIds = await this.repository.getGroupMemberIds(tournament.groupId);
       if (!memberIds.includes(userId)) {
         throw new ForbiddenException("chess.tournament.errors.notInGroup");
+      }
+    }
+
+    if (tournament.classroomId) {
+      const studentIds = await this.repository.getClassroomStudentIds(tournament.classroomId);
+      if (!studentIds.includes(userId)) {
+        throw new ForbiddenException("chess.tournament.errors.notInClassroom");
       }
     }
 

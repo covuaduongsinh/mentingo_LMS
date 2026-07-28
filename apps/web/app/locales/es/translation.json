@@ -154,7 +154,10 @@
       "tooManyStudentsForAnnouncement": "Esta aula tiene más estudiantes activos de los que permite el límite para anuncios",
       "selfRegistrationDisabled": "El autorregistro de profesores no está habilitado para este tenant",
       "alreadyTeacher": "Ya tienes acceso de profesor",
-      "trainerRoleUnavailable": "El rol de formador no está disponible para este tenant"
+      "trainerRoleUnavailable": "El rol de formador no está disponible para este tenant",
+      "courseNotFound": "Curso no encontrado",
+      "courseAssignNotAllowed": "Necesitas permisos de inscripción o ser autor de este curso para asignarlo",
+      "courseNotAssigned": "Este curso no está asignado al aula"
     },
     "wall": {
       "editLabel": "Tablón de anuncios (Markdown)",
@@ -176,6 +179,35 @@
       "toast": {
         "success": "Ya eres profesor — vuelve a iniciar sesión para activarlo",
         "failed": "No se pudo registrarte como profesor"
+      }
+    },
+    "courses": {
+      "heading": "Cursos",
+      "assignButton": "Asignar un curso",
+      "dialogTitle": "Asignar un curso a la clase",
+      "coursePickerLabel": "Curso",
+      "coursePickerPlaceholder": "Selecciona un curso",
+      "mandatoryLabel": "Obligatorio",
+      "mandatoryBadge": "Obligatorio",
+      "dueDateLabel": "Fecha límite (opcional)",
+      "unassignButton": "Quitar",
+      "empty": "Aún no hay cursos asignados.",
+      "toast": {
+        "assigned": "Curso asignado",
+        "assignFailed": "No se pudo asignar el curso",
+        "unassigned": "Curso eliminado",
+        "unassignFailed": "No se pudo eliminar el curso"
+      }
+    },
+    "studies": {
+      "heading": "Estudios de ajedrez",
+      "shareButton": "Compartir un estudio con la clase",
+      "dialogTitle": "Compartir un estudio",
+      "studyPickerLabel": "Estudio",
+      "studyPickerPlaceholder": "Selecciona un estudio",
+      "toast": {
+        "assigned": "Estudio compartido con {{count}} estudiantes",
+        "assignFailed": "No se pudo compartir el estudio"
       }
     }
   },

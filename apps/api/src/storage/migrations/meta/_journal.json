@@ -1450,6 +1450,20 @@
       "when": 1785182327951,
       "tag": "0206_enable_classroom_invites_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 207,
+      "version": "7",
+      "when": 1785196686499,
+      "tag": "0207_add_classroom_courses",
+      "breakpoints": true
+    },
+    {
+      "idx": 208,
+      "version": "7",
+      "when": 1785196716430,
+      "tag": "0208_enable_classroom_courses_rls",
+      "breakpoints": true
     }
   ]
 }

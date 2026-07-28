@@ -210,6 +210,34 @@ export const adminClassroomSchema = Type.Object({
 
 export const adminClassroomListSchema = Type.Array(adminClassroomSchema);
 
+// ---------------------------------------------------------------------------------------
+// Nối lớp với LMS (Đợt C5)
+// ---------------------------------------------------------------------------------------
+
+export const assignClassroomCourseBodySchema = Type.Object({
+  courseId: UUIDSchema,
+  isMandatory: Type.Optional(Type.Boolean({ default: false })),
+  dueDate: Type.Optional(Type.Union([Type.String({ format: "date-time" }), Type.Null()])),
+});
+
+export const classroomCourseSchema = Type.Object({
+  courseId: UUIDSchema,
+  title: Type.Record(Type.String(), Type.String()),
+  isMandatory: Type.Boolean(),
+  dueDate: Type.Union([Type.String(), Type.Null()]),
+  assignedAt: Type.String(),
+});
+
+export const classroomCourseListSchema = Type.Array(classroomCourseSchema);
+
+export const assignClassroomStudyBodySchema = Type.Object({
+  studyId: UUIDSchema,
+});
+
+export const assignClassroomStudyResponseSchema = Type.Object({
+  studentCount: Type.Number(),
+});
+
 export type CreateClassroomBody = Static<typeof createClassroomBodySchema>;
 export type UpdateClassroomBody = Static<typeof updateClassroomBodySchema>;
 export type SetClassroomArchivedBody = Static<typeof setClassroomArchivedBodySchema>;
@@ -223,3 +251,5 @@ export type MoveClassroomStudentBody = Static<typeof moveClassroomStudentBodySch
 export type RunClassroomBulkActionBody = Static<typeof runClassroomBulkActionBodySchema>;
 export type InviteClassroomStudentBody = Static<typeof inviteClassroomStudentBodySchema>;
 export type SendClassroomAnnouncementBody = Static<typeof sendClassroomAnnouncementBodySchema>;
+export type AssignClassroomCourseBody = Static<typeof assignClassroomCourseBodySchema>;
+export type AssignClassroomStudyBody = Static<typeof assignClassroomStudyBodySchema>;
