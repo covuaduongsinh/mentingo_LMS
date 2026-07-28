@@ -75,6 +75,7 @@ export const routes: (
             "classrooms/:classroomId/students",
             "modules/Classroom/ClassroomStudentsList.page.tsx",
           );
+          route("classrooms/:classroomId/progress", "modules/Classroom/ClassroomProgress.page.tsx");
           route(
             "classrooms/:classroomId/students/add",
             "modules/Classroom/ClassroomAddStudent.page.tsx",

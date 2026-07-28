@@ -840,6 +840,35 @@
         "assigned": "Study shared with {{count}} students",
         "assignFailed": "Could not share the study"
       }
+    },
+    "progress": {
+      "title": "Progress report",
+      "daysOption": "Last {{count}} days",
+      "chessHeading": "Chess",
+      "classAverageWinRate": "Class avg. win rate: {{value}}",
+      "classAveragePuzzleAccuracy": "Class avg. puzzle accuracy: {{value}}",
+      "classAverageLearn": "Class avg. Learn completion: {{value}}%",
+      "chessEmpty": "No students in this classroom yet.",
+      "ratings": "Ratings",
+      "matches": "Matches",
+      "winRate": "Win rate",
+      "puzzles": "Puzzles",
+      "playDuration": "Play time",
+      "learn": "Learn",
+      "currentRating": "now {{value}}",
+      "minutes": "{{count}} min",
+      "coursesHeading": "Courses",
+      "coursesEmpty": "No courses assigned to this classroom yet.",
+      "courseAverage": "Avg. completion: {{value}}%",
+      "status": "Status",
+      "chapters": "Chapters",
+      "completion": "Completion",
+      "courseStatus": {
+        "not_enrolled": "Not enrolled",
+        "not_started": "Not started",
+        "in_progress": "In progress",
+        "completed": "Completed"
+      }
     }
   },
   "common": {
@@ -5001,6 +5030,7 @@
     "classrooms": "Classrooms",
     "classroomDetail": "Classroom",
     "classroomStudents": "Classroom Students",
+    "classroomProgress": "Classroom Progress",
     "classroomAddStudent": "Add Student",
     "classroomStudentDetail": "Student",
     "classroomEditStudent": "Edit Student",

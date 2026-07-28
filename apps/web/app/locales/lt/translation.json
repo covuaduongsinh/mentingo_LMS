@@ -209,6 +209,35 @@
         "assigned": "Studija bendrinama su {{count}} mokinių",
         "assignFailed": "Nepavyko bendrinti studijos"
       }
+    },
+    "progress": {
+      "title": "Pažangos ataskaita",
+      "daysOption": "Paskutinės {{count}} dienos",
+      "chessHeading": "Šachmatai",
+      "classAverageWinRate": "Klasės vid. laimėjimų rodiklis: {{value}}",
+      "classAveragePuzzleAccuracy": "Klasės vid. uždavinių tikslumas: {{value}}",
+      "classAverageLearn": "Klasės vid. mokymosi progresas: {{value}}%",
+      "chessEmpty": "Šioje klasėje dar nėra mokinių.",
+      "ratings": "Reitingai",
+      "matches": "Partijos",
+      "winRate": "Laimėjimų rodiklis",
+      "puzzles": "Uždaviniai",
+      "playDuration": "Žaidimo laikas",
+      "learn": "Mokymasis",
+      "currentRating": "dabar {{value}}",
+      "minutes": "{{count}} min",
+      "coursesHeading": "Kursai",
+      "coursesEmpty": "Šiai klasei dar nepriskirtas nė vienas kursas.",
+      "courseAverage": "Vid. baigtumas: {{value}}%",
+      "status": "Būsena",
+      "chapters": "Skyriai",
+      "completion": "Baigtumas",
+      "courseStatus": {
+        "not_enrolled": "Neįregistruotas",
+        "not_started": "Nepradėta",
+        "in_progress": "Vykdoma",
+        "completed": "Baigta"
+      }
     }
   },
   "common": {
@@ -4246,6 +4275,7 @@
     "classrooms": "Klasės",
     "classroomDetail": "Klasė",
     "classroomStudents": "Klasės mokiniai",
+    "classroomProgress": "Klasės pažanga",
     "classroomAddStudent": "Pridėti mokinį",
     "classroomStudentDetail": "Mokinys",
     "classroomEditStudent": "Redaguoti mokinį",

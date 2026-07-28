@@ -209,6 +209,35 @@
         "assigned": "Studium udostępnione {{count}} uczniom",
         "assignFailed": "Nie udało się udostępnić studium"
       }
+    },
+    "progress": {
+      "title": "Raport postępów",
+      "daysOption": "Ostatnie {{count}} dni",
+      "chessHeading": "Szachy",
+      "classAverageWinRate": "Śr. wskaźnik wygranych klasy: {{value}}",
+      "classAveragePuzzleAccuracy": "Śr. skuteczność zadań klasy: {{value}}",
+      "classAverageLearn": "Śr. postęp Nauki klasy: {{value}}%",
+      "chessEmpty": "W tej klasie nie ma jeszcze uczniów.",
+      "ratings": "Ranking",
+      "matches": "Partie",
+      "winRate": "Wskaźnik wygranych",
+      "puzzles": "Zadania szachowe",
+      "playDuration": "Czas gry",
+      "learn": "Nauka",
+      "currentRating": "obecnie {{value}}",
+      "minutes": "{{count}} min",
+      "coursesHeading": "Kursy",
+      "coursesEmpty": "Do tej klasy nie przypisano jeszcze żadnego kursu.",
+      "courseAverage": "Śr. ukończenie: {{value}}%",
+      "status": "Status",
+      "chapters": "Rozdziały",
+      "completion": "Ukończenie",
+      "courseStatus": {
+        "not_enrolled": "Niezapisany",
+        "not_started": "Nierozpoczęty",
+        "in_progress": "W trakcie",
+        "completed": "Ukończony"
+      }
     }
   },
   "common": {
@@ -4592,6 +4621,7 @@
     "classrooms": "Klasy",
     "classroomDetail": "Klasa",
     "classroomStudents": "Uczniowie klasy",
+    "classroomProgress": "Postępy klasy",
     "classroomAddStudent": "Dodaj ucznia",
     "classroomStudentDetail": "Uczeń",
     "classroomEditStudent": "Edytuj ucznia",

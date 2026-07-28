@@ -102,6 +102,13 @@ describe("ClassroomService", () => {
       assignCourse: jest.fn().mockResolvedValue({ newStudentIds: [] }),
       unassignCourse: jest.fn().mockResolvedValue({ unenrolledStudentIds: [] }),
       listClassroomCourses: jest.fn().mockResolvedValue([]),
+      getRatingsForUsers: jest.fn().mockResolvedValue([]),
+      getRatingHistoryForUsers: jest.fn().mockResolvedValue([]),
+      getFinishedMatchesForUsers: jest.fn().mockResolvedValue([]),
+      getPuzzleAttemptsForUsers: jest.fn().mockResolvedValue([]),
+      getPlayDurationForUsers: jest.fn().mockResolvedValue([]),
+      getLearnCompletedCountsForUsers: jest.fn().mockResolvedValue([]),
+      getClassroomCourseProgress: jest.fn().mockResolvedValue([]),
       ...repositoryOverrides,
     } as unknown as ClassroomRepository;
 
@@ -921,6 +928,166 @@ describe("ClassroomService", () => {
       await expect(
         service.assignStudy(CLASSROOM_ID, buildUser(TEACHER_ID), "study-1"),
       ).rejects.toBeInstanceOf(NotFoundException);
+    });
+  });
+
+  describe("getProgressReport (Đợt C6)", () => {
+    it("refuses a student — this is a teacher-facing report, not listCourses' member-readable bar", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(false),
+        isActiveStudent: jest.fn().mockResolvedValue(true),
+      });
+
+      await expect(
+        service.getProgressReport(CLASSROOM_ID, buildUser(STUDENT_ID), 30),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+
+    it("404s for a stranger, never revealing the classroom exists", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(false),
+        isActiveStudent: jest.fn().mockResolvedValue(false),
+      });
+
+      await expect(
+        service.getProgressReport(CLASSROOM_ID, buildUser(STRANGER_ID), 30),
+      ).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it("computes per-student win rate, puzzle accuracy, rating start/end, and class averages", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        listClassroomStudents: jest.fn().mockResolvedValue([
+          {
+            userId: "s1",
+            realName: "A",
+            username: "a",
+            isManaged: true,
+            archivedAt: null,
+            notes: "",
+          },
+          {
+            userId: "s2",
+            realName: "B",
+            username: "b",
+            isManaged: true,
+            archivedAt: null,
+            notes: "",
+          },
+        ]),
+        getRatingsForUsers: jest
+          .fn()
+          .mockResolvedValue([{ userId: "s1", category: "puzzle", rating: 1550, gamesPlayed: 12 }]),
+        getRatingHistoryForUsers: jest.fn().mockResolvedValue([
+          { userId: "s1", category: "puzzle", rating: 1500, createdAt: "2026-01-01T00:00:00Z" },
+          { userId: "s1", category: "puzzle", rating: 1550, createdAt: "2026-01-15T00:00:00Z" },
+        ]),
+        getFinishedMatchesForUsers: jest.fn().mockResolvedValue([
+          { whiteUserId: "s1", blackUserId: "s2", result: "white_win" },
+          { whiteUserId: "s2", blackUserId: "s1", result: "black_win" },
+        ]),
+        getPuzzleAttemptsForUsers: jest.fn().mockResolvedValue([
+          { userId: "s1", correct: true },
+          { userId: "s1", correct: false },
+        ]),
+        getPlayDurationForUsers: jest.fn().mockResolvedValue([{ userId: "s1", durationMs: 60000 }]),
+        getLearnCompletedCountsForUsers: jest
+          .fn()
+          .mockResolvedValue([{ userId: "s1", completed: 3 }]),
+      });
+
+      const result = await service.getProgressReport(CLASSROOM_ID, buildUser(TEACHER_ID), 30);
+
+      const s1 = result.chess.students.find((student) => student.userId === "s1");
+      expect(s1?.ratings).toEqual([
+        { category: "puzzle", current: 1550, gamesPlayed: 12, ratingStart: 1500, ratingEnd: 1550 },
+      ]);
+      // s1 won both their matches (white_win as white, black_win as black).
+      expect(s1?.matchesPlayed).toBe(2);
+      expect(s1?.matchesWon).toBe(2);
+      expect(s1?.winRate).toBe(1);
+      expect(s1?.puzzlesAttempted).toBe(2);
+      expect(s1?.puzzlesCorrect).toBe(1);
+      expect(s1?.puzzleAccuracy).toBe(0.5);
+      expect(s1?.playDurationMs).toBe(60000);
+      expect(s1?.learnCompletedLevels).toBe(3);
+
+      const s2 = result.chess.students.find((student) => student.userId === "s2");
+      expect(s2?.matchesPlayed).toBe(2);
+      expect(s2?.matchesWon).toBe(0);
+      expect(s2?.winRate).toBe(0);
+
+      // Class average win rate over the two students who played (s1: 1.0, s2: 0.0).
+      expect(result.chess.classAverage.winRate).toBe(0.5);
+    });
+
+    it("marks a course as not_enrolled (not 0%-complete) for a student never enrolled in it", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        listClassroomStudents: jest.fn().mockResolvedValue([
+          {
+            userId: "s1",
+            realName: "A",
+            username: "a",
+            isManaged: true,
+            archivedAt: null,
+            notes: "",
+          },
+          {
+            userId: "s2",
+            realName: "B",
+            username: "b",
+            isManaged: true,
+            archivedAt: null,
+            notes: "",
+          },
+        ]),
+        getClassroomCourseProgress: jest.fn().mockResolvedValue([
+          {
+            courseId: "course-1",
+            title: { en: "Course 1" },
+            isMandatory: true,
+            dueDate: null,
+            chapterCount: 10,
+            studentId: "s1",
+            progress: "in_progress",
+            finishedChapterCount: 4,
+          },
+          {
+            courseId: "course-1",
+            title: { en: "Course 1" },
+            isMandatory: true,
+            dueDate: null,
+            chapterCount: 10,
+            studentId: "s2",
+            progress: null,
+            finishedChapterCount: null,
+          },
+        ]),
+      });
+
+      const result = await service.getProgressReport(CLASSROOM_ID, buildUser(TEACHER_ID), 30);
+
+      expect(result.courses).toHaveLength(1);
+      const course = result.courses[0];
+      expect(course.enrolledCount).toBe(1);
+      expect(course.completedCount).toBe(0);
+
+      const s1 = course.students.find((student) => student.userId === "s1");
+      expect(s1).toEqual({
+        userId: "s1",
+        progress: "in_progress",
+        finishedChapterCount: 4,
+        completionPercentage: 40,
+      });
+
+      const s2 = course.students.find((student) => student.userId === "s2");
+      expect(s2).toEqual({
+        userId: "s2",
+        progress: "not_enrolled",
+        finishedChapterCount: 0,
+        completionPercentage: 0,
+      });
     });
   });
 });

@@ -209,6 +209,35 @@
         "assigned": "Studie mit {{count}} Schülern geteilt",
         "assignFailed": "Studie konnte nicht geteilt werden"
       }
+    },
+    "progress": {
+      "title": "Fortschrittsbericht",
+      "daysOption": "Letzte {{count}} Tage",
+      "chessHeading": "Schach",
+      "classAverageWinRate": "Ø Gewinnrate der Klasse: {{value}}",
+      "classAveragePuzzleAccuracy": "Ø Aufgabengenauigkeit der Klasse: {{value}}",
+      "classAverageLearn": "Ø Lernfortschritt der Klasse: {{value}}%",
+      "chessEmpty": "Diese Klasse hat noch keine Schüler.",
+      "ratings": "Wertungen",
+      "matches": "Partien",
+      "winRate": "Gewinnrate",
+      "puzzles": "Aufgaben",
+      "playDuration": "Spielzeit",
+      "learn": "Lernen",
+      "currentRating": "aktuell {{value}}",
+      "minutes": "{{count}} Min.",
+      "coursesHeading": "Kurse",
+      "coursesEmpty": "Dieser Klasse sind noch keine Kurse zugewiesen.",
+      "courseAverage": "Ø Abschluss: {{value}}%",
+      "status": "Status",
+      "chapters": "Kapitel",
+      "completion": "Fortschritt",
+      "courseStatus": {
+        "not_enrolled": "Nicht eingeschrieben",
+        "not_started": "Nicht begonnen",
+        "in_progress": "In Bearbeitung",
+        "completed": "Abgeschlossen"
+      }
     }
   },
   "common": {
@@ -4242,6 +4271,7 @@
     "classrooms": "Klassen",
     "classroomDetail": "Klasse",
     "classroomStudents": "Klassenschüler",
+    "classroomProgress": "Klassenfortschritt",
     "classroomAddStudent": "Schüler hinzufügen",
     "classroomStudentDetail": "Schüler",
     "classroomEditStudent": "Schüler bearbeiten",

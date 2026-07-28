@@ -209,6 +209,35 @@
         "assigned": "Studie sdílena s {{count}} studenty",
         "assignFailed": "Studii se nepodařilo sdílet"
       }
+    },
+    "progress": {
+      "title": "Zpráva o pokroku",
+      "daysOption": "Posledních {{count}} dní",
+      "chessHeading": "Šachy",
+      "classAverageWinRate": "Prům. úspěšnost třídy: {{value}}",
+      "classAveragePuzzleAccuracy": "Prům. přesnost úloh třídy: {{value}}",
+      "classAverageLearn": "Prům. pokrok v Nauč se třídy: {{value}}%",
+      "chessEmpty": "V této třídě zatím nejsou žádní studenti.",
+      "ratings": "Hodnocení",
+      "matches": "Partie",
+      "winRate": "Úspěšnost",
+      "puzzles": "Šachové úlohy",
+      "playDuration": "Doba hraní",
+      "learn": "Nauč se",
+      "currentRating": "nyní {{value}}",
+      "minutes": "{{count}} min",
+      "coursesHeading": "Kurzy",
+      "coursesEmpty": "Této třídě zatím nebyl přiřazen žádný kurz.",
+      "courseAverage": "Prům. dokončení: {{value}}%",
+      "status": "Stav",
+      "chapters": "Kapitoly",
+      "completion": "Dokončení",
+      "courseStatus": {
+        "not_enrolled": "Nepřihlášen",
+        "not_started": "Nezahájeno",
+        "in_progress": "Probíhá",
+        "completed": "Dokončeno"
+      }
     }
   },
   "common": {
@@ -4249,6 +4278,7 @@
     "classrooms": "Třídy",
     "classroomDetail": "Třída",
     "classroomStudents": "Žáci třídy",
+    "classroomProgress": "Pokrok třídy",
     "classroomAddStudent": "Přidat žáka",
     "classroomStudentDetail": "Žák",
     "classroomEditStudent": "Upravit žáka",

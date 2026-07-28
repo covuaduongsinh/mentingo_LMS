@@ -9516,6 +9516,63 @@ export interface ListClassroomInvitesResponse {
   }[];
 }
 
+export interface GetClassroomProgressResponse {
+  data: {
+    /** @format uuid */
+    classroomId: string;
+    days: number;
+    chess: {
+      students: {
+        /** @format uuid */
+        userId: string;
+        username: string | null;
+        realName: string;
+        isManaged: boolean;
+        ratings: {
+          category: string;
+          current: number;
+          gamesPlayed: number;
+          ratingStart: number;
+          ratingEnd: number;
+        }[];
+        matchesPlayed: number;
+        matchesWon: number;
+        winRate: number;
+        puzzlesAttempted: number;
+        puzzlesCorrect: number;
+        puzzleAccuracy: number;
+        playDurationMs: number;
+        learnCompletedLevels: number;
+        learnTotalLevels: number;
+        learnCompletionPercentage: number;
+      }[];
+      classAverage: {
+        winRate: number;
+        puzzleAccuracy: number;
+        learnCompletionPercentage: number;
+      };
+    };
+    courses: {
+      /** @format uuid */
+      courseId: string;
+      title: object;
+      isMandatory: boolean;
+      dueDate: string | null;
+      totalChapterCount: number;
+      enrolledCount: number;
+      completedCount: number;
+      averageCompletionPercentage: number;
+      students: {
+        /** @format uuid */
+        userId: string;
+        progress: string;
+        finishedChapterCount: number;
+        completionPercentage: number;
+      }[];
+    }[];
+  };
+}
+
 export interface GetActivityLogsResponse {
   data: {
     id: string;
@@ -20641,6 +20698,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/classroom/${classroomId}/invites/${inviteId}`,
         method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerGetClassroomProgress
+     * @request GET:/api/classroom/{classroomId}/progress
+     */
+    classroomControllerGetClassroomProgress: (
+      classroomId: string,
+      query?: {
+        days?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetClassroomProgressResponse, any>({
+        path: `/api/classroom/${classroomId}/progress`,
+        method: "GET",
+        query: query,
+        format: "json",
         ...params,
       }),
 

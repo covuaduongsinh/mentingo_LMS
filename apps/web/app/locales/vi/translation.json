@@ -840,6 +840,35 @@
         "assigned": "Đã chia sẻ bài giảng với {{count}} học sinh",
         "assignFailed": "Không thể chia sẻ bài giảng"
       }
+    },
+    "progress": {
+      "title": "Báo cáo tiến độ",
+      "daysOption": "{{count}} ngày gần đây",
+      "chessHeading": "Cờ vua",
+      "classAverageWinRate": "Tỷ lệ thắng TB lớp: {{value}}",
+      "classAveragePuzzleAccuracy": "Độ chính xác giải cờ thế TB lớp: {{value}}",
+      "classAverageLearn": "Tiến độ Nhập môn TB lớp: {{value}}%",
+      "chessEmpty": "Lớp chưa có học sinh nào.",
+      "ratings": "Điểm rating",
+      "matches": "Số ván",
+      "winRate": "Tỷ lệ thắng",
+      "puzzles": "Bài tập cờ thế",
+      "playDuration": "Thời gian chơi",
+      "learn": "Nhập môn",
+      "currentRating": "hiện tại {{value}}",
+      "minutes": "{{count}} phút",
+      "coursesHeading": "Khóa học",
+      "coursesEmpty": "Lớp chưa được gán khóa học nào.",
+      "courseAverage": "Hoàn thành TB: {{value}}%",
+      "status": "Trạng thái",
+      "chapters": "Chương",
+      "completion": "Hoàn thành",
+      "courseStatus": {
+        "not_enrolled": "Chưa ghi danh",
+        "not_started": "Chưa bắt đầu",
+        "in_progress": "Đang học",
+        "completed": "Đã hoàn thành"
+      }
     }
   },
   "common": {
@@ -5001,6 +5030,7 @@
     "classrooms": "Lớp học",
     "classroomDetail": "Chi tiết lớp học",
     "classroomStudents": "Học sinh lớp học",
+    "classroomProgress": "Báo cáo tiến độ lớp học",
     "classroomAddStudent": "Thêm học sinh",
     "classroomStudentDetail": "Học sinh",
     "classroomEditStudent": "Sửa hồ sơ học sinh",

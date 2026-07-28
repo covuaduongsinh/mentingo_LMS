@@ -209,6 +209,35 @@
         "assigned": "Estudio compartido con {{count}} estudiantes",
         "assignFailed": "No se pudo compartir el estudio"
       }
+    },
+    "progress": {
+      "title": "Informe de progreso",
+      "daysOption": "Últimos {{count}} días",
+      "chessHeading": "Ajedrez",
+      "classAverageWinRate": "Tasa de victorias media de la clase: {{value}}",
+      "classAveragePuzzleAccuracy": "Precisión media en problemas de la clase: {{value}}",
+      "classAverageLearn": "Progreso medio de Aprender de la clase: {{value}}%",
+      "chessEmpty": "Esta clase todavía no tiene estudiantes.",
+      "ratings": "Clasificaciones",
+      "matches": "Partidas",
+      "winRate": "Tasa de victorias",
+      "puzzles": "Problemas",
+      "playDuration": "Tiempo de juego",
+      "learn": "Aprender",
+      "currentRating": "actual {{value}}",
+      "minutes": "{{count}} min",
+      "coursesHeading": "Cursos",
+      "coursesEmpty": "Todavía no se ha asignado ningún curso a esta clase.",
+      "courseAverage": "Finalización media: {{value}}%",
+      "status": "Estado",
+      "chapters": "Capítulos",
+      "completion": "Finalización",
+      "courseStatus": {
+        "not_enrolled": "No inscrito",
+        "not_started": "No iniciado",
+        "in_progress": "En curso",
+        "completed": "Completado"
+      }
     }
   },
   "common": {
@@ -4320,6 +4349,7 @@
     "classrooms": "Clases",
     "classroomDetail": "Clase",
     "classroomStudents": "Estudiantes de la clase",
+    "classroomProgress": "Progreso de la clase",
     "classroomAddStudent": "Añadir estudiante",
     "classroomStudentDetail": "Estudiante",
     "classroomEditStudent": "Editar estudiante",

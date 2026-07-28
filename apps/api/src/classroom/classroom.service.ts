@@ -11,6 +11,7 @@ import {
   ACTIVITY_LOG_RESOURCE_TYPES,
   ANNOUNCEMENT_EMAIL_TEMPLATES,
   ANNOUNCEMENT_SOURCE_TYPES,
+  CHESS_LEARN_STAGES,
   CHESS_STUDY_MEMBER_ROLES,
   CLASSROOM_AUTO_ARCHIVE_INACTIVE_DAYS,
   CLASSROOM_BULK_ACTIONS,
@@ -60,6 +61,11 @@ const USERNAME_GENERATION_MAX_ATTEMPTS = 5;
 const CREATE_TOKEN_EXPIRATION_YEARS = 1;
 const CLASSROOM_AUTO_ARCHIVE_INACTIVE_MS =
   CLASSROOM_AUTO_ARCHIVE_INACTIVE_DAYS * 24 * 60 * 60 * 1000;
+const CHESS_LEARN_TOTAL_LEVELS = CHESS_LEARN_STAGES.reduce(
+  (sum, stage) => sum + stage.levels.length,
+  0,
+);
+const CLASSROOM_PROGRESS_NOT_ENROLLED = "not_enrolled";
 
 @Injectable()
 export class ClassroomService {
@@ -906,5 +912,183 @@ export class ClassroomService {
     }
 
     return { studentCount: assignedCount };
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Báo cáo tiến độ (Đợt C6)
+  // ---------------------------------------------------------------------------------------
+
+  /** Teacher-only (like chess-class's CHESS_CLASS_PROGRESS-gated equivalent it supersedes) —
+   * reveals every student's rating/win-rate/course-completion, not just their own. */
+  async getProgressReport(classroomId: UUIDType, user: CurrentUserType, days: number) {
+    await this.getClassroomOrThrow(classroomId);
+    await this.assertCanManage(classroomId, user);
+
+    const students = await this.repository.listClassroomStudents(classroomId, false);
+    const userIds = students.map((student) => student.userId);
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+    const [
+      ratings,
+      ratingHistory,
+      matches,
+      puzzleAttempts,
+      playDurations,
+      learnCounts,
+      courseRows,
+    ] = await Promise.all([
+      this.repository.getRatingsForUsers(userIds),
+      this.repository.getRatingHistoryForUsers(userIds, since),
+      this.repository.getFinishedMatchesForUsers(userIds, since),
+      this.repository.getPuzzleAttemptsForUsers(userIds, since),
+      this.repository.getPlayDurationForUsers(userIds, since),
+      this.repository.getLearnCompletedCountsForUsers(userIds),
+      this.repository.getClassroomCourseProgress(classroomId),
+    ]);
+
+    const chessStudents = students.map((student) => {
+      const memberRatings = ratings.filter((rating) => rating.userId === student.userId);
+      const memberHistory = ratingHistory.filter((row) => row.userId === student.userId);
+
+      const memberMatches = matches.filter(
+        (match) => match.whiteUserId === student.userId || match.blackUserId === student.userId,
+      );
+      const matchesWon = memberMatches.filter((match) => {
+        const isWhite = match.whiteUserId === student.userId;
+        return (
+          (isWhite && match.result === "white_win") || (!isWhite && match.result === "black_win")
+        );
+      }).length;
+
+      const memberPuzzles = puzzleAttempts.filter((row) => row.userId === student.userId);
+      const puzzlesCorrect = memberPuzzles.filter((row) => row.correct).length;
+
+      const learnCompleted =
+        learnCounts.find((row) => row.userId === student.userId)?.completed ?? 0;
+
+      return {
+        userId: student.userId,
+        username: student.username,
+        realName: student.realName,
+        isManaged: student.isManaged,
+        ratings: memberRatings.map((rating) => {
+          const categoryHistory = memberHistory.filter((row) => row.category === rating.category);
+          return {
+            category: rating.category,
+            current: rating.rating,
+            gamesPlayed: rating.gamesPlayed,
+            ratingStart: categoryHistory[0]?.rating ?? rating.rating,
+            ratingEnd: categoryHistory[categoryHistory.length - 1]?.rating ?? rating.rating,
+          };
+        }),
+        matchesPlayed: memberMatches.length,
+        matchesWon,
+        winRate: memberMatches.length > 0 ? matchesWon / memberMatches.length : 0,
+        puzzlesAttempted: memberPuzzles.length,
+        puzzlesCorrect,
+        puzzleAccuracy: memberPuzzles.length > 0 ? puzzlesCorrect / memberPuzzles.length : 0,
+        playDurationMs: playDurations.find((row) => row.userId === student.userId)?.durationMs ?? 0,
+        learnCompletedLevels: learnCompleted,
+        learnTotalLevels: CHESS_LEARN_TOTAL_LEVELS,
+        learnCompletionPercentage:
+          CHESS_LEARN_TOTAL_LEVELS > 0
+            ? Math.round((learnCompleted / CHESS_LEARN_TOTAL_LEVELS) * 100)
+            : 0,
+      };
+    });
+
+    const withMatches = chessStudents.filter((student) => student.matchesPlayed > 0);
+    const withPuzzles = chessStudents.filter((student) => student.puzzlesAttempted > 0);
+
+    const classAverage = {
+      winRate:
+        withMatches.length > 0
+          ? withMatches.reduce((sum, student) => sum + student.winRate, 0) / withMatches.length
+          : 0,
+      puzzleAccuracy:
+        withPuzzles.length > 0
+          ? withPuzzles.reduce((sum, student) => sum + student.puzzleAccuracy, 0) /
+            withPuzzles.length
+          : 0,
+      learnCompletionPercentage:
+        chessStudents.length > 0
+          ? Math.round(
+              chessStudents.reduce((sum, student) => sum + student.learnCompletionPercentage, 0) /
+                chessStudents.length,
+            )
+          : 0,
+    };
+
+    type CourseProgressAccumulator = {
+      courseId: UUIDType;
+      title: Record<string, string>;
+      isMandatory: boolean;
+      dueDate: string | null;
+      totalChapterCount: number;
+      students: Array<{
+        userId: UUIDType;
+        progress: string;
+        finishedChapterCount: number;
+        completionPercentage: number;
+      }>;
+    };
+
+    const courseMap = new Map<UUIDType, CourseProgressAccumulator>();
+    for (const row of courseRows) {
+      let course = courseMap.get(row.courseId);
+      if (!course) {
+        course = {
+          courseId: row.courseId,
+          title: row.title,
+          isMandatory: row.isMandatory,
+          dueDate: row.dueDate,
+          totalChapterCount: row.chapterCount,
+          students: [],
+        };
+        courseMap.set(row.courseId, course);
+      }
+
+      const finishedChapterCount = row.finishedChapterCount ?? 0;
+      const completionPercentage =
+        row.progress !== null && course.totalChapterCount > 0
+          ? Math.round((finishedChapterCount / course.totalChapterCount) * 100)
+          : 0;
+
+      course.students.push({
+        userId: row.studentId,
+        progress: row.progress ?? CLASSROOM_PROGRESS_NOT_ENROLLED,
+        finishedChapterCount,
+        completionPercentage,
+      });
+    }
+
+    const courses = Array.from(courseMap.values()).map((course) => {
+      const enrolledStudents = course.students.filter(
+        (student) => student.progress !== CLASSROOM_PROGRESS_NOT_ENROLLED,
+      );
+      const completedCount = course.students.filter(
+        (student) => student.progress === "completed",
+      ).length;
+
+      return {
+        ...course,
+        enrolledCount: enrolledStudents.length,
+        completedCount,
+        averageCompletionPercentage:
+          course.students.length > 0
+            ? Math.round(
+                course.students.reduce((sum, student) => sum + student.completionPercentage, 0) /
+                  course.students.length,
+              )
+            : 0,
+      };
+    });
+
+    return {
+      classroomId,
+      days,
+      chess: { students: chessStudents, classAverage },
+      courses,
+    };
   }
 }

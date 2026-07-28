@@ -243,6 +243,9 @@ export const routeAccessConfig = createRouteConfig({
   "classrooms/:classroomId/students": {
     anyOf: [PERMISSIONS.CLASSROOM_READ],
   },
+  "classrooms/:classroomId/progress": {
+    anyOf: [PERMISSIONS.CLASSROOM_READ],
+  },
   "classrooms/:classroomId/students/add": {
     anyOf: [PERMISSIONS.CLASSROOM_READ],
   },
