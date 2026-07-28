@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ForbiddenException,
+  forwardRef,
   Inject,
   Injectable,
   NotFoundException,
@@ -10,6 +11,7 @@ import {
   ACTIVITY_LOG_RESOURCE_TYPES,
   ANNOUNCEMENT_EMAIL_TEMPLATES,
   ANNOUNCEMENT_SOURCE_TYPES,
+  CHESS_STUDY_MEMBER_ROLES,
   CLASSROOM_AUTO_ARCHIVE_INACTIVE_DAYS,
   CLASSROOM_BULK_ACTIONS,
   CLASSROOM_DEFAULTS,
@@ -22,6 +24,7 @@ import { nanoid } from "nanoid";
 import { ActivityLogsService } from "src/activity-logs/activity-logs.service";
 import { AnnouncementsSchedulerService } from "src/announcements/announcements-scheduler.service";
 import { hashToken } from "src/auth/utils/hash-auth-token";
+import { ChessStudyService } from "src/chess/chess-study.service";
 import {
   generateManagedAccountEmail,
   generatePseudonym,
@@ -31,7 +34,11 @@ import {
 import { DatabasePg } from "src/common";
 import hashPassword from "src/common/helpers/hashPassword";
 import { resolveTenantOrigin } from "src/common/helpers/resolveTenantOrigin";
+import { canUpdateCourseByAuthor } from "src/common/permissions/course-permission.utils";
 import { hasPermission } from "src/common/permissions/permission.utils";
+import { CourseService } from "src/courses/course.service";
+import { UsersAssignedToCourseEvent } from "src/events/user/user-assigned-to-course.event";
+import { OutboxPublisher } from "src/outbox/outbox.publisher";
 import { SettingsService } from "src/settings/settings.service";
 import { DB_ADMIN } from "src/storage/db/db.providers";
 import { UserService } from "src/user/user.service";
@@ -64,6 +71,9 @@ export class ClassroomService {
     private readonly activityLogsService: ActivityLogsService,
     private readonly userService: UserService,
     private readonly announcementsSchedulerService: AnnouncementsSchedulerService,
+    private readonly chessStudyService: ChessStudyService,
+    private readonly outboxPublisher: OutboxPublisher,
+    @Inject(forwardRef(() => CourseService)) private readonly courseService: CourseService,
   ) {}
 
   private canManageAny(user: CurrentUserType): boolean {
@@ -780,5 +790,121 @@ export class ClassroomService {
 
   async listAllClassroomsForAdmin(includeArchived: boolean) {
     return this.repository.listAllClassroomsForAdmin(includeArchived);
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Nối lớp với LMS — course assignment (Đợt C5)
+  // ---------------------------------------------------------------------------------------
+
+  /** Same security bar as CourseService.enrollGroupsToCourse: being the classroom's teacher is
+   * not enough on its own — the caller also needs course.enrollment or to author the course.
+   * Otherwise any trainer could enroll their whole class into someone else's paid course for
+   * free by creating a classroom and pointing it at that course. */
+  private async assertCanAssignCourse(user: CurrentUserType, courseId: UUIDType) {
+    if (hasPermission(user.permissions, PERMISSIONS.COURSE_ENROLLMENT)) return;
+
+    const authorId = await this.repository.getCourseAuthorId(courseId);
+    if (authorId === null) throw new NotFoundException("classroom.error.courseNotFound");
+    if (!canUpdateCourseByAuthor(user, authorId)) {
+      throw new ForbiddenException("classroom.error.courseAssignNotAllowed");
+    }
+  }
+
+  async assignCourse(
+    classroomId: UUIDType,
+    user: CurrentUserType,
+    courseId: UUIDType,
+    isMandatory: boolean,
+    dueDate: string | null,
+  ) {
+    await this.getClassroomOrThrow(classroomId);
+    await this.assertCanManage(classroomId, user);
+    await this.assertCanAssignCourse(user, courseId);
+
+    const { newStudentIds } = await this.repository.assignCourse(
+      classroomId,
+      courseId,
+      { isMandatory, dueDate },
+      user.userId,
+    );
+
+    if (newStudentIds.length) {
+      // Mirrors CourseService.enrollGroupsToCourse: chapter/lesson progress rows must exist
+      // before the student can open the course. Not wrapped in the same DB transaction as the
+      // student_courses insert (that already committed) — same eventual-consistency shape as
+      // the rest of this multi-step flow (e.g. the outbox publish right below).
+      await Promise.all(
+        newStudentIds.map((studentId) =>
+          this.courseService.createCourseDependencies(courseId, studentId),
+        ),
+      );
+
+      await this.outboxPublisher.publish(
+        new UsersAssignedToCourseEvent({ studentIds: newStudentIds, courseId }),
+      );
+    }
+
+    await this.activityLogsService.recordActivity({
+      actor: user,
+      operation: ACTIVITY_LOG_ACTION_TYPES.ENROLL_COURSE,
+      resourceType: ACTIVITY_LOG_RESOURCE_TYPES.COURSE,
+      resourceId: courseId,
+      context: { classroomId, newStudentCount: String(newStudentIds.length) },
+    });
+
+    return this.repository.listClassroomCourses(classroomId);
+  }
+
+  async unassignCourse(classroomId: UUIDType, user: CurrentUserType, courseId: UUIDType) {
+    await this.getClassroomOrThrow(classroomId);
+    await this.assertCanManage(classroomId, user);
+
+    const result = await this.repository.unassignCourse(classroomId, courseId);
+    if (!result) {
+      throw new NotFoundException("classroom.error.courseNotAssigned");
+    }
+
+    return this.repository.listClassroomCourses(classroomId);
+  }
+
+  async listCourses(classroomId: UUIDType, user: CurrentUserType) {
+    await this.getClassroomOrThrow(classroomId);
+    await this.assertCanRead(classroomId, user);
+    return this.repository.listClassroomCourses(classroomId);
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Nối lớp với LMS — chess Study (Đợt C5)
+  // ---------------------------------------------------------------------------------------
+
+  /** Bulk-shares a Study with every active student of the classroom by inserting into the
+   * existing per-user chess_study_members table (read-only) — no new schema, no change to the
+   * chess module. Authorization is delegated entirely to ChessStudyService.addMember (study
+   * owner or chess.study.manage), same as a teacher sharing one-by-one. */
+  async assignStudy(classroomId: UUIDType, user: CurrentUserType, studyId: UUIDType) {
+    await this.getClassroomOrThrow(classroomId);
+    await this.assertCanManage(classroomId, user);
+
+    const students = await this.repository.listClassroomStudents(classroomId, false);
+
+    let assignedCount = 0;
+    for (const student of students) {
+      try {
+        await this.chessStudyService.addMember(
+          studyId,
+          { userId: student.userId, role: CHESS_STUDY_MEMBER_ROLES.READ },
+          user,
+        );
+        assignedCount++;
+      } catch (error) {
+        // The study's own author can be a classroom student in some other context —
+        // addMember rejects adding the owner as a member. Skip just that one student
+        // rather than aborting the whole bulk assignment; any other failure (not found,
+        // forbidden) is the same for every student, so it surfaces on the first iteration.
+        if (!(error instanceof BadRequestException)) throw error;
+      }
+    }
+
+    return { studentCount: assignedCount };
   }
 }

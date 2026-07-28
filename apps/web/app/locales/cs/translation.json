@@ -154,7 +154,10 @@
       "tooManyStudentsForAnnouncement": "Tato třída má více aktivních studentů, než limit pro oznámení povoluje",
       "selfRegistrationDisabled": "Samoregistrace učitelů není pro tohoto nájemce povolena",
       "alreadyTeacher": "Již máte přístup učitele",
-      "trainerRoleUnavailable": "Role školitele není pro tohoto nájemce dostupná"
+      "trainerRoleUnavailable": "Role školitele není pro tohoto nájemce dostupná",
+      "courseNotFound": "Kurz nenalezen",
+      "courseAssignNotAllowed": "Pro přiřazení tohoto kurzu potřebujete práva k zápisu nebo musíte být jeho autorem",
+      "courseNotAssigned": "Tento kurz není třídě přiřazen"
     },
     "wall": {
       "editLabel": "Nástěnka (Markdown)",
@@ -176,6 +179,35 @@
       "toast": {
         "success": "Nyní jste učitel — přihlaste se znovu pro aktivaci",
         "failed": "Nepodařilo se vás zaregistrovat jako učitele"
+      }
+    },
+    "courses": {
+      "heading": "Kurzy",
+      "assignButton": "Přiřadit kurz",
+      "dialogTitle": "Přiřadit kurz třídě",
+      "coursePickerLabel": "Kurz",
+      "coursePickerPlaceholder": "Vyberte kurz",
+      "mandatoryLabel": "Povinný",
+      "mandatoryBadge": "Povinný",
+      "dueDateLabel": "Termín (volitelné)",
+      "unassignButton": "Odebrat",
+      "empty": "Zatím nejsou přiřazeny žádné kurzy.",
+      "toast": {
+        "assigned": "Kurz přiřazen",
+        "assignFailed": "Kurz se nepodařilo přiřadit",
+        "unassigned": "Kurz odebrán",
+        "unassignFailed": "Kurz se nepodařilo odebrat"
+      }
+    },
+    "studies": {
+      "heading": "Šachové studie",
+      "shareButton": "Sdílet studii se třídou",
+      "dialogTitle": "Sdílet studii",
+      "studyPickerLabel": "Studie",
+      "studyPickerPlaceholder": "Vyberte studii",
+      "toast": {
+        "assigned": "Studie sdílena s {{count}} studenty",
+        "assignFailed": "Studii se nepodařilo sdílet"
       }
     }
   },

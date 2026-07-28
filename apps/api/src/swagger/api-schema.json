@@ -16911,6 +16911,141 @@
         }
       }
     },
+    "/api/classroom/{classroomId}/courses": {
+      "get": {
+        "operationId": "ClassroomController_listClassroomCourses",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListClassroomCoursesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "ClassroomController_assignClassroomCourse",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignClassroomCourseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignClassroomCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/courses/{courseId}": {
+      "delete": {
+        "operationId": "ClassroomController_unassignClassroomCourse",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnassignClassroomCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/studies": {
+      "post": {
+        "operationId": "ClassroomController_assignClassroomStudy",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignClassroomStudyBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignClassroomStudyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/classroom/{classroomId}/students": {
       "get": {
         "operationId": "ClassroomController_listClassroomStudents",
@@ -64501,6 +64636,17 @@
                       }
                     ]
                   },
+                  "classroomId": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
                   "timeControlId": {
                     "type": "string"
                   },
@@ -64573,6 +64719,7 @@
                   "name",
                   "format",
                   "groupId",
+                  "classroomId",
                   "timeControlId",
                   "rated",
                   "roundCount",
@@ -64687,6 +64834,10 @@
             "format": "uuid",
             "type": "string"
           },
+          "classroomId": {
+            "format": "uuid",
+            "type": "string"
+          },
           "timeControlId": {
             "anyOf": [
               {
@@ -64771,6 +64922,17 @@
                   }
                 ]
               },
+              "classroomId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "timeControlId": {
                 "type": "string"
               },
@@ -64843,6 +65005,7 @@
               "name",
               "format",
               "groupId",
+              "classroomId",
               "timeControlId",
               "rated",
               "roundCount",
@@ -64887,6 +65050,17 @@
                   }
                 ]
               },
+              "classroomId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "timeControlId": {
                 "type": "string"
               },
@@ -64959,6 +65133,7 @@
               "name",
               "format",
               "groupId",
+              "classroomId",
               "timeControlId",
               "rated",
               "roundCount",
@@ -65022,6 +65197,17 @@
                   }
                 ]
               },
+              "classroomId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "timeControlId": {
                 "type": "string"
               },
@@ -65094,6 +65280,7 @@
               "name",
               "format",
               "groupId",
+              "classroomId",
               "timeControlId",
               "rated",
               "roundCount",
@@ -65138,6 +65325,17 @@
                   }
                 ]
               },
+              "classroomId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "timeControlId": {
                 "type": "string"
               },
@@ -65210,6 +65408,7 @@
               "name",
               "format",
               "groupId",
+              "classroomId",
               "timeControlId",
               "rated",
               "roundCount",
@@ -67586,6 +67785,217 @@
         "required": [
           "message",
           "language"
+        ]
+      },
+      "ListClassroomCoursesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "courseId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "object",
+                  "patternProperties": {
+                    "^(.*)$": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "isMandatory": {
+                  "type": "boolean"
+                },
+                "dueDate": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "assignedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "courseId",
+                "title",
+                "isMandatory",
+                "dueDate",
+                "assignedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AssignClassroomCourseBody": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "isMandatory": {
+            "default": false,
+            "type": "boolean"
+          },
+          "dueDate": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "courseId"
+        ]
+      },
+      "AssignClassroomCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "courseId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "object",
+                  "patternProperties": {
+                    "^(.*)$": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "isMandatory": {
+                  "type": "boolean"
+                },
+                "dueDate": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "assignedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "courseId",
+                "title",
+                "isMandatory",
+                "dueDate",
+                "assignedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UnassignClassroomCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "courseId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "object",
+                  "patternProperties": {
+                    "^(.*)$": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "isMandatory": {
+                  "type": "boolean"
+                },
+                "dueDate": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "assignedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "courseId",
+                "title",
+                "isMandatory",
+                "dueDate",
+                "assignedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AssignClassroomStudyBody": {
+        "type": "object",
+        "properties": {
+          "studyId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "studyId"
+        ]
+      },
+      "AssignClassroomStudyResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "studentCount": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "studentCount"
+            ]
+          }
+        },
+        "required": [
+          "data"
         ]
       },
       "ListClassroomStudentsResponse": {

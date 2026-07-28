@@ -6,8 +6,11 @@ import { ClassroomService } from "../classroom.service";
 import type { ClassroomRepository } from "../classroom.repository";
 import type { ActivityLogsService } from "src/activity-logs/activity-logs.service";
 import type { AnnouncementsSchedulerService } from "src/announcements/announcements-scheduler.service";
+import type { ChessStudyService } from "src/chess/chess-study.service";
 import type { DatabasePg } from "src/common";
 import type { CurrentUserType } from "src/common/types/current-user.type";
+import type { CourseService } from "src/courses/course.service";
+import type { OutboxPublisher } from "src/outbox/outbox.publisher";
 import type { SettingsService } from "src/settings/settings.service";
 import type { UserService } from "src/user/user.service";
 
@@ -95,6 +98,10 @@ describe("ClassroomService", () => {
       findRoleIdBySlug: jest.fn().mockResolvedValue("role-trainer"),
       addUserRole: jest.fn().mockResolvedValue(undefined),
       listAllClassroomsForAdmin: jest.fn().mockResolvedValue([]),
+      getCourseAuthorId: jest.fn().mockResolvedValue(TEACHER_ID),
+      assignCourse: jest.fn().mockResolvedValue({ newStudentIds: [] }),
+      unassignCourse: jest.fn().mockResolvedValue({ unenrolledStudentIds: [] }),
+      listClassroomCourses: jest.fn().mockResolvedValue([]),
       ...repositoryOverrides,
     } as unknown as ClassroomRepository;
 
@@ -120,6 +127,18 @@ describe("ClassroomService", () => {
       createSystemAnnouncement: jest.fn().mockResolvedValue({ id: "announcement-1" }),
     } as unknown as AnnouncementsSchedulerService;
 
+    const chessStudyService = {
+      addMember: jest.fn().mockResolvedValue(undefined),
+    } as unknown as ChessStudyService;
+
+    const outboxPublisher = {
+      publish: jest.fn().mockResolvedValue(undefined),
+    } as unknown as OutboxPublisher;
+
+    const courseService = {
+      createCourseDependencies: jest.fn().mockResolvedValue(undefined),
+    } as unknown as CourseService;
+
     return {
       service: new ClassroomService(
         db,
@@ -129,12 +148,18 @@ describe("ClassroomService", () => {
         activityLogsService,
         userService,
         announcementsSchedulerService,
+        chessStudyService,
+        outboxPublisher,
+        courseService,
       ),
       repository,
       settingsService,
       activityLogsService,
       userService,
       announcementsSchedulerService,
+      chessStudyService,
+      outboxPublisher,
+      courseService,
     };
   };
 
@@ -701,6 +726,201 @@ describe("ClassroomService", () => {
 
       await service.listAllClassroomsForAdmin(true);
       expect(repository.listAllClassroomsForAdmin).toHaveBeenCalledWith(true);
+    });
+  });
+
+  describe("assignCourse (Đợt C5)", () => {
+    it("refuses a non-teacher", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(false),
+        isActiveStudent: jest.fn().mockResolvedValue(true),
+      });
+
+      await expect(
+        service.assignCourse(CLASSROOM_ID, buildUser(STUDENT_ID), "course-1", false, null),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+
+    it("refuses a teacher without course.enrollment who doesn't author the course", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        getCourseAuthorId: jest.fn().mockResolvedValue("someone-else"),
+      });
+
+      await expect(
+        service.assignCourse(CLASSROOM_ID, buildUser(TEACHER_ID), "course-1", false, null),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+
+    it("allows a teacher with course.enrollment regardless of authorship", async () => {
+      const { service, repository } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        getCourseAuthorId: jest.fn().mockResolvedValue("someone-else"),
+      });
+
+      await service.assignCourse(
+        CLASSROOM_ID,
+        buildUser(ADMIN_ID, [PERMISSIONS.COURSE_ENROLLMENT]),
+        "course-1",
+        true,
+        "2027-01-01T00:00:00.000Z",
+      );
+
+      expect(repository.assignCourse).toHaveBeenCalledWith(
+        CLASSROOM_ID,
+        "course-1",
+        { isMandatory: true, dueDate: "2027-01-01T00:00:00.000Z" },
+        ADMIN_ID,
+      );
+    });
+
+    it("creates course dependencies and publishes an event only for newly-enrolled students", async () => {
+      const { service, courseService, outboxPublisher } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        assignCourse: jest.fn().mockResolvedValue({ newStudentIds: ["new-1", "new-2"] }),
+      });
+
+      await service.assignCourse(
+        CLASSROOM_ID,
+        buildUser(TEACHER_ID, [PERMISSIONS.COURSE_ENROLLMENT]),
+        "course-1",
+        false,
+        null,
+      );
+
+      expect(courseService.createCourseDependencies).toHaveBeenCalledWith("course-1", "new-1");
+      expect(courseService.createCourseDependencies).toHaveBeenCalledWith("course-1", "new-2");
+      expect(outboxPublisher.publish).toHaveBeenCalledWith(
+        expect.objectContaining({
+          usersAssignedToCourse: { studentIds: ["new-1", "new-2"], courseId: "course-1" },
+        }),
+      );
+    });
+
+    it("skips dependency creation and event publish when no student is newly enrolled", async () => {
+      const { service, courseService, outboxPublisher } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        assignCourse: jest.fn().mockResolvedValue({ newStudentIds: [] }),
+      });
+
+      await service.assignCourse(
+        CLASSROOM_ID,
+        buildUser(TEACHER_ID, [PERMISSIONS.COURSE_ENROLLMENT]),
+        "course-1",
+        false,
+        null,
+      );
+
+      expect(courseService.createCourseDependencies).not.toHaveBeenCalled();
+      expect(outboxPublisher.publish).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("unassignCourse (Đợt C5)", () => {
+    it("throws NotFound when the course isn't currently assigned to the classroom", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        unassignCourse: jest.fn().mockResolvedValue(null),
+      });
+
+      await expect(
+        service.unassignCourse(CLASSROOM_ID, buildUser(TEACHER_ID), "course-1"),
+      ).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it("refuses a student trying to unassign", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(false),
+        isActiveStudent: jest.fn().mockResolvedValue(true),
+      });
+
+      await expect(
+        service.unassignCourse(CLASSROOM_ID, buildUser(STUDENT_ID), "course-1"),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+  });
+
+  describe("listCourses (Đợt C5)", () => {
+    it("is readable by a classroom member (student), not just teachers", async () => {
+      const { service, repository } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(false),
+        isActiveStudent: jest.fn().mockResolvedValue(true),
+      });
+
+      await service.listCourses(CLASSROOM_ID, buildUser(STUDENT_ID));
+      expect(repository.listClassroomCourses).toHaveBeenCalledWith(CLASSROOM_ID);
+    });
+  });
+
+  describe("assignStudy (Đợt C5)", () => {
+    it("refuses a non-teacher", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(false),
+        isActiveStudent: jest.fn().mockResolvedValue(true),
+      });
+
+      await expect(
+        service.assignStudy(CLASSROOM_ID, buildUser(STUDENT_ID), "study-1"),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+
+    it("shares the study with every active classroom student", async () => {
+      const { service, chessStudyService } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        listClassroomStudents: jest.fn().mockResolvedValue([
+          { userId: "s1", realName: "A", isManaged: true, archivedAt: null, notes: "" },
+          { userId: "s2", realName: "B", isManaged: true, archivedAt: null, notes: "" },
+        ]),
+      });
+
+      const result = await service.assignStudy(CLASSROOM_ID, buildUser(TEACHER_ID), "study-1");
+
+      expect(chessStudyService.addMember).toHaveBeenCalledWith(
+        "study-1",
+        { userId: "s1", role: "read" },
+        expect.anything(),
+      );
+      expect(chessStudyService.addMember).toHaveBeenCalledWith(
+        "study-1",
+        { userId: "s2", role: "read" },
+        expect.anything(),
+      );
+      expect(result.studentCount).toBe(2);
+    });
+
+    it("skips (not aborts) a student who happens to be the study's own author", async () => {
+      const { service, chessStudyService } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        listClassroomStudents: jest.fn().mockResolvedValue([
+          { userId: "s1", realName: "A", isManaged: true, archivedAt: null, notes: "" },
+          { userId: "s2", realName: "B", isManaged: true, archivedAt: null, notes: "" },
+        ]),
+      });
+      (chessStudyService.addMember as jest.Mock)
+        .mockRejectedValueOnce(new BadRequestException("chess.study.errors.cannotAddOwnerAsMember"))
+        .mockResolvedValueOnce(undefined);
+
+      const result = await service.assignStudy(CLASSROOM_ID, buildUser(TEACHER_ID), "study-1");
+
+      expect(result.studentCount).toBe(1);
+    });
+
+    it("aborts immediately on a non-BadRequest error (e.g. forbidden/not found)", async () => {
+      const { service, chessStudyService } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        listClassroomStudents: jest
+          .fn()
+          .mockResolvedValue([
+            { userId: "s1", realName: "A", isManaged: true, archivedAt: null, notes: "" },
+          ]),
+      });
+      (chessStudyService.addMember as jest.Mock).mockRejectedValueOnce(
+        new NotFoundException("chess.study.errors.studyNotFound"),
+      );
+
+      await expect(
+        service.assignStudy(CLASSROOM_ID, buildUser(TEACHER_ID), "study-1"),
+      ).rejects.toBeInstanceOf(NotFoundException);
     });
   });
 });

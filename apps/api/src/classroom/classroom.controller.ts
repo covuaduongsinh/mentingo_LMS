@@ -12,8 +12,12 @@ import { ClassroomService } from "./classroom.service";
 import {
   addClassroomTeacherBodySchema,
   adminClassroomListSchema,
+  assignClassroomCourseBodySchema,
+  assignClassroomStudyBodySchema,
+  assignClassroomStudyResponseSchema,
   bulkCreateClassroomStudentsBodySchema,
   bulkCreateClassroomStudentsResponseSchema,
+  classroomCourseListSchema,
   classroomDetailSchema,
   classroomIdForSourceGroupResponseSchema,
   classroomInviteListSchema,
@@ -39,6 +43,8 @@ import {
   updateClassroomBodySchema,
   updateClassroomStudentBodySchema,
   type AddClassroomTeacherBody,
+  type AssignClassroomCourseBody,
+  type AssignClassroomStudyBody,
   type BulkCreateClassroomStudentsBody,
   type CreateClassroomBody,
   type CreateClassroomStudentBody,
@@ -246,6 +252,86 @@ export class ClassroomController {
     @CurrentUser() user: CurrentUserType,
   ) {
     await this.classroomService.sendAnnouncement(classroomId, user, body.message, body.language);
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Nối lớp với LMS (Đợt C5)
+  // ---------------------------------------------------------------------------------------
+
+  @Get(":classroomId/courses")
+  @RequirePermission(PERMISSIONS.CLASSROOM_READ)
+  @Validate({
+    request: [{ type: "param", name: "classroomId", schema: UUIDSchema }],
+    response: baseResponse(classroomCourseListSchema),
+  })
+  async listClassroomCourses(
+    @Param("classroomId") classroomId: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.classroomService.listCourses(classroomId, user));
+  }
+
+  @Post(":classroomId/courses")
+  @RequirePermission(PERMISSIONS.CLASSROOM_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "classroomId", schema: UUIDSchema },
+      { type: "body", schema: assignClassroomCourseBodySchema },
+    ],
+    response: baseResponse(classroomCourseListSchema),
+  })
+  async assignClassroomCourse(
+    @Param("classroomId") classroomId: UUIDType,
+    @Body() body: AssignClassroomCourseBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(
+      await this.classroomService.assignCourse(
+        classroomId,
+        user,
+        body.courseId,
+        body.isMandatory ?? false,
+        body.dueDate ?? null,
+      ),
+    );
+  }
+
+  @Delete(":classroomId/courses/:courseId")
+  @RequirePermission(PERMISSIONS.CLASSROOM_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "classroomId", schema: UUIDSchema },
+      { type: "param", name: "courseId", schema: UUIDSchema },
+    ],
+    response: baseResponse(classroomCourseListSchema),
+  })
+  async unassignClassroomCourse(
+    @Param("classroomId") classroomId: UUIDType,
+    @Param("courseId") courseId: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(
+      await this.classroomService.unassignCourse(classroomId, user, courseId),
+    );
+  }
+
+  @Post(":classroomId/studies")
+  @RequirePermission(PERMISSIONS.CLASSROOM_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "classroomId", schema: UUIDSchema },
+      { type: "body", schema: assignClassroomStudyBodySchema },
+    ],
+    response: baseResponse(assignClassroomStudyResponseSchema),
+  })
+  async assignClassroomStudy(
+    @Param("classroomId") classroomId: UUIDType,
+    @Body() body: AssignClassroomStudyBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(
+      await this.classroomService.assignStudy(classroomId, user, body.studyId),
+    );
   }
 
   // ---------------------------------------------------------------------------------------

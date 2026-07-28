@@ -154,7 +154,10 @@
       "tooManyStudentsForAnnouncement": "Diese Klasse hat mehr aktive Schüler als das Limit für Ankündigungen erlaubt",
       "selfRegistrationDisabled": "Die Selbstregistrierung als Lehrkraft ist für diesen Mandanten nicht aktiviert",
       "alreadyTeacher": "Du hast bereits Lehrkraft-Zugriff",
-      "trainerRoleUnavailable": "Die Trainer-Rolle ist für diesen Mandanten nicht verfügbar"
+      "trainerRoleUnavailable": "Die Trainer-Rolle ist für diesen Mandanten nicht verfügbar",
+      "courseNotFound": "Kurs nicht gefunden",
+      "courseAssignNotAllowed": "Du benötigst Einschreibungsrechte oder musst Autor dieses Kurses sein, um ihn zuzuweisen",
+      "courseNotAssigned": "Dieser Kurs ist der Klasse nicht zugewiesen"
     },
     "wall": {
       "editLabel": "Anschlagtafel (Markdown)",
@@ -176,6 +179,35 @@
       "toast": {
         "success": "Du bist jetzt Lehrkraft — melde dich erneut an, um es zu aktivieren",
         "failed": "Registrierung als Lehrkraft fehlgeschlagen"
+      }
+    },
+    "courses": {
+      "heading": "Kurse",
+      "assignButton": "Kurs zuweisen",
+      "dialogTitle": "Kurs der Klasse zuweisen",
+      "coursePickerLabel": "Kurs",
+      "coursePickerPlaceholder": "Kurs auswählen",
+      "mandatoryLabel": "Verpflichtend",
+      "mandatoryBadge": "Verpflichtend",
+      "dueDateLabel": "Fälligkeitsdatum (optional)",
+      "unassignButton": "Entfernen",
+      "empty": "Noch keine Kurse zugewiesen.",
+      "toast": {
+        "assigned": "Kurs zugewiesen",
+        "assignFailed": "Kurs konnte nicht zugewiesen werden",
+        "unassigned": "Kurs entfernt",
+        "unassignFailed": "Kurs konnte nicht entfernt werden"
+      }
+    },
+    "studies": {
+      "heading": "Schachstudien",
+      "shareButton": "Studie mit der Klasse teilen",
+      "dialogTitle": "Studie teilen",
+      "studyPickerLabel": "Studie",
+      "studyPickerPlaceholder": "Studie auswählen",
+      "toast": {
+        "assigned": "Studie mit {{count}} Schülern geteilt",
+        "assignFailed": "Studie konnte nicht geteilt werden"
       }
     }
   },

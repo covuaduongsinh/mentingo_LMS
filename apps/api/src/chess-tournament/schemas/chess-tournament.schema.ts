@@ -10,6 +10,9 @@ export const createTournamentBodySchema = Type.Object({
   name: Type.String({ minLength: 1, maxLength: 200 }),
   format: chessTournamentFormatSchema,
   groupId: Type.Optional(UUIDSchema),
+  // Đợt C5 — same "bulk eligibility, not auto-join" scoping as groupId, for the Classroom
+  // entity. A tournament may set either, both, or neither.
+  classroomId: Type.Optional(UUIDSchema),
   timeControlId: chessTimeControlIdSchema,
   rated: Type.Optional(Type.Boolean()),
   roundCount: Type.Optional(Type.Integer({ minimum: 1, maximum: 30 })),
@@ -35,6 +38,7 @@ export const chessTournamentSchema = Type.Object({
   name: Type.String(),
   format: Type.String(),
   groupId: Type.Union([UUIDSchema, Type.Null()]),
+  classroomId: Type.Union([UUIDSchema, Type.Null()]),
   timeControlId: Type.String(),
   rated: Type.Boolean(),
   roundCount: Type.Union([Type.Number(), Type.Null()]),

@@ -491,7 +491,9 @@
       "bulkPairingHelp": "Instantly pairs every member of the group by current rating and starts games right away.",
       "simulHelp": "You'll play one board against every member of this group at once.",
       "pairNow": "Pair everyone now",
-      "submit": "Create tournament"
+      "submit": "Create tournament",
+      "classroom": "Classroom (optional)",
+      "selectClassroom": "Select a classroom"
     },
     "detail": {
       "round": "Round {{current}} / {{total}}",
@@ -783,7 +785,10 @@
       "tooManyStudentsForAnnouncement": "This classroom has more active students than its cap allows announcements for",
       "selfRegistrationDisabled": "Teacher self-registration is not enabled for this tenant",
       "alreadyTeacher": "You already have teacher access",
-      "trainerRoleUnavailable": "The trainer role is not available for this tenant"
+      "trainerRoleUnavailable": "The trainer role is not available for this tenant",
+      "courseNotFound": "Course not found",
+      "courseAssignNotAllowed": "You need course enrollment rights or to author this course to assign it",
+      "courseNotAssigned": "This course isn't assigned to the classroom"
     },
     "wall": {
       "editLabel": "Bulletin board (Markdown)",
@@ -805,6 +810,35 @@
       "toast": {
         "success": "You're now a teacher — sign in again to activate it",
         "failed": "Could not register you as a teacher"
+      }
+    },
+    "courses": {
+      "heading": "Courses",
+      "assignButton": "Assign a course",
+      "dialogTitle": "Assign a course to the class",
+      "coursePickerLabel": "Course",
+      "coursePickerPlaceholder": "Select a course",
+      "mandatoryLabel": "Mandatory",
+      "mandatoryBadge": "Mandatory",
+      "dueDateLabel": "Due date (optional)",
+      "unassignButton": "Remove",
+      "empty": "No courses assigned yet.",
+      "toast": {
+        "assigned": "Course assigned",
+        "assignFailed": "Could not assign the course",
+        "unassigned": "Course removed",
+        "unassignFailed": "Could not remove the course"
+      }
+    },
+    "studies": {
+      "heading": "Chess studies",
+      "shareButton": "Share a study with the class",
+      "dialogTitle": "Share a study",
+      "studyPickerLabel": "Study",
+      "studyPickerPlaceholder": "Select a study",
+      "toast": {
+        "assigned": "Study shared with {{count}} students",
+        "assignFailed": "Could not share the study"
       }
     }
   },

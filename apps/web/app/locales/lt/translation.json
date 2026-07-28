@@ -154,7 +154,10 @@
       "tooManyStudentsForAnnouncement": "Šioje klasėje daugiau aktyvių mokinių, nei leidžia pranešimų riba",
       "selfRegistrationDisabled": "Šiam nuomininkui savarankiška mokytojų registracija neįjungta",
       "alreadyTeacher": "Jūs jau turite mokytojo teises",
-      "trainerRoleUnavailable": "Trenerio vaidmuo šiam nuomininkui nepasiekiamas"
+      "trainerRoleUnavailable": "Trenerio vaidmuo šiam nuomininkui nepasiekiamas",
+      "courseNotFound": "Kursas nerastas",
+      "courseAssignNotAllowed": "Norėdami priskirti šį kursą, turite turėti įtraukimo teises arba būti jo autoriumi",
+      "courseNotAssigned": "Šis kursas nepriskirtas klasei"
     },
     "wall": {
       "editLabel": "Skelbimų lenta (Markdown)",
@@ -176,6 +179,35 @@
       "toast": {
         "success": "Dabar esate mokytojas — prisijunkite iš naujo, kad aktyvuotumėte",
         "failed": "Nepavyko užregistruoti jūsų kaip mokytojo"
+      }
+    },
+    "courses": {
+      "heading": "Kursai",
+      "assignButton": "Priskirti kursą",
+      "dialogTitle": "Priskirti kursą klasei",
+      "coursePickerLabel": "Kursas",
+      "coursePickerPlaceholder": "Pasirinkite kursą",
+      "mandatoryLabel": "Privalomas",
+      "mandatoryBadge": "Privalomas",
+      "dueDateLabel": "Terminas (neprivaloma)",
+      "unassignButton": "Pašalinti",
+      "empty": "Kursų dar nepriskirta.",
+      "toast": {
+        "assigned": "Kursas priskirtas",
+        "assignFailed": "Nepavyko priskirti kurso",
+        "unassigned": "Kursas pašalintas",
+        "unassignFailed": "Nepavyko pašalinti kurso"
+      }
+    },
+    "studies": {
+      "heading": "Šachmatų studijos",
+      "shareButton": "Bendrinti studiją su klase",
+      "dialogTitle": "Bendrinti studiją",
+      "studyPickerLabel": "Studija",
+      "studyPickerPlaceholder": "Pasirinkite studiją",
+      "toast": {
+        "assigned": "Studija bendrinama su {{count}} mokinių",
+        "assignFailed": "Nepavyko bendrinti studijos"
       }
     }
   },

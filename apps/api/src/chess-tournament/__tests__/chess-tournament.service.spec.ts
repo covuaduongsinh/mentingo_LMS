@@ -59,6 +59,7 @@ describe("ChessTournamentService", () => {
       insertPlayers: jest.fn().mockResolvedValue(undefined),
       getPlayersWithNames: jest.fn().mockResolvedValue([]),
       getGroupMemberIds: jest.fn().mockResolvedValue([]),
+      getClassroomStudentIds: jest.fn().mockResolvedValue([]),
       insertPairings: jest.fn().mockImplementation((rows) => Promise.resolve(rows)),
       getPairings: jest.fn().mockResolvedValue([]),
       getPairingsForRound: jest.fn().mockResolvedValue([]),
@@ -180,6 +181,53 @@ describe("ChessTournamentService", () => {
 
       expect(repository.insertPlayers).toHaveBeenCalledWith(TOURNAMENT_ID, ["s1", "s2"]);
     });
+
+    it("passes classroomId through to the repository (Đợt C5)", async () => {
+      const { service, repository } = buildService();
+
+      await service.createTournament(buildUser(TEACHER_ID), {
+        name: "Swiss",
+        format: "swiss",
+        timeControlId: "5+0",
+        roundCount: 3,
+        classroomId: "classroom-1",
+      });
+
+      expect(repository.createTournament).toHaveBeenCalledWith(
+        expect.objectContaining({ classroomId: "classroom-1" }),
+      );
+    });
+
+    it("defaults simul participants to classroom students when no group/explicit list is given (Đợt C5)", async () => {
+      const { service, repository } = buildService({
+        getClassroomStudentIds: jest.fn().mockResolvedValue(["cs1", "cs2"]),
+      });
+
+      await service.createTournament(buildUser(TEACHER_ID), {
+        name: "Simul",
+        format: "simul",
+        timeControlId: "5+0",
+        classroomId: "classroom-1",
+      });
+
+      expect(repository.getClassroomStudentIds).toHaveBeenCalledWith("classroom-1");
+      expect(repository.insertPlayers).toHaveBeenCalledWith(TOURNAMENT_ID, ["cs1", "cs2"]);
+    });
+
+    it("does not auto-add players for a swiss tournament scoped to a classroom (Đợt C5)", async () => {
+      const { service, repository } = buildService();
+
+      await service.createTournament(buildUser(TEACHER_ID), {
+        name: "Swiss",
+        format: "swiss",
+        timeControlId: "5+0",
+        roundCount: 3,
+        classroomId: "classroom-1",
+      });
+
+      expect(repository.getClassroomStudentIds).not.toHaveBeenCalled();
+      expect(repository.insertPlayers).not.toHaveBeenCalled();
+    });
   });
 
   describe("joinTournament", () => {
@@ -234,6 +282,32 @@ describe("ChessTournamentService", () => {
     it("allows an eligible player to join", async () => {
       const { service, repository } = buildService({
         getGroupMemberIds: jest.fn().mockResolvedValue(["p1"]),
+      });
+
+      await service.joinTournament(buildUser("p1"), TOURNAMENT_ID);
+
+      expect(repository.insertPlayer).toHaveBeenCalledWith(TOURNAMENT_ID, "p1");
+    });
+
+    it("throws when the user is not a member of the tournament's classroom (Đợt C5)", async () => {
+      const { service } = buildService({
+        getTournamentById: jest
+          .fn()
+          .mockResolvedValue(buildTournament({ groupId: null, classroomId: "classroom-1" })),
+        getClassroomStudentIds: jest.fn().mockResolvedValue(["other"]),
+      });
+
+      await expect(service.joinTournament(buildUser("p1"), TOURNAMENT_ID)).rejects.toBeInstanceOf(
+        ForbiddenException,
+      );
+    });
+
+    it("allows an eligible classroom student to join a classroom-scoped tournament", async () => {
+      const { service, repository } = buildService({
+        getTournamentById: jest
+          .fn()
+          .mockResolvedValue(buildTournament({ groupId: null, classroomId: "classroom-1" })),
+        getClassroomStudentIds: jest.fn().mockResolvedValue(["p1"]),
       });
 
       await service.joinTournament(buildUser("p1"), TOURNAMENT_ID);
