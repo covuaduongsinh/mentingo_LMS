@@ -19,6 +19,7 @@
       "bulkActionsButton": "Działania zbiorcze",
       "addButton": "Dodaj ucznia",
       "realName": "Imię i nazwisko",
+      "you": "Ty",
       "username": "Nazwa użytkownika",
       "status": "Status",
       "managedBadge": "Zarządzane",
@@ -1452,7 +1453,8 @@
     "validation": {
       "oldPassword": "Stare hasło jest wymagane",
       "newPassword": "Nowe hasło jest wymagane",
-      "passwordsDontMatch": "Hasła się nie zgadzają"
+      "passwordsDontMatch": "Hasła się nie zgadzają",
+      "managedAccountForbidden": "To konto jest zarządzane przez nauczyciela i nie może samodzielnie zmienić hasła."
     },
     "toast": {
       "passwordChangedSuccessfully": "Hasło zostało zmienione pomyślnie",

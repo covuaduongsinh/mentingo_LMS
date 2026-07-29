@@ -650,6 +650,7 @@
       "bulkActionsButton": "Thao tác hàng loạt",
       "addButton": "Thêm học sinh",
       "realName": "Tên",
+      "you": "Bạn",
       "username": "Tên đăng nhập",
       "status": "Trạng thái",
       "managedBadge": "Do GV quản lý",
@@ -1860,7 +1861,8 @@
     "validation": {
       "oldPassword": "Cần có mật khẩu cũ",
       "newPassword": "Cần có mật khẩu mới",
-      "passwordsDontMatch": "Mật khẩu không khớp"
+      "passwordsDontMatch": "Mật khẩu không khớp",
+      "managedAccountForbidden": "Tài khoản này do giáo viên quản lý, không thể tự đổi mật khẩu."
     },
     "toast": {
       "passwordChangedSuccessfully": "Đã đổi mật khẩu thành công",

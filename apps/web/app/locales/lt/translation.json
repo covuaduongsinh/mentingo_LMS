@@ -19,6 +19,7 @@
       "bulkActionsButton": "Masiniai veiksmai",
       "addButton": "Pridėti mokinį",
       "realName": "Vardas",
+      "you": "Tu",
       "username": "Naudotojo vardas",
       "status": "Būsena",
       "managedBadge": "Valdoma",
@@ -1228,7 +1229,8 @@
     "validation": {
       "oldPassword": "Reikalingas senas slaptažodis",
       "newPassword": "Reikalingas naujas slaptažodis",
-      "passwordsDontMatch": "Slaptažodžiai nesutampa"
+      "passwordsDontMatch": "Slaptažodžiai nesutampa",
+      "managedAccountForbidden": "Šią paskyrą valdo mokytojas, todėl ji negali pati pasikeisti slaptažodžio."
     },
     "toast": {
       "passwordChangedSuccessfully": "Slaptažodis pakeistas sėkmingai",

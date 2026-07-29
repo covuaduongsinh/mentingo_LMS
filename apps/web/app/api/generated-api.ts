@@ -9337,7 +9337,7 @@ export interface ListClassroomStudentsResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9387,7 +9387,7 @@ export interface GetClassroomStudentDetailResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9409,7 +9409,7 @@ export interface UpdateClassroomStudentResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9425,7 +9425,7 @@ export interface SetClassroomStudentArchivedResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9459,7 +9459,7 @@ export interface MoveClassroomStudentResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9479,7 +9479,7 @@ export interface RunClassroomBulkActionResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;

@@ -68046,7 +68046,14 @@
                   "type": "string"
                 },
                 "realName": {
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 },
                 "notes": {
                   "type": "string"
@@ -68207,7 +68214,14 @@
                 "type": "string"
               },
               "realName": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "notes": {
                 "type": "string"
@@ -68275,7 +68289,14 @@
                 "type": "string"
               },
               "realName": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "notes": {
                 "type": "string"
@@ -68340,7 +68361,14 @@
                 "type": "string"
               },
               "realName": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "notes": {
                 "type": "string"
@@ -68458,7 +68486,14 @@
                   "type": "string"
                 },
                 "realName": {
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 },
                 "notes": {
                   "type": "string"
@@ -68556,7 +68591,14 @@
                   "type": "string"
                 },
                 "realName": {
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 },
                 "notes": {
                   "type": "string"

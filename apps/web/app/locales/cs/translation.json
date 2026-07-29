@@ -19,6 +19,7 @@
       "bulkActionsButton": "Hromadné akce",
       "addButton": "Přidat žáka",
       "realName": "Jméno",
+      "you": "Ty",
       "username": "Uživatelské jméno",
       "status": "Stav",
       "managedBadge": "Spravovaný",
@@ -1228,7 +1229,8 @@
     "validation": {
       "oldPassword": "Je vyžadováno staré heslo",
       "newPassword": "Je vyžadováno nové heslo",
-      "passwordsDontMatch": "Hesla se neshodují"
+      "passwordsDontMatch": "Hesla se neshodují",
+      "managedAccountForbidden": "Tento účet spravuje učitel a nemůže si sám změnit heslo."
     },
     "toast": {
       "passwordChangedSuccessfully": "Heslo bylo úspěšně změněno",

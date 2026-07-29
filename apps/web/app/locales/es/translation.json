@@ -19,6 +19,7 @@
       "bulkActionsButton": "Acciones masivas",
       "addButton": "Añadir estudiante",
       "realName": "Nombre",
+      "you": "Tú",
       "username": "Nombre de usuario",
       "status": "Estado",
       "managedBadge": "Gestionado",
@@ -1229,7 +1230,8 @@
     "validation": {
       "oldPassword": "Se requiere contraseña antigua",
       "newPassword": "Se requiere nueva contraseña",
-      "passwordsDontMatch": "Las contraseñas no coinciden"
+      "passwordsDontMatch": "Las contraseñas no coinciden",
+      "managedAccountForbidden": "Esta cuenta está gestionada por un profesor y no puede cambiar su propia contraseña."
     },
     "toast": {
       "passwordChangedSuccessfully": "La contraseña se cambió correctamente",

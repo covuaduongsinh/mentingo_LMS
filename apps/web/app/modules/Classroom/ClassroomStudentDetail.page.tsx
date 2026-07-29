@@ -244,7 +244,10 @@ export default function ClassroomStudentDetailPage() {
       title: t("classroom.students.title", { defaultValue: "Students" }),
       href: `/classrooms/${classroomId}/students`,
     },
-    { title: student?.realName ?? "", href: `/classrooms/${classroomId}/students/${userId}` },
+    {
+      title: student?.realName ?? t("classroom.students.you", { defaultValue: "You" }),
+      href: `/classrooms/${classroomId}/students/${userId}`,
+    },
   ];
 
   if (isLoading || !student) {
@@ -262,7 +265,9 @@ export default function ClassroomStudentDetailPage() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <h1 className="h4 text-neutral-950">{student.realName}</h1>
+            <h1 className="h4 text-neutral-950">
+              {student.realName ?? t("classroom.students.you", { defaultValue: "You" })}
+            </h1>
             {student.isManaged && (
               <Badge variant="outline">
                 {t("classroom.students.managedBadge", { defaultValue: "Managed" })}

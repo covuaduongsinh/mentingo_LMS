@@ -124,6 +124,16 @@ export class ClassroomService {
     return classroom;
   }
 
+  /** Đợt C7: the roster's `realName` is teacher-entered PII for identifying the child, not a
+   * profile field the account owner needs echoed back to them — hide a viewer's own row instead
+   * of leaking it through a serializer meant for looking at *other* people. */
+  private maskOwnRealName<T extends { userId: UUIDType; realName: string }>(
+    row: T,
+    viewerUserId: UUIDType,
+  ): Omit<T, "realName"> & { realName: string | null } {
+    return row.userId === viewerUserId ? { ...row, realName: null } : row;
+  }
+
   private async getManagedStudentOrThrow(classroomId: UUIDType, userId: UUIDType) {
     const student = await this.repository.getClassroomStudent(classroomId, userId);
     if (!student) {
@@ -229,7 +239,8 @@ export class ClassroomService {
   async listStudents(classroomId: UUIDType, user: CurrentUserType, includeArchived: boolean) {
     await this.getClassroomOrThrow(classroomId);
     await this.assertCanRead(classroomId, user);
-    return this.repository.listClassroomStudents(classroomId, includeArchived);
+    const students = await this.repository.listClassroomStudents(classroomId, includeArchived);
+    return students.map((student) => this.maskOwnRealName(student, user.userId));
   }
 
   async getStudentDetail(classroomId: UUIDType, user: CurrentUserType, targetUserId: UUIDType) {
@@ -240,7 +251,7 @@ export class ClassroomService {
     if (!student) {
       throw new NotFoundException("classroom.error.studentNotFound");
     }
-    return student;
+    return this.maskOwnRealName(student, user.userId);
   }
 
   async updateStudent(

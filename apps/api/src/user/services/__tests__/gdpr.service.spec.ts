@@ -1,5 +1,7 @@
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 
+import { classroomInvites, classroomStudents, classroomTeachers } from "src/storage/schema";
+
 import { GdprService } from "../gdpr.service";
 
 import type { DatabasePg } from "src/common";
@@ -105,6 +107,21 @@ describe("GdprService", () => {
       await service.anonymizeUser(actor, USER_ID);
 
       expect(trxUpdate).toHaveBeenCalled();
+    });
+
+    it("ghosts the user's classroom footprint (Đợt C7) — teacher rows, student profile, invites", async () => {
+      const { service, trxDelete } = buildService([
+        [{ id: USER_ID, tenantId: TENANT_ID }],
+        [{ remainingAdmins: 1 }],
+        [{ id: USER_ID }],
+      ]);
+
+      await service.anonymizeUser(actor, USER_ID);
+
+      const deletedTables = trxDelete.mock.calls.map((call) => call[0]);
+      expect(deletedTables).toContain(classroomTeachers);
+      expect(deletedTables).toContain(classroomStudents);
+      expect(deletedTables).toContain(classroomInvites);
     });
   });
 });

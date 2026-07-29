@@ -100,7 +100,7 @@ export default function ClassroomStudentsListPage() {
                       className="text-primary-700 hover:underline"
                       to={`/classrooms/${classroomId}/students/${student.userId}`}
                     >
-                      {student.realName}
+                      {student.realName ?? t("classroom.students.you", { defaultValue: "You" })}
                     </Link>
                   </TableCell>
                   <TableCell className="font-mono">{student.username}</TableCell>

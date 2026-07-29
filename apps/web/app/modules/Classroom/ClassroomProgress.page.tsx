@@ -159,7 +159,10 @@ export default function ClassroomProgressPage() {
                     <TableBody>
                       {report.chess.students.map((student: ChessStudentProgress) => (
                         <TableRow key={student.userId}>
-                          <TableCell>{student.realName}</TableCell>
+                          <TableCell>
+                            {student.realName ??
+                              t("classroom.students.you", { defaultValue: "You" })}
+                          </TableCell>
                           <TableCell>
                             {student.ratings.length === 0 ? (
                               <span className="text-neutral-500">—</span>
@@ -257,7 +260,12 @@ export default function ClassroomProgressPage() {
                             );
                             return (
                               <TableRow key={student.userId}>
-                                <TableCell>{chessStudent?.realName ?? student.userId}</TableCell>
+                                <TableCell>
+                                  {chessStudent
+                                    ? (chessStudent.realName ??
+                                      t("classroom.students.you", { defaultValue: "You" }))
+                                    : student.userId}
+                                </TableCell>
                                 <TableCell>
                                   <Badge
                                     variant={

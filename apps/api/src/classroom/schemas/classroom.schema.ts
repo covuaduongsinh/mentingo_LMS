@@ -69,7 +69,9 @@ export const classroomTeacherListSchema = Type.Array(classroomTeacherSchema);
 
 export const classroomStudentSchema = Type.Object({
   userId: UUIDSchema,
-  realName: Type.String(),
+  // Đợt C7: null when the caller is looking at their own row — see
+  // ClassroomService.maskOwnRealName.
+  realName: Type.Union([Type.String(), Type.Null()]),
   notes: Type.String(),
   isManaged: Type.Boolean(),
   archivedAt: Type.Union([Type.String(), Type.Null()]),

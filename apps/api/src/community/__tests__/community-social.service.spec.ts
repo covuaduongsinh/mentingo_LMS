@@ -30,7 +30,7 @@ describe("CommunitySocialService", () => {
   beforeEach(() => {
     repo = {
       getManagedStatus: jest.fn().mockResolvedValue(false),
-      sharesClassmateRelationship: jest.fn().mockResolvedValue(false),
+      canInteractAsManagedAccount: jest.fn().mockResolvedValue(false),
       getOrCreateConversation: jest
         .fn()
         .mockResolvedValue({ id: CONVERSATION_ID, userAId: ACTOR_ID, userBId: TARGET_ID }),
@@ -90,7 +90,7 @@ describe("CommunitySocialService", () => {
 
     it("rejects a managed account messaging someone outside their class", async () => {
       repo.getManagedStatus.mockResolvedValueOnce(true); // actor is managed
-      repo.sharesClassmateRelationship.mockResolvedValue(false);
+      repo.canInteractAsManagedAccount.mockResolvedValue(false);
 
       await expect(service.sendMessage(buildActor(), TARGET_ID, "hi")).rejects.toThrow(
         ForbiddenException,
@@ -99,7 +99,7 @@ describe("CommunitySocialService", () => {
 
     it("allows a managed account to message a classmate, creates the message, and notifies realtime", async () => {
       repo.getManagedStatus.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
-      repo.sharesClassmateRelationship.mockResolvedValue(true);
+      repo.canInteractAsManagedAccount.mockResolvedValue(true);
 
       const message = await service.sendMessage(buildActor(), TARGET_ID, "hi there");
 
@@ -168,7 +168,7 @@ describe("CommunitySocialService", () => {
 
     it("rejects a managed account following someone outside their class", async () => {
       repo.getManagedStatus.mockResolvedValueOnce(true);
-      repo.sharesClassmateRelationship.mockResolvedValue(false);
+      repo.canInteractAsManagedAccount.mockResolvedValue(false);
 
       await expect(service.follow(buildActor(), TARGET_ID)).rejects.toThrow(ForbiddenException);
     });

@@ -328,6 +328,79 @@ describe("ClassroomService", () => {
     });
   });
 
+  describe("listStudents / getStudentDetail — realName masking (Đợt C7)", () => {
+    it("hides a student's own realName from themselves but not their classmates'", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(false),
+        isActiveStudent: jest.fn().mockResolvedValue(true),
+        listClassroomStudents: jest.fn().mockResolvedValue([
+          {
+            userId: STUDENT_ID,
+            realName: "Nguyễn Văn A",
+            notes: "",
+            isManaged: true,
+            archivedAt: null,
+            username: "a",
+          },
+          {
+            userId: "s2",
+            realName: "Trần Thị B",
+            notes: "",
+            isManaged: true,
+            archivedAt: null,
+            username: "b",
+          },
+        ]),
+      });
+
+      const result = await service.listStudents(CLASSROOM_ID, buildUser(STUDENT_ID), false);
+
+      expect(result.find((student) => student.userId === STUDENT_ID)?.realName).toBeNull();
+      expect(result.find((student) => student.userId === "s2")?.realName).toBe("Trần Thị B");
+    });
+
+    it("shows a teacher every student's realName, including a student who happens to share their own userId", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        listClassroomStudents: jest.fn().mockResolvedValue([
+          {
+            userId: "s2",
+            realName: "Trần Thị B",
+            notes: "",
+            isManaged: true,
+            archivedAt: null,
+            username: "b",
+          },
+        ]),
+      });
+
+      const result = await service.listStudents(CLASSROOM_ID, buildUser(TEACHER_ID), false);
+      expect(result[0].realName).toBe("Trần Thị B");
+    });
+
+    it("getStudentDetail masks realName when the teacher looks up their own userId as a student row", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        getClassroomStudent: jest.fn().mockResolvedValue({
+          userId: TEACHER_ID,
+          classroomId: CLASSROOM_ID,
+          realName: "Should Be Hidden",
+          notes: "",
+          isManaged: true,
+          archivedAt: null,
+          username: "t",
+        }),
+      });
+
+      const result = await service.getStudentDetail(
+        CLASSROOM_ID,
+        buildUser(TEACHER_ID),
+        TEACHER_ID,
+      );
+      expect(result.realName).toBeNull();
+    });
+  });
+
   describe("createStudent (Đợt C3)", () => {
     it("refuses to create a student once the classroom is already at the cap", async () => {
       const { service } = buildService({

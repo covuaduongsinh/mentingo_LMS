@@ -650,6 +650,7 @@
       "bulkActionsButton": "Bulk actions",
       "addButton": "Add student",
       "realName": "Name",
+      "you": "You",
       "username": "Username",
       "status": "Status",
       "managedBadge": "Managed",
@@ -1860,7 +1861,8 @@
     "validation": {
       "oldPassword": "Old password is required",
       "newPassword": "New password is required",
-      "passwordsDontMatch": "Passwords do not match"
+      "passwordsDontMatch": "Passwords do not match",
+      "managedAccountForbidden": "This account is managed by a teacher and can't change its own password."
     },
     "toast": {
       "passwordChangedSuccessfully": "Password changed successfully",
