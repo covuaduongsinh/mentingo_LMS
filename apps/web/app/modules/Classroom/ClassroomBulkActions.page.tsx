@@ -114,7 +114,9 @@ export default function ClassroomBulkActionsPage() {
                         onCheckedChange={() => toggleSelected(student.userId)}
                       />
                     </TableCell>
-                    <TableCell>{student.realName}</TableCell>
+                    <TableCell>
+                      {student.realName ?? t("classroom.students.you", { defaultValue: "You" })}
+                    </TableCell>
                     <TableCell>
                       {student.archivedAt
                         ? t("classroom.students.archivedBadge", { defaultValue: "Archived" })

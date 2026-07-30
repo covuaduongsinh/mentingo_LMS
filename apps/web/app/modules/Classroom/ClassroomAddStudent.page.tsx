@@ -139,11 +139,16 @@ function CreateOneCard({ classroomId }: { classroomId: string }) {
           </Label>
           <Input
             id="create-one-realname"
+            data-testid="classroom-add-student-realname-input"
             value={realName}
             onChange={(event) => setRealName(event.target.value)}
           />
         </div>
-        <Button onClick={handleCreate} disabled={!realName.trim() || isPending}>
+        <Button
+          data-testid="classroom-add-student-submit"
+          onClick={handleCreate}
+          disabled={!realName.trim() || isPending}
+        >
           {t("classroom.addStudent.createButton", { defaultValue: "Create account" })}
         </Button>
         <CreatedCredentialsTable rows={created} />

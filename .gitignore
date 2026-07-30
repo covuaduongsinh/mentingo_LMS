@@ -60,3 +60,6 @@ apps/api/api-stdout.log
 apps/api/api-stderr.log
 
 tmp-*.log
+
+# Local Redis dumps from running redis-server in a repo directory during dev
+*.rdb

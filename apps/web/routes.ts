@@ -75,6 +75,7 @@ export const routes: (
             "classrooms/:classroomId/students",
             "modules/Classroom/ClassroomStudentsList.page.tsx",
           );
+          route("classrooms/:classroomId/progress", "modules/Classroom/ClassroomProgress.page.tsx");
           route(
             "classrooms/:classroomId/students/add",
             "modules/Classroom/ClassroomAddStudent.page.tsx",
@@ -139,7 +140,6 @@ export const routes: (
           route("activity-logs", "modules/ActivityLogs/ActivityLogs.page.tsx");
           route("chess/exercises", "modules/Chess/Admin/ChessExercisesAdmin.page.tsx");
           route("chess/games", "modules/Chess/Admin/ChessGamesAdmin.page.tsx");
-          route("chess/classes/:groupId", "modules/Chess/Admin/ChessClassManagement.page.tsx");
           route("chess/tournaments/new", "modules/Chess/Admin/ChessTournamentCreate.page.tsx");
           route(
             "assignments/:lessonId/grading",

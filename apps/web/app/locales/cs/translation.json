@@ -1,7 +1,8 @@
 {
   "classroom": {
     "nav": {
-      "title": "Třídy"
+      "title": "Třídy",
+      "viewClassroom": "Zobrazit odpovídající třídu"
     },
     "list": {
       "teachingHeading": "Třídy, které učíte",
@@ -19,6 +20,7 @@
       "bulkActionsButton": "Hromadné akce",
       "addButton": "Přidat žáka",
       "realName": "Jméno",
+      "you": "Ty",
       "username": "Uživatelské jméno",
       "status": "Stav",
       "managedBadge": "Spravovaný",
@@ -157,7 +159,8 @@
       "trainerRoleUnavailable": "Role školitele není pro tohoto nájemce dostupná",
       "courseNotFound": "Kurz nenalezen",
       "courseAssignNotAllowed": "Pro přiřazení tohoto kurzu potřebujete práva k zápisu nebo musíte být jeho autorem",
-      "courseNotAssigned": "Tento kurz není třídě přiřazen"
+      "courseNotAssigned": "Tento kurz není třídě přiřazen",
+      "noManagedStudentsInClassroom": "Tato třída nemá žádné spravované účty studentů"
     },
     "wall": {
       "editLabel": "Nástěnka (Markdown)",
@@ -208,6 +211,45 @@
       "toast": {
         "assigned": "Studie sdílena s {{count}} studenty",
         "assignFailed": "Studii se nepodařilo sdílet"
+      }
+    },
+    "progress": {
+      "title": "Zpráva o pokroku",
+      "daysOption": "Posledních {{count}} dní",
+      "chessHeading": "Šachy",
+      "classAverageWinRate": "Prům. úspěšnost třídy: {{value}}",
+      "classAveragePuzzleAccuracy": "Prům. přesnost úloh třídy: {{value}}",
+      "classAverageLearn": "Prům. pokrok v Nauč se třídy: {{value}}%",
+      "chessEmpty": "V této třídě zatím nejsou žádní studenti.",
+      "ratings": "Hodnocení",
+      "matches": "Partie",
+      "winRate": "Úspěšnost",
+      "puzzles": "Šachové úlohy",
+      "playDuration": "Doba hraní",
+      "learn": "Nauč se",
+      "currentRating": "nyní {{value}}",
+      "minutes": "{{count}} min",
+      "coursesHeading": "Kurzy",
+      "coursesEmpty": "Této třídě zatím nebyl přiřazen žádný kurz.",
+      "courseAverage": "Prům. dokončení: {{value}}%",
+      "status": "Stav",
+      "chapters": "Kapitoly",
+      "completion": "Dokončení",
+      "courseStatus": {
+        "not_enrolled": "Nepřihlášen",
+        "not_started": "Nezahájeno",
+        "in_progress": "Probíhá",
+        "completed": "Dokončeno"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Vygenerovat přihlašovací kódy",
+      "title": "Přihlašovací kódy třídy",
+      "expiresAt": "Platnost vyprší v {{time}}",
+      "displayName": "Jméno",
+      "code": "Kód",
+      "toast": {
+        "generateFailed": "Nepodařilo se vygenerovat přihlašovací kódy"
       }
     }
   },
@@ -1199,7 +1241,8 @@
     "validation": {
       "oldPassword": "Je vyžadováno staré heslo",
       "newPassword": "Je vyžadováno nové heslo",
-      "passwordsDontMatch": "Hesla se neshodují"
+      "passwordsDontMatch": "Hesla se neshodují",
+      "managedAccountForbidden": "Tento účet spravuje učitel a nemůže si sám změnit heslo."
     },
     "toast": {
       "passwordChangedSuccessfully": "Heslo bylo úspěšně změněno",
@@ -4249,6 +4292,7 @@
     "classrooms": "Třídy",
     "classroomDetail": "Třída",
     "classroomStudents": "Žáci třídy",
+    "classroomProgress": "Pokrok třídy",
     "classroomAddStudent": "Přidat žáka",
     "classroomStudentDetail": "Žák",
     "classroomEditStudent": "Upravit žáka",

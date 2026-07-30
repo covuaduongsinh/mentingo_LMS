@@ -14,6 +14,10 @@ export const TEST_DATA = {
   group: {
     namePrefix: "E2E Group",
   },
+  classroom: {
+    namePrefix: "E2E Classroom",
+    studentNamePrefix: "E2E Classroom Student",
+  },
   tenant: {
     namePrefix: "E2E Tenant",
     hostPrefix: "e2e-tenant",

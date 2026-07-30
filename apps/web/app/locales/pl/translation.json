@@ -1,7 +1,8 @@
 {
   "classroom": {
     "nav": {
-      "title": "Klasy"
+      "title": "Klasy",
+      "viewClassroom": "Zobacz odpowiadającą klasę"
     },
     "list": {
       "teachingHeading": "Klasy, których uczysz",
@@ -19,6 +20,7 @@
       "bulkActionsButton": "Działania zbiorcze",
       "addButton": "Dodaj ucznia",
       "realName": "Imię i nazwisko",
+      "you": "Ty",
       "username": "Nazwa użytkownika",
       "status": "Status",
       "managedBadge": "Zarządzane",
@@ -157,7 +159,8 @@
       "trainerRoleUnavailable": "Rola trenera nie jest dostępna dla tej instancji",
       "courseNotFound": "Nie znaleziono kursu",
       "courseAssignNotAllowed": "Potrzebujesz uprawnień do zapisywania na kurs lub musisz być jego autorem, aby go przypisać",
-      "courseNotAssigned": "Ten kurs nie jest przypisany do klasy"
+      "courseNotAssigned": "Ten kurs nie jest przypisany do klasy",
+      "noManagedStudentsInClassroom": "Ta klasa nie ma żadnych zarządzanych kont uczniów"
     },
     "wall": {
       "editLabel": "Tablica ogłoszeń (Markdown)",
@@ -208,6 +211,45 @@
       "toast": {
         "assigned": "Studium udostępnione {{count}} uczniom",
         "assignFailed": "Nie udało się udostępnić studium"
+      }
+    },
+    "progress": {
+      "title": "Raport postępów",
+      "daysOption": "Ostatnie {{count}} dni",
+      "chessHeading": "Szachy",
+      "classAverageWinRate": "Śr. wskaźnik wygranych klasy: {{value}}",
+      "classAveragePuzzleAccuracy": "Śr. skuteczność zadań klasy: {{value}}",
+      "classAverageLearn": "Śr. postęp Nauki klasy: {{value}}%",
+      "chessEmpty": "W tej klasie nie ma jeszcze uczniów.",
+      "ratings": "Ranking",
+      "matches": "Partie",
+      "winRate": "Wskaźnik wygranych",
+      "puzzles": "Zadania szachowe",
+      "playDuration": "Czas gry",
+      "learn": "Nauka",
+      "currentRating": "obecnie {{value}}",
+      "minutes": "{{count}} min",
+      "coursesHeading": "Kursy",
+      "coursesEmpty": "Do tej klasy nie przypisano jeszcze żadnego kursu.",
+      "courseAverage": "Śr. ukończenie: {{value}}%",
+      "status": "Status",
+      "chapters": "Rozdziały",
+      "completion": "Ukończenie",
+      "courseStatus": {
+        "not_enrolled": "Niezapisany",
+        "not_started": "Nierozpoczęty",
+        "in_progress": "W trakcie",
+        "completed": "Ukończony"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Wygeneruj kody logowania",
+      "title": "Kody logowania klasy",
+      "expiresAt": "Wygasa o {{time}}",
+      "displayName": "Imię",
+      "code": "Kod",
+      "toast": {
+        "generateFailed": "Nie udało się wygenerować kodów logowania"
       }
     }
   },
@@ -1423,7 +1465,8 @@
     "validation": {
       "oldPassword": "Stare hasło jest wymagane",
       "newPassword": "Nowe hasło jest wymagane",
-      "passwordsDontMatch": "Hasła się nie zgadzają"
+      "passwordsDontMatch": "Hasła się nie zgadzają",
+      "managedAccountForbidden": "To konto jest zarządzane przez nauczyciela i nie może samodzielnie zmienić hasła."
     },
     "toast": {
       "passwordChangedSuccessfully": "Hasło zostało zmienione pomyślnie",
@@ -4592,6 +4635,7 @@
     "classrooms": "Klasy",
     "classroomDetail": "Klasa",
     "classroomStudents": "Uczniowie klasy",
+    "classroomProgress": "Postępy klasy",
     "classroomAddStudent": "Dodaj ucznia",
     "classroomStudentDetail": "Uczeń",
     "classroomEditStudent": "Edytuj ucznia",

@@ -22,6 +22,7 @@ import {
   classroomIdForSourceGroupResponseSchema,
   classroomInviteListSchema,
   classroomListSchema,
+  classroomProgressResponseSchema,
   classroomSchema,
   classroomStudentListSchema,
   classroomStudentSchema,
@@ -29,6 +30,7 @@ import {
   createClassroomBodySchema,
   createClassroomStudentBodySchema,
   createClassroomStudentResponseSchema,
+  generateClassroomLoginCodesResponseSchema,
   inviteClassroomStudentBodySchema,
   inviteClassroomStudentResponseSchema,
   moveClassroomStudentBodySchema,
@@ -502,6 +504,19 @@ export class ClassroomController {
     return new BaseResponse({ createToken });
   }
 
+  @Post(":classroomId/login-codes")
+  @RequirePermission(PERMISSIONS.CLASSROOM_READ)
+  @Validate({
+    request: [{ type: "param", name: "classroomId", schema: UUIDSchema }],
+    response: baseResponse(generateClassroomLoginCodesResponseSchema),
+  })
+  async generateClassroomLoginCodes(
+    @Param("classroomId") classroomId: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.classroomService.generateLoginCodes(classroomId, user));
+  }
+
   @Post(":classroomId/students/:userId/close")
   @RequirePermission(PERMISSIONS.CLASSROOM_READ)
   @Validate({
@@ -614,5 +629,28 @@ export class ClassroomController {
     @CurrentUser() user: CurrentUserType,
   ) {
     await this.classroomService.revokeInvite(classroomId, user, inviteId);
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Báo cáo tiến độ (Đợt C6)
+  // ---------------------------------------------------------------------------------------
+
+  @Get(":classroomId/progress")
+  @RequirePermission(PERMISSIONS.CLASSROOM_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "classroomId", schema: UUIDSchema },
+      { type: "query", name: "days", schema: Type.Optional(Type.Number()) },
+    ],
+    response: baseResponse(classroomProgressResponseSchema),
+  })
+  async getClassroomProgress(
+    @Param("classroomId") classroomId: UUIDType,
+    @Query("days") days: number | undefined,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(
+      await this.classroomService.getProgressReport(classroomId, user, days ?? 30),
+    );
   }
 }

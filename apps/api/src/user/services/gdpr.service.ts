@@ -2,6 +2,7 @@ import { BadRequestException, Inject, Injectable, NotFoundException } from "@nes
 import { PERMISSIONS } from "@repo/shared";
 import { and, count, eq, isNull, not, sql } from "drizzle-orm";
 
+import { ghostClassroomMembership } from "src/classroom/utils/ghost-classroom-membership";
 import { DatabasePg, type UUIDType } from "src/common";
 import { userHasPermissionCondition } from "src/common/permissions/permission-sql.utils";
 import { UserAnonymizedEvent } from "src/events/user/user-anonymized.event";
@@ -203,6 +204,7 @@ export class GdprService {
       await trx.delete(createTokens).where(eq(createTokens.userId, userId));
       await trx.delete(magicLinkTokens).where(eq(magicLinkTokens.userId, userId));
       await trx.delete(credentialsTable).where(eq(credentialsTable.userId, userId));
+      await ghostClassroomMembership(trx, userId);
 
       await this.outboxPublisher.publish(new UserAnonymizedEvent({ userId, actor }), trx);
     });

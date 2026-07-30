@@ -320,9 +320,6 @@ export interface CurrentUserResponse {
       | "chess.puzzle.manage"
       | "chess.match.play"
       | "chess.match.watch"
-      | "chess.class.manage_students"
-      | "chess.class.reset_password"
-      | "chess.class.progress"
       | "chess.tournament.read"
       | "chess.tournament.create"
       | "chess.tournament.manage"
@@ -8454,92 +8451,6 @@ export interface FinishScormAttemptResponse {
   };
 }
 
-export interface BulkCreateStudentsBody {
-  /**
-   * @maxItems 200
-   * @minItems 1
-   */
-  names: string[];
-}
-
-export interface BulkCreateStudentsResponse {
-  data: {
-    students: {
-      /** @format uuid */
-      userId: string;
-      username: string;
-      temporaryPassword: string;
-      realName: string;
-    }[];
-  };
-}
-
-export interface ResetStudentPasswordResponse {
-  data: {
-    temporaryPassword: string;
-  };
-}
-
-export interface ReleaseStudentAccountBody {
-  /** @format email */
-  email: string;
-}
-
-export interface ReleaseStudentAccountResponse {
-  data: {
-    createToken: string;
-  };
-}
-
-export interface GenerateLoginCodesResponse {
-  data: {
-    codes: {
-      /** @format uuid */
-      userId: string;
-      username: string | null;
-      displayName: string;
-      code: string;
-    }[];
-    expiresAt: string;
-  };
-}
-
-export interface GetClassProgressResponse {
-  data: {
-    /** @format uuid */
-    groupId: string;
-    days: number;
-    students: {
-      /** @format uuid */
-      userId: string;
-      username: string | null;
-      displayName: string;
-      isManagedAccount: boolean;
-      ratings: {
-        category: string;
-        rating: number;
-        gamesPlayed: number;
-      }[];
-      ratingHistory: {
-        category: string;
-        rating: number;
-        recordedAt: string;
-      }[];
-      matchesPlayed: number;
-      matchesWon: number;
-      winRate: number;
-      puzzlesAttempted: number;
-      puzzlesCorrect: number;
-      weakMotifs: string[];
-      strongMotifs: string[];
-    }[];
-    classAverage: {
-      winRate: number;
-      puzzleAccuracy: number;
-    };
-  };
-}
-
 export interface BulkPairingBody {
   /** @format uuid */
   groupId: string;
@@ -9337,7 +9248,7 @@ export interface ListClassroomStudentsResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9387,7 +9298,7 @@ export interface GetClassroomStudentDetailResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9409,7 +9320,7 @@ export interface UpdateClassroomStudentResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9425,7 +9336,7 @@ export interface SetClassroomStudentArchivedResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9450,6 +9361,19 @@ export interface ReleaseClassroomStudentResponse {
   };
 }
 
+export interface GenerateClassroomLoginCodesResponse {
+  data: {
+    codes: {
+      /** @format uuid */
+      userId: string;
+      username: string | null;
+      displayName: string;
+      code: string;
+    }[];
+    expiresAt: string;
+  };
+}
+
 export interface MoveClassroomStudentBody {
   /** @format uuid */
   targetClassroomId: string;
@@ -9459,7 +9383,7 @@ export interface MoveClassroomStudentResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9479,7 +9403,7 @@ export interface RunClassroomBulkActionResponse {
   data: {
     /** @format uuid */
     userId: string;
-    realName: string;
+    realName: string | null;
     notes: string;
     isManaged: boolean;
     archivedAt: string | null;
@@ -9514,6 +9438,63 @@ export interface ListClassroomInvitesResponse {
     createdAt: string;
     username: string | null;
   }[];
+}
+
+export interface GetClassroomProgressResponse {
+  data: {
+    /** @format uuid */
+    classroomId: string;
+    days: number;
+    chess: {
+      students: {
+        /** @format uuid */
+        userId: string;
+        username: string | null;
+        realName: string;
+        isManaged: boolean;
+        ratings: {
+          category: string;
+          current: number;
+          gamesPlayed: number;
+          ratingStart: number;
+          ratingEnd: number;
+        }[];
+        matchesPlayed: number;
+        matchesWon: number;
+        winRate: number;
+        puzzlesAttempted: number;
+        puzzlesCorrect: number;
+        puzzleAccuracy: number;
+        playDurationMs: number;
+        learnCompletedLevels: number;
+        learnTotalLevels: number;
+        learnCompletionPercentage: number;
+      }[];
+      classAverage: {
+        winRate: number;
+        puzzleAccuracy: number;
+        learnCompletionPercentage: number;
+      };
+    };
+    courses: {
+      /** @format uuid */
+      courseId: string;
+      title: object;
+      isMandatory: boolean;
+      dueDate: string | null;
+      totalChapterCount: number;
+      enrolledCount: number;
+      completedCount: number;
+      averageCompletionPercentage: number;
+      students: {
+        /** @format uuid */
+        userId: string;
+        progress: string;
+        finishedChapterCount: number;
+        completionPercentage: number;
+      }[];
+    }[];
+  };
 }
 
 export interface GetActivityLogsResponse {
@@ -19579,105 +19560,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name ChessClassControllerBulkCreateStudents
-     * @summary Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8
-     * @request POST:/api/chess-class/groups/{groupId}/students/bulk
-     * @deprecated
-     */
-    chessClassControllerBulkCreateStudents: (
-      groupId: string,
-      data: BulkCreateStudentsBody,
-      params: RequestParams = {},
-    ) =>
-      this.request<BulkCreateStudentsResponse, any>({
-        path: `/api/chess-class/groups/${groupId}/students/bulk`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessClassControllerResetStudentPassword
-     * @summary Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8
-     * @request POST:/api/chess-class/students/{userId}/reset-password
-     * @deprecated
-     */
-    chessClassControllerResetStudentPassword: (userId: string, params: RequestParams = {}) =>
-      this.request<ResetStudentPasswordResponse, any>({
-        path: `/api/chess-class/students/${userId}/reset-password`,
-        method: "POST",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessClassControllerReleaseStudentAccount
-     * @summary Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8
-     * @request POST:/api/chess-class/students/{userId}/release
-     * @deprecated
-     */
-    chessClassControllerReleaseStudentAccount: (
-      userId: string,
-      data: ReleaseStudentAccountBody,
-      params: RequestParams = {},
-    ) =>
-      this.request<ReleaseStudentAccountResponse, any>({
-        path: `/api/chess-class/students/${userId}/release`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessClassControllerGenerateLoginCodes
-     * @summary Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8
-     * @request POST:/api/chess-class/groups/{groupId}/login-codes
-     * @deprecated
-     */
-    chessClassControllerGenerateLoginCodes: (groupId: string, params: RequestParams = {}) =>
-      this.request<GenerateLoginCodesResponse, any>({
-        path: `/api/chess-class/groups/${groupId}/login-codes`,
-        method: "POST",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChessClassControllerGetClassProgress
-     * @summary Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8
-     * @request GET:/api/chess-class/groups/{groupId}/progress
-     * @deprecated
-     */
-    chessClassControllerGetClassProgress: (
-      groupId: string,
-      query?: {
-        days?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetClassProgressResponse, any>({
-        path: `/api/chess-class/groups/${groupId}/progress`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @name ChessTournamentControllerBulkPairing
      * @request POST:/api/chess-tournament/bulk-pairing
      */
@@ -20538,6 +20420,23 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name ClassroomControllerGenerateClassroomLoginCodes
+     * @request POST:/api/classroom/{classroomId}/login-codes
+     */
+    classroomControllerGenerateClassroomLoginCodes: (
+      classroomId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<GenerateClassroomLoginCodesResponse, any>({
+        path: `/api/classroom/${classroomId}/login-codes`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name ClassroomControllerCloseClassroomStudent
      * @request POST:/api/classroom/{classroomId}/students/{userId}/close
      */
@@ -20641,6 +20540,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/classroom/${classroomId}/invites/${inviteId}`,
         method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ClassroomControllerGetClassroomProgress
+     * @request GET:/api/classroom/{classroomId}/progress
+     */
+    classroomControllerGetClassroomProgress: (
+      classroomId: string,
+      query?: {
+        days?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetClassroomProgressResponse, any>({
+        path: `/api/classroom/${classroomId}/progress`,
+        method: "GET",
+        query: query,
+        format: "json",
         ...params,
       }),
 

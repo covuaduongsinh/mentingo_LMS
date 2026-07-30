@@ -1,7 +1,8 @@
 {
   "classroom": {
     "nav": {
-      "title": "Clases"
+      "title": "Clases",
+      "viewClassroom": "Ver la clase correspondiente"
     },
     "list": {
       "teachingHeading": "Clases que impartes",
@@ -19,6 +20,7 @@
       "bulkActionsButton": "Acciones masivas",
       "addButton": "Añadir estudiante",
       "realName": "Nombre",
+      "you": "Tú",
       "username": "Nombre de usuario",
       "status": "Estado",
       "managedBadge": "Gestionado",
@@ -157,7 +159,8 @@
       "trainerRoleUnavailable": "El rol de formador no está disponible para este tenant",
       "courseNotFound": "Curso no encontrado",
       "courseAssignNotAllowed": "Necesitas permisos de inscripción o ser autor de este curso para asignarlo",
-      "courseNotAssigned": "Este curso no está asignado al aula"
+      "courseNotAssigned": "Este curso no está asignado al aula",
+      "noManagedStudentsInClassroom": "Esta clase no tiene cuentas de estudiante gestionadas"
     },
     "wall": {
       "editLabel": "Tablón de anuncios (Markdown)",
@@ -208,6 +211,45 @@
       "toast": {
         "assigned": "Estudio compartido con {{count}} estudiantes",
         "assignFailed": "No se pudo compartir el estudio"
+      }
+    },
+    "progress": {
+      "title": "Informe de progreso",
+      "daysOption": "Últimos {{count}} días",
+      "chessHeading": "Ajedrez",
+      "classAverageWinRate": "Tasa de victorias media de la clase: {{value}}",
+      "classAveragePuzzleAccuracy": "Precisión media en problemas de la clase: {{value}}",
+      "classAverageLearn": "Progreso medio de Aprender de la clase: {{value}}%",
+      "chessEmpty": "Esta clase todavía no tiene estudiantes.",
+      "ratings": "Clasificaciones",
+      "matches": "Partidas",
+      "winRate": "Tasa de victorias",
+      "puzzles": "Problemas",
+      "playDuration": "Tiempo de juego",
+      "learn": "Aprender",
+      "currentRating": "actual {{value}}",
+      "minutes": "{{count}} min",
+      "coursesHeading": "Cursos",
+      "coursesEmpty": "Todavía no se ha asignado ningún curso a esta clase.",
+      "courseAverage": "Finalización media: {{value}}%",
+      "status": "Estado",
+      "chapters": "Capítulos",
+      "completion": "Finalización",
+      "courseStatus": {
+        "not_enrolled": "No inscrito",
+        "not_started": "No iniciado",
+        "in_progress": "En curso",
+        "completed": "Completado"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Generar códigos de acceso",
+      "title": "Códigos de acceso de la clase",
+      "expiresAt": "Caduca a las {{time}}",
+      "displayName": "Nombre",
+      "code": "Código",
+      "toast": {
+        "generateFailed": "No se pudieron generar los códigos de acceso"
       }
     }
   },
@@ -1200,7 +1242,8 @@
     "validation": {
       "oldPassword": "Se requiere contraseña antigua",
       "newPassword": "Se requiere nueva contraseña",
-      "passwordsDontMatch": "Las contraseñas no coinciden"
+      "passwordsDontMatch": "Las contraseñas no coinciden",
+      "managedAccountForbidden": "Esta cuenta está gestionada por un profesor y no puede cambiar su propia contraseña."
     },
     "toast": {
       "passwordChangedSuccessfully": "La contraseña se cambió correctamente",
@@ -4320,6 +4363,7 @@
     "classrooms": "Clases",
     "classroomDetail": "Clase",
     "classroomStudents": "Estudiantes de la clase",
+    "classroomProgress": "Progreso de la clase",
     "classroomAddStudent": "Añadir estudiante",
     "classroomStudentDetail": "Estudiante",
     "classroomEditStudent": "Editar estudiante",

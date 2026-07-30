@@ -1,7 +1,8 @@
 {
   "classroom": {
     "nav": {
-      "title": "Klasės"
+      "title": "Klasės",
+      "viewClassroom": "Peržiūrėti atitinkamą klasę"
     },
     "list": {
       "teachingHeading": "Klasės, kurias mokote",
@@ -19,6 +20,7 @@
       "bulkActionsButton": "Masiniai veiksmai",
       "addButton": "Pridėti mokinį",
       "realName": "Vardas",
+      "you": "Tu",
       "username": "Naudotojo vardas",
       "status": "Būsena",
       "managedBadge": "Valdoma",
@@ -157,7 +159,8 @@
       "trainerRoleUnavailable": "Trenerio vaidmuo šiam nuomininkui nepasiekiamas",
       "courseNotFound": "Kursas nerastas",
       "courseAssignNotAllowed": "Norėdami priskirti šį kursą, turite turėti įtraukimo teises arba būti jo autoriumi",
-      "courseNotAssigned": "Šis kursas nepriskirtas klasei"
+      "courseNotAssigned": "Šis kursas nepriskirtas klasei",
+      "noManagedStudentsInClassroom": "Šioje klasėje nėra valdomų mokinių paskyrų"
     },
     "wall": {
       "editLabel": "Skelbimų lenta (Markdown)",
@@ -208,6 +211,45 @@
       "toast": {
         "assigned": "Studija bendrinama su {{count}} mokinių",
         "assignFailed": "Nepavyko bendrinti studijos"
+      }
+    },
+    "progress": {
+      "title": "Pažangos ataskaita",
+      "daysOption": "Paskutinės {{count}} dienos",
+      "chessHeading": "Šachmatai",
+      "classAverageWinRate": "Klasės vid. laimėjimų rodiklis: {{value}}",
+      "classAveragePuzzleAccuracy": "Klasės vid. uždavinių tikslumas: {{value}}",
+      "classAverageLearn": "Klasės vid. mokymosi progresas: {{value}}%",
+      "chessEmpty": "Šioje klasėje dar nėra mokinių.",
+      "ratings": "Reitingai",
+      "matches": "Partijos",
+      "winRate": "Laimėjimų rodiklis",
+      "puzzles": "Uždaviniai",
+      "playDuration": "Žaidimo laikas",
+      "learn": "Mokymasis",
+      "currentRating": "dabar {{value}}",
+      "minutes": "{{count}} min",
+      "coursesHeading": "Kursai",
+      "coursesEmpty": "Šiai klasei dar nepriskirtas nė vienas kursas.",
+      "courseAverage": "Vid. baigtumas: {{value}}%",
+      "status": "Būsena",
+      "chapters": "Skyriai",
+      "completion": "Baigtumas",
+      "courseStatus": {
+        "not_enrolled": "Neįregistruotas",
+        "not_started": "Nepradėta",
+        "in_progress": "Vykdoma",
+        "completed": "Baigta"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Generuoti prisijungimo kodus",
+      "title": "Klasės prisijungimo kodai",
+      "expiresAt": "Galioja iki {{time}}",
+      "displayName": "Vardas",
+      "code": "Kodas",
+      "toast": {
+        "generateFailed": "Nepavyko sugeneruoti prisijungimo kodų"
       }
     }
   },
@@ -1199,7 +1241,8 @@
     "validation": {
       "oldPassword": "Reikalingas senas slaptažodis",
       "newPassword": "Reikalingas naujas slaptažodis",
-      "passwordsDontMatch": "Slaptažodžiai nesutampa"
+      "passwordsDontMatch": "Slaptažodžiai nesutampa",
+      "managedAccountForbidden": "Šią paskyrą valdo mokytojas, todėl ji negali pati pasikeisti slaptažodžio."
     },
     "toast": {
       "passwordChangedSuccessfully": "Slaptažodis pakeistas sėkmingai",
@@ -4246,6 +4289,7 @@
     "classrooms": "Klasės",
     "classroomDetail": "Klasė",
     "classroomStudents": "Klasės mokiniai",
+    "classroomProgress": "Klasės pažanga",
     "classroomAddStudent": "Pridėti mokinį",
     "classroomStudentDetail": "Mokinys",
     "classroomEditStudent": "Redaguoti mokinį",

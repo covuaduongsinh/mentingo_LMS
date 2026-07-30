@@ -36,7 +36,7 @@ export default function ClassroomEditStudentPage() {
 
   useEffect(() => {
     if (!student) return;
-    setRealName(student.realName);
+    setRealName(student.realName ?? "");
     setNotes(student.notes);
   }, [student]);
 

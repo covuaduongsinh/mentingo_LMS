@@ -1,6 +1,7 @@
 import { ArticleFactory } from "./article.factory";
 import { CategoryFactory } from "./category.factory";
 import { ChessExerciseFactory, ChessGameFactory, ChessPlaySessionFactory } from "./chess.factory";
+import { ClassroomFactory } from "./classroom.factory";
 import { CourseFactory } from "./course.factory";
 import { CurriculumFactory } from "./curriculum.factory";
 import { EnrollmentFactory } from "./enrollment.factory";
@@ -19,6 +20,7 @@ export type FixtureFactories = {
   createChessExerciseFactory: () => ChessExerciseFactory;
   createChessGameFactory: () => ChessGameFactory;
   createChessPlaySessionFactory: () => ChessPlaySessionFactory;
+  createClassroomFactory: () => ClassroomFactory;
   createCourseFactory: () => CourseFactory;
   createCurriculumFactory: () => CurriculumFactory;
   createEnrollmentFactory: () => EnrollmentFactory;
@@ -36,6 +38,7 @@ export const createFixtureFactories = (apiClient: FixtureApiClient): FixtureFact
   let chessExerciseFactory: ChessExerciseFactory | undefined;
   let chessGameFactory: ChessGameFactory | undefined;
   let chessPlaySessionFactory: ChessPlaySessionFactory | undefined;
+  let classroomFactory: ClassroomFactory | undefined;
   let courseFactory: CourseFactory | undefined;
   let curriculumFactory: CurriculumFactory | undefined;
   let enrollmentFactory: EnrollmentFactory | undefined;
@@ -66,6 +69,10 @@ export const createFixtureFactories = (apiClient: FixtureApiClient): FixtureFact
     createChessPlaySessionFactory: () => {
       chessPlaySessionFactory ??= new ChessPlaySessionFactory(apiClient);
       return chessPlaySessionFactory;
+    },
+    createClassroomFactory: () => {
+      classroomFactory ??= new ClassroomFactory(apiClient);
+      return classroomFactory;
     },
     createCourseFactory: () => {
       courseFactory ??= new CourseFactory(apiClient);
@@ -109,6 +116,7 @@ export const createFixtureFactories = (apiClient: FixtureApiClient): FixtureFact
 export { ArticleFactory } from "./article.factory";
 export { CategoryFactory } from "./category.factory";
 export { ChessExerciseFactory, ChessGameFactory, ChessPlaySessionFactory } from "./chess.factory";
+export { ClassroomFactory } from "./classroom.factory";
 export { CourseFactory } from "./course.factory";
 export { CurriculumFactory } from "./curriculum.factory";
 export { EnrollmentFactory } from "./enrollment.factory";

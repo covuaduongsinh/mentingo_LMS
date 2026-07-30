@@ -41,6 +41,7 @@ import { match } from "ts-pattern";
 
 import { CreatePasswordService } from "src/auth/create-password.service";
 import { hashToken } from "src/auth/utils/hash-auth-token";
+import { ghostClassroomMembership } from "src/classroom/utils/ghost-classroom-membership";
 import { DatabasePg } from "src/common";
 import { getGroupFilterConditions } from "src/common/helpers/getGroupFilterConditions";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
@@ -502,6 +503,13 @@ export class UserService {
       throw new NotFoundException("User not found");
     }
 
+    // Kid-mode account (Đợt C7): managed accounts don't self-serve password changes — a
+    // teacher resets it instead (ClassroomService.resetStudentPassword), same as they can't
+    // turn off kid mode or close their own account.
+    if (existingUser.isManagedAccount) {
+      throw new ForbiddenException("changePasswordView.validation.managedAccountForbidden");
+    }
+
     const [userCredentials] = await this.db
       .select()
       .from(credentials)
@@ -607,6 +615,8 @@ export class UserService {
         .where(eq(users.id, id))
         .returning();
 
+      await ghostClassroomMembership(trx, id);
+
       if (userSnapshot) {
         await this.outboxPublisher.publish(
           new DeleteUserEvent({
@@ -673,6 +683,8 @@ export class UserService {
             .where(eq(users.id, id)),
         ),
       );
+
+      await Promise.all(ids.map((id) => ghostClassroomMembership(trx, id)));
 
       await Promise.all(
         usersSnapshots.map((snapshot, index) => {

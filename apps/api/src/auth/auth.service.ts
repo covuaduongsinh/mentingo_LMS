@@ -1030,9 +1030,9 @@ export class AuthService {
     };
   }
 
-  // Chess class management (L5): teacher-projected short-lived login code,
-  // single-use, no password check — possession of the code is the credential.
-  // See docs/specs/chess-class-management-business-spec.md.
+  // Classroom quick login (originally L5/chess-class, ported to the Classroom module in
+  // Đợt C8): teacher-projected short-lived login code, single-use, no password check —
+  // possession of the code is the credential. See docs/specs/classroom-business-spec.md.
   async loginWithClassCode(response: Response, code: string) {
     const { MFAEnforcedRoles } = await this.settingsService.getGlobalSettings();
 

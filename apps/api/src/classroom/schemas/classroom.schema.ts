@@ -69,7 +69,9 @@ export const classroomTeacherListSchema = Type.Array(classroomTeacherSchema);
 
 export const classroomStudentSchema = Type.Object({
   userId: UUIDSchema,
-  realName: Type.String(),
+  // Đợt C7: null when the caller is looking at their own row — see
+  // ClassroomService.maskOwnRealName.
+  realName: Type.Union([Type.String(), Type.Null()]),
   notes: Type.String(),
   isManaged: Type.Boolean(),
   archivedAt: Type.Union([Type.String(), Type.Null()]),
@@ -113,6 +115,19 @@ export const setClassroomStudentArchivedBodySchema = Type.Object({
 
 export const resetClassroomStudentPasswordResponseSchema = Type.Object({
   temporaryPassword: Type.String(),
+});
+
+// Đợt C8 — ported from the deleted chess-class module.
+export const generateClassroomLoginCodesResponseSchema = Type.Object({
+  codes: Type.Array(
+    Type.Object({
+      userId: UUIDSchema,
+      username: Type.Union([Type.String(), Type.Null()]),
+      displayName: Type.String(),
+      code: Type.String(),
+    }),
+  ),
+  expiresAt: Type.String(),
 });
 
 export const releaseClassroomStudentBodySchema = Type.Object({
@@ -236,6 +251,69 @@ export const assignClassroomStudyBodySchema = Type.Object({
 
 export const assignClassroomStudyResponseSchema = Type.Object({
   studentCount: Type.Number(),
+});
+
+// ---------------------------------------------------------------------------------------
+// Báo cáo tiến độ (Đợt C6)
+// ---------------------------------------------------------------------------------------
+
+export const classroomProgressRatingSchema = Type.Object({
+  category: Type.String(),
+  current: Type.Number(),
+  gamesPlayed: Type.Number(),
+  ratingStart: Type.Number(),
+  ratingEnd: Type.Number(),
+});
+
+export const classroomStudentProgressSchema = Type.Object({
+  userId: UUIDSchema,
+  username: Type.Union([Type.String(), Type.Null()]),
+  realName: Type.String(),
+  isManaged: Type.Boolean(),
+  ratings: Type.Array(classroomProgressRatingSchema),
+  matchesPlayed: Type.Number(),
+  matchesWon: Type.Number(),
+  winRate: Type.Number(),
+  puzzlesAttempted: Type.Number(),
+  puzzlesCorrect: Type.Number(),
+  puzzleAccuracy: Type.Number(),
+  playDurationMs: Type.Number(),
+  learnCompletedLevels: Type.Number(),
+  learnTotalLevels: Type.Number(),
+  learnCompletionPercentage: Type.Number(),
+});
+
+export const classroomCourseProgressStudentSchema = Type.Object({
+  userId: UUIDSchema,
+  progress: Type.String(),
+  finishedChapterCount: Type.Number(),
+  completionPercentage: Type.Number(),
+});
+
+export const classroomCourseProgressSchema = Type.Object({
+  courseId: UUIDSchema,
+  title: Type.Record(Type.String(), Type.String()),
+  isMandatory: Type.Boolean(),
+  dueDate: Type.Union([Type.String(), Type.Null()]),
+  totalChapterCount: Type.Number(),
+  enrolledCount: Type.Number(),
+  completedCount: Type.Number(),
+  averageCompletionPercentage: Type.Number(),
+  students: Type.Array(classroomCourseProgressStudentSchema),
+});
+
+export const classroomProgressResponseSchema = Type.Object({
+  classroomId: UUIDSchema,
+  days: Type.Number(),
+  chess: Type.Object({
+    students: Type.Array(classroomStudentProgressSchema),
+    classAverage: Type.Object({
+      winRate: Type.Number(),
+      puzzleAccuracy: Type.Number(),
+      learnCompletionPercentage: Type.Number(),
+    }),
+  }),
+  courses: Type.Array(classroomCourseProgressSchema),
 });
 
 export type CreateClassroomBody = Static<typeof createClassroomBodySchema>;

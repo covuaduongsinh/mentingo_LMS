@@ -1,10 +1,22 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { COURSE_ENROLLMENT, PERMISSIONS, SYSTEM_ROLE_SLUGS } from "@repo/shared";
-import { and, asc, desc, eq, inArray, isNull, not, sql } from "drizzle-orm";
+import {
+  CHESS_MATCH_STATUSES,
+  COURSE_ENROLLMENT,
+  PERMISSIONS,
+  SYSTEM_ROLE_SLUGS,
+} from "@repo/shared";
+import { and, asc, desc, eq, gte, inArray, isNull, not, or, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import { userHasAnyPermissionsCondition } from "src/common/permissions/permission-sql.utils";
 import {
+  chessClassLoginCodes,
+  chessLearnProgress,
+  chessMatches,
+  chessPlaySessions,
+  chessPuzzleAttempts,
+  chessRatingHistory,
+  chessRatings,
   classroomCourses,
   classroomInvites,
   classrooms,
@@ -875,5 +887,171 @@ export class ClassroomRepository {
       .innerJoin(courses, eq(courses.id, classroomCourses.courseId))
       .where(eq(classroomCourses.classroomId, classroomId))
       .orderBy(desc(classroomCourses.createdAt));
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Báo cáo tiến độ (Đợt C6)
+  // ---------------------------------------------------------------------------------------
+
+  async getRatingsForUsers(userIds: UUIDType[]) {
+    if (!userIds.length) return [];
+
+    return this.db
+      .select({
+        userId: chessRatings.userId,
+        category: chessRatings.category,
+        rating: chessRatings.rating,
+        gamesPlayed: chessRatings.gamesPlayed,
+      })
+      .from(chessRatings)
+      .where(inArray(chessRatings.userId, userIds));
+  }
+
+  /** Ordered ascending so the service can take the first/last row per category as start/end. */
+  async getRatingHistoryForUsers(userIds: UUIDType[], since: Date) {
+    if (!userIds.length) return [];
+
+    return this.db
+      .select({
+        userId: chessRatingHistory.userId,
+        category: chessRatingHistory.category,
+        rating: chessRatingHistory.rating,
+        createdAt: chessRatingHistory.createdAt,
+      })
+      .from(chessRatingHistory)
+      .where(
+        and(
+          inArray(chessRatingHistory.userId, userIds),
+          gte(chessRatingHistory.createdAt, since.toISOString()),
+        ),
+      )
+      .orderBy(asc(chessRatingHistory.createdAt));
+  }
+
+  async getFinishedMatchesForUsers(userIds: UUIDType[], since: Date) {
+    if (!userIds.length) return [];
+
+    return this.db
+      .select({
+        whiteUserId: chessMatches.whiteUserId,
+        blackUserId: chessMatches.blackUserId,
+        result: chessMatches.result,
+      })
+      .from(chessMatches)
+      .where(
+        and(
+          eq(chessMatches.status, CHESS_MATCH_STATUSES.FINISHED),
+          gte(chessMatches.createdAt, since.toISOString()),
+          or(
+            inArray(chessMatches.whiteUserId, userIds),
+            inArray(chessMatches.blackUserId, userIds),
+          ),
+        ),
+      );
+  }
+
+  async getPuzzleAttemptsForUsers(userIds: UUIDType[], since: Date) {
+    if (!userIds.length) return [];
+
+    return this.db
+      .select({ userId: chessPuzzleAttempts.userId, correct: chessPuzzleAttempts.correct })
+      .from(chessPuzzleAttempts)
+      .where(
+        and(
+          inArray(chessPuzzleAttempts.userId, userIds),
+          gte(chessPuzzleAttempts.createdAt, since.toISOString()),
+        ),
+      );
+  }
+
+  /** Vs-engine play only (chess_play_sessions) — PvP matches have no duration column to sum. */
+  async getPlayDurationForUsers(userIds: UUIDType[], since: Date) {
+    if (!userIds.length) return [];
+
+    return this.db
+      .select({
+        userId: chessPlaySessions.userId,
+        durationMs: sql<number>`COALESCE(SUM(${chessPlaySessions.durationMs}), 0)::int`,
+      })
+      .from(chessPlaySessions)
+      .where(
+        and(
+          inArray(chessPlaySessions.userId, userIds),
+          gte(chessPlaySessions.createdAt, since.toISOString()),
+        ),
+      )
+      .groupBy(chessPlaySessions.userId);
+  }
+
+  /** Cumulative, not windowed by `since` — a Learn level is completed once, ever. */
+  async getLearnCompletedCountsForUsers(userIds: UUIDType[]) {
+    if (!userIds.length) return [];
+
+    return this.db
+      .select({ userId: chessLearnProgress.userId, completed: sql<number>`COUNT(*)::int` })
+      .from(chessLearnProgress)
+      .where(inArray(chessLearnProgress.userId, userIds))
+      .groupBy(chessLearnProgress.userId);
+  }
+
+  /** One row per (course, active student); `progress`/`finishedChapterCount` are null when the
+   * student was never enrolled in that course — the service reports that as "not_enrolled"
+   * rather than silently treating it the same as "not_started". */
+  async getClassroomCourseProgress(classroomId: UUIDType) {
+    return this.db
+      .select({
+        courseId: classroomCourses.courseId,
+        title: sql<LocalizedText>`${courses.title}`,
+        isMandatory: classroomCourses.isMandatory,
+        dueDate: sql<
+          string | null
+        >`TO_CHAR(${classroomCourses.dueDate}, 'YYYY-MM-DD"T"HH24:MI:SS"Z"')`,
+        chapterCount: courses.chapterCount,
+        studentId: classroomStudents.userId,
+        progress: studentCourses.progress,
+        finishedChapterCount: studentCourses.finishedChapterCount,
+      })
+      .from(classroomCourses)
+      .innerJoin(courses, eq(courses.id, classroomCourses.courseId))
+      .innerJoin(
+        classroomStudents,
+        and(
+          eq(classroomStudents.classroomId, classroomCourses.classroomId),
+          isNull(classroomStudents.archivedAt),
+        ),
+      )
+      .leftJoin(
+        studentCourses,
+        and(
+          eq(studentCourses.courseId, classroomCourses.courseId),
+          eq(studentCourses.studentId, classroomStudents.userId),
+          eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
+        ),
+      )
+      .where(eq(classroomCourses.classroomId, classroomId))
+      .orderBy(desc(classroomCourses.createdAt));
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Mã đăng nhập nhanh (Đợt C8 — ported from the deleted chess-class module)
+  // ---------------------------------------------------------------------------------------
+
+  async invalidateActiveLoginCodes(userIds: UUIDType[]) {
+    if (!userIds.length) return;
+
+    await this.db
+      .update(chessClassLoginCodes)
+      .set({ consumedAt: new Date() })
+      .where(
+        and(inArray(chessClassLoginCodes.userId, userIds), isNull(chessClassLoginCodes.consumedAt)),
+      );
+  }
+
+  async insertLoginCodes(
+    rows: Array<{ userId: UUIDType; classroomId: UUIDType; codeHash: string; expiresAt: Date }>,
+  ) {
+    if (!rows.length) return [];
+
+    return this.db.insert(chessClassLoginCodes).values(rows).returning();
   }
 }

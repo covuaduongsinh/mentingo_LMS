@@ -136,6 +136,13 @@ export default function ClassroomDetailPage() {
                 {t("classroom.students.title", { defaultValue: "Students" })}
               </Link>
             </Button>
+            {classroom.isTeacher && (
+              <Button variant="outline" asChild>
+                <Link to={`/classrooms/${classroomId}/progress`}>
+                  {t("classroom.progress.title", { defaultValue: "Progress report" })}
+                </Link>
+              </Button>
+            )}
             {classroom.isTeacher && !isArchived && (
               <Dialog open={isAnnouncementDialogOpen} onOpenChange={setIsAnnouncementDialogOpen}>
                 <DialogTrigger asChild>

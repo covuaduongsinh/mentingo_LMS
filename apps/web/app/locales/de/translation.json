@@ -1,7 +1,8 @@
 {
   "classroom": {
     "nav": {
-      "title": "Klassen"
+      "title": "Klassen",
+      "viewClassroom": "Entsprechende Klasse ansehen"
     },
     "list": {
       "teachingHeading": "Klassen, die Sie unterrichten",
@@ -19,6 +20,7 @@
       "bulkActionsButton": "Massenaktionen",
       "addButton": "Schüler hinzufügen",
       "realName": "Name",
+      "you": "Du",
       "username": "Benutzername",
       "status": "Status",
       "managedBadge": "Verwaltet",
@@ -157,7 +159,8 @@
       "trainerRoleUnavailable": "Die Trainer-Rolle ist für diesen Mandanten nicht verfügbar",
       "courseNotFound": "Kurs nicht gefunden",
       "courseAssignNotAllowed": "Du benötigst Einschreibungsrechte oder musst Autor dieses Kurses sein, um ihn zuzuweisen",
-      "courseNotAssigned": "Dieser Kurs ist der Klasse nicht zugewiesen"
+      "courseNotAssigned": "Dieser Kurs ist der Klasse nicht zugewiesen",
+      "noManagedStudentsInClassroom": "Diese Klasse hat keine verwalteten Schülerkonten"
     },
     "wall": {
       "editLabel": "Anschlagtafel (Markdown)",
@@ -208,6 +211,45 @@
       "toast": {
         "assigned": "Studie mit {{count}} Schülern geteilt",
         "assignFailed": "Studie konnte nicht geteilt werden"
+      }
+    },
+    "progress": {
+      "title": "Fortschrittsbericht",
+      "daysOption": "Letzte {{count}} Tage",
+      "chessHeading": "Schach",
+      "classAverageWinRate": "Ø Gewinnrate der Klasse: {{value}}",
+      "classAveragePuzzleAccuracy": "Ø Aufgabengenauigkeit der Klasse: {{value}}",
+      "classAverageLearn": "Ø Lernfortschritt der Klasse: {{value}}%",
+      "chessEmpty": "Diese Klasse hat noch keine Schüler.",
+      "ratings": "Wertungen",
+      "matches": "Partien",
+      "winRate": "Gewinnrate",
+      "puzzles": "Aufgaben",
+      "playDuration": "Spielzeit",
+      "learn": "Lernen",
+      "currentRating": "aktuell {{value}}",
+      "minutes": "{{count}} Min.",
+      "coursesHeading": "Kurse",
+      "coursesEmpty": "Dieser Klasse sind noch keine Kurse zugewiesen.",
+      "courseAverage": "Ø Abschluss: {{value}}%",
+      "status": "Status",
+      "chapters": "Kapitel",
+      "completion": "Fortschritt",
+      "courseStatus": {
+        "not_enrolled": "Nicht eingeschrieben",
+        "not_started": "Nicht begonnen",
+        "in_progress": "In Bearbeitung",
+        "completed": "Abgeschlossen"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Anmeldecodes generieren",
+      "title": "Anmeldecodes der Klasse",
+      "expiresAt": "Läuft ab um {{time}}",
+      "displayName": "Name",
+      "code": "Code",
+      "toast": {
+        "generateFailed": "Anmeldecodes konnten nicht generiert werden"
       }
     }
   },
@@ -1199,7 +1241,8 @@
     "validation": {
       "oldPassword": "Altes Passwort ist erforderlich",
       "newPassword": "Neues Passwort ist erforderlich",
-      "passwordsDontMatch": "Passwörter stimmen nicht überein"
+      "passwordsDontMatch": "Passwörter stimmen nicht überein",
+      "managedAccountForbidden": "Dieses Konto wird von einer Lehrkraft verwaltet und kann sein Passwort nicht selbst ändern."
     },
     "toast": {
       "passwordChangedSuccessfully": "Passwort erfolgreich geändert",
@@ -4242,6 +4285,7 @@
     "classrooms": "Klassen",
     "classroomDetail": "Klasse",
     "classroomStudents": "Klassenschüler",
+    "classroomProgress": "Klassenfortschritt",
     "classroomAddStudent": "Schüler hinzufügen",
     "classroomStudentDetail": "Schüler",
     "classroomEditStudent": "Schüler bearbeiten",

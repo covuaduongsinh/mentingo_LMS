@@ -37,13 +37,16 @@ export class CommunitySocialRepository {
     return row?.isManagedAccount ?? false;
   }
 
-  /** True if the two users share an HR/L&D group (`groups`) OR are both active members of the
-   * same classroom (`classroom_students` — independent of `groups` since the Classroom module,
-   * see docs/specs/classroom-business-spec.md). Kid-mode messaging/follow checks call this to
-   * decide whether two managed accounts are classmates — a fix here that misses either source
-   * fails silently (no exception, just an unexpectedly empty result), so both are covered by
-   * one query rather than two call sites that could drift apart. */
-  async sharesClassmateRelationship(userIdA: UUIDType, userIdB: UUIDType) {
+  /** True if two accounts are allowed to interact under kid-mode (Đợt C1, extended C7):
+   * - share an HR/L&D group (`groups`) — no `canMsg`-style gate ever existed for groups, kept as-is.
+   * - are both active members of the same classroom **with messaging enabled**
+   *   (`classrooms.can_msg = true`) — Đợt C4 added the flag, C7 is the first thing to enforce it.
+   * - one is an active teacher and the other an active student of the same classroom, regardless
+   *   of `can_msg` — a managed student must always be able to reach their own teacher; `can_msg`
+   *   only gates classmate-to-classmate contact, not the escalation path to an adult.
+   * A fix here that misses any of the three fails silently (empty result, no exception), so all
+   * three live in one query rather than call sites that could drift apart. */
+  async canInteractAsManagedAccount(userIdA: UUIDType, userIdB: UUIDType) {
     const [row] = await this.db.execute(sql`
       SELECT 1
       FROM group_users gu1
@@ -53,10 +56,21 @@ export class CommunitySocialRepository {
       SELECT 1
       FROM classroom_students cs1
       JOIN classroom_students cs2 ON cs1.classroom_id = cs2.classroom_id
+      JOIN classrooms c ON c.id = cs1.classroom_id
       WHERE cs1.user_id = ${userIdA}
         AND cs2.user_id = ${userIdB}
         AND cs1.archived_at IS NULL
         AND cs2.archived_at IS NULL
+        AND c.can_msg = true
+      UNION ALL
+      SELECT 1
+      FROM classroom_teachers ct
+      JOIN classroom_students cs ON cs.classroom_id = ct.classroom_id
+      WHERE cs.archived_at IS NULL
+        AND (
+          (ct.user_id = ${userIdA} AND cs.user_id = ${userIdB})
+          OR (ct.user_id = ${userIdB} AND cs.user_id = ${userIdA})
+        )
       LIMIT 1
     `);
 
@@ -317,21 +331,40 @@ export class CommunitySocialRepository {
     return { data, pagination: { page, perPage, totalItems } };
   }
 
+  /** Candidate list for "who can I message" under kid-mode — must stay in lockstep with
+   * `canInteractAsManagedAccount` (Đợt C7): group classmates (unrestricted), classroom
+   * classmates (only where `can_msg = true`), and the actor's own classroom teacher(s)
+   * (always, so the escalation path to an adult is never hidden from the candidate list). */
   async listClassmates(actorUserId: UUIDType): Promise<UserSummaryRow[]> {
     const rows = await this.db.execute(sql`
       SELECT DISTINCT u.id AS "userId", u.first_name AS "firstName", u.last_name AS "lastName",
         u.avatar_reference AS "avatarReference"
-      FROM group_users gu1
-      JOIN group_users gu2 ON gu1.group_id = gu2.group_id
-      JOIN users u ON u.id = gu2.user_id
-      WHERE gu1.user_id = ${actorUserId} AND gu2.user_id <> ${actorUserId}
-        AND NOT EXISTS (
-          SELECT 1 FROM community_user_relationships b
-          WHERE b.relationship_type = 'block' AND (
-            (b.actor_user_id = ${actorUserId} AND b.target_user_id = u.id) OR
-            (b.actor_user_id = u.id AND b.target_user_id = ${actorUserId})
-          )
+      FROM (
+        SELECT gu2.user_id AS candidate_id
+        FROM group_users gu1
+        JOIN group_users gu2 ON gu1.group_id = gu2.group_id
+        WHERE gu1.user_id = ${actorUserId} AND gu2.user_id <> ${actorUserId}
+        UNION
+        SELECT cs2.user_id AS candidate_id
+        FROM classroom_students cs1
+        JOIN classroom_students cs2 ON cs1.classroom_id = cs2.classroom_id
+        JOIN classrooms c ON c.id = cs1.classroom_id
+        WHERE cs1.user_id = ${actorUserId} AND cs2.user_id <> ${actorUserId}
+          AND cs1.archived_at IS NULL AND cs2.archived_at IS NULL AND c.can_msg = true
+        UNION
+        SELECT ct.user_id AS candidate_id
+        FROM classroom_teachers ct
+        JOIN classroom_students cs ON cs.classroom_id = ct.classroom_id
+        WHERE cs.user_id = ${actorUserId} AND cs.archived_at IS NULL
+      ) candidates
+      JOIN users u ON u.id = candidates.candidate_id
+      WHERE NOT EXISTS (
+        SELECT 1 FROM community_user_relationships b
+        WHERE b.relationship_type = 'block' AND (
+          (b.actor_user_id = ${actorUserId} AND b.target_user_id = u.id) OR
+          (b.actor_user_id = u.id AND b.target_user_id = ${actorUserId})
         )
+      )
     `);
 
     return rows as unknown as UserSummaryRow[];

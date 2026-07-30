@@ -15659,179 +15659,6 @@
         }
       }
     },
-    "/api/chess-class/groups/{groupId}/students/bulk": {
-      "post": {
-        "operationId": "ChessClassController_bulkCreateStudents",
-        "summary": "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
-        "deprecated": true,
-        "parameters": [
-          {
-            "name": "groupId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BulkCreateStudentsBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BulkCreateStudentsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/chess-class/students/{userId}/reset-password": {
-      "post": {
-        "operationId": "ChessClassController_resetStudentPassword",
-        "summary": "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
-        "deprecated": true,
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResetStudentPasswordResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/chess-class/students/{userId}/release": {
-      "post": {
-        "operationId": "ChessClassController_releaseStudentAccount",
-        "summary": "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
-        "deprecated": true,
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReleaseStudentAccountBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseStudentAccountResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/chess-class/groups/{groupId}/login-codes": {
-      "post": {
-        "operationId": "ChessClassController_generateLoginCodes",
-        "summary": "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
-        "deprecated": true,
-        "parameters": [
-          {
-            "name": "groupId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GenerateLoginCodesResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/chess-class/groups/{groupId}/progress": {
-      "get": {
-        "operationId": "ChessClassController_getClassProgress",
-        "summary": "Deprecated — superseded by the Classroom module (docs/specs/classroom-business-spec.md), scheduled for removal in Đợt C8",
-        "deprecated": true,
-        "parameters": [
-          {
-            "name": "groupId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          },
-          {
-            "name": "days",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetClassProgressResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/chess-tournament/bulk-pairing": {
       "post": {
         "operationId": "ChessTournamentController_bulkPairing",
@@ -17361,6 +17188,33 @@
         }
       }
     },
+    "/api/classroom/{classroomId}/login-codes": {
+      "post": {
+        "operationId": "ClassroomController_generateClassroomLoginCodes",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateClassroomLoginCodesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/classroom/{classroomId}/students/{userId}/close": {
       "post": {
         "operationId": "ClassroomController_closeClassroomStudent",
@@ -17562,6 +17416,41 @@
         "responses": {
           "200": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/progress": {
+      "get": {
+        "operationId": "ClassroomController_getClassroomProgress",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClassroomProgressResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -23151,18 +23040,6 @@
                         },
                         {
                           "const": "chess.match.watch",
-                          "type": "string"
-                        },
-                        {
-                          "const": "chess.class.manage_students",
-                          "type": "string"
-                        },
-                        {
-                          "const": "chess.class.reset_password",
-                          "type": "string"
-                        },
-                        {
-                          "const": "chess.class.progress",
                           "type": "string"
                         },
                         {
@@ -64227,326 +64104,6 @@
           "data"
         ]
       },
-      "BulkCreateStudentsBody": {
-        "type": "object",
-        "properties": {
-          "names": {
-            "minItems": 1,
-            "maxItems": 200,
-            "type": "array",
-            "items": {
-              "minLength": 1,
-              "maxLength": 100,
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "names"
-        ]
-      },
-      "BulkCreateStudentsResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "students": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "userId": {
-                      "format": "uuid",
-                      "type": "string"
-                    },
-                    "username": {
-                      "type": "string"
-                    },
-                    "temporaryPassword": {
-                      "type": "string"
-                    },
-                    "realName": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "userId",
-                    "username",
-                    "temporaryPassword",
-                    "realName"
-                  ]
-                }
-              }
-            },
-            "required": [
-              "students"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      },
-      "ResetStudentPasswordResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "temporaryPassword": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "temporaryPassword"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      },
-      "ReleaseStudentAccountBody": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "format": "email",
-            "type": "string"
-          }
-        },
-        "required": [
-          "email"
-        ]
-      },
-      "ReleaseStudentAccountResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "createToken": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "createToken"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      },
-      "GenerateLoginCodesResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "codes": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "userId": {
-                      "format": "uuid",
-                      "type": "string"
-                    },
-                    "username": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "code": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "userId",
-                    "username",
-                    "displayName",
-                    "code"
-                  ]
-                }
-              },
-              "expiresAt": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "codes",
-              "expiresAt"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      },
-      "GetClassProgressResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "groupId": {
-                "format": "uuid",
-                "type": "string"
-              },
-              "days": {
-                "type": "number"
-              },
-              "students": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "userId": {
-                      "format": "uuid",
-                      "type": "string"
-                    },
-                    "username": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "isManagedAccount": {
-                      "type": "boolean"
-                    },
-                    "ratings": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "category": {
-                            "type": "string"
-                          },
-                          "rating": {
-                            "type": "number"
-                          },
-                          "gamesPlayed": {
-                            "type": "number"
-                          }
-                        },
-                        "required": [
-                          "category",
-                          "rating",
-                          "gamesPlayed"
-                        ]
-                      }
-                    },
-                    "ratingHistory": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "category": {
-                            "type": "string"
-                          },
-                          "rating": {
-                            "type": "number"
-                          },
-                          "recordedAt": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "category",
-                          "rating",
-                          "recordedAt"
-                        ]
-                      }
-                    },
-                    "matchesPlayed": {
-                      "type": "number"
-                    },
-                    "matchesWon": {
-                      "type": "number"
-                    },
-                    "winRate": {
-                      "type": "number"
-                    },
-                    "puzzlesAttempted": {
-                      "type": "number"
-                    },
-                    "puzzlesCorrect": {
-                      "type": "number"
-                    },
-                    "weakMotifs": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "strongMotifs": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "required": [
-                    "userId",
-                    "username",
-                    "displayName",
-                    "isManagedAccount",
-                    "ratings",
-                    "ratingHistory",
-                    "matchesPlayed",
-                    "matchesWon",
-                    "winRate",
-                    "puzzlesAttempted",
-                    "puzzlesCorrect",
-                    "weakMotifs",
-                    "strongMotifs"
-                  ]
-                }
-              },
-              "classAverage": {
-                "type": "object",
-                "properties": {
-                  "winRate": {
-                    "type": "number"
-                  },
-                  "puzzleAccuracy": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "winRate",
-                  "puzzleAccuracy"
-                ]
-              }
-            },
-            "required": [
-              "groupId",
-              "days",
-              "students",
-              "classAverage"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      },
       "BulkPairingBody": {
         "type": "object",
         "properties": {
@@ -68011,7 +67568,14 @@
                   "type": "string"
                 },
                 "realName": {
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 },
                 "notes": {
                   "type": "string"
@@ -68172,7 +67736,14 @@
                 "type": "string"
               },
               "realName": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "notes": {
                 "type": "string"
@@ -68240,7 +67811,14 @@
                 "type": "string"
               },
               "realName": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "notes": {
                 "type": "string"
@@ -68305,7 +67883,14 @@
                 "type": "string"
               },
               "realName": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "notes": {
                 "type": "string"
@@ -68398,6 +67983,60 @@
           "data"
         ]
       },
+      "GenerateClassroomLoginCodesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "codes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "username": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "username",
+                    "displayName",
+                    "code"
+                  ]
+                }
+              },
+              "expiresAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "codes",
+              "expiresAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "MoveClassroomStudentBody": {
         "type": "object",
         "properties": {
@@ -68423,7 +68062,14 @@
                   "type": "string"
                 },
                 "realName": {
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 },
                 "notes": {
                   "type": "string"
@@ -68521,7 +68167,14 @@
                   "type": "string"
                 },
                 "realName": {
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 },
                 "notes": {
                   "type": "string"
@@ -68673,6 +68326,248 @@
                 "username"
               ]
             }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetClassroomProgressResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "classroomId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "days": {
+                "type": "number"
+              },
+              "chess": {
+                "type": "object",
+                "properties": {
+                  "students": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "userId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "username": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "realName": {
+                          "type": "string"
+                        },
+                        "isManaged": {
+                          "type": "boolean"
+                        },
+                        "ratings": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "category": {
+                                "type": "string"
+                              },
+                              "current": {
+                                "type": "number"
+                              },
+                              "gamesPlayed": {
+                                "type": "number"
+                              },
+                              "ratingStart": {
+                                "type": "number"
+                              },
+                              "ratingEnd": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "category",
+                              "current",
+                              "gamesPlayed",
+                              "ratingStart",
+                              "ratingEnd"
+                            ]
+                          }
+                        },
+                        "matchesPlayed": {
+                          "type": "number"
+                        },
+                        "matchesWon": {
+                          "type": "number"
+                        },
+                        "winRate": {
+                          "type": "number"
+                        },
+                        "puzzlesAttempted": {
+                          "type": "number"
+                        },
+                        "puzzlesCorrect": {
+                          "type": "number"
+                        },
+                        "puzzleAccuracy": {
+                          "type": "number"
+                        },
+                        "playDurationMs": {
+                          "type": "number"
+                        },
+                        "learnCompletedLevels": {
+                          "type": "number"
+                        },
+                        "learnTotalLevels": {
+                          "type": "number"
+                        },
+                        "learnCompletionPercentage": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "userId",
+                        "username",
+                        "realName",
+                        "isManaged",
+                        "ratings",
+                        "matchesPlayed",
+                        "matchesWon",
+                        "winRate",
+                        "puzzlesAttempted",
+                        "puzzlesCorrect",
+                        "puzzleAccuracy",
+                        "playDurationMs",
+                        "learnCompletedLevels",
+                        "learnTotalLevels",
+                        "learnCompletionPercentage"
+                      ]
+                    }
+                  },
+                  "classAverage": {
+                    "type": "object",
+                    "properties": {
+                      "winRate": {
+                        "type": "number"
+                      },
+                      "puzzleAccuracy": {
+                        "type": "number"
+                      },
+                      "learnCompletionPercentage": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "winRate",
+                      "puzzleAccuracy",
+                      "learnCompletionPercentage"
+                    ]
+                  }
+                },
+                "required": [
+                  "students",
+                  "classAverage"
+                ]
+              },
+              "courses": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "courseId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "object",
+                      "patternProperties": {
+                        "^(.*)$": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "isMandatory": {
+                      "type": "boolean"
+                    },
+                    "dueDate": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "totalChapterCount": {
+                      "type": "number"
+                    },
+                    "enrolledCount": {
+                      "type": "number"
+                    },
+                    "completedCount": {
+                      "type": "number"
+                    },
+                    "averageCompletionPercentage": {
+                      "type": "number"
+                    },
+                    "students": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "progress": {
+                            "type": "string"
+                          },
+                          "finishedChapterCount": {
+                            "type": "number"
+                          },
+                          "completionPercentage": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "userId",
+                          "progress",
+                          "finishedChapterCount",
+                          "completionPercentage"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "courseId",
+                    "title",
+                    "isMandatory",
+                    "dueDate",
+                    "totalChapterCount",
+                    "enrolledCount",
+                    "completedCount",
+                    "averageCompletionPercentage",
+                    "students"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "classroomId",
+              "days",
+              "chess",
+              "courses"
+            ]
           }
         },
         "required": [
