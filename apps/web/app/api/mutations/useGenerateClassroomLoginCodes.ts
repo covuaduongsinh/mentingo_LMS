@@ -5,13 +5,14 @@ import { ApiClient } from "~/api/api-client";
 import { getTranslatedApiErrorMessage } from "~/api/utils/getTranslatedApiErrorMessage";
 import { useToast } from "~/components/ui/use-toast";
 
-export function useResetChessClassStudentPassword() {
+export function useGenerateClassroomLoginCodes(classroomId: string) {
   const { toast } = useToast();
   const { t } = useTranslation();
 
   return useMutation({
-    mutationFn: async (userId: string) => {
-      const response = await ApiClient.api.chessClassControllerResetStudentPassword(userId);
+    mutationFn: async () => {
+      const response =
+        await ApiClient.api.classroomControllerGenerateClassroomLoginCodes(classroomId);
       return response.data.data;
     },
     onError: (error) => {
@@ -20,7 +21,9 @@ export function useResetChessClassStudentPassword() {
         description: getTranslatedApiErrorMessage(
           error,
           t,
-          t("chessClass.toast.resetPasswordFailed", { defaultValue: "Could not reset password" }),
+          t("classroom.loginCodes.toast.generateFailed", {
+            defaultValue: "Could not generate login codes",
+          }),
         ),
       });
     },

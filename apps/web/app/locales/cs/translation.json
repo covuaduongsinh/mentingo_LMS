@@ -1,7 +1,8 @@
 {
   "classroom": {
     "nav": {
-      "title": "Třídy"
+      "title": "Třídy",
+      "viewClassroom": "Zobrazit odpovídající třídu"
     },
     "list": {
       "teachingHeading": "Třídy, které učíte",
@@ -158,7 +159,8 @@
       "trainerRoleUnavailable": "Role školitele není pro tohoto nájemce dostupná",
       "courseNotFound": "Kurz nenalezen",
       "courseAssignNotAllowed": "Pro přiřazení tohoto kurzu potřebujete práva k zápisu nebo musíte být jeho autorem",
-      "courseNotAssigned": "Tento kurz není třídě přiřazen"
+      "courseNotAssigned": "Tento kurz není třídě přiřazen",
+      "noManagedStudentsInClassroom": "Tato třída nemá žádné spravované účty studentů"
     },
     "wall": {
       "editLabel": "Nástěnka (Markdown)",
@@ -238,6 +240,16 @@
         "not_started": "Nezahájeno",
         "in_progress": "Probíhá",
         "completed": "Dokončeno"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Vygenerovat přihlašovací kódy",
+      "title": "Přihlašovací kódy třídy",
+      "expiresAt": "Platnost vyprší v {{time}}",
+      "displayName": "Jméno",
+      "code": "Kód",
+      "toast": {
+        "generateFailed": "Nepodařilo se vygenerovat přihlašovací kódy"
       }
     }
   },

@@ -3421,12 +3421,13 @@ export const chessClassLoginCodes = pgTable(
     userId: uuid("user_id")
       .references(() => users.id, { onDelete: "cascade" })
       .notNull(),
-    groupId: uuid("group_id")
-      .references(() => groups.id, { onDelete: "cascade" })
-      .notNull(),
-    // Nullable bridge added in the Classroom roadmap's Đợt C2 — backfilled from `classrooms`
-    // rows mirroring existing chess-class groups (docs/specs/classroom-business-spec.md).
-    // `groupId` above stays authoritative through C2; not yet read by any query.
+    // Nullable since Đợt C8 — the chess-class module that exclusively wrote this column is
+    // deleted in C8; every row from here on is written by the Classroom module via
+    // `classroomId` below instead. Old rows keep their `groupId` (read-only history; the
+    // login codes they held are long since expired/consumed).
+    groupId: uuid("group_id").references(() => groups.id, { onDelete: "cascade" }),
+    // Bridge added in the Classroom roadmap's Đợt C2, authoritative since C8 (see `groupId`
+    // above) — see docs/specs/classroom-business-spec.md.
     classroomId: uuid("classroom_id").references((): AnyPgColumn => classrooms.id, {
       onDelete: "set null",
     }),

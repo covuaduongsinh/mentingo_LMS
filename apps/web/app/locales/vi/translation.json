@@ -411,64 +411,6 @@
       "seekAcceptFailed": "Không thể chấp nhận lời mời"
     }
   },
-  "chessClass": {
-    "nav": {
-      "title": "Lớp cờ",
-      "manageChessClass": "Quản lý lớp cờ"
-    },
-    "deprecatedBanner": {
-      "text": "Trang này đang được thay thế bằng module Lớp học mới.",
-      "link": "Xem lớp học tương ứng"
-    },
-    "bulkCreate": {
-      "title": "Thêm học sinh hàng loạt",
-      "placeholder": "Mỗi dòng một tên học sinh",
-      "submit": "Tạo tài khoản",
-      "showOnceWarning": "Lưu lại thông tin này ngay — sẽ không hiển thị lại lần nữa."
-    },
-    "loginCodes": {
-      "title": "Mã đăng nhập lớp",
-      "generate": "Tạo mã mới",
-      "expiresAt": "Hết hạn lúc {{time}}"
-    },
-    "progress": {
-      "title": "Tiến độ lớp (30 ngày gần nhất)",
-      "classWinRate": "Tỉ lệ thắng cả lớp: {{rate}}%",
-      "classPuzzleAccuracy": "Độ chính xác bài đố cả lớp: {{rate}}%"
-    },
-    "table": {
-      "realName": "Tên",
-      "username": "Tên đăng nhập",
-      "password": "Mật khẩu",
-      "displayName": "Bút danh",
-      "code": "Mã",
-      "matches": "Ván đấu",
-      "winRate": "Tỉ lệ thắng",
-      "puzzles": "Bài đố",
-      "actions": "Thao tác"
-    },
-    "button": {
-      "resetPassword": "Đặt lại mật khẩu",
-      "release": "Giải phóng",
-      "confirmRelease": "Xác nhận giải phóng"
-    },
-    "releaseDialog": {
-      "title": "Giải phóng tài khoản học sinh",
-      "emailLabel": "Email thật của học sinh"
-    },
-    "toast": {
-      "bulkCreateSuccess": "Đã tạo {{count}} tài khoản học sinh",
-      "bulkCreateFailed": "Không thể tạo tài khoản học sinh",
-      "resetPasswordFailed": "Không thể đặt lại mật khẩu",
-      "newPassword": "Mật khẩu mới: {{password}}",
-      "released": "Đã giải phóng tài khoản",
-      "releaseFailed": "Không thể giải phóng tài khoản",
-      "loginCodesFailed": "Không thể tạo mã đăng nhập"
-    },
-    "errors": {
-      "groupNotFound": "Không tìm thấy lớp"
-    }
-  },
   "chessTournament": {
     "nav": {
       "title": "Giải đấu"
@@ -632,7 +574,8 @@
   },
   "classroom": {
     "nav": {
-      "title": "Lớp học"
+      "title": "Lớp học",
+      "viewClassroom": "Xem lớp học tương ứng"
     },
     "list": {
       "teachingHeading": "Lớp bạn đang dạy",
@@ -789,7 +732,8 @@
       "trainerRoleUnavailable": "Vai trò giáo viên chưa khả dụng cho đơn vị này",
       "courseNotFound": "Không tìm thấy khóa học",
       "courseAssignNotAllowed": "Bạn cần quyền ghi danh khóa học hoặc là tác giả khóa học này để gán nó",
-      "courseNotAssigned": "Khóa học này chưa được gán cho lớp"
+      "courseNotAssigned": "Khóa học này chưa được gán cho lớp",
+      "noManagedStudentsInClassroom": "Lớp này chưa có tài khoản học sinh do giáo viên quản lý"
     },
     "wall": {
       "editLabel": "Bảng tin (Markdown)",
@@ -869,6 +813,16 @@
         "not_started": "Chưa bắt đầu",
         "in_progress": "Đang học",
         "completed": "Đã hoàn thành"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Tạo mã đăng nhập",
+      "title": "Mã đăng nhập lớp",
+      "expiresAt": "Hết hạn lúc {{time}}",
+      "displayName": "Tên",
+      "code": "Mã",
+      "toast": {
+        "generateFailed": "Không thể tạo mã đăng nhập"
       }
     }
   },
@@ -5046,7 +5000,6 @@
     "chessInsightDashboard": "Phân tích điểm mạnh-yếu",
     "communityMessages": "Tin nhắn",
     "communityTrainers": "Danh bạ HLV",
-    "chessClassManagement": "Quản lý lớp cờ",
     "chessClassLogin": "Đăng nhập bằng mã lớp",
     "chessTournamentCreate": "Tạo giải đấu cờ",
     "chessTournamentDetail": "Giải đấu cờ",

@@ -171,9 +171,6 @@ export const routeAccessConfig = createRouteConfig({
   "admin/chess/games": {
     anyOf: [PERMISSIONS.CHESS_GAME_MANAGE, PERMISSIONS.CHESS_GAME_READ],
   },
-  "admin/chess/classes/:groupId": {
-    anyOf: [PERMISSIONS.CHESS_CLASS_MANAGE_STUDENTS, PERMISSIONS.CHESS_CLASS_PROGRESS],
-  },
   "admin/chess/tournaments/new": {
     anyOf: [PERMISSIONS.CHESS_TOURNAMENT_CREATE],
   },

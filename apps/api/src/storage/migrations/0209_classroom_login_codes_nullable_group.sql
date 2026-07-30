@@ -1,0 +1,1 @@
+ALTER TABLE "chess_class_login_codes" ALTER COLUMN "group_id" DROP NOT NULL;

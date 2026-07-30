@@ -10,6 +10,7 @@ import { and, asc, desc, eq, gte, inArray, isNull, not, or, sql } from "drizzle-
 import { DatabasePg, type UUIDType } from "src/common";
 import { userHasAnyPermissionsCondition } from "src/common/permissions/permission-sql.utils";
 import {
+  chessClassLoginCodes,
   chessLearnProgress,
   chessMatches,
   chessPlaySessions,
@@ -1029,5 +1030,28 @@ export class ClassroomRepository {
       )
       .where(eq(classroomCourses.classroomId, classroomId))
       .orderBy(desc(classroomCourses.createdAt));
+  }
+
+  // ---------------------------------------------------------------------------------------
+  // Mã đăng nhập nhanh (Đợt C8 — ported from the deleted chess-class module)
+  // ---------------------------------------------------------------------------------------
+
+  async invalidateActiveLoginCodes(userIds: UUIDType[]) {
+    if (!userIds.length) return;
+
+    await this.db
+      .update(chessClassLoginCodes)
+      .set({ consumedAt: new Date() })
+      .where(
+        and(inArray(chessClassLoginCodes.userId, userIds), isNull(chessClassLoginCodes.consumedAt)),
+      );
+  }
+
+  async insertLoginCodes(
+    rows: Array<{ userId: UUIDType; classroomId: UUIDType; codeHash: string; expiresAt: Date }>,
+  ) {
+    if (!rows.length) return [];
+
+    return this.db.insert(chessClassLoginCodes).values(rows).returning();
   }
 }

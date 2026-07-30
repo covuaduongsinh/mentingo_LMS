@@ -1,7 +1,8 @@
 {
   "classroom": {
     "nav": {
-      "title": "Klassen"
+      "title": "Klassen",
+      "viewClassroom": "Entsprechende Klasse ansehen"
     },
     "list": {
       "teachingHeading": "Klassen, die Sie unterrichten",
@@ -158,7 +159,8 @@
       "trainerRoleUnavailable": "Die Trainer-Rolle ist für diesen Mandanten nicht verfügbar",
       "courseNotFound": "Kurs nicht gefunden",
       "courseAssignNotAllowed": "Du benötigst Einschreibungsrechte oder musst Autor dieses Kurses sein, um ihn zuzuweisen",
-      "courseNotAssigned": "Dieser Kurs ist der Klasse nicht zugewiesen"
+      "courseNotAssigned": "Dieser Kurs ist der Klasse nicht zugewiesen",
+      "noManagedStudentsInClassroom": "Diese Klasse hat keine verwalteten Schülerkonten"
     },
     "wall": {
       "editLabel": "Anschlagtafel (Markdown)",
@@ -238,6 +240,16 @@
         "not_started": "Nicht begonnen",
         "in_progress": "In Bearbeitung",
         "completed": "Abgeschlossen"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Anmeldecodes generieren",
+      "title": "Anmeldecodes der Klasse",
+      "expiresAt": "Läuft ab um {{time}}",
+      "displayName": "Name",
+      "code": "Code",
+      "toast": {
+        "generateFailed": "Anmeldecodes konnten nicht generiert werden"
       }
     }
   },

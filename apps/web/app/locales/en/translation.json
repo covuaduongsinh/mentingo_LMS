@@ -411,64 +411,6 @@
       "seekAcceptFailed": "Could not accept the seek"
     }
   },
-  "chessClass": {
-    "nav": {
-      "title": "Chess class",
-      "manageChessClass": "Manage chess class"
-    },
-    "deprecatedBanner": {
-      "text": "This page is being replaced by the new Classroom module.",
-      "link": "View corresponding classroom"
-    },
-    "bulkCreate": {
-      "title": "Add students in bulk",
-      "placeholder": "One student name per line",
-      "submit": "Create accounts",
-      "showOnceWarning": "Save these credentials now — they won't be shown again."
-    },
-    "loginCodes": {
-      "title": "Class login codes",
-      "generate": "Generate new codes",
-      "expiresAt": "Expires at {{time}}"
-    },
-    "progress": {
-      "title": "Class progress (last 30 days)",
-      "classWinRate": "Class win rate: {{rate}}%",
-      "classPuzzleAccuracy": "Class puzzle accuracy: {{rate}}%"
-    },
-    "table": {
-      "realName": "Name",
-      "username": "Username",
-      "password": "Password",
-      "displayName": "Display name",
-      "code": "Code",
-      "matches": "Matches",
-      "winRate": "Win rate",
-      "puzzles": "Puzzles",
-      "actions": "Actions"
-    },
-    "button": {
-      "resetPassword": "Reset password",
-      "release": "Release",
-      "confirmRelease": "Confirm release"
-    },
-    "releaseDialog": {
-      "title": "Release student account",
-      "emailLabel": "Student's real email"
-    },
-    "toast": {
-      "bulkCreateSuccess": "{{count}} student accounts created",
-      "bulkCreateFailed": "Could not create student accounts",
-      "resetPasswordFailed": "Could not reset password",
-      "newPassword": "New password: {{password}}",
-      "released": "Account released",
-      "releaseFailed": "Could not release the account",
-      "loginCodesFailed": "Could not generate login codes"
-    },
-    "errors": {
-      "groupNotFound": "Group not found"
-    }
-  },
   "chessTournament": {
     "nav": {
       "title": "Tournaments"
@@ -632,7 +574,8 @@
   },
   "classroom": {
     "nav": {
-      "title": "Classrooms"
+      "title": "Classrooms",
+      "viewClassroom": "View corresponding classroom"
     },
     "list": {
       "teachingHeading": "Classes you teach",
@@ -789,7 +732,8 @@
       "trainerRoleUnavailable": "The trainer role is not available for this tenant",
       "courseNotFound": "Course not found",
       "courseAssignNotAllowed": "You need course enrollment rights or to author this course to assign it",
-      "courseNotAssigned": "This course isn't assigned to the classroom"
+      "courseNotAssigned": "This course isn't assigned to the classroom",
+      "noManagedStudentsInClassroom": "This classroom has no managed student accounts"
     },
     "wall": {
       "editLabel": "Bulletin board (Markdown)",
@@ -869,6 +813,16 @@
         "not_started": "Not started",
         "in_progress": "In progress",
         "completed": "Completed"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Generate login codes",
+      "title": "Class login codes",
+      "expiresAt": "Expires at {{time}}",
+      "displayName": "Name",
+      "code": "Code",
+      "toast": {
+        "generateFailed": "Could not generate login codes"
       }
     }
   },
@@ -5048,7 +5002,6 @@
     "chessInsightDashboard": "Insight & Tutor",
     "communityMessages": "Messages",
     "communityTrainers": "Trainer Directory",
-    "chessClassManagement": "Chess Class Management",
     "chessClassLogin": "Class Code Login",
     "chessTournamentCreate": "Create Chess Tournament",
     "chessTournamentDetail": "Chess Tournament",

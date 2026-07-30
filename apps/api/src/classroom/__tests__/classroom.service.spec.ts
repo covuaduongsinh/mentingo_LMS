@@ -109,6 +109,8 @@ describe("ClassroomService", () => {
       getPlayDurationForUsers: jest.fn().mockResolvedValue([]),
       getLearnCompletedCountsForUsers: jest.fn().mockResolvedValue([]),
       getClassroomCourseProgress: jest.fn().mockResolvedValue([]),
+      invalidateActiveLoginCodes: jest.fn().mockResolvedValue(undefined),
+      insertLoginCodes: jest.fn().mockResolvedValue([]),
       ...repositoryOverrides,
     } as unknown as ClassroomRepository;
 
@@ -1161,6 +1163,74 @@ describe("ClassroomService", () => {
         finishedChapterCount: 0,
         completionPercentage: 0,
       });
+    });
+  });
+
+  describe("generateLoginCodes (Đợt C8 — ported from chess-class)", () => {
+    it("refuses a non-teacher", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(false),
+        isActiveStudent: jest.fn().mockResolvedValue(true),
+      });
+
+      await expect(
+        service.generateLoginCodes(CLASSROOM_ID, buildUser(STUDENT_ID)),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+
+    it("rejects when the classroom has no managed students", async () => {
+      const { service } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        listClassroomStudents: jest.fn().mockResolvedValue([
+          {
+            userId: "s1",
+            realName: "A",
+            isManaged: false,
+            archivedAt: null,
+            notes: "",
+            username: null,
+          },
+        ]),
+      });
+
+      await expect(
+        service.generateLoginCodes(CLASSROOM_ID, buildUser(TEACHER_ID)),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it("invalidates prior codes and generates one fresh 5-char code per managed student only", async () => {
+      const { service, repository } = buildService({
+        isTeacher: jest.fn().mockResolvedValue(true),
+        listClassroomStudents: jest.fn().mockResolvedValue([
+          {
+            userId: "s1",
+            realName: "A",
+            isManaged: true,
+            archivedAt: null,
+            notes: "",
+            username: "hsone",
+          },
+          {
+            userId: "s2",
+            realName: "B",
+            isManaged: false,
+            archivedAt: null,
+            notes: "",
+            username: "hstwo",
+          },
+        ]),
+      });
+
+      const result = await service.generateLoginCodes(CLASSROOM_ID, buildUser(TEACHER_ID));
+
+      expect(repository.invalidateActiveLoginCodes).toHaveBeenCalledWith(["s1"]);
+      expect(repository.insertLoginCodes).toHaveBeenCalledWith([
+        expect.objectContaining({ userId: "s1", classroomId: CLASSROOM_ID }),
+      ]);
+      expect(result.codes).toHaveLength(1);
+      expect(result.codes[0]).toMatchObject({ userId: "s1", username: "hsone", displayName: "A" });
+      expect(result.codes[0].code).toMatch(/^[A-Z0-9]{5}$/);
+      expect(new Date(result.expiresAt).getTime()).toBeGreaterThan(Date.now());
     });
   });
 });

@@ -65,22 +65,15 @@ const EditGroup = (): ReactElement => {
       ]}
     >
       <div data-testid={GROUP_PAGE_HANDLES.PAGE} className="flex h-full flex-col gap-4">
-        <div className="flex flex-wrap gap-2">
-          <Button type="button" variant="outline" className="w-fit" asChild>
-            <Link to={`/admin/chess/classes/${groupId}`}>
-              {t("chessClass.nav.manageChessClass", { defaultValue: "Manage chess class" })}
-            </Link>
-          </Button>
-          {linkedClassroomId && (
+        {linkedClassroomId && (
+          <div className="flex flex-wrap gap-2">
             <Button type="button" variant="outline" className="w-fit" asChild>
               <Link to={`/classrooms/${linkedClassroomId}`}>
-                {t("chessClass.deprecatedBanner.link", {
-                  defaultValue: "View corresponding classroom",
-                })}
+                {t("classroom.nav.viewClassroom", { defaultValue: "View corresponding classroom" })}
               </Link>
             </Button>
-          )}
-        </div>
+          </div>
+        )}
         <EditGroupForm
           key={formKey}
           formKey={formKey}

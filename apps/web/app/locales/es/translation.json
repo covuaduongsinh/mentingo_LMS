@@ -1,7 +1,8 @@
 {
   "classroom": {
     "nav": {
-      "title": "Clases"
+      "title": "Clases",
+      "viewClassroom": "Ver la clase correspondiente"
     },
     "list": {
       "teachingHeading": "Clases que impartes",
@@ -158,7 +159,8 @@
       "trainerRoleUnavailable": "El rol de formador no está disponible para este tenant",
       "courseNotFound": "Curso no encontrado",
       "courseAssignNotAllowed": "Necesitas permisos de inscripción o ser autor de este curso para asignarlo",
-      "courseNotAssigned": "Este curso no está asignado al aula"
+      "courseNotAssigned": "Este curso no está asignado al aula",
+      "noManagedStudentsInClassroom": "Esta clase no tiene cuentas de estudiante gestionadas"
     },
     "wall": {
       "editLabel": "Tablón de anuncios (Markdown)",
@@ -238,6 +240,16 @@
         "not_started": "No iniciado",
         "in_progress": "En curso",
         "completed": "Completado"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Generar códigos de acceso",
+      "title": "Códigos de acceso de la clase",
+      "expiresAt": "Caduca a las {{time}}",
+      "displayName": "Nombre",
+      "code": "Código",
+      "toast": {
+        "generateFailed": "No se pudieron generar los códigos de acceso"
       }
     }
   },

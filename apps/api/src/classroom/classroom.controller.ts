@@ -30,6 +30,7 @@ import {
   createClassroomBodySchema,
   createClassroomStudentBodySchema,
   createClassroomStudentResponseSchema,
+  generateClassroomLoginCodesResponseSchema,
   inviteClassroomStudentBodySchema,
   inviteClassroomStudentResponseSchema,
   moveClassroomStudentBodySchema,
@@ -501,6 +502,19 @@ export class ClassroomController {
       body.email,
     );
     return new BaseResponse({ createToken });
+  }
+
+  @Post(":classroomId/login-codes")
+  @RequirePermission(PERMISSIONS.CLASSROOM_READ)
+  @Validate({
+    request: [{ type: "param", name: "classroomId", schema: UUIDSchema }],
+    response: baseResponse(generateClassroomLoginCodesResponseSchema),
+  })
+  async generateClassroomLoginCodes(
+    @Param("classroomId") classroomId: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.classroomService.generateLoginCodes(classroomId, user));
   }
 
   @Post(":classroomId/students/:userId/close")

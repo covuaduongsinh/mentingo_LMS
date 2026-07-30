@@ -2,6 +2,7 @@ import { Link, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useGenerateClassroomLoginCodes } from "~/api/mutations/useGenerateClassroomLoginCodes";
 import { useRevokeClassroomInvite } from "~/api/mutations/useRevokeClassroomInvite";
 import { useClassroomDetail } from "~/api/queries/useClassroomDetail";
 import { useClassroomInvites } from "~/api/queries/useClassroomInvites";
@@ -9,6 +10,13 @@ import { useClassroomStudents } from "~/api/queries/useClassroomStudents";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { Switch } from "~/components/ui/switch";
 import {
   Table,
@@ -21,8 +29,82 @@ import {
 import { setPageTitle } from "~/utils/setPageTitle";
 
 import type { MetaFunction } from "@remix-run/react";
+import type { GenerateClassroomLoginCodesResponse } from "~/api/generated-api";
 
 export const meta: MetaFunction = ({ matches }) => setPageTitle(matches, "pages.classroomStudents");
+
+type LoginCodesResult = GenerateClassroomLoginCodesResponse["data"];
+
+function LoginCodesDialog({ classroomId }: { classroomId: string }) {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const [result, setResult] = useState<LoginCodesResult | null>(null);
+  const { mutateAsync: generateLoginCodes, isPending } =
+    useGenerateClassroomLoginCodes(classroomId);
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (nextOpen) {
+      generateLoginCodes().then(setResult);
+    } else {
+      setResult(null);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button variant="outline" data-testid="classroom-generate-login-codes-trigger">
+          {t("classroom.loginCodes.generateButton", { defaultValue: "Generate login codes" })}
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {t("classroom.loginCodes.title", { defaultValue: "Class login codes" })}
+          </DialogTitle>
+        </DialogHeader>
+        {isPending || !result ? (
+          <p className="body-base text-neutral-600">
+            {t("common.loading", { defaultValue: "Loading…" })}
+          </p>
+        ) : (
+          <div className="space-y-2">
+            <p className="body-sm text-neutral-500">
+              {t("classroom.loginCodes.expiresAt", {
+                defaultValue: "Expires at {{time}}",
+                time: new Date(result.expiresAt).toLocaleTimeString(),
+              })}
+            </p>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>
+                    {t("classroom.loginCodes.displayName", { defaultValue: "Name" })}
+                  </TableHead>
+                  <TableHead>{t("classroom.loginCodes.code", { defaultValue: "Code" })}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {result.codes.map((code) => (
+                  <TableRow key={code.userId}>
+                    <TableCell>{code.displayName}</TableCell>
+                    <TableCell
+                      className="font-mono text-lg tracking-widest"
+                      data-testid="classroom-login-code"
+                    >
+                      {code.code}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default function ClassroomStudentsListPage() {
   const { t } = useTranslation();
@@ -57,6 +139,7 @@ export default function ClassroomStudentsListPage() {
             {t("classroom.students.title", { defaultValue: "Students" })}
           </h1>
           <div className="flex flex-wrap gap-2">
+            <LoginCodesDialog classroomId={classroomId} />
             <Button variant="outline" asChild>
               <Link to={`/classrooms/${classroomId}/bulk-actions`}>
                 {t("classroom.students.bulkActionsButton", { defaultValue: "Bulk actions" })}

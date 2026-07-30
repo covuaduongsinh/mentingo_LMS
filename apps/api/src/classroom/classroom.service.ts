@@ -24,14 +24,9 @@ import { nanoid } from "nanoid";
 
 import { ActivityLogsService } from "src/activity-logs/activity-logs.service";
 import { AnnouncementsSchedulerService } from "src/announcements/announcements-scheduler.service";
+import { CLASS_LOGIN_CODE_EXPIRATION_TIME } from "src/auth/consts";
 import { hashToken } from "src/auth/utils/hash-auth-token";
 import { ChessStudyService } from "src/chess/chess-study.service";
-import {
-  generateManagedAccountEmail,
-  generatePseudonym,
-  generateSafeCode,
-  generateUsernameCandidate,
-} from "src/chess-class/utils/safe-code.utils";
 import { DatabasePg } from "src/common";
 import hashPassword from "src/common/helpers/hashPassword";
 import { resolveTenantOrigin } from "src/common/helpers/resolveTenantOrigin";
@@ -45,6 +40,12 @@ import { DB_ADMIN } from "src/storage/db/db.providers";
 import { UserService } from "src/user/user.service";
 
 import { ClassroomRepository, type NewClassroomManagedUserRow } from "./classroom.repository";
+import {
+  generateManagedAccountEmail,
+  generatePseudonym,
+  generateSafeCode,
+  generateUsernameCandidate,
+} from "./utils/safe-code.utils";
 
 import type {
   CreateClassroomInput,
@@ -57,6 +58,7 @@ import type { UUIDType } from "src/common";
 import type { CurrentUserType } from "src/common/types/current-user.type";
 
 const TEMP_PASSWORD_LENGTH = 10;
+const LOGIN_CODE_LENGTH = 5;
 const USERNAME_GENERATION_MAX_ATTEMPTS = 5;
 const CREATE_TOKEN_EXPIRATION_YEARS = 1;
 const CLASSROOM_AUTO_ARCHIVE_INACTIVE_MS =
@@ -498,6 +500,49 @@ export class ClassroomService {
     });
 
     return createToken;
+  }
+
+  /** Mã đăng nhập nhanh (Đợt C8 — ported from the deleted chess-class module, same behavior):
+   * one 5-char code per active managed student, 15-minute expiry, single-use, invalidates any
+   * still-active codes from a previous generation so a screenshotted old code stops working. */
+  async generateLoginCodes(classroomId: UUIDType, user: CurrentUserType) {
+    await this.getClassroomOrThrow(classroomId);
+    await this.assertCanManage(classroomId, user);
+
+    const students = await this.repository.listClassroomStudents(classroomId, false);
+    const managedStudents = students.filter((student) => student.isManaged);
+
+    if (!managedStudents.length) {
+      throw new BadRequestException("classroom.error.noManagedStudentsInClassroom");
+    }
+
+    await this.repository.invalidateActiveLoginCodes(
+      managedStudents.map((student) => student.userId),
+    );
+
+    const expiresAt = new Date(Date.now() + CLASS_LOGIN_CODE_EXPIRATION_TIME);
+    const plainCodesByUserId = new Map(
+      managedStudents.map((student) => [student.userId, generateSafeCode(LOGIN_CODE_LENGTH)]),
+    );
+
+    await this.repository.insertLoginCodes(
+      managedStudents.map((student) => ({
+        userId: student.userId,
+        classroomId,
+        codeHash: hashToken(plainCodesByUserId.get(student.userId) as string),
+        expiresAt,
+      })),
+    );
+
+    return {
+      codes: managedStudents.map((student) => ({
+        userId: student.userId,
+        username: student.username,
+        displayName: student.realName,
+        code: plainCodesByUserId.get(student.userId) as string,
+      })),
+      expiresAt: expiresAt.toISOString(),
+    };
   }
 
   async closeStudent(classroomId: UUIDType, user: CurrentUserType, targetUserId: UUIDType) {

@@ -1,7 +1,8 @@
 {
   "classroom": {
     "nav": {
-      "title": "Klasy"
+      "title": "Klasy",
+      "viewClassroom": "Zobacz odpowiadającą klasę"
     },
     "list": {
       "teachingHeading": "Klasy, których uczysz",
@@ -158,7 +159,8 @@
       "trainerRoleUnavailable": "Rola trenera nie jest dostępna dla tej instancji",
       "courseNotFound": "Nie znaleziono kursu",
       "courseAssignNotAllowed": "Potrzebujesz uprawnień do zapisywania na kurs lub musisz być jego autorem, aby go przypisać",
-      "courseNotAssigned": "Ten kurs nie jest przypisany do klasy"
+      "courseNotAssigned": "Ten kurs nie jest przypisany do klasy",
+      "noManagedStudentsInClassroom": "Ta klasa nie ma żadnych zarządzanych kont uczniów"
     },
     "wall": {
       "editLabel": "Tablica ogłoszeń (Markdown)",
@@ -238,6 +240,16 @@
         "not_started": "Nierozpoczęty",
         "in_progress": "W trakcie",
         "completed": "Ukończony"
+      }
+    },
+    "loginCodes": {
+      "generateButton": "Wygeneruj kody logowania",
+      "title": "Kody logowania klasy",
+      "expiresAt": "Wygasa o {{time}}",
+      "displayName": "Imię",
+      "code": "Kod",
+      "toast": {
+        "generateFailed": "Nie udało się wygenerować kodów logowania"
       }
     }
   },

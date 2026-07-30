@@ -117,6 +117,19 @@ export const resetClassroomStudentPasswordResponseSchema = Type.Object({
   temporaryPassword: Type.String(),
 });
 
+// Đợt C8 — ported from the deleted chess-class module.
+export const generateClassroomLoginCodesResponseSchema = Type.Object({
+  codes: Type.Array(
+    Type.Object({
+      userId: UUIDSchema,
+      username: Type.Union([Type.String(), Type.Null()]),
+      displayName: Type.String(),
+      code: Type.String(),
+    }),
+  ),
+  expiresAt: Type.String(),
+});
+
 export const releaseClassroomStudentBodySchema = Type.Object({
   email: Type.String({ format: "email" }),
 });
