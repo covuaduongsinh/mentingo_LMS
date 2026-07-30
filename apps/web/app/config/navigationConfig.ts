@@ -275,6 +275,7 @@ export const getNavigationConfig = (
           PERMISSIONS.BILLING_MANAGE,
           PERMISSIONS.CHESS_EXERCISE_MANAGE,
           PERMISSIONS.CHESS_GAME_MANAGE,
+          PERMISSIONS.CLASSROOM_MANAGE,
         ],
       },
       items: [
@@ -295,6 +296,13 @@ export const getNavigationConfig = (
           path: "admin/categories",
           iconName: "Category",
           testId: NAVIGATION_HANDLES.CATEGORIES_LINK,
+        },
+        {
+          label: t("navigationSideBar.classrooms"),
+          path: "admin/classrooms",
+          iconName: "Group",
+          accessRequirement: { allOf: [PERMISSIONS.CLASSROOM_MANAGE] },
+          testId: NAVIGATION_HANDLES.CLASSROOMS_LINK,
         },
         {
           label: t("chess.nav.exercises", { defaultValue: "Exercise bank" }),
