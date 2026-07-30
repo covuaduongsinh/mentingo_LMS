@@ -101,6 +101,7 @@ function CreateClassroomDialog() {
             </Label>
             <Input
               id="classroom-name"
+              data-testid="classroom-name-input"
               value={name}
               onChange={(event) => setName(event.target.value)}
             />
@@ -117,7 +118,11 @@ function CreateClassroomDialog() {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleCreate} disabled={name.trim().length < 3 || isPending}>
+          <Button
+            data-testid="classroom-create-submit"
+            onClick={handleCreate}
+            disabled={name.trim().length < 3 || isPending}
+          >
             {t("classroom.form.submit", { defaultValue: "Save" })}
           </Button>
         </DialogFooter>

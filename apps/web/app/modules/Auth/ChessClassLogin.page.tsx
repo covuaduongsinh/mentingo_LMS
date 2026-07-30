@@ -73,6 +73,7 @@ export default function ChessClassLoginPage() {
                 <Label htmlFor="code">{t("chessClassLoginView.field.code")}</Label>
                 <Input
                   id="code"
+                  data-testid="class-login-code-input"
                   autoComplete="off"
                   autoCapitalize="characters"
                   maxLength={5}
@@ -84,7 +85,12 @@ export default function ChessClassLoginPage() {
                 />
                 {errors.code && <div className="text-sm text-red-500">{errors.code.message}</div>}
               </div>
-              <Button type="submit" className="w-full" disabled={isPending}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isPending}
+                data-testid="class-login-submit-button"
+              >
                 {isPending ? t("common.button.saving") : t("chessClassLoginView.button.login")}
               </Button>
             </form>
