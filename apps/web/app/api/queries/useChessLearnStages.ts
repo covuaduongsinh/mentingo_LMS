@@ -9,7 +9,7 @@ export const chessLearnStagesQueryOptions = () =>
     queryKey: CHESS_LEARN_STAGES_QUERY_KEY,
     queryFn: async () => {
       const response = await ApiClient.api.chessLearnControllerGetStages();
-      return response.data.data.stages;
+      return response.data.data;
     },
   });
 

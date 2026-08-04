@@ -26,7 +26,7 @@ export default function ChessLearnLevelPage() {
   }
 
   const { data: level, isLoading } = useChessLearnLevel(stageId, levelId);
-  const { data: stages } = useChessLearnStages();
+  const { data: stagesData } = useChessLearnStages();
   const { mutateAsync: submitAttempt, isPending } = useSubmitChessLearnAttempt();
 
   const [fen, setFen] = useState<string | null>(null);
@@ -36,7 +36,7 @@ export default function ChessLearnLevelPage() {
   const [resultStars, setResultStars] = useState(0);
   const [resultScore, setResultScore] = useState(0);
 
-  const stage = stages?.find((candidate) => candidate.id === stageId);
+  const stage = stagesData?.stages?.find((candidate) => candidate.id === stageId);
   const levelIndex = stage?.levels.findIndex((candidate) => candidate.id === levelId) ?? -1;
   const nextLevel = stage && levelIndex >= 0 ? stage.levels[levelIndex + 1] : undefined;
 

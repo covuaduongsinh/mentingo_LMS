@@ -8641,18 +8641,28 @@ export interface GetStandingsResponse {
 
 export interface GetStagesResponse {
   data: {
+    sequentialLock: boolean;
     stages: {
       id: string;
       label: string;
       description: string;
+      intro: string | null;
+      complete: string | null;
       totalLevels: number;
       completedLevels: number;
+      locked: boolean;
       levels: {
         id: string;
         completed: boolean;
         bestStars: number;
         bestScore: number;
       }[];
+    }[];
+    categories: {
+      id: string;
+      label: string;
+      description: string;
+      stages: GetStagesResponse["data"]["stages"];
     }[];
   };
 }
@@ -8673,6 +8683,9 @@ export interface GetLevelResponse {
     completed: boolean;
     bestStars: number;
     bestScore: number;
+    stageIntro: string | null;
+    stageComplete: string | null;
+    locked: boolean;
   };
 }
 
@@ -19747,6 +19760,89 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<SubmitLearnAttemptResponse, any>({
         path: `/api/chess-learn/stages/${stageId}/levels/${levelId}/attempt`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @name ChessLearnControllerResetLearnProgress
+     * @request POST:/api/chess-learn/reset
+     */
+    chessLearnControllerResetLearnProgress: (params: RequestParams = {}) =>
+      this.request<{ data: { ok: true } }, any>({
+        path: `/api/chess-learn/reset`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @name ChessLearnControllerGetLearnCompletion
+     * @request GET:/api/chess-learn/completion
+     */
+    chessLearnControllerGetLearnCompletion: (
+      query?: { userIds?: string[] },
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        {
+          data: {
+            totalLevels: number;
+            completedLevels: number;
+            percent: number;
+            byUserId: { userId: string; completedLevels: number; percent: number }[];
+          };
+        },
+        any
+      >({
+        path: `/api/chess-learn/completion`,
+        method: "GET",
+        query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @name ChessLearnControllerGetCoordinateScores
+     * @request GET:/api/chess-learn/coordinate-scores
+     */
+    chessLearnControllerGetCoordinateScores: (params: RequestParams = {}) =>
+      this.request<
+        {
+          data: {
+            scores: {
+              mode: string;
+              orientation: string;
+              bestScore: number;
+              updatedAt: string | null;
+            }[];
+          };
+        },
+        any
+      >({
+        path: `/api/chess-learn/coordinate-scores`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @name ChessLearnControllerSubmitCoordinateHighScore
+     * @request POST:/api/chess-learn/coordinate-scores
+     */
+    chessLearnControllerSubmitCoordinateHighScore: (
+      data: {
+        mode: "find" | "name";
+        orientation: "white" | "black";
+        score: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<{ data: { bestScore: number; isNewBest: boolean } }, any>({
+        path: `/api/chess-learn/coordinate-scores`,
         method: "POST",
         body: data,
         type: ContentType.Json,

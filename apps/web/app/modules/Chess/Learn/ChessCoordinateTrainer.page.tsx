@@ -1,6 +1,8 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ApiClient } from "~/api/api-client";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -22,6 +24,7 @@ export const meta: MetaFunction = ({ matches }) =>
 
 const ROUND_SECONDS = 30;
 const ALL_SQUARES = RANKS.flatMap((rank) => FILES.map((file) => `${file}${rank}`));
+const COORD_SCORES_KEY = ["chess-learn-coordinate-scores"] as const;
 
 function randomSquare(exclude?: string): string {
   let square = ALL_SQUARES[Math.floor(Math.random() * ALL_SQUARES.length)];
@@ -33,6 +36,7 @@ function randomSquare(exclude?: string): string {
 
 export default function ChessCoordinateTrainerPage() {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [mode, setMode] = useState<"find" | "name">("find");
   const [orientation, setOrientation] = useState<BoardOrientation>("white");
   const [isRunning, setIsRunning] = useState(false);
@@ -41,23 +45,49 @@ export default function ChessCoordinateTrainerPage() {
   const [target, setTarget] = useState(() => randomSquare());
   const [nameInput, setNameInput] = useState("");
   const [flash, setFlash] = useState<"correct" | "incorrect" | null>(null);
+  const [lastBest, setLastBest] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { data: highScores } = useQuery({
+    queryKey: COORD_SCORES_KEY,
+    queryFn: async () => {
+      const response = await ApiClient.api.chessLearnControllerGetCoordinateScores();
+      return response.data.data.scores;
+    },
+  });
+
+  const submitScore = useMutation({
+    mutationFn: async (finalScore: number) => {
+      const response = await ApiClient.api.chessLearnControllerSubmitCoordinateHighScore({
+        mode,
+        orientation,
+        score: finalScore,
+      });
+      return response.data.data;
+    },
+    onSuccess: async (result) => {
+      setLastBest(result.bestScore);
+      await queryClient.invalidateQueries({ queryKey: COORD_SCORES_KEY });
+    },
+  });
 
   useEffect(() => {
     if (!isRunning) return;
     if (timeLeft <= 0) {
       setIsRunning(false);
+      submitScore.mutate(score);
       return;
     }
     const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
     return () => clearInterval(timer);
-  }, [isRunning, timeLeft]);
+  }, [isRunning, timeLeft]); // eslint-disable-line react-hooks/exhaustive-deps -- only tick on time
 
   const start = () => {
     setScore(0);
     setTimeLeft(ROUND_SECONDS);
     setTarget(randomSquare());
     setNameInput("");
+    setLastBest(null);
     setIsRunning(true);
     setTimeout(() => inputRef.current?.focus(), 0);
   };
@@ -83,6 +113,8 @@ export default function ChessCoordinateTrainerPage() {
 
   const displayFiles = orientation === "white" ? FILES : [...FILES].reverse();
   const displayRanks = orientation === "white" ? RANKS : [...RANKS].reverse();
+  const bestForMode =
+    highScores?.find((row) => row.mode === mode && row.orientation === orientation)?.bestScore ?? 0;
 
   const breadcrumbs = [
     {
@@ -135,6 +167,12 @@ export default function ChessCoordinateTrainerPage() {
           </span>
           <span className="body-base-md">
             {t("chessLearn.coordinate.score", { defaultValue: "Điểm: {{score}}", score })}
+          </span>
+          <span className="body-sm text-neutral-600">
+            {t("chessLearn.coordinate.best", {
+              defaultValue: "Cao nhất: {{score}}",
+              score: lastBest ?? bestForMode,
+            })}
           </span>
         </div>
 

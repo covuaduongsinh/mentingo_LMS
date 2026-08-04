@@ -983,14 +983,14 @@ export class ClassroomRepository {
       .groupBy(chessPlaySessions.userId);
   }
 
-  /** Cumulative, not windowed by `since` — a Learn level is completed once, ever. */
+  /** Cumulative completed Learn levels (bestStars >= 1), not windowed by `since`. */
   async getLearnCompletedCountsForUsers(userIds: UUIDType[]) {
     if (!userIds.length) return [];
 
     return this.db
       .select({ userId: chessLearnProgress.userId, completed: sql<number>`COUNT(*)::int` })
       .from(chessLearnProgress)
-      .where(inArray(chessLearnProgress.userId, userIds))
+      .where(and(inArray(chessLearnProgress.userId, userIds), gte(chessLearnProgress.bestStars, 1)))
       .groupBy(chessLearnProgress.userId);
   }
 

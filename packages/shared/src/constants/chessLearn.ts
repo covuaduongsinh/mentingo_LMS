@@ -3,7 +3,6 @@
  * not derived from any external reference system. See chess-learn-business-spec.md and
  * chess-learn-interactive-engine-business-spec.md.
  *
- * Each level's fen/solution/rules are built on sparse, easy-to-verify positions.
  * NEVER import CHESS_LEARN_STAGES from the web app (answer leak). API only.
  */
 
@@ -11,7 +10,7 @@ export type ChessLearnShape =
   | { kind: "arrow"; from: string; to: string; color?: "green" | "red" | "blue" | "yellow" }
   | { kind: "circle"; square: string; color?: "green" | "red" | "blue" | "yellow" };
 
-/** Whitelist rule DSL evaluated server-side only (LEARN-2). */
+/** Whitelist rule DSL evaluated server-side only. */
 export type ChessLearnRule =
   | { op: "piece_on"; piece: string; square: string }
   | { op: "piece_not_on"; piece: string; square: string }
@@ -40,31 +39,17 @@ export type ChessLearnScriptStep = {
 export type ChessLearnLevel = {
   id: string;
   fen: string;
-  /** Default exact_line. */
   mode?: ChessLearnMode;
-  /**
-   * exact_line: each entry is one accepted line.
-   * Multi-move lines use space-separated UCI tokens, e.g. "a1a4 a4a8".
-   * Optional for non-exact modes (may be empty).
-   */
   solutionUci: string[];
-  /** predicate mode success condition (server-only). */
   successRule?: ChessLearnRule;
   failureRule?: ChessLearnRule;
-  /** collect_targets: squares the learner must visit (public). */
   targets?: string[];
-  /** clear_side: remove all pieces of this color (usually "b"). */
   clearColor?: "w" | "b";
-  /** clear_side: fail if a hanging capture is left for the static opponent. */
   detectHanging?: boolean;
-  /** scripted: alternating player/opponent UCI steps (server-only answers). */
   scriptSteps?: ChessLearnScriptStep[];
-  /** Public goal text for the learner. */
   goal?: string;
   hint: string;
-  /** Public board shapes (safe to send to client). */
   shapes?: ChessLearnShape[];
-  /** Override optimal move count for scoring; default derived from solutions/targets. */
   optimalMoves?: number;
 };
 
@@ -72,14 +57,31 @@ export type ChessLearnStage = {
   id: string;
   label: string;
   description: string;
+  intro?: string;
+  complete?: string;
   levels: ChessLearnLevel[];
 };
+
+export type ChessLearnCategory = {
+  id: string;
+  label: string;
+  description: string;
+  stageIds: string[];
+};
+
+/**
+ * When true, stage N+1 stays locked until stage N has every level completed.
+ * Default off for LMS flexibility (LEARN-4).
+ */
+export const CHESS_LEARN_SEQUENTIAL_LOCK = false;
 
 export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
   {
     id: "piece-movement",
     label: "Nước đi từng quân",
     description: "Học cách mỗi quân cờ di chuyển trên bàn cờ.",
+    intro: "Bắt đầu với xe, mã — những quân di chuyển rõ ràng nhất.",
+    complete: "Bạn đã biết di chuyển xe và mã. Tiếp theo: ăn quân.",
     levels: [
       {
         id: "rook-move",
@@ -121,12 +123,22 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
         hint: "Mã đi theo hình chữ L. Hãy đưa mã từ e2 đến f4.",
         shapes: [{ kind: "arrow", from: "e2", to: "f4", color: "green" }],
       },
+      {
+        id: "bishop-move",
+        fen: "4k3/8/8/8/8/8/8/2B1K3 w - - 0 1",
+        solutionUci: ["c1a3", "c1e3", "c1f4", "c1g5", "c1h6"],
+        goal: "Di chuyển tượng theo đường chéo (một nước hợp lệ bất kỳ ra khỏi c1).",
+        hint: "Tượng chỉ đi chéo. Thử a3, e3, f4…",
+        shapes: [{ kind: "arrow", from: "c1", to: "f4", color: "green" }],
+      },
     ],
   },
   {
     id: "capturing",
     label: "Ăn quân",
     description: "Học cách ăn quân đối phương.",
+    intro: "Ăn quân là di chuyển đến ô đang có quân địch.",
+    complete: "Bạn đã biết ăn quân. Hãy học bảo vệ quân của mình.",
     levels: [
       {
         id: "knight-capture",
@@ -137,7 +149,6 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
       },
       {
         id: "rook-clear-pawns",
-        // Both kings present so chess.js accepts the position; only pawns are targets.
         fen: "4k3/2p2p2/8/8/8/2R5/8/4K3 w - - 0 1",
         mode: "clear_side",
         solutionUci: [],
@@ -152,6 +163,8 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
     id: "protecting-pieces",
     label: "Bảo vệ quân",
     description: "Học cách tránh để mất quân miễn phí.",
+    intro: "Đừng để quân bị ăn mà không được bảo vệ.",
+    complete: "Bạn đã hiểu ý bảo vệ. Tiếp: chiếu và chiếu hết.",
     levels: [
       {
         id: "rook-escape",
@@ -171,7 +184,7 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
         ],
         optimalMoves: 1,
         goal: "Bảo vệ mã bằng xe (đưa xe lên cùng cột a).",
-        hint: "Xe có thể bảo vệ mã từ a2. Sau đó hậu đen sẽ ăn mã — bạn đã học được ý bảo vệ.",
+        hint: "Xe có thể bảo vệ mã từ a2.",
         shapes: [{ kind: "arrow", from: "g2", to: "a2", color: "green" }],
       },
     ],
@@ -180,6 +193,8 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
     id: "check",
     label: "Chiếu",
     description: "Học cách chiếu vua đối phương.",
+    intro: "Chiếu là tấn công vua — đối phương phải xử lý ngay.",
+    complete: "Bạn biết chiếu. Bước tiếp: chiếu hết.",
     levels: [
       {
         id: "rook-check",
@@ -193,12 +208,24 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
         hint: "Đưa xe vào cột e để chiếu vua đen đứng ở e8.",
         shapes: [{ kind: "arrow", from: "a4", to: "e4", color: "green" }],
       },
+      {
+        id: "queen-check",
+        fen: "4k3/8/8/8/8/8/8/3QK3 w - - 0 1",
+        solutionUci: ["d1d8", "d1a4", "d1h5"],
+        mode: "predicate",
+        successRule: { op: "in_check", color: "b" },
+        optimalMoves: 1,
+        goal: "Chiếu vua đen bằng hậu.",
+        hint: "Hậu đi thẳng hoặc chéo. Nhiều ô có thể chiếu — ví dụ d8.",
+      },
     ],
   },
   {
     id: "checkmate",
     label: "Chiếu hết",
     description: "Học cách chiếu hết — kết thúc ván cờ.",
+    intro: "Chiếu hết: vua bị chiếu và không còn cách thoát.",
+    complete: "Bạn biết chiếu hết! Học thêm hòa cờ và luật đặc biệt.",
     levels: [
       {
         id: "fools-mate",
@@ -208,14 +235,16 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
         successRule: { op: "checkmate" },
         optimalMoves: 1,
         goal: "Chiếu hết vua trắng ngay.",
-        hint: 'Đưa hậu ra h4 để chiếu hết ngay lập tức — đây là ván "chiếu hết của thằng ngốc" nổi tiếng.',
+        hint: 'Đưa hậu ra h4 — "chiếu hết của thằng ngốc".',
       },
     ],
   },
   {
     id: "draw",
     label: "Hòa cờ",
-    description: "Học một trong những cách ván cờ kết thúc hòa: bắt bí (stalemate).",
+    description: "Học bắt bí (stalemate) — một cách hòa.",
+    intro: "Bắt bí: không bị chiếu nhưng không còn nước đi hợp lệ.",
+    complete: "Bạn phân biệt được chiếu hết và bắt bí.",
     levels: [
       {
         id: "stalemate",
@@ -225,7 +254,7 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
         successRule: { op: "stalemate" },
         optimalMoves: 1,
         goal: "Tạo thế bắt bí (hòa).",
-        hint: "Đưa hậu về b6 — vua đen ở a8 sẽ không còn nước đi hợp lệ nào nhưng không bị chiếu, đó là bắt bí (hòa).",
+        hint: "Đưa hậu về b6 — vua đen không còn nước đi nhưng không bị chiếu.",
       },
     ],
   },
@@ -233,6 +262,8 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
     id: "castling",
     label: "Nhập thành",
     description: "Học nước đi đặc biệt nhập thành.",
+    intro: "Nhập thành đưa vua an toàn và phát triển xe.",
+    complete: "Bạn đã nhập thành được.",
     levels: [
       {
         id: "kingside-castle",
@@ -242,19 +273,29 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
         hint: "Nhập thành cánh vua: vua đi hai ô về phía xe.",
         shapes: [{ kind: "arrow", from: "e1", to: "g1", color: "green" }],
       },
+      {
+        id: "queenside-castle",
+        fen: "4k3/8/8/8/8/8/8/R3K3 w Q - 0 1",
+        solutionUci: ["e1c1"],
+        goal: "Nhập thành cánh hậu.",
+        hint: "Vua đi hai ô về phía xe cánh hậu (e1 → c1).",
+        shapes: [{ kind: "arrow", from: "e1", to: "c1", color: "green" }],
+      },
     ],
   },
   {
     id: "en-passant",
     label: "Bắt tốt qua đường",
     description: "Học nước đi đặc biệt bắt tốt qua đường.",
+    intro: "Khi tốt địch vừa đi hai ô, bạn có thể bắt như thể nó chỉ đi một ô.",
+    complete: "Bạn đã nắm bắt qua đường.",
     levels: [
       {
         id: "en-passant-capture",
         fen: "4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 1",
         solutionUci: ["e5d6"],
         goal: "Bắt tốt qua đường.",
-        hint: "Tốt đen vừa đi hai ô từ d7 xuống d5. Tốt trắng có thể bắt qua đường tại d6.",
+        hint: "Tốt đen vừa đi hai ô từ d7 xuống d5. Tốt trắng bắt qua đường tại d6.",
       },
     ],
   },
@@ -262,28 +303,65 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
     id: "fork",
     label: "Đòn đôi",
     description: "Học cách tấn công hai quân cùng lúc.",
+    intro: "Đòn đôi (fork) buộc đối phương mất ít nhất một quân.",
+    complete: "Bạn nhận ra đòn đôi cơ bản bằng mã.",
     levels: [
       {
         id: "knight-fork",
         fen: "4k1r1/8/8/3N4/8/8/8/4K3 w - - 0 1",
         solutionUci: ["d5f6"],
         goal: "Tấn công đồng thời vua và xe bằng mã.",
-        hint: "Đưa mã đến f6 — vừa chiếu vua đen, vừa tấn công xe đen ở g8 cùng lúc.",
+        hint: "Đưa mã đến f6 — vừa chiếu vua, vừa tấn công xe g8.",
       },
     ],
   },
   {
     id: "piece-value",
     label: "Giá trị quân",
-    description: "Học cách nhận biết quân nào đáng giá hơn khi có nhiều lựa chọn ăn quân.",
+    description: "Học cách nhận biết quân nào đáng giá hơn.",
+    intro: "Hậu > xe > mã/tượng > tốt. Ưu tiên ăn quân giá trị cao.",
+    complete: "Chúc mừng — bạn đã hoàn thành lộ trình nhập môn cốt lõi!",
     levels: [
       {
         id: "capture-the-queen",
         fen: "4k3/8/8/8/2p3q1/4N3/8/4K3 w - - 0 1",
         solutionUci: ["e3g4"],
         goal: "Ăn quân có giá trị cao hơn.",
-        hint: "Mã có thể ăn tốt ở c4 hoặc hậu ở g4 — hãy chọn quân đáng giá hơn.",
+        hint: "Mã có thể ăn tốt c4 hoặc hậu g4 — hãy chọn hậu.",
       },
     ],
   },
 ];
+
+/** Pedagogical grouping for the Learn map UI (LEARN-4). */
+export const CHESS_LEARN_CATEGORIES: ChessLearnCategory[] = [
+  {
+    id: "pieces",
+    label: "Quân cờ",
+    description: "Di chuyển từng loại quân.",
+    stageIds: ["piece-movement"],
+  },
+  {
+    id: "fundamentals",
+    label: "Nền tảng",
+    description: "Ăn quân, bảo vệ, chiếu, chiếu hết.",
+    stageIds: ["capturing", "protecting-pieces", "check", "checkmate"],
+  },
+  {
+    id: "intermediate",
+    label: "Trung cấp",
+    description: "Hòa cờ và luật đặc biệt.",
+    stageIds: ["draw", "castling", "en-passant"],
+  },
+  {
+    id: "advanced",
+    label: "Nâng cao",
+    description: "Chiến thuật và giá trị quân.",
+    stageIds: ["fork", "piece-value"],
+  },
+];
+
+/** Total published levels — used for classroom completion %. */
+export function countChessLearnLevels(): number {
+  return CHESS_LEARN_STAGES.reduce((sum, stage) => sum + stage.levels.length, 0);
+}

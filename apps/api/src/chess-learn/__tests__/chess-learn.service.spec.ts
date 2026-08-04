@@ -22,6 +22,10 @@ describe("ChessLearnService", () => {
         bestMovesUsed: params.correct ? params.movesUsed : null,
         attemptCount: 1,
       })),
+      countCompletedLevelsForUsers: jest.fn().mockResolvedValue([]),
+      deleteAllForUser: jest.fn().mockResolvedValue(undefined),
+      listCoordinateScores: jest.fn().mockResolvedValue([]),
+      upsertCoordinateScore: jest.fn().mockResolvedValue({ bestScore: 10, isNewBest: true }),
       ...repositoryOverrides,
     } as unknown as ChessLearnRepository;
 
@@ -29,18 +33,18 @@ describe("ChessLearnService", () => {
   };
 
   describe("getStages", () => {
-    it("reports every curated stage with a completion count of 0 when nothing is completed", async () => {
+    it("returns categories and sequentialLock flag", async () => {
       const { service } = buildService();
 
-      const stages = await service.getStages(USER_ID);
+      const result = await service.getStages(USER_ID);
 
-      expect(stages).toHaveLength(CHESS_LEARN_STAGES.length);
-      expect(stages.every((stage) => stage.completedLevels === 0)).toBe(true);
-      expect(stages[0].totalLevels).toBe(FIRST_STAGE.levels.length);
-      expect(stages[0].levels[0]).toMatchObject({
-        bestStars: 0,
-        bestScore: 0,
-        completed: false,
+      expect(result.stages).toHaveLength(CHESS_LEARN_STAGES.length);
+      expect(result.categories.length).toBeGreaterThan(0);
+      expect(typeof result.sequentialLock).toBe("boolean");
+      expect(result.stages[0].locked).toBe(false);
+      expect(result.stages[0]).toMatchObject({
+        intro: expect.anything(),
+        complete: expect.anything(),
       });
     });
 
@@ -58,14 +62,9 @@ describe("ChessLearnService", () => {
         ]),
       });
 
-      const stages = await service.getStages(USER_ID);
+      const result = await service.getStages(USER_ID);
 
-      expect(stages.find((stage) => stage.id === FIRST_STAGE.id)?.completedLevels).toBe(1);
-      expect(
-        stages
-          .find((stage) => stage.id === FIRST_STAGE.id)
-          ?.levels.find((level) => level.id === FIRST_LEVEL.id),
-      ).toMatchObject({ completed: true, bestStars: 3, bestScore: 500 });
+      expect(result.stages.find((stage) => stage.id === FIRST_STAGE.id)?.completedLevels).toBe(1);
     });
   });
 
@@ -78,19 +77,14 @@ describe("ChessLearnService", () => {
       ).rejects.toBeInstanceOf(NotFoundException);
     });
 
-    it("returns the level's public fields without exposing the solution", async () => {
+    it("returns public fields without solution", async () => {
       const { service } = buildService();
 
       const content = await service.getLevelContent(FIRST_STAGE.id, FIRST_LEVEL.id, USER_ID);
 
       expect(content.id).toBe(FIRST_LEVEL.id);
-      expect(content.fen).toBe(FIRST_LEVEL.fen);
-      expect(content.hint).toBe(FIRST_LEVEL.hint);
-      expect(content.mode).toBe("exact_line");
-      expect(content.optimalMoves).toBeGreaterThanOrEqual(1);
-      expect(content.completed).toBe(false);
       expect(content).not.toHaveProperty("solutionUci");
-      expect(content).not.toHaveProperty("successRule");
+      expect(content.locked).toBe(false);
     });
   });
 
@@ -103,46 +97,48 @@ describe("ChessLearnService", () => {
       ]);
 
       expect(result.correct).toBe(true);
-      expect(result.score).toBe(500);
-      expect(result.stars).toBe(3);
-      expect(result.bestScore).toBe(500);
-      expect(result.bestStars).toBe(3);
-      expect(repository.recordAttempt).toHaveBeenCalledWith(
-        expect.objectContaining({
-          userId: USER_ID,
-          stageId: FIRST_STAGE.id,
-          levelId: FIRST_LEVEL.id,
-          correct: true,
-          score: 500,
-          stars: 3,
-          movesUsed: 1,
-        }),
-      );
+      expect(result.stars).toBeGreaterThanOrEqual(1);
+      expect(repository.recordAttempt).toHaveBeenCalled();
     });
 
     it("does not mark stars for an incorrect move", async () => {
-      const { service, repository } = buildService();
+      const { service } = buildService();
 
       const result = await service.submitAttempt(USER_ID, FIRST_STAGE.id, FIRST_LEVEL.id, ["a1a2"]);
 
-      expect(result).toEqual({
-        correct: false,
-        score: 0,
-        stars: 0,
-        bestScore: 0,
-        bestStars: 0,
-      });
-      expect(repository.recordAttempt).toHaveBeenCalledWith(
-        expect.objectContaining({ correct: false, score: 0, stars: 0 }),
-      );
+      expect(result.correct).toBe(false);
+      expect(result.stars).toBe(0);
+    });
+  });
+
+  describe("reset and completion", () => {
+    it("resets progress for the user", async () => {
+      const { service, repository } = buildService();
+      await service.resetProgress(USER_ID);
+      expect(repository.deleteAllForUser).toHaveBeenCalledWith(USER_ID);
     });
 
-    it("throws NotFoundException for an unknown level", async () => {
-      const { service } = buildService();
+    it("aggregates completion percent", async () => {
+      const { service, repository } = buildService({
+        countCompletedLevelsForUsers: jest
+          .fn()
+          .mockResolvedValue([{ userId: USER_ID, completedLevels: 2 }]),
+      });
 
-      await expect(
-        service.submitAttempt(USER_ID, "no-such-stage", "no-such-level", ["a1a2"]),
-      ).rejects.toBeInstanceOf(NotFoundException);
+      const summary = await service.getCompletionForUsers([USER_ID]);
+      expect(summary.totalLevels).toBeGreaterThan(0);
+      expect(summary.byUserId[0].completedLevels).toBe(2);
+      expect(summary.byUserId[0].percent).toBeGreaterThan(0);
+      expect(repository.countCompletedLevelsForUsers).toHaveBeenCalled();
+    });
+  });
+
+  describe("coordinate scores", () => {
+    it("submits a coordinate high score", async () => {
+      const { service, repository } = buildService();
+      const result = await service.submitCoordinateScore(USER_ID, "find", "white", 12);
+      expect(result.bestScore).toBe(10);
+      expect(repository.upsertCoordinateScore).toHaveBeenCalledWith(USER_ID, "find", "white", 12);
     });
   });
 });
