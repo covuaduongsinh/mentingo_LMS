@@ -9,7 +9,7 @@ import { useToast } from "~/components/ui/use-toast";
 
 import type { UpdateStudyChapterBody } from "~/api/generated-api";
 
-export function useUpdateChessStudyChapter() {
+export function useUpdateChessStudyChapter(options?: { silent?: boolean }) {
   const { toast } = useToast();
   const { t } = useTranslation();
 
@@ -21,20 +21,22 @@ export function useUpdateChessStudyChapter() {
     }: {
       studyId: string;
       chapterId: string;
-      data: UpdateStudyChapterBody;
+      data: UpdateStudyChapterBody & { expectedUpdatedAt?: string };
     }) => {
       const response = await ApiClient.api.chessControllerUpdateStudyChapter(
         studyId,
         chapterId,
-        data,
+        data as UpdateStudyChapterBody,
       );
       return response.data.data;
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: CHESS_STUDY_QUERY_KEY });
-      toast({
-        description: t("chess.toast.chapterSaved", { defaultValue: "Chapter saved" }),
-      });
+      if (!options?.silent) {
+        toast({
+          description: t("chess.toast.chapterSaved", { defaultValue: "Chapter saved" }),
+        });
+      }
     },
     onError: (error) => {
       toast({

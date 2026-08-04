@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  NotFoundException,
+} from "@nestjs/common";
 
 import { ChessStudyService } from "../chess-study.service";
 
@@ -303,6 +308,28 @@ describe("ChessStudyService", () => {
 
       expect(findUserIdByIdentity).toHaveBeenCalledWith("student@school.test");
       expect(repository.addMember).toHaveBeenCalledWith(STUDY_ID, OTHER_ID, "write");
+    });
+  });
+
+  describe("updateChapter concurrency (S5)", () => {
+    it("throws ConflictException when expectedUpdatedAt misses", async () => {
+      const { service } = buildService({
+        getChapterById: jest.fn().mockResolvedValue({
+          id: "chapter-1",
+          studyId: STUDY_ID,
+          updatedAt: "2026-01-01T00:00:00.000Z",
+        }),
+        updateChapter: jest.fn().mockResolvedValue(null),
+      });
+
+      await expect(
+        service.updateChapter(
+          STUDY_ID,
+          "chapter-1",
+          { title: "x", expectedUpdatedAt: "2026-01-01T00:00:00.000Z" },
+          buildUser(OWNER_ID),
+        ),
+      ).rejects.toBeInstanceOf(ConflictException);
     });
   });
 

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -219,7 +220,14 @@ export class ChessStudyService {
     if (!chapter || chapter.studyId !== studyId) {
       throw new NotFoundException("chess.study.errors.chapterNotFound");
     }
-    return this.repository.updateChapter(chapterId, body);
+    const updated = await this.repository.updateChapter(chapterId, body);
+    if (!updated) {
+      if (body.expectedUpdatedAt) {
+        throw new ConflictException("chess.study.errors.chapterConflict");
+      }
+      throw new NotFoundException("chess.study.errors.chapterNotFound");
+    }
+    return updated;
   }
 
   async deleteChapter(studyId: UUIDType, chapterId: UUIDType, user: CurrentUserType) {

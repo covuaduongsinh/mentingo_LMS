@@ -287,24 +287,35 @@ export class ChessStudyRepository {
   }
 
   async updateChapter(chapterId: UUIDType, body: UpdateChessStudyChapterBody) {
+    const { expectedUpdatedAt, ...fields } = body;
+    const setValues = {
+      ...(fields.title !== undefined ? { title: fields.title } : {}),
+      ...(fields.rootFen !== undefined ? { rootFen: fields.rootFen } : {}),
+      ...(fields.moveNodes !== undefined ? { moveNodes: fields.moveNodes } : {}),
+      ...(fields.mode !== undefined ? { mode: fields.mode } : {}),
+      ...(fields.concealFromPly !== undefined ? { concealFromPly: fields.concealFromPly } : {}),
+      ...(fields.practiceGoal !== undefined ? { practiceGoal: fields.practiceGoal } : {}),
+      ...(fields.practiceGoalType !== undefined
+        ? { practiceGoalType: fields.practiceGoalType }
+        : {}),
+      ...(fields.practiceGoalTargetValue !== undefined
+        ? { practiceGoalTargetValue: fields.practiceGoalTargetValue }
+        : {}),
+      ...(fields.orientation !== undefined ? { orientation: fields.orientation } : {}),
+      ...(fields.description !== undefined ? { description: fields.description } : {}),
+      ...(fields.pgnTags !== undefined ? { pgnTags: fields.pgnTags } : {}),
+    };
+
+    const conditions = [eq(chessStudyChapters.id, chapterId)];
+    if (expectedUpdatedAt) {
+      // Compare as timestamptz; clients send ISO from chapter.updatedAt.
+      conditions.push(eq(chessStudyChapters.updatedAt, expectedUpdatedAt));
+    }
+
     const [row] = await this.db
       .update(chessStudyChapters)
-      .set({
-        ...(body.title !== undefined ? { title: body.title } : {}),
-        ...(body.rootFen !== undefined ? { rootFen: body.rootFen } : {}),
-        ...(body.moveNodes !== undefined ? { moveNodes: body.moveNodes } : {}),
-        ...(body.mode !== undefined ? { mode: body.mode } : {}),
-        ...(body.concealFromPly !== undefined ? { concealFromPly: body.concealFromPly } : {}),
-        ...(body.practiceGoal !== undefined ? { practiceGoal: body.practiceGoal } : {}),
-        ...(body.practiceGoalType !== undefined ? { practiceGoalType: body.practiceGoalType } : {}),
-        ...(body.practiceGoalTargetValue !== undefined
-          ? { practiceGoalTargetValue: body.practiceGoalTargetValue }
-          : {}),
-        ...(body.orientation !== undefined ? { orientation: body.orientation } : {}),
-        ...(body.description !== undefined ? { description: body.description } : {}),
-        ...(body.pgnTags !== undefined ? { pgnTags: body.pgnTags } : {}),
-      })
-      .where(eq(chessStudyChapters.id, chapterId))
+      .set(setValues)
+      .where(and(...conditions))
       .returning();
     return row ?? null;
   }
