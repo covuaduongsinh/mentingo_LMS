@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "@remix-run/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useSubmitChessLearnAttempt } from "~/api/mutations/useSubmitChessLearnAttempt";
@@ -12,6 +12,7 @@ import { LearnStars } from "~/modules/Chess/Learn/LearnStars";
 import { setPageTitle } from "~/utils/setPageTitle";
 
 import type { MetaFunction } from "@remix-run/react";
+import type { BoardShape } from "~/modules/Chess/board/shapes";
 
 export const meta: MetaFunction = ({ matches }) => setPageTitle(matches, "pages.chessLearnLevel");
 
@@ -29,6 +30,7 @@ export default function ChessLearnLevelPage() {
   const { mutateAsync: submitAttempt, isPending } = useSubmitChessLearnAttempt();
 
   const [fen, setFen] = useState<string | null>(null);
+  const [movesUci, setMovesUci] = useState<string[]>([]);
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState<"correct" | "incorrect" | null>(null);
   const [resultStars, setResultStars] = useState(0);
@@ -38,16 +40,54 @@ export default function ChessLearnLevelPage() {
   const levelIndex = stage?.levels.findIndex((candidate) => candidate.id === levelId) ?? -1;
   const nextLevel = stage && levelIndex >= 0 ? stage.levels[levelIndex + 1] : undefined;
 
-  const handleMove = (uci: string) => {
-    submitAttempt({ stageId, levelId, movesUci: [uci] }).then((result) => {
-      setFeedback(result.correct ? "correct" : "incorrect");
-      if (result.correct) {
-        setResultStars(result.stars ?? result.bestStars ?? 0);
-        setResultScore(result.score ?? result.bestScore ?? 0);
-      } else {
-        setFen(level?.fen ?? null);
+  const boardShapes: BoardShape[] = useMemo(() => {
+    const raw = level?.shapes ?? [];
+    return raw.map((shape) => {
+      if (shape.kind === "arrow") {
+        return {
+          kind: "arrow" as const,
+          from: shape.from as BoardShape extends { from: infer F } ? F : never,
+          to: shape.to as never,
+          color: shape.color ?? "green",
+        };
       }
+      return {
+        kind: "circle" as const,
+        square: shape.square as never,
+        color: shape.color ?? "green",
+      };
     });
+  }, [level?.shapes]);
+
+  const resetBoard = () => {
+    setFen(level?.fen ?? null);
+    setMovesUci([]);
+    setFeedback(null);
+  };
+
+  const grade = async (nextMoves: string[]) => {
+    const result = await submitAttempt({ stageId, levelId, movesUci: nextMoves });
+    setFeedback(result.correct ? "correct" : "incorrect");
+    if (result.correct) {
+      setResultStars(result.stars ?? result.bestStars ?? 0);
+      setResultScore(result.score ?? result.bestScore ?? 0);
+    } else {
+      setFen(level?.fen ?? null);
+      setMovesUci([]);
+    }
+  };
+
+  const handleMove = (uci: string, fenAfter: string) => {
+    if (feedback === "correct") return;
+
+    const nextMoves = [...movesUci, uci];
+    setMovesUci(nextMoves);
+    setFen(fenAfter);
+
+    const optimal = level?.optimalMoves ?? 1;
+    if (nextMoves.length >= optimal) {
+      void grade(nextMoves);
+    }
   };
 
   const breadcrumbs = [
@@ -67,6 +107,10 @@ export default function ChessLearnLevelPage() {
   return (
     <PageWrapper breadcrumbs={breadcrumbs}>
       <div className="flex flex-col items-center gap-4">
+        {level.goal && (
+          <p className="body-base-md max-w-lg text-center text-neutral-800">{level.goal}</p>
+        )}
+
         {(level.bestStars ?? 0) > 0 && feedback !== "correct" && (
           <div className="flex items-center gap-2 text-neutral-600">
             <span className="body-sm">
@@ -81,7 +125,20 @@ export default function ChessLearnLevelPage() {
           interactive={feedback !== "correct"}
           onMove={handleMove}
           size={400}
+          shapes={boardShapes}
+          // Read-only hint shapes: no-op changer so overlay still renders without free drawing.
+          onShapesChange={() => undefined}
         />
+
+        {movesUci.length > 0 && feedback !== "correct" && (
+          <p className="body-sm text-neutral-500">
+            {t("chessLearn.level.movesPlayed", {
+              defaultValue: "Moves: {{count}} / {{optimal}}",
+              count: movesUci.length,
+              optimal: level.optimalMoves ?? 1,
+            })}
+          </p>
+        )}
 
         {feedback === "correct" ? (
           <div className="rounded-md border border-green-300 bg-green-50 p-3 text-center">
@@ -119,9 +176,26 @@ export default function ChessLearnLevelPage() {
                 {t("chessLearn.level.incorrect", { defaultValue: "Chưa đúng, thử lại nhé." })}
               </p>
             )}
-            <Button type="button" variant="outline" onClick={() => setShowHint(true)}>
-              {t("chessLearn.level.showHint", { defaultValue: "Xem gợi ý" })}
-            </Button>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button type="button" variant="outline" onClick={() => setShowHint(true)}>
+                {t("chessLearn.level.showHint", { defaultValue: "Xem gợi ý" })}
+              </Button>
+              {movesUci.length > 0 && (
+                <>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isPending}
+                    onClick={() => void grade(movesUci)}
+                  >
+                    {t("chessLearn.level.check", { defaultValue: "Kiểm tra" })}
+                  </Button>
+                  <Button type="button" variant="ghost" onClick={resetBoard}>
+                    {t("chessLearn.level.reset", { defaultValue: "Làm lại" })}
+                  </Button>
+                </>
+              )}
+            </div>
             {showHint && (
               <p className="body-sm max-w-md text-center text-neutral-600">{level.hint}</p>
             )}

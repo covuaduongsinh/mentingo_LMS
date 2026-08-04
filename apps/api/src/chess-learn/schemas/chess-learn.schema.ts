@@ -20,17 +20,49 @@ export const chessLearnStagesResponseSchema = Type.Object({
   stages: Type.Array(chessLearnStageProgressSchema),
 });
 
+const chessLearnShapeSchema = Type.Union([
+  Type.Object({
+    kind: Type.Literal("arrow"),
+    from: Type.String(),
+    to: Type.String(),
+    color: Type.Optional(
+      Type.Union([
+        Type.Literal("green"),
+        Type.Literal("red"),
+        Type.Literal("blue"),
+        Type.Literal("yellow"),
+      ]),
+    ),
+  }),
+  Type.Object({
+    kind: Type.Literal("circle"),
+    square: Type.String(),
+    color: Type.Optional(
+      Type.Union([
+        Type.Literal("green"),
+        Type.Literal("red"),
+        Type.Literal("blue"),
+        Type.Literal("yellow"),
+      ]),
+    ),
+  }),
+]);
+
 export const chessLearnLevelContentSchema = Type.Object({
   id: Type.String(),
   fen: Type.String(),
   hint: Type.String(),
+  goal: Type.Union([Type.String(), Type.Null()]),
+  mode: Type.Union([Type.Literal("exact_line"), Type.Literal("predicate")]),
+  shapes: Type.Array(chessLearnShapeSchema),
+  optimalMoves: Type.Integer({ minimum: 1 }),
   completed: Type.Boolean(),
   bestStars: Type.Integer({ minimum: 0, maximum: 3 }),
   bestScore: Type.Integer({ minimum: 0 }),
 });
 
 export const submitChessLearnAttemptBodySchema = Type.Object({
-  movesUci: Type.Array(Type.String(), { minItems: 1, maxItems: 10 }),
+  movesUci: Type.Array(Type.String(), { minItems: 1, maxItems: 20 }),
 });
 
 export const chessLearnAttemptResultSchema = Type.Object({

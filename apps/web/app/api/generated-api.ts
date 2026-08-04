@@ -8662,6 +8662,13 @@ export interface GetLevelResponse {
     id: string;
     fen: string;
     hint: string;
+    goal: string | null;
+    mode: "exact_line" | "predicate";
+    shapes: (
+      | { kind: "arrow"; from: string; to: string; color?: "green" | "red" | "blue" | "yellow" }
+      | { kind: "circle"; square: string; color?: "green" | "red" | "blue" | "yellow" }
+    )[];
+    optimalMoves: number;
     completed: boolean;
     bestStars: number;
     bestScore: number;
@@ -8670,7 +8677,7 @@ export interface GetLevelResponse {
 
 export interface SubmitLearnAttemptBody {
   /**
-   * @maxItems 10
+   * @maxItems 20
    * @minItems 1
    */
   movesUci: string[];
