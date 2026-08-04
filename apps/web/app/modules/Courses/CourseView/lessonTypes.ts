@@ -6,6 +6,7 @@ const lessonTypeTranslationSuffix = {
   scorm: "scorm",
   live_training: "live_training",
   assignment: "assignment",
+  chess_study: "chess_study",
 } as const;
 
 type LessonTypeTranslationKey = keyof typeof lessonTypeTranslationSuffix;

@@ -1,4 +1,4 @@
-import { ClipboardList, Users } from "lucide-react";
+import { ClipboardList, Swords, Users } from "lucide-react";
 
 import { Icon } from "~/components/Icon";
 
@@ -44,6 +44,10 @@ const lessonTypeIconConfig = {
   assignment: {
     kind: "lucide",
     Icon: ClipboardList,
+  },
+  chess_study: {
+    kind: "lucide",
+    Icon: Swords,
   },
 } as const satisfies Record<string, LessonTypeIconConfig>;
 

@@ -1,13 +1,25 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { CHESS_STUDY_MEMBER_ROLES, CHESS_STUDY_VISIBILITY } from "@repo/shared";
+import {
+  CHESS_STUDY_MEMBER_ROLES,
+  CHESS_STUDY_VISIBILITY,
+  COURSE_ENROLLMENT,
+  LESSON_TYPES,
+  type SupportedLanguages,
+} from "@repo/shared";
 import { and, count, desc, eq, ilike, isNull, ne, or, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
+import { buildJsonbField } from "src/common/helpers/sqlHelpers";
 import {
+  chapters,
   chessPracticeAttempts,
   chessStudies,
   chessStudyChapters,
   chessStudyMembers,
+  courses,
+  lessonChessStudies,
+  lessons,
+  studentCourses,
   users,
 } from "src/storage/schema";
 
@@ -456,5 +468,96 @@ export class ChessStudyRepository {
     }
 
     return null;
+  }
+
+  // --- S4: lesson embed ---
+
+  async createChessStudyLessonRow(
+    chapterId: UUIDType,
+    language: SupportedLanguages,
+    title: string,
+    description: string | undefined,
+    displayOrder: number,
+  ) {
+    const [row] = await this.db
+      .insert(lessons)
+      .values({
+        chapterId,
+        type: LESSON_TYPES.CHESS_STUDY,
+        title: buildJsonbField(language, title),
+        description: description ? buildJsonbField(language, description) : sql`'{}'::jsonb`,
+        displayOrder,
+      })
+      .returning({
+        id: lessons.id,
+        chapterId: lessons.chapterId,
+        displayOrder: lessons.displayOrder,
+      });
+    return row;
+  }
+
+  async createLessonChessStudyLink(data: {
+    lessonId: UUIDType;
+    studyId: UUIDType;
+    studyChapterId?: UUIDType | null;
+  }) {
+    const [row] = await this.db
+      .insert(lessonChessStudies)
+      .values({
+        lessonId: data.lessonId,
+        studyId: data.studyId,
+        studyChapterId: data.studyChapterId ?? null,
+      })
+      .returning();
+    return row;
+  }
+
+  async getLessonChessStudyLink(lessonId: UUIDType) {
+    const [row] = await this.db
+      .select()
+      .from(lessonChessStudies)
+      .where(eq(lessonChessStudies.lessonId, lessonId));
+    return row ?? null;
+  }
+
+  async updateLessonChessStudyLink(
+    lessonId: UUIDType,
+    data: { studyId?: UUIDType; studyChapterId?: UUIDType | null },
+  ) {
+    const [row] = await this.db
+      .update(lessonChessStudies)
+      .set({
+        ...(data.studyId !== undefined ? { studyId: data.studyId } : {}),
+        ...(data.studyChapterId !== undefined ? { studyChapterId: data.studyChapterId } : {}),
+      })
+      .where(eq(lessonChessStudies.lessonId, lessonId))
+      .returning();
+    return row ?? null;
+  }
+
+  /**
+   * Whether the user may open a chess_study lesson: course author, admin permission,
+   * freemium chapter, or enrolled student.
+   */
+  async canAccessChessStudyLesson(lessonId: UUIDType, userId: UUIDType): Promise<boolean> {
+    const [row] = await this.db
+      .select({
+        courseAuthorId: courses.authorId,
+        isFreemium: chapters.isFreemium,
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.status} = ${COURSE_ENROLLMENT.ENROLLED} THEN TRUE ELSE FALSE END`,
+      })
+      .from(lessons)
+      .innerJoin(chapters, eq(chapters.id, lessons.chapterId))
+      .innerJoin(courses, eq(courses.id, chapters.courseId))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, courses.id), eq(studentCourses.studentId, userId)),
+      )
+      .where(and(eq(lessons.id, lessonId), eq(lessons.type, LESSON_TYPES.CHESS_STUDY)));
+
+    if (!row) return false;
+    if (row.courseAuthorId === userId) return true;
+    if (row.isFreemium) return true;
+    return Boolean(row.enrolled);
   }
 }

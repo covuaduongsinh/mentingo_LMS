@@ -6,6 +6,7 @@ import { RICH_TEXT_VIEWER_VARIANT } from "~/components/RichText/viewerTypes";
 
 import AiMentorLesson from "./AiMentorLesson/AiMentorLesson";
 import { AssignmentLesson } from "./AssignmentLesson/AssignmentLesson";
+import { ChessStudyLesson } from "./ChessStudyLesson/ChessStudyLesson";
 import { EmbedLesson } from "./EmbedLesson/EmbedLesson";
 import { LiveTrainingLesson } from "./LiveTrainingLesson/LiveTrainingLesson";
 import { Quiz } from "./Quiz";
@@ -42,7 +43,8 @@ export const LessonContentRenderer = memo(
     onVideoEnded,
     videoCoverageTracking,
   }: LessonContentRendererProps) => {
-    return match(lesson.type)
+    // Cast: generated-api may lag behind LESSON_TYPES until swagger refresh (S4 chess_study).
+    return match(lesson.type as string)
       .with("content", () => (
         <Viewer
           variant={RICH_TEXT_VIEWER_VARIANT.CONTENT}
@@ -66,6 +68,7 @@ export const LessonContentRenderer = memo(
       .with("scorm", () => <ScormLesson lessonId={lesson.id} />)
       .with("live_training", () => <LiveTrainingLesson lesson={lesson} />)
       .with("assignment", () => <AssignmentLesson lessonId={lesson.id} lesson={lesson} />)
+      .with("chess_study", () => <ChessStudyLesson lessonId={lesson.id} />)
       .otherwise(() => null);
   },
 );

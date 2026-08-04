@@ -66,8 +66,10 @@ import {
 import {
   addChessStudyMemberBodySchema,
   chessStudyContinueResponseSchema,
+  chessStudyLessonLearnerResponseSchema,
   createChessStudyBodySchema,
   createChessStudyChapterBodySchema,
+  createChessStudyLessonBodySchema,
   chessStudyChapterSchema,
   chessStudyDetailSchema,
   chessStudySchema,
@@ -77,14 +79,17 @@ import {
   submitPracticeAttemptBodySchema,
   updateChessStudyBodySchema,
   updateChessStudyChapterBodySchema,
+  updateChessStudyLessonBodySchema,
   type AddChessStudyMemberBody,
   type CreateChessStudyBody,
   type CreateChessStudyChapterBody,
+  type CreateChessStudyLessonBody,
   type ImportStudyPgnBody,
   type ReorderChessStudyChaptersBody,
   type SubmitPracticeAttemptBody,
   type UpdateChessStudyBody,
   type UpdateChessStudyChapterBody,
+  type UpdateChessStudyLessonBody,
 } from "./schemas/chess-study.schema";
 import {
   chessAudienceSchema,
@@ -432,6 +437,68 @@ export class ChessController {
   })
   async createStudy(@Body() body: CreateChessStudyBody, @CurrentUser() user: CurrentUserType) {
     return new BaseResponse(await this.chessStudyService.createStudy(body, user));
+  }
+
+  @Post("studies/create-lesson")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_CREATE)
+  @Validate({
+    request: [{ type: "body", schema: createChessStudyLessonBodySchema }],
+    response: baseResponse(
+      Type.Object({
+        lessonId: UUIDSchema,
+        studyId: Type.Union([UUIDSchema, Type.Null()]),
+        studyChapterId: Type.Union([UUIDSchema, Type.Null()]),
+      }),
+    ),
+  })
+  async createChessStudyLesson(
+    @Body() body: CreateChessStudyLessonBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.chessStudyService.createChessStudyLesson(body, user));
+  }
+
+  @Get("studies/lessons/:lessonId")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [{ type: "param", name: "lessonId", schema: UUIDSchema }],
+    response: baseResponse(chessStudyLessonLearnerResponseSchema),
+  })
+  async getChessStudyLessonForLearner(
+    @Param("lessonId") lessonId: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(
+      await this.chessStudyService.getChessStudyLessonForLearner(lessonId, user),
+    );
+  }
+
+  @Patch("studies/lessons/:lessonId")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_CREATE)
+  @Validate({
+    request: [
+      { type: "param", name: "lessonId", schema: UUIDSchema },
+      { type: "body", schema: updateChessStudyLessonBodySchema },
+    ],
+    response: baseResponse(
+      Type.Object({
+        lessonId: UUIDSchema,
+        studyId: Type.Union([UUIDSchema, Type.Null()]),
+        studyChapterId: Type.Union([UUIDSchema, Type.Null()]),
+      }),
+    ),
+  })
+  async updateChessStudyLesson(
+    @Param("lessonId") lessonId: UUIDType,
+    @Body() body: UpdateChessStudyLessonBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    const updated = await this.chessStudyService.updateChessStudyLesson(lessonId, body, user);
+    return new BaseResponse({
+      lessonId,
+      studyId: updated?.studyId ?? null,
+      studyChapterId: updated?.studyChapterId ?? null,
+    });
   }
 
   @Get("studies/:id")

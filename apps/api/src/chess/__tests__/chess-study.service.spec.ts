@@ -87,10 +87,47 @@ describe("ChessStudyService", () => {
       findNextIncompletePracticeChapter: jest.fn().mockResolvedValue(null),
       createChaptersFromImport: jest.fn().mockResolvedValue([]),
       findUserIdByIdentity: jest.fn().mockResolvedValue(null),
+      createChessStudyLessonRow: jest.fn().mockResolvedValue({ id: "lesson-1", chapterId: "ch-1" }),
+      createLessonChessStudyLink: jest.fn().mockResolvedValue({
+        lessonId: "lesson-1",
+        studyId: STUDY_ID,
+        studyChapterId: null,
+      }),
+      getLessonChessStudyLink: jest.fn(),
+      canAccessChessStudyLesson: jest.fn().mockResolvedValue(true),
+      updateLessonChessStudyLink: jest.fn(),
       ...repositoryOverrides,
     } as unknown as ChessStudyRepository;
 
-    return { service: new ChessStudyService(repository), repository };
+    const adminLessonRepository = {
+      getMaxDisplayOrder: jest.fn().mockResolvedValue(0),
+    };
+    const adminLessonService = {
+      validateAccess: jest.fn().mockResolvedValue(undefined),
+    };
+    const masterCourseService = {
+      assertCourseContentEditableByChapterId: jest.fn().mockResolvedValue(undefined),
+      assertCourseContentEditableByLessonId: jest.fn().mockResolvedValue(undefined),
+    };
+    const courseFeaturePolicyService = {
+      assertCourseFeatureEnabledByChapterId: jest.fn().mockResolvedValue(undefined),
+      assertCourseFeatureEnabledByLessonId: jest.fn().mockResolvedValue(undefined),
+    };
+    const localizationService = {
+      getBaseLanguage: jest.fn().mockResolvedValue({ language: "en" }),
+    };
+
+    return {
+      service: new ChessStudyService(
+        repository,
+        adminLessonRepository as never,
+        adminLessonService as never,
+        masterCourseService as never,
+        courseFeaturePolicyService as never,
+        localizationService as never,
+      ),
+      repository,
+    };
   };
 
   describe("getStudyDetail (read access)", () => {

@@ -87,6 +87,7 @@ export const ContentTypes = {
   SCORM_LESSON_FORM: "SCORM_LESSON_FORM",
   LIVE_TRAINING_LESSON_FORM: "LIVE_TRAINING_LESSON_FORM",
   ASSIGNMENT_FORM: "ASSIGNMENT_FORM",
+  CHESS_STUDY_FORM: "CHESS_STUDY_FORM",
 } as const;
 
 export type LessonIcons = "Content" | "Quiz" | "AiMentor" | "Embed" | "LiveTraining";
@@ -99,6 +100,7 @@ export const LessonType = {
   SCORM: "scorm",
   LIVE_TRAINING: "live_training",
   ASSIGNMENT: "assignment",
+  CHESS_STUDY: "chess_study",
 } as const;
 
 export type LessonType = (typeof LessonType)[keyof typeof LessonType];

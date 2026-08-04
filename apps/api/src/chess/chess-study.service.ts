@@ -4,9 +4,21 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { CHESS_STUDY_MEMBER_ROLES, CHESS_STUDY_VISIBILITY, PERMISSIONS } from "@repo/shared";
+import {
+  CHESS_STUDY_MEMBER_ROLES,
+  CHESS_STUDY_VISIBILITY,
+  COURSE_FEATURE,
+  ENTITY_TYPES,
+  PERMISSIONS,
+} from "@repo/shared";
 
 import { hasPermission } from "src/common/permissions/permission.utils";
+import { CourseFeaturePolicyService } from "src/courses/course-feature-policy.service";
+import { MasterCourseService } from "src/courses/master-course.service";
+import { AdminLessonRepository } from "src/lesson/repositories/adminLesson.repository";
+import { AdminLessonService } from "src/lesson/services/adminLesson.service";
+import { LocalizationService } from "src/localization/localization.service";
+import { ENTITY_TYPE } from "src/localization/localization.types";
 
 import { ChessStudyRepository, type ListChessStudiesParams } from "./chess-study.repository";
 import { evaluatePracticeGoal, replayPracticeMoves } from "./utils/practice-goal.utils";
@@ -21,18 +33,27 @@ import type {
   AddChessStudyMemberBody,
   CreateChessStudyBody,
   CreateChessStudyChapterBody,
+  CreateChessStudyLessonBody,
   ImportStudyPgnBody,
   ReorderChessStudyChaptersBody,
   SubmitPracticeAttemptBody,
   UpdateChessStudyBody,
   UpdateChessStudyChapterBody,
+  UpdateChessStudyLessonBody,
 } from "./schemas/chess-study.schema";
 import type { UUIDType } from "src/common";
 import type { CurrentUserType } from "src/common/types/current-user.type";
 
 @Injectable()
 export class ChessStudyService {
-  constructor(private readonly repository: ChessStudyRepository) {}
+  constructor(
+    private readonly repository: ChessStudyRepository,
+    private readonly adminLessonRepository: AdminLessonRepository,
+    private readonly adminLessonService: AdminLessonService,
+    private readonly masterCourseService: MasterCourseService,
+    private readonly courseFeaturePolicyService: CourseFeaturePolicyService,
+    private readonly localizationService: LocalizationService,
+  ) {}
 
   private canManageAny(user: CurrentUserType): boolean {
     return hasPermission(user.permissions, PERMISSIONS.CHESS_STUDY_MANAGE);
@@ -276,6 +297,151 @@ export class ChessStudyService {
     const study = await this.getStudyOrThrow(studyId);
     this.assertCanManage(study, user);
     await this.repository.removeMember(studyId, userId);
+  }
+
+  // --- S4: course lesson embed ---
+
+  async createChessStudyLesson(body: CreateChessStudyLessonBody, user: CurrentUserType) {
+    await this.masterCourseService.assertCourseContentEditableByChapterId(body.chapterId);
+    await this.courseFeaturePolicyService.assertCourseFeatureEnabledByChapterId(
+      body.chapterId,
+      COURSE_FEATURE.CURRICULUM_EDITING,
+    );
+    await this.adminLessonService.validateAccess(ENTITY_TYPES.CHAPTER, user, body.chapterId);
+
+    // Author must be able to read the study they embed.
+    const study = await this.getStudyOrThrow(body.studyId);
+    await this.assertCanRead(study, user);
+
+    if (body.studyChapterId) {
+      const chapter = await this.repository.getChapterById(body.studyChapterId);
+      if (!chapter || chapter.studyId !== body.studyId) {
+        throw new BadRequestException("chess.study.errors.chapterNotFound");
+      }
+    }
+
+    const { language } = await this.localizationService.getBaseLanguage(
+      ENTITY_TYPE.CHAPTER,
+      body.chapterId,
+    );
+    const displayOrder = (await this.adminLessonRepository.getMaxDisplayOrder(body.chapterId)) + 1;
+
+    const lessonRow = await this.repository.createChessStudyLessonRow(
+      body.chapterId,
+      language,
+      body.title,
+      body.description ?? undefined,
+      displayOrder,
+    );
+
+    const link = await this.repository.createLessonChessStudyLink({
+      lessonId: lessonRow.id,
+      studyId: body.studyId,
+      studyChapterId: body.studyChapterId ?? null,
+    });
+
+    return {
+      lessonId: lessonRow.id,
+      studyId: link.studyId,
+      studyChapterId: link.studyChapterId,
+    };
+  }
+
+  async getChessStudyLessonForLearner(lessonId: UUIDType, user: CurrentUserType) {
+    const link = await this.repository.getLessonChessStudyLink(lessonId);
+    if (!link) {
+      throw new NotFoundException("chess.study.errors.lessonEmbedNotFound");
+    }
+
+    const canAccessLesson =
+      this.canManageAny(user) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_READ_MANAGEABLE) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE) ||
+      (await this.repository.canAccessChessStudyLesson(lessonId, user.userId));
+
+    if (!canAccessLesson) {
+      throw new ForbiddenException("chess.study.errors.lessonAccessDenied");
+    }
+
+    if (!link.studyId) {
+      return {
+        lessonId,
+        studyId: null,
+        studyChapterId: link.studyChapterId,
+        studyMissing: true,
+        study: null,
+      };
+    }
+
+    const study = await this.repository.getStudyById(link.studyId);
+    if (!study) {
+      return {
+        lessonId,
+        studyId: link.studyId,
+        studyChapterId: link.studyChapterId,
+        studyMissing: true,
+        study: null,
+      };
+    }
+
+    // Lesson enrollment grants temporary read of private studies for this view only.
+    const [chaptersList, members] = await Promise.all([
+      this.repository.getChaptersByStudyId(study.id),
+      this.repository.getMembersByStudyId(study.id),
+    ]);
+
+    const filteredChapters = link.studyChapterId
+      ? chaptersList.filter((chapter) => chapter.id === link.studyChapterId)
+      : chaptersList;
+
+    return {
+      lessonId,
+      studyId: study.id,
+      studyChapterId: link.studyChapterId,
+      studyMissing: false,
+      study: {
+        ...study,
+        chapters: filteredChapters.length > 0 ? filteredChapters : chaptersList,
+        members,
+        canWrite: false,
+      },
+    };
+  }
+
+  async updateChessStudyLesson(
+    lessonId: UUIDType,
+    body: UpdateChessStudyLessonBody,
+    user: CurrentUserType,
+  ) {
+    await this.masterCourseService.assertCourseContentEditableByLessonId(lessonId);
+    await this.courseFeaturePolicyService.assertCourseFeatureEnabledByLessonId(
+      lessonId,
+      COURSE_FEATURE.CURRICULUM_EDITING,
+    );
+    await this.adminLessonService.validateAccess(ENTITY_TYPES.LESSON, user, lessonId);
+
+    const link = await this.repository.getLessonChessStudyLink(lessonId);
+    if (!link) {
+      throw new NotFoundException("chess.study.errors.lessonEmbedNotFound");
+    }
+
+    if (body.studyId) {
+      const study = await this.getStudyOrThrow(body.studyId);
+      await this.assertCanRead(study, user);
+    }
+
+    const nextStudyId = body.studyId ?? link.studyId;
+    if (body.studyChapterId && nextStudyId) {
+      const chapter = await this.repository.getChapterById(body.studyChapterId);
+      if (!chapter || chapter.studyId !== nextStudyId) {
+        throw new BadRequestException("chess.study.errors.chapterNotFound");
+      }
+    }
+
+    return this.repository.updateLessonChessStudyLink(lessonId, {
+      studyId: body.studyId,
+      studyChapterId: body.studyChapterId,
+    });
   }
 
   async submitPracticeAttempt(
