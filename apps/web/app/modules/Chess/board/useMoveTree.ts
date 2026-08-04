@@ -9,11 +9,14 @@ import {
   nodesOnPath,
   promoteToMainline,
   setComment,
+  setGamebookFields,
   setGlyph,
+  setShapes,
 } from "./moveTree";
 
 import type { GlyphSymbol } from "./glyphs";
 import type { MoveInput, MoveTree } from "./moveTree";
+import type { BoardShape } from "./shapes";
 
 /**
  * React state wrapper around the pure moveTree.ts functions. `path` is the id chain from
@@ -86,6 +89,17 @@ export function useMoveTree(rootFen: string, initialTree?: MoveTree) {
     setTree((prev) => setComment(prev, targetPath, comment));
   }, []);
 
+  const annotateShapes = useCallback((targetPath: string[], shapes: BoardShape[]) => {
+    setTree((prev) => setShapes(prev, targetPath, shapes));
+  }, []);
+
+  const annotateGamebook = useCallback(
+    (targetPath: string[], fields: { hint?: string; onWrong?: string; onCorrect?: string }) => {
+      setTree((prev) => setGamebookFields(prev, targetPath, fields));
+    },
+    [],
+  );
+
   const reset = useCallback((nextRootFen: string) => {
     setTree(createMoveTree(nextRootFen));
     setPath([]);
@@ -107,6 +121,8 @@ export function useMoveTree(rootFen: string, initialTree?: MoveTree) {
     remove,
     annotateGlyph,
     annotateComment,
+    annotateShapes,
+    annotateGamebook,
     reset,
   };
 }

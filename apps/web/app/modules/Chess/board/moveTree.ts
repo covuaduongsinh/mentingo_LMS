@@ -1,4 +1,5 @@
 import type { GlyphSymbol } from "./glyphs";
+import type { BoardShape } from "./shapes";
 
 /**
  * A branching move tree: at any node, playing a move that differs from what was recorded
@@ -6,8 +7,7 @@ import type { GlyphSymbol } from "./glyphs";
  * the mainline continuation; any other entries are variations. A "path" is the list of node
  * ids from the (virtual, move-less) root down to a specific node — an empty path means the
  * starting position itself. All functions here are pure; see useMoveTree.ts for the React
- * state wrapper. Not persisted anywhere in this pass — see
- * docs/specs/interactive-chess-board-business-spec.md.
+ * state wrapper.
  */
 
 export type MoveNode = {
@@ -17,6 +17,14 @@ export type MoveNode = {
   fenAfter: string;
   comment?: string;
   glyph?: GlyphSymbol;
+  /** Board arrows/circles attached to this move (persisted on study chapters from S2). */
+  shapes?: BoardShape[];
+  /** Gamebook: hint shown before trying the next move from this position's child. */
+  hint?: string;
+  /** Gamebook: message when the learner plays a wrong move looking for this node. */
+  onWrong?: string;
+  /** Gamebook: message after the learner correctly reaches this node. */
+  onCorrect?: string;
   children: MoveNode[];
 };
 
@@ -133,6 +141,26 @@ export function setGlyph(tree: MoveTree, path: string[], glyph: GlyphSymbol | un
   return updateNodeAtPath(tree, path, (node) => ({ ...node, glyph }));
 }
 
+export function setShapes(tree: MoveTree, path: string[], shapes: BoardShape[]): MoveTree {
+  return updateNodeAtPath(tree, path, (node) => ({
+    ...node,
+    shapes: shapes.length > 0 ? shapes : undefined,
+  }));
+}
+
+export function setGamebookFields(
+  tree: MoveTree,
+  path: string[],
+  fields: { hint?: string; onWrong?: string; onCorrect?: string },
+): MoveTree {
+  return updateNodeAtPath(tree, path, (node) => ({
+    ...node,
+    hint: fields.hint?.trim() ? fields.hint.trim() : undefined,
+    onWrong: fields.onWrong?.trim() ? fields.onWrong.trim() : undefined,
+    onCorrect: fields.onCorrect?.trim() ? fields.onCorrect.trim() : undefined,
+  }));
+}
+
 function updateNodeAtPath(
   tree: MoveTree,
   path: string[],
@@ -234,6 +262,10 @@ export type FlatMoveNode = {
   comment?: string;
   glyph?: string;
   order: number;
+  shapes?: BoardShape[];
+  hint?: string;
+  onWrong?: string;
+  onCorrect?: string;
 };
 
 export function flattenMoveTree(tree: MoveTree): FlatMoveNode[] {
@@ -249,6 +281,10 @@ export function flattenMoveTree(tree: MoveTree): FlatMoveNode[] {
         comment: node.comment,
         glyph: node.glyph,
         order: index,
+        shapes: node.shapes,
+        hint: node.hint,
+        onWrong: node.onWrong,
+        onCorrect: node.onCorrect,
       });
       walk(node.children, node.id);
     });
@@ -275,6 +311,10 @@ export function unflattenMoveTree(rootFen: string, flatNodes: FlatMoveNode[]): M
       fenAfter: flatNode.fenAfter,
       comment: flatNode.comment,
       glyph: flatNode.glyph as GlyphSymbol | undefined,
+      shapes: flatNode.shapes as BoardShape[] | undefined,
+      hint: flatNode.hint,
+      onWrong: flatNode.onWrong,
+      onCorrect: flatNode.onCorrect,
       children: build(flatNode.id),
     }));
   }

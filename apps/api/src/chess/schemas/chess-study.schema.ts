@@ -21,6 +21,20 @@ export const chessPracticeGoalTypeSchema = Type.Enum(CHESS_PRACTICE_GOAL_TYPES);
  * A move tree flattened into an adjacency list — see ChessStudyFlatMoveNode in the schema
  * and moveTree.ts on the web app for the recursive shape reconstructed from this on the client.
  */
+export const chessStudyBoardShapeSchema = Type.Union([
+  Type.Object({
+    kind: Type.Literal("arrow"),
+    from: Type.String(),
+    to: Type.String(),
+    color: Type.String(),
+  }),
+  Type.Object({
+    kind: Type.Literal("circle"),
+    square: Type.String(),
+    color: Type.String(),
+  }),
+]);
+
 export const chessStudyMoveNodeSchema = Type.Object({
   id: Type.String(),
   parentId: Type.Union([Type.String(), Type.Null()]),
@@ -30,6 +44,10 @@ export const chessStudyMoveNodeSchema = Type.Object({
   comment: Type.Optional(Type.String()),
   glyph: Type.Optional(Type.String()),
   order: Type.Number(),
+  shapes: Type.Optional(Type.Array(chessStudyBoardShapeSchema, { maxItems: 32 })),
+  hint: Type.Optional(Type.String({ maxLength: 2000 })),
+  onWrong: Type.Optional(Type.String({ maxLength: 2000 })),
+  onCorrect: Type.Optional(Type.String({ maxLength: 2000 })),
 });
 
 export const chessStudyChapterSchema = Type.Object({
