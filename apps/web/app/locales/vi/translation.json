@@ -276,7 +276,33 @@
       "guidedDone": "Đã hoàn thành chương",
       "guidedWrong": "Chưa đúng — thử lại nhé.",
       "guidedReveal": "Xem đáp án",
-      "guidedRestart": "Làm lại từ đầu"
+      "guidedRestart": "Làm lại từ đầu",
+      "scopeAll": "Tất cả có thể xem",
+      "scopeMine": "Study của tôi",
+      "scopeShared": "Được chia sẻ với tôi",
+      "importPgn": "Nhập PGN",
+      "exportPgn": "Xuất PGN",
+      "exportChapterPgn": "Xuất PGN chương",
+      "pastePgn": "Dán PGN (một hoặc nhiều ván)",
+      "importPgnSubmit": "Nhập thành các chương",
+      "chapterDescription": "Giới thiệu chương",
+      "chapterDescriptionPlaceholder": "Mô tả tùy chọn cho người học",
+      "orientation": "Hướng bàn cờ",
+      "orientationWhite": "Trắng",
+      "orientationBlack": "Đen",
+      "gamebookFields": "Huấn luyện gamebook (nước này)",
+      "hint": "Gợi ý",
+      "onWrong": "Khi đi sai",
+      "onCorrect": "Khi đi đúng",
+      "guidedHint": "Gợi ý",
+      "guidedCorrectDefault": "Đúng rồi!",
+      "memberIdentity": "Email hoặc tên đăng nhập",
+      "lessonStudyMissing": "Study cờ này không còn khả dụng.",
+      "saveStatusSaving": "Đang lưu…",
+      "saveStatusSaved": "Đã lưu",
+      "saveStatusConflict": "Xung đột — tải lại và thử lại",
+      "saveStatusError": "Lưu thất bại",
+      "saveStatusIdle": "Tự động lưu bật"
     },
     "puzzle": {
       "title": "Luyện bài đố",
@@ -408,7 +434,11 @@
       "puzzleImportFailed": "Không thể xếp hàng nhập",
       "seekCreateFailed": "Không thể tạo lời mời",
       "seekCancelFailed": "Không thể hủy lời mời",
-      "seekAcceptFailed": "Không thể chấp nhận lời mời"
+      "seekAcceptFailed": "Không thể chấp nhận lời mời",
+      "pgnImported": "Đã nhập PGN thành chương mới",
+      "pgnImportFailed": "Không nhập được PGN",
+      "studyLessonCreated": "Đã tạo bài học study cờ",
+      "studyLessonCreateFailed": "Không tạo được bài học study cờ"
     }
   },
   "chessTournament": {
@@ -880,7 +910,8 @@
       "embed": "Nhúng",
       "scorm": "SCORM",
       "live_training": "Đào tạo trực tiếp",
-      "assignment": "Bài tập"
+      "assignment": "Bài tập",
+      "chess_study": "Study cờ"
     },
     "error": {
       "somethingWentWrong": "Rất tiếc! Đã có lỗi xảy ra."
@@ -3405,7 +3436,9 @@
           "taskDescriptionTooltip": "Mô tả ngắn gọn những gì người tham gia nên làm trong cuộc trò chuyện với cố vấn AI.",
           "assignment": "Bài tập",
           "assignmentLessonDescription": "Tạo một nhiệm vụ có chấm điểm hoặc bài tập về nhà để học viên hoàn thành.",
-          "tasks": "Câu hỏi/nhiệm vụ"
+          "tasks": "Câu hỏi/nhiệm vụ",
+          "chessStudy": "Bài học study cờ",
+          "chessStudyLessonDescription": "Nhúng study cờ nhiều chương vào khóa học"
         },
         "assignmentTaskType": {
           "short_answer": "Trả lời ngắn",

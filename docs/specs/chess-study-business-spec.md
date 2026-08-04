@@ -81,13 +81,20 @@ Người xem mở study, thấy danh sách chapter theo `displayOrder`; chọn m
 
 ## Follow-up Work (explicitly not done in this pass)
 
-> **Cập nhật 2026-08-04:** các follow-up dưới đây được xếp vào roadmap **Study depth S0–S6** — xem `docs/research/lila/08-study-roadmap.md` và teardown `docs/research/lila/07-study-deep-teardown.md`. Frontend Study/Chapter MVP **đã có** sau L2 (list/detail/editor/guided). Classroom **C5** đã có chia sẻ study → members lớp (khác embed lesson).
+> **Cập nhật 2026-08-04 (S6):** roadmap Study depth **S0–S6 đã triển khai**. Teardown: `docs/research/lila/07-study-deep-teardown.md`. Roadmap: `docs/research/lila/08-study-roadmap.md`.
 
-- **Import/export PGN theo chapter** (+ multi-PGN, orientation, description, pgnTags) — **S1**.
-- **Shapes persist trên node + gamebook per-node** (hint / onWrong / onCorrect) — **S2**.
-- **UX discovery / invite-by-identity / allowClone** — **S3** (không unlisted, không like — đã chốt).
-- **Nhúng study vào bài học khóa học** (lesson type hoặc block `studyId`+`chapterId`) — **S4** (không nhầm với C5 classroom assign).
-- **Autosave + optimistic concurrency** (+ presence optional) — **S5**.
-- **E2E Playwright + i18n đầy đủ** — **S6**.
-- **Like/lượt thích study** — **không làm trong S\*** (giá trị thấp trong tenant trường).
-- **Realtime collab full tree / chat study** — hoãn sau S\*.
+### Đã làm trong S\*
+
+- **S1** (#43): Import/export PGN, orientation, description, pgnTags.
+- **S2** (#44): Shapes persist + gamebook hint/onWrong/onCorrect.
+- **S3** (#45): Discovery mine/shared/all, invite email/username, allowClone.
+- **S4** (#46): Lesson type `chess_study` + `lesson_chess_studies` embed.
+- **S5** (#47): Autosave debounce + `expectedUpdatedAt` conflict 409.
+- **S6**: E2E smoke list page, i18n en/vi keys, HANDOVER/roadmap.
+
+### Vẫn ngoài phạm vi (có chủ đích)
+
+- **Like/lượt thích study** — không làm trong S\* (tenant trường).
+- **Unlisted visibility** — không làm trong S\*.
+- **Realtime collab full tree / chat study / presence room** — hoãn sau S\*.
+- **Swagger regenerate** — chạy API dev + `pnpm generate:client` khi deploy để bỏ cast tạm trên web.
