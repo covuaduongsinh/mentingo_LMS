@@ -3174,6 +3174,8 @@ export const chessStudies = pgTable(
       onDelete: "set null",
     }),
     chapterCount: integer("chapter_count").notNull().default(0),
+    /** When false, only owner/admin may clone (S3). */
+    allowClone: boolean("allow_clone").notNull().default(true),
     tenantId,
   },
   (table) => ({

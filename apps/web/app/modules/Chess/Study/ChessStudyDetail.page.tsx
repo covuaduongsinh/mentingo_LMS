@@ -82,7 +82,7 @@ export default function ChessStudyDetailPage() {
   const [showPgnImport, setShowPgnImport] = useState(false);
 
   const [selectedChapterId, setSelectedChapterId] = useState<string | undefined>();
-  const [memberUserId, setMemberUserId] = useState("");
+  const [memberIdentity, setMemberIdentity] = useState("");
   const [memberRole, setMemberRole] = useState<"read" | "write">("read");
 
   useEffect(() => {
@@ -155,9 +155,19 @@ export default function ChessStudyDetailPage() {
   };
 
   const handleAddMember = async () => {
-    if (!memberUserId.trim()) return;
-    await addMember({ studyId: id, data: { userId: memberUserId.trim(), role: memberRole } });
-    setMemberUserId("");
+    if (!memberIdentity.trim()) return;
+    const value = memberIdentity.trim();
+    // S3: prefer identity (email/username); UUID still works as userId when it looks like one.
+    const looksLikeUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+    await addMember({
+      studyId: id,
+      // S3 identity invite — cast until swagger client includes optional identity.
+      data: (looksLikeUuid
+        ? { userId: value, role: memberRole }
+        : { identity: value, role: memberRole }) as { userId: string; role: "read" | "write" },
+    });
+    setMemberIdentity("");
   };
 
   const handleImportPgn = async () => {
@@ -356,9 +366,11 @@ export default function ChessStudyDetailPage() {
                 <div className="flex gap-1">
                   <Input
                     className="h-8 text-xs"
-                    placeholder={t("chess.study.memberUserId", { defaultValue: "User id" })}
-                    value={memberUserId}
-                    onChange={(e) => setMemberUserId(e.target.value)}
+                    placeholder={t("chess.study.memberIdentity", {
+                      defaultValue: "Email or username",
+                    })}
+                    value={memberIdentity}
+                    onChange={(e) => setMemberIdentity(e.target.value)}
                   />
                   <Select
                     value={memberRole}

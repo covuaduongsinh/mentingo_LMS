@@ -128,6 +128,10 @@ export class ChessStudyService {
   async cloneStudy(id: UUIDType, user: CurrentUserType) {
     const study = await this.getStudyOrThrow(id);
     await this.assertCanRead(study, user);
+    const allowClone = study.allowClone !== false;
+    if (!allowClone && !this.isOwner(user, study.authorId) && !this.canManageAny(user)) {
+      throw new ForbiddenException("chess.study.errors.cloneNotAllowed");
+    }
     const clone = await this.repository.cloneStudy(id, user.userId);
     if (!clone) {
       throw new NotFoundException("chess.study.errors.studyNotFound");
@@ -247,10 +251,25 @@ export class ChessStudyService {
   async addMember(studyId: UUIDType, body: AddChessStudyMemberBody, user: CurrentUserType) {
     const study = await this.getStudyOrThrow(studyId);
     this.assertCanManage(study, user);
-    if (body.userId === study.authorId) {
+
+    let targetUserId = body.userId;
+    if (!targetUserId && body.identity) {
+      targetUserId = (await this.repository.findUserIdByIdentity(body.identity)) ?? undefined;
+      if (!targetUserId) {
+        throw new NotFoundException("chess.study.errors.memberUserNotFound");
+      }
+    }
+    if (!targetUserId) {
+      throw new BadRequestException("chess.study.errors.memberIdentityRequired");
+    }
+    if (targetUserId === study.authorId) {
       throw new BadRequestException("chess.study.errors.cannotAddOwnerAsMember");
     }
-    await this.repository.addMember(studyId, body);
+    await this.repository.addMember(
+      studyId,
+      targetUserId,
+      body.role ?? CHESS_STUDY_MEMBER_ROLES.READ,
+    );
   }
 
   async removeMember(studyId: UUIDType, userId: UUIDType, user: CurrentUserType) {

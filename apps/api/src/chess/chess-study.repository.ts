@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CHESS_STUDY_MEMBER_ROLES, CHESS_STUDY_VISIBILITY } from "@repo/shared";
-import { and, count, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, ilike, isNull, ne, or, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import {
@@ -12,7 +12,6 @@ import {
 } from "src/storage/schema";
 
 import type {
-  AddChessStudyMemberBody,
   CreateChessStudyBody,
   CreateChessStudyChapterBody,
   UpdateChessStudyBody,
@@ -28,6 +27,8 @@ export type ListChessStudiesParams = {
   viewerId: UUIDType;
   /** When true, restrict to studies authored by viewerId. */
   mineOnly?: boolean;
+  /** When true, only studies where viewer is a member (not the author). */
+  sharedOnly?: boolean;
 };
 
 @Injectable()
@@ -42,6 +43,17 @@ export class ChessStudyRepository {
     const conditions = [];
     if (params.mineOnly) {
       conditions.push(eq(chessStudies.authorId, params.viewerId));
+    } else if (params.sharedOnly) {
+      conditions.push(
+        and(
+          ne(chessStudies.authorId, params.viewerId),
+          sql`EXISTS (
+            SELECT 1 FROM ${chessStudyMembers}
+            WHERE ${chessStudyMembers.studyId} = ${chessStudies.id}
+              AND ${chessStudyMembers.userId} = ${params.viewerId}
+          )`,
+        ),
+      );
     } else {
       conditions.push(
         or(
@@ -123,6 +135,23 @@ export class ChessStudyRepository {
     return row?.role ?? null;
   }
 
+  async findUserIdByIdentity(identity: string): Promise<UUIDType | null> {
+    const trimmed = identity.trim();
+    if (!trimmed) return null;
+    const [byEmail] = await this.db
+      .select({ id: users.id })
+      .from(users)
+      .where(and(eq(users.email, trimmed), isNull(users.deletedAt)))
+      .limit(1);
+    if (byEmail) return byEmail.id;
+    const [byUsername] = await this.db
+      .select({ id: users.id })
+      .from(users)
+      .where(and(eq(users.username, trimmed), isNull(users.deletedAt)))
+      .limit(1);
+    return byUsername?.id ?? null;
+  }
+
   async createStudy(body: CreateChessStudyBody, authorId: UUIDType) {
     const [row] = await this.db
       .insert(chessStudies)
@@ -131,6 +160,7 @@ export class ChessStudyRepository {
         description: body.description ?? null,
         visibility: body.visibility ?? CHESS_STUDY_VISIBILITY.PRIVATE,
         topics: body.topics ?? [],
+        allowClone: body.allowClone ?? true,
         authorId,
       })
       .returning();
@@ -145,6 +175,7 @@ export class ChessStudyRepository {
         ...(body.description !== undefined ? { description: body.description } : {}),
         ...(body.visibility !== undefined ? { visibility: body.visibility } : {}),
         ...(body.topics !== undefined ? { topics: body.topics } : {}),
+        ...(body.allowClone !== undefined ? { allowClone: body.allowClone } : {}),
       })
       .where(eq(chessStudies.id, id))
       .returning();
@@ -341,17 +372,21 @@ export class ChessStudyRepository {
     });
   }
 
-  async addMember(studyId: UUIDType, body: AddChessStudyMemberBody) {
+  async addMember(
+    studyId: UUIDType,
+    userId: UUIDType,
+    role: (typeof CHESS_STUDY_MEMBER_ROLES)[keyof typeof CHESS_STUDY_MEMBER_ROLES] = CHESS_STUDY_MEMBER_ROLES.READ,
+  ) {
     await this.db
       .insert(chessStudyMembers)
       .values({
         studyId,
-        userId: body.userId,
-        role: body.role ?? CHESS_STUDY_MEMBER_ROLES.READ,
+        userId,
+        role,
       })
       .onConflictDoUpdate({
         target: [chessStudyMembers.studyId, chessStudyMembers.userId],
-        set: { role: body.role ?? CHESS_STUDY_MEMBER_ROLES.READ },
+        set: { role },
       });
   }
 

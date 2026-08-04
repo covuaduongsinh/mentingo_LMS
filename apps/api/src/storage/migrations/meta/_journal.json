@@ -1478,6 +1478,13 @@
       "when": 1785800000000,
       "tag": "0210_add_chess_study_chapter_meta",
       "breakpoints": true
+    },
+    {
+      "idx": 211,
+      "version": "7",
+      "when": 1785801000000,
+      "tag": "0211_add_chess_study_allow_clone",
+      "breakpoints": true
     }
   ]
 }
