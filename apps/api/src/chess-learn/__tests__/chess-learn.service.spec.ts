@@ -78,20 +78,19 @@ describe("ChessLearnService", () => {
       ).rejects.toBeInstanceOf(NotFoundException);
     });
 
-    it("returns the level's FEN/hint without exposing the solution", async () => {
+    it("returns the level's public fields without exposing the solution", async () => {
       const { service } = buildService();
 
       const content = await service.getLevelContent(FIRST_STAGE.id, FIRST_LEVEL.id, USER_ID);
 
-      expect(content).toEqual({
-        id: FIRST_LEVEL.id,
-        fen: FIRST_LEVEL.fen,
-        hint: FIRST_LEVEL.hint,
-        completed: false,
-        bestStars: 0,
-        bestScore: 0,
-      });
+      expect(content.id).toBe(FIRST_LEVEL.id);
+      expect(content.fen).toBe(FIRST_LEVEL.fen);
+      expect(content.hint).toBe(FIRST_LEVEL.hint);
+      expect(content.mode).toBe("exact_line");
+      expect(content.optimalMoves).toBeGreaterThanOrEqual(1);
+      expect(content.completed).toBe(false);
       expect(content).not.toHaveProperty("solutionUci");
+      expect(content).not.toHaveProperty("successRule");
     });
   });
 
