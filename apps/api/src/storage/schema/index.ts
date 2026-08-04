@@ -3600,6 +3600,26 @@ export const chessLearnProgress = pgTable(
   }),
 );
 
+/** Coordinate trainer personal best scores (LEARN-6). */
+export const chessCoordinateHighScores = pgTable(
+  "chess_coordinate_high_scores",
+  {
+    ...id,
+    ...timestamps,
+    userId: uuid("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    mode: varchar("mode", { length: 20 }).notNull(),
+    orientation: varchar("orientation", { length: 10 }).notNull(),
+    bestScore: integer("best_score").notNull().default(0),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("chess_coordinate_high_scores")(table),
+    unq: unique().on(table.userId, table.mode, table.orientation),
+  }),
+);
+
 export const chessPracticeAttempts = pgTable(
   "chess_practice_attempts",
   {
