@@ -218,14 +218,14 @@ Unique `(tenantId, userId, stageId, levelId)` giữ nguyên. RLS theo mẫu migr
 
 ## Implementation phases checklist
 
-| Đợt     | Scope                                                      |
-| ------- | ---------------------------------------------------------- |
-| LEARN-0 | Docs (teardown + spec này + roadmap)                       |
-| LEARN-1 | DB score/stars + attempt scoring for exact_line + UI stars |
-| LEARN-2 | Multi-move runner, shapes, predicate mode                  |
-| LEARN-3 | collect_targets, clear_side, scripted + scoring constants  |
-| LEARN-4 | Curriculum expansion, categories, sequential lock          |
-| LEARN-5 | Classroom % + optional learning_path node                  |
-| LEARN-6 | Coordinate high score, reset, polish                       |
+| Đợt     | Scope                                                             |
+| ------- | ----------------------------------------------------------------- |
+| LEARN-0 | Docs (teardown + spec này + roadmap) — done (PR #49)              |
+| LEARN-1 | DB score/stars + exact_line scoring + UI stars — migration `0213` |
+| LEARN-2 | Multi-move runner, shapes, predicate mode                         |
+| LEARN-3 | collect_targets, clear_side, scripted + scoring constants         |
+| LEARN-4 | Curriculum expansion, categories, sequential lock                 |
+| LEARN-5 | Classroom % + optional learning_path node                         |
+| LEARN-6 | Coordinate high score, reset, polish                              |
 
 Mỗi đợt: cập nhật spec này / L7 spec nếu lệch thực tế; commit; PR; merge; sang đợt sau.

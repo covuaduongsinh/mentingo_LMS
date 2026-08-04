@@ -3,6 +3,8 @@ import { Type, type Static } from "@sinclair/typebox";
 export const chessLearnLevelProgressSchema = Type.Object({
   id: Type.String(),
   completed: Type.Boolean(),
+  bestStars: Type.Integer({ minimum: 0, maximum: 3 }),
+  bestScore: Type.Integer({ minimum: 0 }),
 });
 
 export const chessLearnStageProgressSchema = Type.Object({
@@ -23,6 +25,8 @@ export const chessLearnLevelContentSchema = Type.Object({
   fen: Type.String(),
   hint: Type.String(),
   completed: Type.Boolean(),
+  bestStars: Type.Integer({ minimum: 0, maximum: 3 }),
+  bestScore: Type.Integer({ minimum: 0 }),
 });
 
 export const submitChessLearnAttemptBodySchema = Type.Object({
@@ -31,6 +35,10 @@ export const submitChessLearnAttemptBodySchema = Type.Object({
 
 export const chessLearnAttemptResultSchema = Type.Object({
   correct: Type.Boolean(),
+  score: Type.Integer({ minimum: 0 }),
+  stars: Type.Integer({ minimum: 0, maximum: 3 }),
+  bestScore: Type.Integer({ minimum: 0 }),
+  bestStars: Type.Integer({ minimum: 0, maximum: 3 }),
 });
 
 export type SubmitChessLearnAttemptBody = Static<typeof submitChessLearnAttemptBodySchema>;

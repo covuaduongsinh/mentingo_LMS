@@ -5,6 +5,7 @@ import { useChessLearnStages } from "~/api/queries/useChessLearnStages";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Badge } from "~/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { LearnStars } from "~/modules/Chess/Learn/LearnStars";
 import { setPageTitle } from "~/utils/setPageTitle";
 
 import type { MetaFunction } from "@remix-run/react";
@@ -40,12 +41,19 @@ export default function ChessLearnStagesPage() {
             {(stages ?? []).map((stage) => {
               const firstIncomplete =
                 stage.levels.find((level) => !level.completed) ?? stage.levels[0];
+              const stageStars =
+                stage.levels.length === 0
+                  ? 0
+                  : Math.round(
+                      stage.levels.reduce((sum, level) => sum + (level.bestStars ?? 0), 0) /
+                        stage.levels.length,
+                    );
               return (
                 <Link key={stage.id} to={`/chess/learn/${stage.id}/${firstIncomplete?.id ?? ""}`}>
                   <Card className="h-full transition hover:border-primary-400">
                     <CardHeader>
-                      <CardTitle className="flex items-center justify-between text-base">
-                        {stage.label}
+                      <CardTitle className="flex items-center justify-between gap-2 text-base">
+                        <span className="min-w-0 truncate">{stage.label}</span>
                         <Badge
                           variant={
                             stage.completedLevels === stage.totalLevels ? "default" : "outline"
@@ -55,8 +63,9 @@ export default function ChessLearnStagesPage() {
                         </Badge>
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-2">
                       <p className="body-sm text-neutral-600">{stage.description}</p>
+                      <LearnStars stars={stageStars} size="sm" />
                     </CardContent>
                   </Card>
                 </Link>

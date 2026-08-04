@@ -4,6 +4,12 @@ import { CHESS_LEARN_STAGES } from "@repo/shared";
 import { uciMoveSequencesEqual } from "src/chess/utils/chess-moves.utils";
 
 import { ChessLearnRepository } from "./chess-learn.repository";
+import {
+  exactLineMaxScore,
+  scoreExactLine,
+  starsFromScore,
+  type LearnStars,
+} from "./scoring.utils";
 
 import type { UUIDType } from "src/common";
 
@@ -12,13 +18,22 @@ export class ChessLearnService {
   constructor(private readonly repository: ChessLearnRepository) {}
 
   async getStages(userId: UUIDType) {
-    const completed = await this.repository.getCompletedLevelKeys(userId);
+    const progressRows = await this.repository.listProgressForUser(userId);
+    const byKey = new Map(
+      progressRows.map((row) => [`${row.stageId}:${row.levelId}`, row] as const),
+    );
 
     return CHESS_LEARN_STAGES.map((stage) => {
-      const levels = stage.levels.map((level) => ({
-        id: level.id,
-        completed: completed.has(`${stage.id}:${level.id}`),
-      }));
+      const levels = stage.levels.map((level) => {
+        const progress = byKey.get(`${stage.id}:${level.id}`);
+        const bestStars = (progress?.bestStars ?? 0) as LearnStars;
+        return {
+          id: level.id,
+          completed: bestStars >= 1,
+          bestStars,
+          bestScore: progress?.bestScore ?? 0,
+        };
+      });
 
       return {
         id: stage.id,
@@ -33,9 +48,17 @@ export class ChessLearnService {
 
   async getLevelContent(stageId: string, levelId: string, userId: UUIDType) {
     const level = this.findLevelOrThrow(stageId, levelId);
-    const completed = await this.repository.isLevelCompleted(userId, stageId, levelId);
+    const progress = await this.repository.getLevelProgress(userId, stageId, levelId);
+    const bestStars = (progress?.bestStars ?? 0) as LearnStars;
 
-    return { id: level.id, fen: level.fen, hint: level.hint, completed };
+    return {
+      id: level.id,
+      fen: level.fen,
+      hint: level.hint,
+      completed: bestStars >= 1,
+      bestStars,
+      bestScore: progress?.bestScore ?? 0,
+    };
   }
 
   async submitAttempt(userId: UUIDType, stageId: string, levelId: string, movesUci: string[]) {
@@ -43,11 +66,37 @@ export class ChessLearnService {
 
     const correct = level.solutionUci.some((accepted) => uciMoveSequencesEqual(accepted, movesUci));
 
-    if (correct) {
-      await this.repository.markCompleted(userId, stageId, levelId);
-    }
+    // Each accepted solution is one UCI string today; multi-move lines may be space-joined later.
+    const optimalPly = Math.max(
+      1,
+      ...level.solutionUci.map((solution) => {
+        const parts = solution.trim().split(/\s+/).filter(Boolean);
+        return parts.length > 0 ? parts.length : 1;
+      }),
+    );
 
-    return { correct };
+    const movesUsed = movesUci.length;
+    const maxScore = exactLineMaxScore(optimalPly);
+    const score = correct ? scoreExactLine(movesUsed, optimalPly) : 0;
+    const stars = correct ? starsFromScore(score, maxScore) : 0;
+
+    const progress = await this.repository.recordAttempt({
+      userId,
+      stageId,
+      levelId,
+      correct,
+      score,
+      stars,
+      movesUsed,
+    });
+
+    return {
+      correct,
+      score,
+      stars,
+      bestScore: progress.bestScore,
+      bestStars: progress.bestStars,
+    };
   }
 
   private findLevelOrThrow(stageId: string, levelId: string) {

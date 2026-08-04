@@ -8650,6 +8650,8 @@ export interface GetStagesResponse {
       levels: {
         id: string;
         completed: boolean;
+        bestStars: number;
+        bestScore: number;
       }[];
     }[];
   };
@@ -8661,6 +8663,8 @@ export interface GetLevelResponse {
     fen: string;
     hint: string;
     completed: boolean;
+    bestStars: number;
+    bestScore: number;
   };
 }
 
@@ -8675,6 +8679,10 @@ export interface SubmitLearnAttemptBody {
 export interface SubmitLearnAttemptResponse {
   data: {
     correct: boolean;
+    score: number;
+    stars: number;
+    bestScore: number;
+    bestStars: number;
   };
 }
 
