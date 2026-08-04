@@ -81,8 +81,13 @@ Người xem mở study, thấy danh sách chapter theo `displayOrder`; chọn m
 
 ## Follow-up Work (explicitly not done in this pass)
 
-- **Frontend Study/Chapter** (danh sách study, trang biên tập chapter tái dùng `ChessBoard`/`MoveTreeView`/`useMoveTree`/`BoardShapesOverlay` của L1, giao diện gamebook/conceal cho người học, quản lý thành viên) — nếu bị lùi sang commit/PR kế tiếp trong cùng đợt L2, ghi rõ ở đây và trong `05-roadmap.md`.
-- **Nhúng study vào bài học khóa học** (lesson type `chess_study` hoặc TipTap block) — lùi lại như đã nêu ở "How It Works", chưa có đợt kế nhiệm cụ thể; cân nhắc gộp vào Đợt L7 (Practice) nếu về mặt nghiệp vụ hai thứ này nên đi cùng nhau.
-- **Import/export PGN theo chapter** — có trong kế hoạch gốc (`05-roadmap.md` mục L2) nhưng không có trong đợt này; hiện chỉ có thể build cây biến qua UI (kế thừa từ L1), không có đường nhập PGN dán trực tiếp. Cân nhắc bổ sung khi có nhu cầu thực tế (giáo viên có sẵn file PGN từ nguồn khác).
-- **Like/lượt thích study** — có trong bảng liệt kê ở kế hoạch gốc (`chess_study_likes`) nhưng bị loại khỏi đợt này vì giá trị thấp so với chi phí (thêm bảng + endpoint chỉ để đếm lượt thích) ở quy mô trường/CLB; có thể bổ sung cùng Đợt L9 (cộng đồng cờ) nếu cần tín hiệu mức độ phổ biến của study công khai.
-- **E2E Playwright** cho luồng Study/Chapter — chưa có, tương tự L1 (xem lý do ở spec L1); cân nhắc bổ sung khi luồng gamebook/conceal có UI hoàn chỉnh.
+> **Cập nhật 2026-08-04:** các follow-up dưới đây được xếp vào roadmap **Study depth S0–S6** — xem `docs/research/lila/08-study-roadmap.md` và teardown `docs/research/lila/07-study-deep-teardown.md`. Frontend Study/Chapter MVP **đã có** sau L2 (list/detail/editor/guided). Classroom **C5** đã có chia sẻ study → members lớp (khác embed lesson).
+
+- **Import/export PGN theo chapter** (+ multi-PGN, orientation, description, pgnTags) — **S1**.
+- **Shapes persist trên node + gamebook per-node** (hint / onWrong / onCorrect) — **S2**.
+- **UX discovery / invite-by-identity / allowClone** — **S3** (không unlisted, không like — đã chốt).
+- **Nhúng study vào bài học khóa học** (lesson type hoặc block `studyId`+`chapterId`) — **S4** (không nhầm với C5 classroom assign).
+- **Autosave + optimistic concurrency** (+ presence optional) — **S5**.
+- **E2E Playwright + i18n đầy đủ** — **S6**.
+- **Like/lượt thích study** — **không làm trong S\*** (giá trị thấp trong tenant trường).
+- **Realtime collab full tree / chat study** — hoãn sau S\*.

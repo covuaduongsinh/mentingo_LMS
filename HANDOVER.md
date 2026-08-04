@@ -1,9 +1,34 @@
 # HANDOVER — covuahocduong.com (Chess on Mentingo)
 
-**Ngày:** 2026-07-28 (cập nhật)
+**Ngày:** 2026-08-04 (cập nhật)
 **Nền tảng:** monorepo Mentingo LMS + module cờ vua (MIT-only)
 **Domain mục tiêu:** `covuahocduong.com`
-**Trạng thái:** W1–W4 (module cờ) + đợt phát triển LMS-core PR1–PR5 (xem mục 0 dưới) + roadmap "còn thiếu so với lila" L0–L10 (xem mục -3) đều đã **merged vào `main`**. Đợt "Classroom" (C0–C8, xem mục -4) đang triển khai.
+**Trạng thái:** W1–W4 (module cờ) + LMS-core PR1–PR5 + roadmap lila L0–L10 đã **merged**. Classroom C0–C5 đã merged (C6–C8 còn lại). **Study depth S0–S6** (đào sâu Study sau MVP L2) đang triển khai — xem mục -5.
+
+---
+
+## -5. Cập nhật mới nhất (2026-08-04) — Study depth (S0–S6): tear-down sạch module Study (lila) → nâng cấp Study Mentingo
+
+Sau L0–L10 và Classroom C5 (đã có `assignStudy` chia sẻ study cho lớp qua `chess_study_members`), khảo sát **sâu module Study** của lila (`D:\code\lila` modules/study + ui/analyse study) để đặc tả clean-room các gap còn lại so với nhu cầu LMS cờ học đường — **không copy code AGPL**.
+
+- Teardown: `docs/research/lila/07-study-deep-teardown.md`
+- Roadmap: `docs/research/lila/08-study-roadmap.md`
+- Matrix mục B đã cập nhật trạng thái sau L2 + trỏ S\*
+- Master MVP: `docs/specs/chess-study-business-spec.md`
+
+| Đợt    | Nội dung                                                    | Ghi chú                 |
+| ------ | ----------------------------------------------------------- | ----------------------- |
+| **S0** | Docs teardown + roadmap (file này)                          | không product code      |
+| **S1** | PGN import/export + orientation/description/pgnTags         |                         |
+| **S2** | Shapes-on-node + gamebook hint/onWrong/onCorrect            |                         |
+| **S3** | Discovery filters, invite-by-identity, clone UX, allowClone | không unlisted/like     |
+| **S4** | Embed study vào **lesson khóa học**                         | khác C5 classroom share |
+| **S5** | Autosave + optimistic concurrency (+ presence optional)     | không full OT tree      |
+| **S6** | E2E Playwright + i18n + cập nhật spec master                |                         |
+
+**Đã chốt:** visibility chỉ `public`/`private`; không like; mỗi đợt commit+push+PR+merge rồi sang đợt sau. Clean-room: [docs/research/lila/00-cleanroom-policy.md](docs/research/lila/00-cleanroom-policy.md).
+
+**Lưu ý vận hành phiên S0:** stash local WIP cũ `wip: classroom announcements grants` (trùng số migration 0207+ với C5 đã merge — **không** `stash pop` mù quáng).
 
 ---
 
