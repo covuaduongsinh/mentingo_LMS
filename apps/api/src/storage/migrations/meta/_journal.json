@@ -1492,6 +1492,13 @@
       "when": 1785802000000,
       "tag": "0212_add_lesson_chess_studies",
       "breakpoints": true
+    },
+    {
+      "idx": 213,
+      "version": "7",
+      "when": 1785900000000,
+      "tag": "0213_add_chess_learn_score_stars",
+      "breakpoints": true
     }
   ]
 }

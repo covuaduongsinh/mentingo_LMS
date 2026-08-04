@@ -3586,6 +3586,12 @@ export const chessLearnProgress = pgTable(
     stageId: varchar("stage_id", { length: 100 }).notNull(),
     levelId: varchar("level_id", { length: 100 }).notNull(),
     completedAt: timestamp("completed_at", { withTimezone: true }).notNull().defaultNow(),
+    /** Best score achieved on this level (server-computed; best-only). LEARN-1. */
+    bestScore: integer("best_score").notNull().default(0),
+    /** Best star rank 0–3 (0 = not completed). LEARN-1. */
+    bestStars: integer("best_stars").notNull().default(0),
+    bestMovesUsed: integer("best_moves_used"),
+    attemptCount: integer("attempt_count").notNull().default(0),
     tenantId,
   },
   (table) => ({

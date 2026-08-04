@@ -8,6 +8,7 @@ import { useChessLearnStages } from "~/api/queries/useChessLearnStages";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Button } from "~/components/ui/button";
 import { ChessBoard } from "~/modules/Chess/board";
+import { LearnStars } from "~/modules/Chess/Learn/LearnStars";
 import { setPageTitle } from "~/utils/setPageTitle";
 
 import type { MetaFunction } from "@remix-run/react";
@@ -30,6 +31,8 @@ export default function ChessLearnLevelPage() {
   const [fen, setFen] = useState<string | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState<"correct" | "incorrect" | null>(null);
+  const [resultStars, setResultStars] = useState(0);
+  const [resultScore, setResultScore] = useState(0);
 
   const stage = stages?.find((candidate) => candidate.id === stageId);
   const levelIndex = stage?.levels.findIndex((candidate) => candidate.id === levelId) ?? -1;
@@ -38,8 +41,11 @@ export default function ChessLearnLevelPage() {
   const handleMove = (uci: string) => {
     submitAttempt({ stageId, levelId, movesUci: [uci] }).then((result) => {
       setFeedback(result.correct ? "correct" : "incorrect");
-      if (!result.correct) {
-        setFen(level?.fen ?? null); // reset the board back to the start on a wrong try
+      if (result.correct) {
+        setResultStars(result.stars ?? result.bestStars ?? 0);
+        setResultScore(result.score ?? result.bestScore ?? 0);
+      } else {
+        setFen(level?.fen ?? null);
       }
     });
   };
@@ -61,6 +67,15 @@ export default function ChessLearnLevelPage() {
   return (
     <PageWrapper breadcrumbs={breadcrumbs}>
       <div className="flex flex-col items-center gap-4">
+        {(level.bestStars ?? 0) > 0 && feedback !== "correct" && (
+          <div className="flex items-center gap-2 text-neutral-600">
+            <span className="body-sm">
+              {t("chessLearn.level.best", { defaultValue: "Best so far" })}
+            </span>
+            <LearnStars stars={level.bestStars ?? 0} size="sm" />
+          </div>
+        )}
+
         <ChessBoard
           fen={fen ?? level.fen}
           interactive={feedback !== "correct"}
@@ -73,6 +88,15 @@ export default function ChessLearnLevelPage() {
             <p className="body-base-md text-green-800">
               {t("chessLearn.level.correct", { defaultValue: "Chính xác! Làm tốt lắm." })}
             </p>
+            <div className="mt-2 flex flex-col items-center gap-1">
+              <LearnStars stars={resultStars} />
+              <p className="body-sm text-green-800">
+                {t("chessLearn.level.score", {
+                  defaultValue: "Score: {{score}}",
+                  score: resultScore,
+                })}
+              </p>
+            </div>
             {nextLevel ? (
               <Button
                 className="mt-2"

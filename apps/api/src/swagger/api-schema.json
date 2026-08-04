@@ -11091,6 +11091,26 @@
                 }
               ]
             }
+          },
+          {
+            "name": "shared",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "const": "true",
+                  "type": "string"
+                },
+                {
+                  "const": "false",
+                  "type": "string"
+                }
+              ]
+            }
           }
         ],
         "responses": {
@@ -11124,6 +11144,95 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateStudyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/create-lesson": {
+      "post": {
+        "operationId": "ChessController_createChessStudyLesson",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChessStudyLessonBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateChessStudyLessonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/lessons/{lessonId}": {
+      "get": {
+        "operationId": "ChessController_getChessStudyLessonForLearner",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetChessStudyLessonForLearnerResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "ChessController_updateChessStudyLesson",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChessStudyLessonBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateChessStudyLessonResponse"
                 }
               }
             }
@@ -11241,6 +11350,91 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}/import-pgn": {
+      "post": {
+        "operationId": "ChessController_importStudyPgn",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportStudyPgnBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportStudyPgnResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}/export.pgn": {
+      "get": {
+        "operationId": "ChessController_exportStudyPgn",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/chess/studies/{id}/chapters/{chapterId}/export.pgn": {
+      "get": {
+        "operationId": "ChessController_exportStudyChapterPgn",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         }
       }
@@ -33288,6 +33482,10 @@
                               {
                                 "const": "assignment",
                                 "type": "string"
+                              },
+                              {
+                                "const": "chess_study",
+                                "type": "string"
                               }
                             ]
                           },
@@ -33751,6 +33949,10 @@
                               },
                               {
                                 "const": "assignment",
+                                "type": "string"
+                              },
+                              {
+                                "const": "chess_study",
                                 "type": "string"
                               }
                             ]
@@ -36773,6 +36975,10 @@
                         {
                           "const": "assignment",
                           "type": "string"
+                        },
+                        {
+                          "const": "chess_study",
+                          "type": "string"
                         }
                       ]
                     },
@@ -36965,6 +37171,10 @@
                         },
                         {
                           "const": "assignment",
+                          "type": "string"
+                        },
+                        {
+                          "const": "chess_study",
                           "type": "string"
                         }
                       ]
@@ -37492,6 +37702,10 @@
                             },
                             {
                               "const": "assignment",
+                              "type": "string"
+                            },
+                            {
+                              "const": "chess_study",
                               "type": "string"
                             }
                           ]
@@ -38128,6 +38342,10 @@
                     {
                       "const": "assignment",
                       "type": "string"
+                    },
+                    {
+                      "const": "chess_study",
+                      "type": "string"
                     }
                   ]
                 },
@@ -38238,6 +38456,10 @@
                   },
                   {
                     "const": "assignment",
+                    "type": "string"
+                  },
+                  {
+                    "const": "chess_study",
                     "type": "string"
                   }
                 ]
@@ -39511,6 +39733,10 @@
                   },
                   {
                     "const": "assignment",
+                    "type": "string"
+                  },
+                  {
+                    "const": "chess_study",
                     "type": "string"
                   }
                 ]
@@ -42119,6 +42345,10 @@
                       {
                         "const": "assignment",
                         "type": "string"
+                      },
+                      {
+                        "const": "chess_study",
+                        "type": "string"
                       }
                     ]
                   },
@@ -42936,6 +43166,10 @@
               {
                 "const": "assignment",
                 "type": "string"
+              },
+              {
+                "const": "chess_study",
+                "type": "string"
               }
             ]
           },
@@ -43025,6 +43259,10 @@
               },
               {
                 "const": "assignment",
+                "type": "string"
+              },
+              {
+                "const": "chess_study",
                 "type": "string"
               }
             ]
@@ -52463,6 +52701,9 @@
                 "chapterCount": {
                   "type": "number"
                 },
+                "allowClone": {
+                  "type": "boolean"
+                },
                 "canWrite": {
                   "type": "boolean"
                 },
@@ -52482,6 +52723,7 @@
                 "topics",
                 "sourceStudyId",
                 "chapterCount",
+                "allowClone",
                 "canWrite",
                 "createdAt",
                 "updatedAt"
@@ -52603,6 +52845,9 @@
                 }
               ]
             }
+          },
+          "allowClone": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -52724,6 +52969,9 @@
               "chapterCount": {
                 "type": "number"
               },
+              "allowClone": {
+                "type": "boolean"
+              },
               "canWrite": {
                 "type": "boolean"
               },
@@ -52743,9 +52991,698 @@
               "topics",
               "sourceStudyId",
               "chapterCount",
+              "allowClone",
               "canWrite",
               "createdAt",
               "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateChessStudyLessonBody": {
+        "type": "object",
+        "properties": {
+          "chapterId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": {
+            "minLength": 1,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "maxLength": 5000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "studyId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "studyChapterId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "chapterId",
+          "title",
+          "studyId"
+        ]
+      },
+      "CreateChessStudyLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "lessonId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "studyId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "studyChapterId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "lessonId",
+              "studyId",
+              "studyChapterId"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetChessStudyLessonForLearnerResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "lessonId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "studyId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "studyChapterId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "studyMissing": {
+                "type": "boolean"
+              },
+              "study": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "allOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "authorId": {
+                            "anyOf": [
+                              {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "visibility": {
+                            "anyOf": [
+                              {
+                                "const": "public",
+                                "type": "string"
+                              },
+                              {
+                                "const": "private",
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "topics": {
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "const": "intro",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "rules",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "tournament_rules",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "opening",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "middlegame",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "endgame",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "tactics",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "strategy",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "story",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "competitive_psychology",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "student_psychology",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "pedagogy",
+                                  "type": "string"
+                                }
+                              ]
+                            }
+                          },
+                          "sourceStudyId": {
+                            "anyOf": [
+                              {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "chapterCount": {
+                            "type": "number"
+                          },
+                          "allowClone": {
+                            "type": "boolean"
+                          },
+                          "canWrite": {
+                            "type": "boolean"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "authorId",
+                          "title",
+                          "description",
+                          "visibility",
+                          "topics",
+                          "sourceStudyId",
+                          "chapterCount",
+                          "allowClone",
+                          "canWrite",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "chapters": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "studyId": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "title": {
+                                  "type": "string"
+                                },
+                                "rootFen": {
+                                  "type": "string"
+                                },
+                                "moveNodes": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string"
+                                      },
+                                      "parentId": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "uci": {
+                                        "type": "string"
+                                      },
+                                      "san": {
+                                        "type": "string"
+                                      },
+                                      "fenAfter": {
+                                        "type": "string"
+                                      },
+                                      "comment": {
+                                        "type": "string"
+                                      },
+                                      "glyph": {
+                                        "type": "string"
+                                      },
+                                      "order": {
+                                        "type": "number"
+                                      },
+                                      "shapes": {
+                                        "maxItems": 32,
+                                        "type": "array",
+                                        "items": {
+                                          "anyOf": [
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "const": "arrow",
+                                                  "type": "string"
+                                                },
+                                                "from": {
+                                                  "type": "string"
+                                                },
+                                                "to": {
+                                                  "type": "string"
+                                                },
+                                                "color": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "from",
+                                                "to",
+                                                "color"
+                                              ]
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "const": "circle",
+                                                  "type": "string"
+                                                },
+                                                "square": {
+                                                  "type": "string"
+                                                },
+                                                "color": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "square",
+                                                "color"
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "hint": {
+                                        "maxLength": 2000,
+                                        "type": "string"
+                                      },
+                                      "onWrong": {
+                                        "maxLength": 2000,
+                                        "type": "string"
+                                      },
+                                      "onCorrect": {
+                                        "maxLength": 2000,
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "id",
+                                      "parentId",
+                                      "uci",
+                                      "san",
+                                      "fenAfter",
+                                      "order"
+                                    ]
+                                  }
+                                },
+                                "mode": {
+                                  "anyOf": [
+                                    {
+                                      "const": "normal",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "gamebook",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "conceal",
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                "concealFromPly": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "practiceGoal": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "practiceGoalType": {
+                                  "anyOf": [
+                                    {
+                                      "anyOf": [
+                                        {
+                                          "const": "checkmate_in_n",
+                                          "type": "string"
+                                        },
+                                        {
+                                          "const": "draw",
+                                          "type": "string"
+                                        },
+                                        {
+                                          "const": "reach_material_advantage",
+                                          "type": "string"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "practiceGoalTargetValue": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "orientation": {
+                                  "anyOf": [
+                                    {
+                                      "const": "white",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "black",
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                "description": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "pgnTags": {
+                                  "type": "object",
+                                  "patternProperties": {
+                                    "^(.*)$": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "displayOrder": {
+                                  "type": "number"
+                                },
+                                "createdAt": {
+                                  "type": "string"
+                                },
+                                "updatedAt": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "studyId",
+                                "title",
+                                "rootFen",
+                                "moveNodes",
+                                "mode",
+                                "concealFromPly",
+                                "practiceGoal",
+                                "practiceGoalType",
+                                "practiceGoalTargetValue",
+                                "orientation",
+                                "description",
+                                "pgnTags",
+                                "displayOrder",
+                                "createdAt",
+                                "updatedAt"
+                              ]
+                            }
+                          },
+                          "members": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "userId": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "role": {
+                                  "anyOf": [
+                                    {
+                                      "const": "read",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "write",
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                "firstName": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "lastName": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "userId",
+                                "role",
+                                "firstName",
+                                "lastName"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "chapters",
+                          "members"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "lessonId",
+              "studyId",
+              "studyChapterId",
+              "studyMissing",
+              "study"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateChessStudyLessonBody": {
+        "type": "object",
+        "properties": {
+          "studyId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "studyChapterId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "minLength": 1,
+            "maxLength": 300,
+            "type": "string"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "maxLength": 5000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "UpdateChessStudyLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "lessonId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "studyId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "studyChapterId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "lessonId",
+              "studyId",
+              "studyChapterId"
             ]
           }
         },
@@ -52871,6 +53808,9 @@
                   "chapterCount": {
                     "type": "number"
                   },
+                  "allowClone": {
+                    "type": "boolean"
+                  },
                   "canWrite": {
                     "type": "boolean"
                   },
@@ -52890,6 +53830,7 @@
                   "topics",
                   "sourceStudyId",
                   "chapterCount",
+                  "allowClone",
                   "canWrite",
                   "createdAt",
                   "updatedAt"
@@ -52952,6 +53893,70 @@
                               },
                               "order": {
                                 "type": "number"
+                              },
+                              "shapes": {
+                                "maxItems": 32,
+                                "type": "array",
+                                "items": {
+                                  "anyOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "const": "arrow",
+                                          "type": "string"
+                                        },
+                                        "from": {
+                                          "type": "string"
+                                        },
+                                        "to": {
+                                          "type": "string"
+                                        },
+                                        "color": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "from",
+                                        "to",
+                                        "color"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "const": "circle",
+                                          "type": "string"
+                                        },
+                                        "square": {
+                                          "type": "string"
+                                        },
+                                        "color": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "square",
+                                        "color"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "hint": {
+                                "maxLength": 2000,
+                                "type": "string"
+                              },
+                              "onWrong": {
+                                "maxLength": 2000,
+                                "type": "string"
+                              },
+                              "onCorrect": {
+                                "maxLength": 2000,
+                                "type": "string"
                               }
                             },
                             "required": [
@@ -53033,6 +54038,36 @@
                             }
                           ]
                         },
+                        "orientation": {
+                          "anyOf": [
+                            {
+                              "const": "white",
+                              "type": "string"
+                            },
+                            {
+                              "const": "black",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "description": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "pgnTags": {
+                          "type": "object",
+                          "patternProperties": {
+                            "^(.*)$": {
+                              "type": "string"
+                            }
+                          }
+                        },
                         "displayOrder": {
                           "type": "number"
                         },
@@ -53054,6 +54089,9 @@
                         "practiceGoal",
                         "practiceGoalType",
                         "practiceGoalTargetValue",
+                        "orientation",
+                        "description",
+                        "pgnTags",
                         "displayOrder",
                         "createdAt",
                         "updatedAt"
@@ -53207,6 +54245,9 @@
                 }
               ]
             }
+          },
+          "allowClone": {
+            "type": "boolean"
           }
         }
       },
@@ -53325,6 +54366,9 @@
               "chapterCount": {
                 "type": "number"
               },
+              "allowClone": {
+                "type": "boolean"
+              },
               "canWrite": {
                 "type": "boolean"
               },
@@ -53344,6 +54388,7 @@
               "topics",
               "sourceStudyId",
               "chapterCount",
+              "allowClone",
               "canWrite",
               "createdAt",
               "updatedAt"
@@ -53489,6 +54534,9 @@
               "chapterCount": {
                 "type": "number"
               },
+              "allowClone": {
+                "type": "boolean"
+              },
               "canWrite": {
                 "type": "boolean"
               },
@@ -53508,10 +54556,307 @@
               "topics",
               "sourceStudyId",
               "chapterCount",
+              "allowClone",
               "canWrite",
               "createdAt",
               "updatedAt"
             ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ImportStudyPgnBody": {
+        "type": "object",
+        "properties": {
+          "pgn": {
+            "minLength": 1,
+            "maxLength": 500000,
+            "type": "string"
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "const": "normal",
+                "type": "string"
+              },
+              {
+                "const": "gamebook",
+                "type": "string"
+              },
+              {
+                "const": "conceal",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "pgn"
+        ]
+      },
+      "ImportStudyPgnResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "studyId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "rootFen": {
+                  "type": "string"
+                },
+                "moveNodes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "parentId": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "uci": {
+                        "type": "string"
+                      },
+                      "san": {
+                        "type": "string"
+                      },
+                      "fenAfter": {
+                        "type": "string"
+                      },
+                      "comment": {
+                        "type": "string"
+                      },
+                      "glyph": {
+                        "type": "string"
+                      },
+                      "order": {
+                        "type": "number"
+                      },
+                      "shapes": {
+                        "maxItems": 32,
+                        "type": "array",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "const": "arrow",
+                                  "type": "string"
+                                },
+                                "from": {
+                                  "type": "string"
+                                },
+                                "to": {
+                                  "type": "string"
+                                },
+                                "color": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "from",
+                                "to",
+                                "color"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "const": "circle",
+                                  "type": "string"
+                                },
+                                "square": {
+                                  "type": "string"
+                                },
+                                "color": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "square",
+                                "color"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "hint": {
+                        "maxLength": 2000,
+                        "type": "string"
+                      },
+                      "onWrong": {
+                        "maxLength": 2000,
+                        "type": "string"
+                      },
+                      "onCorrect": {
+                        "maxLength": 2000,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "parentId",
+                      "uci",
+                      "san",
+                      "fenAfter",
+                      "order"
+                    ]
+                  }
+                },
+                "mode": {
+                  "anyOf": [
+                    {
+                      "const": "normal",
+                      "type": "string"
+                    },
+                    {
+                      "const": "gamebook",
+                      "type": "string"
+                    },
+                    {
+                      "const": "conceal",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "concealFromPly": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "practiceGoal": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "practiceGoalType": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "const": "checkmate_in_n",
+                          "type": "string"
+                        },
+                        {
+                          "const": "draw",
+                          "type": "string"
+                        },
+                        {
+                          "const": "reach_material_advantage",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "practiceGoalTargetValue": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "orientation": {
+                  "anyOf": [
+                    {
+                      "const": "white",
+                      "type": "string"
+                    },
+                    {
+                      "const": "black",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "pgnTags": {
+                  "type": "object",
+                  "patternProperties": {
+                    "^(.*)$": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "displayOrder": {
+                  "type": "number"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "studyId",
+                "title",
+                "rootFen",
+                "moveNodes",
+                "mode",
+                "concealFromPly",
+                "practiceGoal",
+                "practiceGoalType",
+                "practiceGoalTargetValue",
+                "orientation",
+                "description",
+                "pgnTags",
+                "displayOrder",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
           }
         },
         "required": [
@@ -53564,6 +54909,70 @@
                 },
                 "order": {
                   "type": "number"
+                },
+                "shapes": {
+                  "maxItems": 32,
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "const": "arrow",
+                            "type": "string"
+                          },
+                          "from": {
+                            "type": "string"
+                          },
+                          "to": {
+                            "type": "string"
+                          },
+                          "color": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "from",
+                          "to",
+                          "color"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "const": "circle",
+                            "type": "string"
+                          },
+                          "square": {
+                            "type": "string"
+                          },
+                          "color": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "square",
+                          "color"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "hint": {
+                  "maxLength": 2000,
+                  "type": "string"
+                },
+                "onWrong": {
+                  "maxLength": 2000,
+                  "type": "string"
+                },
+                "onCorrect": {
+                  "maxLength": 2000,
+                  "type": "string"
                 }
               },
               "required": [
@@ -53646,6 +55055,37 @@
                 "type": "null"
               }
             ]
+          },
+          "orientation": {
+            "anyOf": [
+              {
+                "const": "white",
+                "type": "string"
+              },
+              {
+                "const": "black",
+                "type": "string"
+              }
+            ]
+          },
+          "description": {
+            "anyOf": [
+              {
+                "maxLength": 5000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pgnTags": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {
+                "type": "string"
+              }
+            }
           }
         },
         "required": [
@@ -53707,6 +55147,70 @@
                     },
                     "order": {
                       "type": "number"
+                    },
+                    "shapes": {
+                      "maxItems": 32,
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "const": "arrow",
+                                "type": "string"
+                              },
+                              "from": {
+                                "type": "string"
+                              },
+                              "to": {
+                                "type": "string"
+                              },
+                              "color": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "from",
+                              "to",
+                              "color"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "const": "circle",
+                                "type": "string"
+                              },
+                              "square": {
+                                "type": "string"
+                              },
+                              "color": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "square",
+                              "color"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "hint": {
+                      "maxLength": 2000,
+                      "type": "string"
+                    },
+                    "onWrong": {
+                      "maxLength": 2000,
+                      "type": "string"
+                    },
+                    "onCorrect": {
+                      "maxLength": 2000,
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -53788,6 +55292,36 @@
                   }
                 ]
               },
+              "orientation": {
+                "anyOf": [
+                  {
+                    "const": "white",
+                    "type": "string"
+                  },
+                  {
+                    "const": "black",
+                    "type": "string"
+                  }
+                ]
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "pgnTags": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
               "displayOrder": {
                 "type": "number"
               },
@@ -53809,6 +55343,9 @@
               "practiceGoal",
               "practiceGoalType",
               "practiceGoalTargetValue",
+              "orientation",
+              "description",
+              "pgnTags",
               "displayOrder",
               "createdAt",
               "updatedAt"
@@ -53821,134 +55358,242 @@
       },
       "UpdateStudyChapterBody": {
         "type": "object",
-        "properties": {
-          "title": {
-            "minLength": 1,
-            "maxLength": 300,
-            "type": "string"
-          },
-          "rootFen": {
-            "type": "string"
-          },
-          "moveNodes": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "parentId": {
-                  "anyOf": [
-                    {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "minLength": 1,
+                "maxLength": 300,
+                "type": "string"
+              },
+              "rootFen": {
+                "type": "string"
+              },
+              "moveNodes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
                       "type": "string"
                     },
-                    {
-                      "type": "null"
+                    "parentId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "uci": {
+                      "type": "string"
+                    },
+                    "san": {
+                      "type": "string"
+                    },
+                    "fenAfter": {
+                      "type": "string"
+                    },
+                    "comment": {
+                      "type": "string"
+                    },
+                    "glyph": {
+                      "type": "string"
+                    },
+                    "order": {
+                      "type": "number"
+                    },
+                    "shapes": {
+                      "maxItems": 32,
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "const": "arrow",
+                                "type": "string"
+                              },
+                              "from": {
+                                "type": "string"
+                              },
+                              "to": {
+                                "type": "string"
+                              },
+                              "color": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "from",
+                              "to",
+                              "color"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "const": "circle",
+                                "type": "string"
+                              },
+                              "square": {
+                                "type": "string"
+                              },
+                              "color": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "square",
+                              "color"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "hint": {
+                      "maxLength": 2000,
+                      "type": "string"
+                    },
+                    "onWrong": {
+                      "maxLength": 2000,
+                      "type": "string"
+                    },
+                    "onCorrect": {
+                      "maxLength": 2000,
+                      "type": "string"
                     }
+                  },
+                  "required": [
+                    "id",
+                    "parentId",
+                    "uci",
+                    "san",
+                    "fenAfter",
+                    "order"
                   ]
-                },
-                "uci": {
-                  "type": "string"
-                },
-                "san": {
-                  "type": "string"
-                },
-                "fenAfter": {
-                  "type": "string"
-                },
-                "comment": {
-                  "type": "string"
-                },
-                "glyph": {
-                  "type": "string"
-                },
-                "order": {
-                  "type": "number"
                 }
               },
-              "required": [
-                "id",
-                "parentId",
-                "uci",
-                "san",
-                "fenAfter",
-                "order"
-              ]
-            }
-          },
-          "mode": {
-            "anyOf": [
-              {
-                "const": "normal",
-                "type": "string"
-              },
-              {
-                "const": "gamebook",
-                "type": "string"
-              },
-              {
-                "const": "conceal",
-                "type": "string"
-              }
-            ]
-          },
-          "concealFromPly": {
-            "anyOf": [
-              {
-                "minimum": 0,
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "practiceGoal": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "practiceGoalType": {
-            "anyOf": [
-              {
+              "mode": {
                 "anyOf": [
                   {
-                    "const": "checkmate_in_n",
+                    "const": "normal",
                     "type": "string"
                   },
                   {
-                    "const": "draw",
+                    "const": "gamebook",
                     "type": "string"
                   },
                   {
-                    "const": "reach_material_advantage",
+                    "const": "conceal",
                     "type": "string"
                   }
                 ]
               },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "practiceGoalTargetValue": {
-            "anyOf": [
-              {
-                "minimum": 0,
-                "type": "number"
+              "concealFromPly": {
+                "anyOf": [
+                  {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
-              {
-                "type": "null"
+              "practiceGoal": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "practiceGoalType": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "const": "checkmate_in_n",
+                        "type": "string"
+                      },
+                      {
+                        "const": "draw",
+                        "type": "string"
+                      },
+                      {
+                        "const": "reach_material_advantage",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "practiceGoalTargetValue": {
+                "anyOf": [
+                  {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "orientation": {
+                "anyOf": [
+                  {
+                    "const": "white",
+                    "type": "string"
+                  },
+                  {
+                    "const": "black",
+                    "type": "string"
+                  }
+                ]
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "maxLength": 5000,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "pgnTags": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
               }
-            ]
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "expectedUpdatedAt": {
+                "type": "string"
+              }
+            }
           }
-        }
+        ]
       },
       "UpdateStudyChapterResponse": {
         "type": "object",
@@ -54005,6 +55650,70 @@
                     },
                     "order": {
                       "type": "number"
+                    },
+                    "shapes": {
+                      "maxItems": 32,
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "const": "arrow",
+                                "type": "string"
+                              },
+                              "from": {
+                                "type": "string"
+                              },
+                              "to": {
+                                "type": "string"
+                              },
+                              "color": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "from",
+                              "to",
+                              "color"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "const": "circle",
+                                "type": "string"
+                              },
+                              "square": {
+                                "type": "string"
+                              },
+                              "color": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "square",
+                              "color"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "hint": {
+                      "maxLength": 2000,
+                      "type": "string"
+                    },
+                    "onWrong": {
+                      "maxLength": 2000,
+                      "type": "string"
+                    },
+                    "onCorrect": {
+                      "maxLength": 2000,
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -54086,6 +55795,36 @@
                   }
                 ]
               },
+              "orientation": {
+                "anyOf": [
+                  {
+                    "const": "white",
+                    "type": "string"
+                  },
+                  {
+                    "const": "black",
+                    "type": "string"
+                  }
+                ]
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "pgnTags": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "string"
+                  }
+                }
+              },
               "displayOrder": {
                 "type": "number"
               },
@@ -54107,6 +55846,9 @@
               "practiceGoal",
               "practiceGoalType",
               "practiceGoalTargetValue",
+              "orientation",
+              "description",
+              "pgnTags",
               "displayOrder",
               "createdAt",
               "updatedAt"
@@ -54256,6 +55998,11 @@
             "format": "uuid",
             "type": "string"
           },
+          "identity": {
+            "minLength": 1,
+            "maxLength": 320,
+            "type": "string"
+          },
           "role": {
             "anyOf": [
               {
@@ -54268,10 +56015,7 @@
               }
             ]
           }
-        },
-        "required": [
-          "userId"
-        ]
+        }
       },
       "AddMemberResponse": {
         "type": "object",
@@ -65093,11 +66837,22 @@
                           },
                           "completed": {
                             "type": "boolean"
+                          },
+                          "bestStars": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 3
+                          },
+                          "bestScore": {
+                            "type": "integer",
+                            "minimum": 0
                           }
                         },
                         "required": [
                           "id",
-                          "completed"
+                          "completed",
+                          "bestStars",
+                          "bestScore"
                         ]
                       }
                     }
@@ -65139,13 +66894,24 @@
               },
               "completed": {
                 "type": "boolean"
+              },
+              "bestStars": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "bestScore": {
+                "type": "integer",
+                "minimum": 0
               }
             },
             "required": [
               "id",
               "fen",
               "hint",
-              "completed"
+              "completed",
+              "bestStars",
+              "bestScore"
             ]
           }
         },
@@ -65177,10 +66943,32 @@
             "properties": {
               "correct": {
                 "type": "boolean"
+              },
+              "score": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "stars": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "bestScore": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "bestStars": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
               }
             },
             "required": [
-              "correct"
+              "correct",
+              "score",
+              "stars",
+              "bestScore",
+              "bestStars"
             ]
           }
         },

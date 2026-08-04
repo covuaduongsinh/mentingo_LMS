@@ -12,9 +12,16 @@ const FIRST_LEVEL = FIRST_STAGE.levels[0];
 describe("ChessLearnService", () => {
   const buildService = (repositoryOverrides: Partial<ChessLearnRepository> = {}) => {
     const repository = {
-      getCompletedLevelKeys: jest.fn().mockResolvedValue(new Set<string>()),
-      isLevelCompleted: jest.fn().mockResolvedValue(false),
-      markCompleted: jest.fn().mockResolvedValue(undefined),
+      listProgressForUser: jest.fn().mockResolvedValue([]),
+      getLevelProgress: jest.fn().mockResolvedValue(null),
+      recordAttempt: jest.fn().mockImplementation(async (params) => ({
+        stageId: params.stageId,
+        levelId: params.levelId,
+        bestScore: params.correct ? params.score : 0,
+        bestStars: params.correct ? params.stars : 0,
+        bestMovesUsed: params.correct ? params.movesUsed : null,
+        attemptCount: 1,
+      })),
       ...repositoryOverrides,
     } as unknown as ChessLearnRepository;
 
@@ -30,18 +37,35 @@ describe("ChessLearnService", () => {
       expect(stages).toHaveLength(CHESS_LEARN_STAGES.length);
       expect(stages.every((stage) => stage.completedLevels === 0)).toBe(true);
       expect(stages[0].totalLevels).toBe(FIRST_STAGE.levels.length);
+      expect(stages[0].levels[0]).toMatchObject({
+        bestStars: 0,
+        bestScore: 0,
+        completed: false,
+      });
     });
 
-    it("counts a level as completed only when its stage:level key is in the completed set", async () => {
+    it("counts a level as completed when bestStars >= 1", async () => {
       const { service } = buildService({
-        getCompletedLevelKeys: jest
-          .fn()
-          .mockResolvedValue(new Set([`${FIRST_STAGE.id}:${FIRST_LEVEL.id}`])),
+        listProgressForUser: jest.fn().mockResolvedValue([
+          {
+            stageId: FIRST_STAGE.id,
+            levelId: FIRST_LEVEL.id,
+            bestScore: 500,
+            bestStars: 3,
+            bestMovesUsed: 1,
+            attemptCount: 1,
+          },
+        ]),
       });
 
       const stages = await service.getStages(USER_ID);
 
       expect(stages.find((stage) => stage.id === FIRST_STAGE.id)?.completedLevels).toBe(1);
+      expect(
+        stages
+          .find((stage) => stage.id === FIRST_STAGE.id)
+          ?.levels.find((level) => level.id === FIRST_LEVEL.id),
+      ).toMatchObject({ completed: true, bestStars: 3, bestScore: 500 });
     });
   });
 
@@ -64,34 +88,54 @@ describe("ChessLearnService", () => {
         fen: FIRST_LEVEL.fen,
         hint: FIRST_LEVEL.hint,
         completed: false,
+        bestStars: 0,
+        bestScore: 0,
       });
       expect(content).not.toHaveProperty("solutionUci");
     });
   });
 
   describe("submitAttempt", () => {
-    it("marks the level completed and reports correct for a matching solution", async () => {
+    it("records progress and returns score/stars for a matching solution", async () => {
       const { service, repository } = buildService();
 
       const result = await service.submitAttempt(USER_ID, FIRST_STAGE.id, FIRST_LEVEL.id, [
         FIRST_LEVEL.solutionUci[0],
       ]);
 
-      expect(result).toEqual({ correct: true });
-      expect(repository.markCompleted).toHaveBeenCalledWith(
-        USER_ID,
-        FIRST_STAGE.id,
-        FIRST_LEVEL.id,
+      expect(result.correct).toBe(true);
+      expect(result.score).toBe(500);
+      expect(result.stars).toBe(3);
+      expect(result.bestScore).toBe(500);
+      expect(result.bestStars).toBe(3);
+      expect(repository.recordAttempt).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: USER_ID,
+          stageId: FIRST_STAGE.id,
+          levelId: FIRST_LEVEL.id,
+          correct: true,
+          score: 500,
+          stars: 3,
+          movesUsed: 1,
+        }),
       );
     });
 
-    it("does not record progress for an incorrect move", async () => {
+    it("does not mark stars for an incorrect move", async () => {
       const { service, repository } = buildService();
 
       const result = await service.submitAttempt(USER_ID, FIRST_STAGE.id, FIRST_LEVEL.id, ["a1a2"]);
 
-      expect(result).toEqual({ correct: false });
-      expect(repository.markCompleted).not.toHaveBeenCalled();
+      expect(result).toEqual({
+        correct: false,
+        score: 0,
+        stars: 0,
+        bestScore: 0,
+        bestStars: 0,
+      });
+      expect(repository.recordAttempt).toHaveBeenCalledWith(
+        expect.objectContaining({ correct: false, score: 0, stars: 0 }),
+      );
     });
 
     it("throws NotFoundException for an unknown level", async () => {
