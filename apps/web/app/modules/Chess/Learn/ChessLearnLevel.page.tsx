@@ -41,12 +41,11 @@ export default function ChessLearnLevelPage() {
   const nextLevel = stage && levelIndex >= 0 ? stage.levels[levelIndex + 1] : undefined;
 
   const boardShapes: BoardShape[] = useMemo(() => {
-    const raw = level?.shapes ?? [];
-    return raw.map((shape) => {
+    const fromShapes = (level?.shapes ?? []).map((shape) => {
       if (shape.kind === "arrow") {
         return {
           kind: "arrow" as const,
-          from: shape.from as BoardShape extends { from: infer F } ? F : never,
+          from: shape.from as never,
           to: shape.to as never,
           color: shape.color ?? "green",
         };
@@ -54,10 +53,21 @@ export default function ChessLearnLevelPage() {
       return {
         kind: "circle" as const,
         square: shape.square as never,
-        color: shape.color ?? "green",
+        color: shape.color ?? "yellow",
       };
     });
-  }, [level?.shapes]);
+    const visited = new Set(
+      movesUci.map((uci) => uci.trim().toLowerCase().slice(2, 4)).filter(Boolean),
+    );
+    const targetShapes = (level?.targets ?? [])
+      .filter((square) => !visited.has(square.toLowerCase()))
+      .map((square) => ({
+        kind: "circle" as const,
+        square: square as never,
+        color: "yellow" as const,
+      }));
+    return [...fromShapes, ...targetShapes];
+  }, [level?.shapes, level?.targets, movesUci]);
 
   const resetBoard = () => {
     setFen(level?.fen ?? null);
@@ -84,7 +94,33 @@ export default function ChessLearnLevelPage() {
     setMovesUci(nextMoves);
     setFen(fenAfter);
 
+    const mode = level?.mode ?? "exact_line";
     const optimal = level?.optimalMoves ?? 1;
+
+    // Free-play modes: auto-check when optimal move budget is reached or all targets visited.
+    if (mode === "collect_targets") {
+      const remaining = (level?.targets ?? []).filter((square) => {
+        const visited = nextMoves.some(
+          (uci) => uci.trim().toLowerCase().slice(2, 4) === square.toLowerCase(),
+        );
+        return !visited;
+      });
+      if (
+        remaining.length === 0 ||
+        nextMoves.length >= Math.max(optimal, (level?.targets ?? []).length + 2)
+      ) {
+        void grade(nextMoves);
+      }
+      return;
+    }
+
+    if (mode === "clear_side" || mode === "scripted" || mode === "predicate") {
+      if (nextMoves.length >= optimal) {
+        void grade(nextMoves);
+      }
+      return;
+    }
+
     if (nextMoves.length >= optimal) {
       void grade(nextMoves);
     }

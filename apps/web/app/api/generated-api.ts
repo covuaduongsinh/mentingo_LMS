@@ -8663,11 +8663,12 @@ export interface GetLevelResponse {
     fen: string;
     hint: string;
     goal: string | null;
-    mode: "exact_line" | "predicate";
+    mode: "exact_line" | "predicate" | "collect_targets" | "clear_side" | "scripted";
     shapes: (
       | { kind: "arrow"; from: string; to: string; color?: "green" | "red" | "blue" | "yellow" }
       | { kind: "circle"; square: string; color?: "green" | "red" | "blue" | "yellow" }
     )[];
+    targets: string[];
     optimalMoves: number;
     completed: boolean;
     bestStars: number;

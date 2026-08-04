@@ -25,7 +25,17 @@ export type ChessLearnRule =
   | { op: "or"; rules: ChessLearnRule[] }
   | { op: "not"; rule: ChessLearnRule };
 
-export type ChessLearnMode = "exact_line" | "predicate";
+export type ChessLearnMode =
+  | "exact_line"
+  | "predicate"
+  | "collect_targets"
+  | "clear_side"
+  | "scripted";
+
+export type ChessLearnScriptStep = {
+  actor: "player" | "opponent";
+  uci: string;
+};
 
 export type ChessLearnLevel = {
   id: string;
@@ -35,17 +45,26 @@ export type ChessLearnLevel = {
   /**
    * exact_line: each entry is one accepted line.
    * Multi-move lines use space-separated UCI tokens, e.g. "a1a4 a4a8".
+   * Optional for non-exact modes (may be empty).
    */
   solutionUci: string[];
   /** predicate mode success condition (server-only). */
   successRule?: ChessLearnRule;
   failureRule?: ChessLearnRule;
+  /** collect_targets: squares the learner must visit (public). */
+  targets?: string[];
+  /** clear_side: remove all pieces of this color (usually "b"). */
+  clearColor?: "w" | "b";
+  /** clear_side: fail if a hanging capture is left for the static opponent. */
+  detectHanging?: boolean;
+  /** scripted: alternating player/opponent UCI steps (server-only answers). */
+  scriptSteps?: ChessLearnScriptStep[];
   /** Public goal text for the learner. */
   goal?: string;
   hint: string;
   /** Public board shapes (safe to send to client). */
   shapes?: ChessLearnShape[];
-  /** Override optimal move count for scoring; default derived from solutions. */
+  /** Override optimal move count for scoring; default derived from solutions/targets. */
   optimalMoves?: number;
 };
 
@@ -69,6 +88,20 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
         goal: "Đưa xe từ a1 lên a4.",
         hint: "Xe đi thẳng theo hàng ngang hoặc hàng dọc. Hãy đưa xe từ a1 lên a4.",
         shapes: [{ kind: "arrow", from: "a1", to: "a4", color: "green" }],
+      },
+      {
+        id: "rook-collect-stars",
+        fen: "4k3/8/8/8/8/8/4R3/4K3 w - - 0 1",
+        mode: "collect_targets",
+        solutionUci: [],
+        targets: ["e7", "a7"],
+        optimalMoves: 2,
+        goal: "Đưa xe đến mọi ô có ngôi sao (e7 rồi a7, hoặc ngược lại).",
+        hint: "Xe đi thẳng. Hãy chạm từng ô mục tiêu.",
+        shapes: [
+          { kind: "circle", square: "e7", color: "yellow" },
+          { kind: "circle", square: "a7", color: "yellow" },
+        ],
       },
       {
         id: "rook-two-moves",
@@ -102,6 +135,17 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
         goal: "Ăn tốt đen bằng mã.",
         hint: "Mã có thể ăn quân tốt đen đang đứng ở d5.",
       },
+      {
+        id: "rook-clear-pawns",
+        // Both kings present so chess.js accepts the position; only pawns are targets.
+        fen: "4k3/2p2p2/8/8/8/2R5/8/4K3 w - - 0 1",
+        mode: "clear_side",
+        solutionUci: [],
+        clearColor: "b",
+        optimalMoves: 2,
+        goal: "Ăn hết tốt đen bằng xe (không cần chiếu vua).",
+        hint: "Xe có thể ăn cả hai tốt trên cùng một hàng nếu đi đúng đường.",
+      },
     ],
   },
   {
@@ -115,6 +159,20 @@ export const CHESS_LEARN_STAGES: ChessLearnStage[] = [
         solutionUci: ["d4d1"],
         goal: "Di chuyển xe ra khỏi đường tấn công của tượng.",
         hint: "Xe đang bị tượng đen tấn công theo đường chéo. Hãy di chuyển xe đến d1 để an toàn.",
+      },
+      {
+        id: "protect-with-rook",
+        fen: "8/N2q4/8/8/8/8/6R1/4K3 w - - 0 1",
+        mode: "scripted",
+        solutionUci: [],
+        scriptSteps: [
+          { actor: "player", uci: "g2a2" },
+          { actor: "opponent", uci: "d7a7" },
+        ],
+        optimalMoves: 1,
+        goal: "Bảo vệ mã bằng xe (đưa xe lên cùng cột a).",
+        hint: "Xe có thể bảo vệ mã từ a2. Sau đó hậu đen sẽ ăn mã — bạn đã học được ý bảo vệ.",
+        shapes: [{ kind: "arrow", from: "g2", to: "a2", color: "green" }],
       },
     ],
   },
