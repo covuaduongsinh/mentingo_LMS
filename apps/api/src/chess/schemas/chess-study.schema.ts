@@ -110,6 +110,7 @@ export const chessStudySchema = Type.Object({
   topics: Type.Array(chessStudyTopicSchema),
   sourceStudyId: Type.Union([UUIDSchema, Type.Null()]),
   chapterCount: Type.Number(),
+  allowClone: Type.Boolean(),
   /** Whether the requesting user can edit this study (owner, admin, or a write member). */
   canWrite: Type.Boolean(),
   createdAt: Type.String(),
@@ -129,12 +130,15 @@ export const createChessStudyBodySchema = Type.Object({
   description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   visibility: Type.Optional(chessStudyVisibilitySchema),
   topics: Type.Optional(Type.Array(chessStudyTopicSchema)),
+  allowClone: Type.Optional(Type.Boolean()),
 });
 
 export const updateChessStudyBodySchema = Type.Partial(createChessStudyBodySchema);
 
 export const addChessStudyMemberBodySchema = Type.Object({
-  userId: UUIDSchema,
+  userId: Type.Optional(UUIDSchema),
+  /** Email or username within the tenant (S3). Exactly one of userId / identity required. */
+  identity: Type.Optional(Type.String({ minLength: 1, maxLength: 320 })),
   role: Type.Optional(chessStudyMemberRoleSchema),
 });
 

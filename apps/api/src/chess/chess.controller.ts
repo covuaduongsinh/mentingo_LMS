@@ -397,6 +397,7 @@ export class ChessController {
       { type: "query", name: "search", schema: Type.Optional(Type.String()) },
       { type: "query", name: "topic", schema: Type.Optional(chessTopicSchema) },
       { type: "query", name: "mine", schema: queryBooleanSchema },
+      { type: "query", name: "shared", schema: queryBooleanSchema },
     ],
     response: paginatedResponse(Type.Array(chessStudySchema)),
   })
@@ -406,6 +407,7 @@ export class ChessController {
     @Query("search") search: string,
     @Query("topic") topic: string,
     @Query("mine") mine: boolean | "true" | "false",
+    @Query("shared") shared: boolean | "true" | "false",
     @CurrentUser() user: CurrentUserType,
   ) {
     const result = await this.chessStudyService.listStudies(user, {
@@ -414,6 +416,7 @@ export class ChessController {
       search,
       topic,
       mineOnly: parseQueryBoolean(mine),
+      sharedOnly: parseQueryBoolean(shared),
     });
     return new PaginatedResponse({
       data: result.data.map((study) => ({ ...study, canWrite: study.authorId === user.userId })),

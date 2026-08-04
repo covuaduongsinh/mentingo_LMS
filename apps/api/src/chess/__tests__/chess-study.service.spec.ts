@@ -86,6 +86,7 @@ describe("ChessStudyService", () => {
       getBestMovesUsed: jest.fn().mockResolvedValue(null),
       findNextIncompletePracticeChapter: jest.fn().mockResolvedValue(null),
       createChaptersFromImport: jest.fn().mockResolvedValue([]),
+      findUserIdByIdentity: jest.fn().mockResolvedValue(null),
       ...repositoryOverrides,
     } as unknown as ChessStudyRepository;
 
@@ -265,10 +266,21 @@ describe("ChessStudyService", () => {
 
       await service.addMember(STUDY_ID, { userId: OTHER_ID, role: "read" }, buildUser(OWNER_ID));
 
-      expect(repository.addMember).toHaveBeenCalledWith(STUDY_ID, {
-        userId: OTHER_ID,
-        role: "read",
-      });
+      expect(repository.addMember).toHaveBeenCalledWith(STUDY_ID, OTHER_ID, "read");
+    });
+
+    it("resolves identity email/username when userId is omitted (S3)", async () => {
+      const findUserIdByIdentity = jest.fn().mockResolvedValue(OTHER_ID);
+      const { service, repository } = buildService({ findUserIdByIdentity });
+
+      await service.addMember(
+        STUDY_ID,
+        { identity: "student@school.test", role: "write" },
+        buildUser(OWNER_ID),
+      );
+
+      expect(findUserIdByIdentity).toHaveBeenCalledWith("student@school.test");
+      expect(repository.addMember).toHaveBeenCalledWith(STUDY_ID, OTHER_ID, "write");
     });
   });
 

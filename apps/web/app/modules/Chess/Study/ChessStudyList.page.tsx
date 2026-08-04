@@ -27,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Switch } from "~/components/ui/switch";
 import { setPageTitle } from "~/utils/setPageTitle";
 
 import type { MetaFunction } from "@remix-run/react";
@@ -45,7 +44,7 @@ export default function ChessStudyListPage() {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [topic, setTopic] = useState<ChessTopic | "all">("all");
-  const [mineOnly, setMineOnly] = useState(false);
+  const [scope, setScope] = useState<"all" | "mine" | "shared">("all");
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
 
@@ -54,8 +53,10 @@ export default function ChessStudyListPage() {
     perPage: 50,
     search: search || undefined,
     topic: topic === "all" ? undefined : topic,
-    mine: mineOnly || undefined,
-  });
+    mine: scope === "mine" || undefined,
+    // generated-api may not know `shared` until swagger refresh — cast at call site
+    ...(scope === "shared" ? ({ shared: true } as { shared?: boolean }) : {}),
+  } as Parameters<typeof useChessStudies>[0]);
 
   const { mutateAsync: createStudy, isPending: isCreating } = useCreateChessStudy();
   const { mutateAsync: cloneStudy } = useCloneChessStudy();
@@ -199,8 +200,22 @@ export default function ChessStudyListPage() {
             </SelectContent>
           </Select>
           <div className="flex items-center gap-2">
-            <Switch checked={mineOnly} onCheckedChange={setMineOnly} />
-            <Label>{t("chess.study.mineOnly", { defaultValue: "My studies only" })}</Label>
+            <Select value={scope} onValueChange={(value) => setScope(value as typeof scope)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">
+                  {t("chess.study.scopeAll", { defaultValue: "All visible" })}
+                </SelectItem>
+                <SelectItem value="mine">
+                  {t("chess.study.scopeMine", { defaultValue: "My studies" })}
+                </SelectItem>
+                <SelectItem value="shared">
+                  {t("chess.study.scopeShared", { defaultValue: "Shared with me" })}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
