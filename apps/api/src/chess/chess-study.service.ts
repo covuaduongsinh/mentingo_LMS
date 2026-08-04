@@ -7,14 +7,11 @@ import {
 import {
   CHESS_STUDY_MEMBER_ROLES,
   CHESS_STUDY_VISIBILITY,
-  COURSE_FEATURE,
   ENTITY_TYPES,
   PERMISSIONS,
 } from "@repo/shared";
 
 import { hasPermission } from "src/common/permissions/permission.utils";
-import { CourseFeaturePolicyService } from "src/courses/course-feature-policy.service";
-import { MasterCourseService } from "src/courses/master-course.service";
 import { AdminLessonRepository } from "src/lesson/repositories/adminLesson.repository";
 import { AdminLessonService } from "src/lesson/services/adminLesson.service";
 import { LocalizationService } from "src/localization/localization.service";
@@ -50,8 +47,6 @@ export class ChessStudyService {
     private readonly repository: ChessStudyRepository,
     private readonly adminLessonRepository: AdminLessonRepository,
     private readonly adminLessonService: AdminLessonService,
-    private readonly masterCourseService: MasterCourseService,
-    private readonly courseFeaturePolicyService: CourseFeaturePolicyService,
     private readonly localizationService: LocalizationService,
   ) {}
 
@@ -302,11 +297,7 @@ export class ChessStudyService {
   // --- S4: course lesson embed ---
 
   async createChessStudyLesson(body: CreateChessStudyLessonBody, user: CurrentUserType) {
-    await this.masterCourseService.assertCourseContentEditableByChapterId(body.chapterId);
-    await this.courseFeaturePolicyService.assertCourseFeatureEnabledByChapterId(
-      body.chapterId,
-      COURSE_FEATURE.CURRICULUM_EDITING,
-    );
+    // Ownership / chapter access only — avoid importing CourseModule (circular dep with Chess).
     await this.adminLessonService.validateAccess(ENTITY_TYPES.CHAPTER, user, body.chapterId);
 
     // Author must be able to read the study they embed.
@@ -413,11 +404,6 @@ export class ChessStudyService {
     body: UpdateChessStudyLessonBody,
     user: CurrentUserType,
   ) {
-    await this.masterCourseService.assertCourseContentEditableByLessonId(lessonId);
-    await this.courseFeaturePolicyService.assertCourseFeatureEnabledByLessonId(
-      lessonId,
-      COURSE_FEATURE.CURRICULUM_EDITING,
-    );
     await this.adminLessonService.validateAccess(ENTITY_TYPES.LESSON, user, lessonId);
 
     const link = await this.repository.getLessonChessStudyLink(lessonId);

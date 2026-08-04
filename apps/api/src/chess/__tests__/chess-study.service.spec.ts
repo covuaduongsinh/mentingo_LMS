@@ -105,14 +105,6 @@ describe("ChessStudyService", () => {
     const adminLessonService = {
       validateAccess: jest.fn().mockResolvedValue(undefined),
     };
-    const masterCourseService = {
-      assertCourseContentEditableByChapterId: jest.fn().mockResolvedValue(undefined),
-      assertCourseContentEditableByLessonId: jest.fn().mockResolvedValue(undefined),
-    };
-    const courseFeaturePolicyService = {
-      assertCourseFeatureEnabledByChapterId: jest.fn().mockResolvedValue(undefined),
-      assertCourseFeatureEnabledByLessonId: jest.fn().mockResolvedValue(undefined),
-    };
     const localizationService = {
       getBaseLanguage: jest.fn().mockResolvedValue({ language: "en" }),
     };
@@ -122,8 +114,6 @@ describe("ChessStudyService", () => {
         repository,
         adminLessonRepository as never,
         adminLessonService as never,
-        masterCourseService as never,
-        courseFeaturePolicyService as never,
         localizationService as never,
       ),
       repository,

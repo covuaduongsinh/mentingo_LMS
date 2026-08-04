@@ -1,6 +1,5 @@
-import { forwardRef, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 
-import { CourseModule } from "src/courses/course.module";
 import { LessonModule } from "src/lesson/lesson.module";
 import { LocalizationModule } from "src/localization/localization.module";
 
@@ -25,7 +24,8 @@ import { ChessEngineController } from "./engine/engine.controller";
 import { ChessEngineService } from "./engine/engine.service";
 
 @Module({
-  imports: [LessonModule, LocalizationModule, forwardRef(() => CourseModule)],
+  // LessonModule only — do not import CourseModule here (circular via WebSocket → Course → Chess).
+  imports: [LessonModule, LocalizationModule],
   controllers: [ChessController, ChessEngineController],
   providers: [
     ChessService,
