@@ -127,9 +127,29 @@ Bảng mới: `chess_tournaments`, `chess_tournament_players`, `chess_tournament
 - Learn: 10 stage nội dung tự viết tiếng Việt (cấu trúc stage × level), mỗi stage 1-2 level đã kiểm tra tay kỹ (bàn cờ thưa, dễ xác minh) thay vì bộ nội dung lớn — có thể mở rộng thêm level sau. Bảng tiến độ mới `chess_learn_progress` (RLS riêng, `0193`/`0194`).
 - Luyện tọa độ: 2 chế độ (tìm ô theo tên / gọi tên ô) × 2 màu — hoàn toàn client-side, chưa lưu điểm cao nhất (xem "Follow-up Work" trong spec).
 - Practice: kích hoạt chấm điểm tự động cho trường `practiceGoal` đã có từ L2 (thêm 2 cột có cấu trúc `practiceGoalType`/`practiceGoalTargetValue`), chấm bằng cách phát lại nước đi server-side qua `chess.js`, ghi nhận số nước tối thiểu đã dùng. Bảng mới `chess_practice_attempts`.
-- **Chưa làm**: gắn vào `learning_paths` sẵn có, soạn nội dung Learn qua UI cho giáo viên, khóa stage tuần tự — xem "Follow-up Work" trong spec.
+- **Chưa làm lúc L7**: gắn `learning_paths`, CMS Learn cho giáo viên, khóa stage tuần tự, deep interactive modes, stars/best-score — chuyển sang **Learn expansion LEARN-0…6** bên dưới.
 
 **Phát hiện quan trọng khi triển khai**: nội dung Learn (kể cả đáp án `solutionUci`) là dữ liệu tĩnh trong `packages/shared` — package này dùng chung cho cả API lẫn web, nên **không được để frontend import trực tiếp mảng nội dung** (sẽ rò rỉ đáp án vào bundle trình duyệt); response `GET /chess-learn/stages` phải tự trả về danh sách level ID cần thiết để frontend điều hướng, không dựa vào import chung. Cũng gặp lại đúng lỗi trùng tên method controller đã ghi nhận từ L2 (`swagger-typescript-api` đặt tên DTO theo tên method, không theo class) — `submitAttempt` trùng giữa `ChessLearnController` và `ChessController` hiện có, phải đổi tên thành `submitLearnAttempt`.
+
+## Learn expansion — LEARN-0…6 (sau L10, clean-room)
+
+> Teardown chi tiết: `docs/research/lila/09-learn-deep-teardown.md`.  
+> Business spec: `docs/specs/chess-learn-interactive-engine-business-spec.md`.  
+> Chính sách: không copy code/asset lila (AGPL); chấm server-authoritative; curriculum VN tự soạn.
+
+| Đợt         | Nội dung                                                                | Ghi chú                             |
+| ----------- | ----------------------------------------------------------------------- | ----------------------------------- |
+| **LEARN-0** | Docs only: teardown + interactive engine spec + cập nhật matrix/roadmap | PR docs                             |
+| **LEARN-1** | `bestScore` / `bestStars` / attempt count; scoring exact_line; UI sao   | Migration + API + web               |
+| **LEARN-2** | Multi-move runner, shapes gợi ý, mode `predicate`                       | Engine + 1–2 level mẫu tự soạn      |
+| **LEARN-3** | Modes `collect_targets`, `clear_side`, `scripted` + hằng số điểm        | Asset marker tự vẽ (MIT)            |
+| **LEARN-4** | Curriculum mở rộng, category map, sequential lock (default off)         | E2E smoke                           |
+| **LEARN-5** | Aggregate % Learn cho classroom; optional learning_path node            | Tích hợp LMS                        |
+| **LEARN-6** | Coordinate high-score, reset progress, polish                           | Đóng follow-up L7 còn lại (trừ CMS) |
+
+**Ngoài phạm vi expansion:** CMS soạn Learn cho giáo viên; guest anonymous progress; chessground/Stockfish/asset lila.
+
+Quy trình mỗi đợt: implement → test hẹp → commit → push → PR → merge `main` → đợt tiếp theo.
 
 ## Đợt L8 — Phân tích điểm mạnh-yếu (Insight/Tutor)
 

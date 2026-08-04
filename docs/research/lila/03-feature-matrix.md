@@ -114,12 +114,16 @@ Ma trận này liệt kê **toàn bộ** tính năng đã khảo sát của lila
 
 ## G. Nhập môn (Learn/Coordinate/Practice)
 
-| Tính năng lila                                                        | mentingo | Phán quyết                                                                            |
-| --------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------- |
-| Learn: 20 giai đoạn × 10 cấp độ, chấm điểm từng cấp                   | ❌       | **Port — Đợt L7** (nội dung tự viết tiếng Việt, không copy nội dung/văn bản của lila) |
-| Coordinate trainer: 2 chế độ × 2 màu, chấm theo thời gian             | ❌       | **Port — Đợt L7**                                                                     |
-| Practice: chuỗi study có mục tiêu, ghi nhận số nước tối thiểu đã dùng | ❌       | **Port — Đợt L7** (dùng Study từ Đợt L2 làm nền)                                      |
-| Gắn lộ trình nhập môn vào `learning_paths` sẵn có                     | —        | **Port — Đợt L7** (tích hợp, không phải tính năng lila gốc)                           |
+| Tính năng lila                                                                                | mentingo     | Phán quyết                                                                                          |
+| --------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------- |
+| Learn: stage × level, exact-line chấm server, progress table                                  | ✅ L7        | Nền đã ship (PR #27); nội dung VN tự viết, không copy curriculum lila                               |
+| Learn: điểm / sao 1–3 best-only, multi-mode engine (targets, clear-side, predicate, scripted) | ◐ L7 thin    | **LEARN-1…3** — xem `09-learn-deep-teardown.md` + `chess-learn-interactive-engine-business-spec.md` |
+| Learn: curriculum sâu + map category + khóa tuần tự                                           | ◐            | **LEARN-4**                                                                                         |
+| Learn: % hoàn thành cho báo cáo lớp                                                           | ◐            | **LEARN-5**                                                                                         |
+| Coordinate trainer: 2 chế độ × 2 màu, chấm theo thời gian                                     | ✅ L7 client | Lưu high-score server: **LEARN-6**                                                                  |
+| Practice: chuỗi study có mục tiêu, ghi nhận số nước tối thiểu đã dùng                         | ✅ L7        | Đã ship cùng L7                                                                                     |
+| Gắn lộ trình nhập môn vào `learning_paths` sẵn có                                             | ❌           | **LEARN-5** (tích hợp LMS, không phải tính năng lila gốc)                                           |
+| CMS soạn Learn cho giáo viên                                                                  | ❌           | **Epic sau LEARN-6** — ngoài phạm vi expansion hiện tại                                             |
 
 ## H. Phân tích điểm mạnh-yếu (Insight/Tutor)
 

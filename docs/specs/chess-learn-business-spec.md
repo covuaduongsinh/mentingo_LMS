@@ -59,7 +59,10 @@ Học sinh mới vào mục "Nhập môn", thấy danh sách stage theo thứ t�
 
 ## Follow-up Work (explicitly not done in this pass)
 
-- **Soạn nội dung Learn qua UI cho giáo viên**: đợt này nội dung cố định trong mã nguồn; một CMS nhập môn tùy biến được là công việc lớn riêng, cân nhắc sau khi có phản hồi thực tế về chương trình học hiện tại.
-- **Khóa stage tuần tự bắt buộc**: đợt này mọi stage đều mở, chỉ hiển thị % hoàn thành — chưa chặn học sinh nhảy cóc sang stage sau khi chưa xong stage trước.
-- **Lưu điểm cao nhất Coordinate trainer**: đợt này chỉ hiển thị điểm cuối phiên, không lưu lịch sử/bảng xếp hạng cá nhân.
-- **Gắn Learn/Practice vào `learning_paths`**: kế hoạch gốc có nêu, đợt này chưa nối — giáo viên chưa xếp được bài Learn/Practice cụ thể vào một lộ trình học có sẵn; cân nhắc bổ sung khi có nhu cầu thực tế.
+Các hạng mục dưới đây được **lên lịch lại** trong expansion LEARN-0…6 — xem `docs/specs/chess-learn-interactive-engine-business-spec.md` và `docs/research/lila/05-roadmap.md` (mục Learn expansion). Teardown hành vi tham khảo (clean-room): `docs/research/lila/09-learn-deep-teardown.md`.
+
+- **Interactive engine + stars/best-score** → LEARN-1…3.
+- **Curriculum sâu + category map + khóa stage tuần tự** → LEARN-4.
+- **Gắn Learn vào classroom % / `learning_paths`** → LEARN-5.
+- **Lưu điểm cao nhất Coordinate trainer + reset progress** → LEARN-6.
+- **Soạn nội dung Learn qua UI cho giáo viên (CMS)**: vẫn **ngoài** LEARN-0…6 — epic riêng sau khi có phản hồi chương trình học.
