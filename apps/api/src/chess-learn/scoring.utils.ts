@@ -1,6 +1,5 @@
 /**
- * Mentingo-owned Learn scoring (exact_line baseline for LEARN-1).
- * Constants are independent of any external reference system.
+ * Mentingo-owned Learn scoring.
  * See docs/specs/chess-learn-interactive-engine-business-spec.md.
  */
 
@@ -23,8 +22,7 @@ export function efficiencyBonus(movesUsed: number, optimalMoves: number): number
 }
 
 /**
- * Max score for a correct exact_line attempt with perfect efficiency.
- * LEARN-1: base is efficiency best only (no targets/captures yet).
+ * Max score for a correct exact_line / predicate attempt with perfect efficiency.
  */
 export function exactLineMaxScore(optimalMoves: number): number {
   return efficiencyBonus(optimalMoves, optimalMoves);
@@ -32,6 +30,20 @@ export function exactLineMaxScore(optimalMoves: number): number {
 
 export function scoreExactLine(movesUsed: number, optimalMoves: number): number {
   return efficiencyBonus(movesUsed, optimalMoves);
+}
+
+/** eventPoints + efficiency, capped conceptually by eventMax + best efficiency. */
+export function scoreWithEvents(
+  eventPoints: number,
+  eventMaxPoints: number,
+  movesUsed: number,
+  optimalMoves: number,
+  correct: boolean,
+): { score: number; maxScore: number } {
+  const eff = correct ? efficiencyBonus(movesUsed, optimalMoves) : 0;
+  const maxScore = eventMaxPoints + LEARN_EFFICIENCY_BONUS.best;
+  const score = correct ? eventPoints + eff : 0;
+  return { score, maxScore };
 }
 
 export function starsFromScore(score: number, maxScore: number): LearnStars {

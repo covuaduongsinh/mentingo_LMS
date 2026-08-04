@@ -4,10 +4,12 @@ import { CHESS_LEARN_STAGES, type ChessLearnLevel } from "@repo/shared";
 import { normalizeUciMoves, uciMoveSequencesEqual } from "src/chess/utils/chess-moves.utils";
 
 import { ChessLearnRepository } from "./chess-learn.repository";
+import { gradeClearSide, gradeCollectTargets, gradeScripted } from "./mode-grade.utils";
 import { evaluateLearnRule, replayMovesFromFen } from "./rule-eval.utils";
 import {
   exactLineMaxScore,
   scoreExactLine,
+  scoreWithEvents,
   starsFromScore,
   type LearnStars,
 } from "./scoring.utils";
@@ -52,14 +54,17 @@ export class ChessLearnService {
     const progress = await this.repository.getLevelProgress(userId, stageId, levelId);
     const bestStars = (progress?.bestStars ?? 0) as LearnStars;
     const optimalMoves = this.resolveOptimalMoves(level);
+    const mode = level.mode ?? "exact_line";
 
     return {
       id: level.id,
       fen: level.fen,
       hint: level.hint,
       goal: level.goal ?? null,
-      mode: level.mode ?? "exact_line",
+      mode,
       shapes: level.shapes ?? [],
+      /** Public target squares for collect_targets UI markers. */
+      targets: level.targets ?? [],
       optimalMoves,
       completed: bestStars >= 1,
       bestStars,
@@ -73,13 +78,66 @@ export class ChessLearnService {
     const optimalPly = this.resolveOptimalMoves(level);
     const movesUsed = movesUci.length;
 
-    const correct =
-      mode === "predicate"
-        ? this.gradePredicate(level, movesUci)
-        : level.solutionUci.some((accepted) => uciMoveSequencesEqual(accepted, movesUci));
+    let correct = false;
+    let score = 0;
+    let maxScore = exactLineMaxScore(optimalPly);
 
-    const maxScore = exactLineMaxScore(optimalPly);
-    const score = correct ? scoreExactLine(movesUsed, optimalPly) : 0;
+    switch (mode) {
+      case "predicate": {
+        correct = this.gradePredicate(level, movesUci);
+        score = correct ? scoreExactLine(movesUsed, optimalPly) : 0;
+        break;
+      }
+      case "collect_targets": {
+        const graded = gradeCollectTargets(level, movesUci);
+        correct = graded.correct;
+        const scored = scoreWithEvents(
+          graded.eventPoints,
+          graded.eventMaxPoints,
+          movesUsed,
+          optimalPly,
+          correct,
+        );
+        score = scored.score;
+        maxScore = scored.maxScore;
+        break;
+      }
+      case "clear_side": {
+        const graded = gradeClearSide(level, movesUci);
+        correct = graded.correct;
+        const scored = scoreWithEvents(
+          graded.eventPoints,
+          graded.eventMaxPoints,
+          movesUsed,
+          optimalPly,
+          correct,
+        );
+        score = scored.score;
+        maxScore = scored.maxScore;
+        break;
+      }
+      case "scripted": {
+        const graded = gradeScripted(level, movesUci);
+        correct = graded.correct;
+        const scored = scoreWithEvents(
+          graded.eventPoints,
+          graded.eventMaxPoints,
+          movesUsed,
+          optimalPly,
+          correct,
+        );
+        score = scored.score;
+        maxScore = scored.maxScore;
+        break;
+      }
+      case "exact_line":
+      default: {
+        correct = level.solutionUci.some((accepted) => uciMoveSequencesEqual(accepted, movesUci));
+        score = correct ? scoreExactLine(movesUsed, optimalPly) : 0;
+        break;
+      }
+    }
+
     const stars = correct ? starsFromScore(score, maxScore) : 0;
 
     const progress = await this.repository.recordAttempt({
@@ -122,6 +180,14 @@ export class ChessLearnService {
   private resolveOptimalMoves(level: ChessLearnLevel): number {
     if (level.optimalMoves && level.optimalMoves > 0) {
       return level.optimalMoves;
+    }
+
+    if (level.mode === "collect_targets" && level.targets?.length) {
+      return level.targets.length;
+    }
+
+    if (level.mode === "scripted" && level.scriptSteps?.length) {
+      return Math.max(1, level.scriptSteps.filter((s) => s.actor === "player").length);
     }
 
     const fromSolutions = level.solutionUci.map((solution) => {
