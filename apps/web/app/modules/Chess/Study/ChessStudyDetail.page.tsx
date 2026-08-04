@@ -1,12 +1,13 @@
 import { Link, useParams } from "@remix-run/react";
 import { CHESS_STUDY_CHAPTER_MODES, type ChessStudyChapterMode } from "@repo/shared";
-import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Download, Plus, Trash2, Upload } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAddChessStudyMember } from "~/api/mutations/useAddChessStudyMember";
 import { useCreateChessStudyChapter } from "~/api/mutations/useCreateChessStudyChapter";
 import { useDeleteChessStudyChapter } from "~/api/mutations/useDeleteChessStudyChapter";
+import { useImportStudyPgn } from "~/api/mutations/useImportStudyPgn";
 import { useRemoveChessStudyMember } from "~/api/mutations/useRemoveChessStudyMember";
 import { useReorderChessStudyChapters } from "~/api/mutations/useReorderChessStudyChapters";
 import { useUpdateChessStudyChapter } from "~/api/mutations/useUpdateChessStudyChapter";
@@ -23,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Textarea } from "~/components/ui/textarea";
 import { ChessBoard, MoveTreeView } from "~/modules/Chess/board";
 import { unflattenMoveTree } from "~/modules/Chess/board/moveTree";
 import { useMoveTree } from "~/modules/Chess/board/useMoveTree";
@@ -75,6 +77,9 @@ export default function ChessStudyDetailPage() {
   const { mutateAsync: updateChapter } = useUpdateChessStudyChapter();
   const { mutateAsync: addMember, isPending: isAddingMember } = useAddChessStudyMember();
   const { mutateAsync: removeMember } = useRemoveChessStudyMember();
+  const { mutateAsync: importPgn, isPending: isImportingPgn } = useImportStudyPgn();
+  const [pgnDraft, setPgnDraft] = useState("");
+  const [showPgnImport, setShowPgnImport] = useState(false);
 
   const [selectedChapterId, setSelectedChapterId] = useState<string | undefined>();
   const [memberUserId, setMemberUserId] = useState("");
@@ -155,6 +160,26 @@ export default function ChessStudyDetailPage() {
     setMemberUserId("");
   };
 
+  const handleImportPgn = async () => {
+    if (!pgnDraft.trim() || !id) return;
+    await importPgn({ studyId: id, pgn: pgnDraft });
+    setPgnDraft("");
+    setShowPgnImport(false);
+  };
+
+  const handleExportStudyPgn = () => {
+    // Direct download of text/plain endpoint (cookies/session same-origin).
+    window.open(`/api/chess/studies/${id}/export.pgn`, "_blank", "noopener,noreferrer");
+  };
+
+  const handleExportChapterPgn = (chapterId: string) => {
+    window.open(
+      `/api/chess/studies/${id}/chapters/${chapterId}/export.pgn`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
+
   return (
     <PageWrapper breadcrumbs={breadcrumbs}>
       <div className="flex flex-col gap-4">
@@ -165,12 +190,55 @@ export default function ChessStudyDetailPage() {
               <p className="body-base text-neutral-600">{study.description}</p>
             ) : null}
           </div>
-          <Button asChild variant="outline">
-            <Link to="/chess/studies">
-              {t("chess.study.backToList", { defaultValue: "All studies" })}
-            </Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="outline" onClick={handleExportStudyPgn}>
+              <Download className="mr-1 size-4" />
+              {t("chess.study.exportPgn", { defaultValue: "Export PGN" })}
+            </Button>
+            {study.canWrite ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowPgnImport((value) => !value)}
+              >
+                <Upload className="mr-1 size-4" />
+                {t("chess.study.importPgn", { defaultValue: "Import PGN" })}
+              </Button>
+            ) : null}
+            <Button asChild variant="outline">
+              <Link to="/chess/studies">
+                {t("chess.study.backToList", { defaultValue: "All studies" })}
+              </Link>
+            </Button>
+          </div>
         </div>
+
+        {showPgnImport && study.canWrite ? (
+          <div className="space-y-2 rounded-md border border-neutral-200 bg-white p-3">
+            <Label>
+              {t("chess.study.pastePgn", { defaultValue: "Paste PGN (one or more games)" })}
+            </Label>
+            <Textarea
+              rows={8}
+              value={pgnDraft}
+              onChange={(e) => setPgnDraft(e.target.value)}
+              placeholder='[Event "Lesson 1"]&#10;&#10;1. e4 e5 *'
+              className="font-mono text-xs"
+            />
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                disabled={isImportingPgn || !pgnDraft.trim()}
+                onClick={() => void handleImportPgn()}
+              >
+                {t("chess.study.importPgnSubmit", { defaultValue: "Import as chapters" })}
+              </Button>
+              <Button type="button" variant="ghost" onClick={() => setShowPgnImport(false)}>
+                {t("common.cancel", { defaultValue: "Cancel" })}
+              </Button>
+            </div>
+          </div>
+        ) : null}
 
         <div className="grid gap-4 lg:grid-cols-[260px_1fr]">
           <div className="space-y-3">
@@ -229,13 +297,34 @@ export default function ChessStudyDetailPage() {
                       </button>
                       <button
                         type="button"
+                        onClick={() => handleExportChapterPgn(chapter.id)}
+                        className="text-neutral-400 hover:text-neutral-700"
+                        title={t("chess.study.exportChapterPgn", {
+                          defaultValue: "Export chapter PGN",
+                        })}
+                      >
+                        <Download className="size-3.5" />
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => void handleDeleteChapter(chapter.id)}
                         className="text-neutral-400 hover:text-red-600"
                       >
                         <Trash2 className="size-3.5" />
                       </button>
                     </div>
-                  ) : null}
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => handleExportChapterPgn(chapter.id)}
+                      className="text-neutral-400 hover:text-neutral-700"
+                      title={t("chess.study.exportChapterPgn", {
+                        defaultValue: "Export chapter PGN",
+                      })}
+                    >
+                      <Download className="size-3.5" />
+                    </button>
+                  )}
                 </div>
               ))}
               {chapters.length === 0 ? (

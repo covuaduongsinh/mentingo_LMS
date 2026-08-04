@@ -24,6 +24,46 @@ const buildStudy = (overrides: Partial<Record<string, unknown>> = {}) => ({
 });
 
 describe("ChessStudyService", () => {
+  describe("importStudyPgn (S1)", () => {
+    const samplePgn = `[Event "Import me"]
+[White "A"]
+[Black "B"]
+[Result "*"]
+
+1. e4 e5 *
+`;
+
+    it("creates chapters for the owner from a valid PGN", async () => {
+      const createChaptersFromImport = jest.fn().mockResolvedValue([{ id: "ch-1" }]);
+      const { service, repository } = buildService({ createChaptersFromImport });
+
+      const result = await service.importStudyPgn(
+        STUDY_ID,
+        { pgn: samplePgn },
+        buildUser(OWNER_ID),
+      );
+      expect(createChaptersFromImport).toHaveBeenCalled();
+      const bodies = (repository.createChaptersFromImport as jest.Mock).mock.calls[0][1];
+      expect(bodies[0].title).toBe("Import me");
+      expect(bodies[0].moveNodes.length).toBe(2);
+      expect(result).toEqual([{ id: "ch-1" }]);
+    });
+
+    it("rejects import for a non-writer", async () => {
+      const { service } = buildService();
+      await expect(
+        service.importStudyPgn(STUDY_ID, { pgn: samplePgn }, buildUser(OTHER_ID)),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+
+    it("rejects invalid PGN with BadRequestException", async () => {
+      const { service } = buildService();
+      await expect(
+        service.importStudyPgn(STUDY_ID, { pgn: "not a real pgn at all" }, buildUser(OWNER_ID)),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+  });
+
   const buildService = (repositoryOverrides: Partial<ChessStudyRepository> = {}) => {
     const repository = {
       listStudies: jest.fn(),
@@ -45,6 +85,7 @@ describe("ChessStudyService", () => {
       insertPracticeAttempt: jest.fn().mockResolvedValue(undefined),
       getBestMovesUsed: jest.fn().mockResolvedValue(null),
       findNextIncompletePracticeChapter: jest.fn().mockResolvedValue(null),
+      createChaptersFromImport: jest.fn().mockResolvedValue([]),
       ...repositoryOverrides,
     } as unknown as ChessStudyRepository;
 

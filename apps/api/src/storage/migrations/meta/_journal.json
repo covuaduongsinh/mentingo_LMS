@@ -1471,6 +1471,13 @@
       "when": 1785376630504,
       "tag": "0209_classroom_login_codes_nullable_group",
       "breakpoints": true
+    },
+    {
+      "idx": 210,
+      "version": "7",
+      "when": 1785800000000,
+      "tag": "0210_add_chess_study_chapter_meta",
+      "breakpoints": true
     }
   ]
 }

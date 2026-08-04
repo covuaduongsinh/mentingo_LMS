@@ -2,6 +2,7 @@ import {
   CHESS_PRACTICE_GOAL_TYPES,
   CHESS_STUDY_CHAPTER_MODES,
   CHESS_STUDY_MEMBER_ROLES,
+  CHESS_STUDY_ORIENTATIONS,
   CHESS_STUDY_VISIBILITY,
   CHESS_TOPICS,
 } from "@repo/shared";
@@ -12,6 +13,7 @@ import { UUIDSchema } from "src/common";
 export const chessStudyVisibilitySchema = Type.Enum(CHESS_STUDY_VISIBILITY);
 export const chessStudyMemberRoleSchema = Type.Enum(CHESS_STUDY_MEMBER_ROLES);
 export const chessStudyChapterModeSchema = Type.Enum(CHESS_STUDY_CHAPTER_MODES);
+export const chessStudyOrientationSchema = Type.Enum(CHESS_STUDY_ORIENTATIONS);
 export const chessStudyTopicSchema = Type.Enum(CHESS_TOPICS);
 export const chessPracticeGoalTypeSchema = Type.Enum(CHESS_PRACTICE_GOAL_TYPES);
 
@@ -41,6 +43,9 @@ export const chessStudyChapterSchema = Type.Object({
   practiceGoal: Type.Union([Type.String(), Type.Null()]),
   practiceGoalType: Type.Union([chessPracticeGoalTypeSchema, Type.Null()]),
   practiceGoalTargetValue: Type.Union([Type.Number(), Type.Null()]),
+  orientation: chessStudyOrientationSchema,
+  description: Type.Union([Type.String(), Type.Null()]),
+  pgnTags: Type.Record(Type.String(), Type.String()),
   displayOrder: Type.Number(),
   createdAt: Type.String(),
   updatedAt: Type.String(),
@@ -55,6 +60,14 @@ export const createChessStudyChapterBodySchema = Type.Object({
   practiceGoal: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   practiceGoalType: Type.Optional(Type.Union([chessPracticeGoalTypeSchema, Type.Null()])),
   practiceGoalTargetValue: Type.Optional(Type.Union([Type.Number({ minimum: 0 }), Type.Null()])),
+  orientation: Type.Optional(chessStudyOrientationSchema),
+  description: Type.Optional(Type.Union([Type.String({ maxLength: 5000 }), Type.Null()])),
+  pgnTags: Type.Optional(Type.Record(Type.String(), Type.String())),
+});
+
+export const importStudyPgnBodySchema = Type.Object({
+  pgn: Type.String({ minLength: 1, maxLength: 500_000 }),
+  mode: Type.Optional(chessStudyChapterModeSchema),
 });
 
 export const updateChessStudyChapterBodySchema = Type.Partial(createChessStudyChapterBodySchema);
@@ -129,3 +142,4 @@ export type ReorderChessStudyChaptersBody = Static<typeof reorderChessStudyChapt
 export type AddChessStudyMemberBody = Static<typeof addChessStudyMemberBodySchema>;
 export type ChessStudyMoveNode = Static<typeof chessStudyMoveNodeSchema>;
 export type SubmitPracticeAttemptBody = Static<typeof submitPracticeAttemptBodySchema>;
+export type ImportStudyPgnBody = Static<typeof importStudyPgnBodySchema>;

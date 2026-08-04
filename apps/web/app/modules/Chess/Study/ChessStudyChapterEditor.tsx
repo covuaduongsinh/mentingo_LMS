@@ -1,4 +1,9 @@
-import { CHESS_PRACTICE_GOAL_TYPES, CHESS_STUDY_CHAPTER_MODES } from "@repo/shared";
+import {
+  CHESS_PRACTICE_GOAL_TYPES,
+  CHESS_STUDY_CHAPTER_MODES,
+  CHESS_STUDY_ORIENTATIONS,
+  type ChessStudyOrientation,
+} from "@repo/shared";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -44,6 +49,16 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
   const moveTree = useMoveTree(chapter.rootFen, initialTree);
   const [shapes, setShapes] = useState<BoardShape[]>([]);
   const [title, setTitle] = useState(chapter.title);
+  const [description, setDescription] = useState(
+    "description" in chapter && typeof chapter.description === "string" ? chapter.description : "",
+  );
+  const [orientation, setOrientation] = useState<ChessStudyOrientation>(
+    "orientation" in chapter &&
+      (chapter.orientation === CHESS_STUDY_ORIENTATIONS.BLACK ||
+        chapter.orientation === CHESS_STUDY_ORIENTATIONS.WHITE)
+      ? chapter.orientation
+      : CHESS_STUDY_ORIENTATIONS.WHITE,
+  );
   const [practiceGoal, setPracticeGoal] = useState(chapter.practiceGoal ?? "");
   const [practiceGoalType, setPracticeGoalType] = useState<"none" | ChessPracticeGoalType>(
     chapter.practiceGoalType ?? "none",
@@ -97,6 +112,12 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
         practiceGoalType: practiceGoalType === "none" ? null : practiceGoalType,
         practiceGoalTargetValue: practiceGoalType === "none" ? null : practiceGoalTargetValue,
         concealFromPly: chapter.mode === CHESS_STUDY_CHAPTER_MODES.CONCEAL ? concealFromPly : null,
+        // S1 fields — regenerated in generated-api after swagger refresh from a running API.
+        orientation,
+        description: description.trim() || null,
+      } as Parameters<typeof saveChapter>[0]["data"] & {
+        orientation?: ChessStudyOrientation;
+        description?: string | null;
       },
     });
   };
@@ -111,6 +132,7 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
           size={400}
           shapes={shapes}
           onShapesChange={setShapes}
+          orientation={orientation}
         />
         <div className="rounded-md border border-neutral-200 bg-neutral-50 p-3">
           <MoveTreeView
@@ -140,6 +162,36 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
         <div className="space-y-1">
           <Label>{t("chess.study.fieldTitle", { defaultValue: "Title" })}</Label>
           <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+        </div>
+        <div className="space-y-1">
+          <Label>{t("chess.study.chapterDescription", { defaultValue: "Chapter intro" })}</Label>
+          <Textarea
+            rows={2}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder={t("chess.study.chapterDescriptionPlaceholder", {
+              defaultValue: "Optional introduction for learners",
+            })}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>{t("chess.study.orientation", { defaultValue: "Board orientation" })}</Label>
+          <Select
+            value={orientation}
+            onValueChange={(value) => setOrientation(value as ChessStudyOrientation)}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={CHESS_STUDY_ORIENTATIONS.WHITE}>
+                {t("chess.study.orientationWhite", { defaultValue: "White" })}
+              </SelectItem>
+              <SelectItem value={CHESS_STUDY_ORIENTATIONS.BLACK}>
+                {t("chess.study.orientationBlack", { defaultValue: "Black" })}
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-1">
           <Label>{t("chess.study.practiceGoal", { defaultValue: "Practice goal" })}</Label>

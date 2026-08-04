@@ -194,6 +194,11 @@ export class ChessStudyRepository {
             mode: chapter.mode,
             concealFromPly: chapter.concealFromPly,
             practiceGoal: chapter.practiceGoal,
+            practiceGoalType: chapter.practiceGoalType,
+            practiceGoalTargetValue: chapter.practiceGoalTargetValue,
+            orientation: chapter.orientation,
+            description: chapter.description,
+            pgnTags: chapter.pgnTags,
             displayOrder: chapter.displayOrder,
           })),
         );
@@ -222,6 +227,9 @@ export class ChessStudyRepository {
           practiceGoal: body.practiceGoal ?? null,
           practiceGoalType: body.practiceGoalType ?? null,
           practiceGoalTargetValue: body.practiceGoalTargetValue ?? null,
+          orientation: body.orientation ?? "white",
+          description: body.description ?? null,
+          pgnTags: body.pgnTags ?? {},
           displayOrder: Number(maxOrder) + 1,
         })
         .returning();
@@ -249,10 +257,57 @@ export class ChessStudyRepository {
         ...(body.practiceGoalTargetValue !== undefined
           ? { practiceGoalTargetValue: body.practiceGoalTargetValue }
           : {}),
+        ...(body.orientation !== undefined ? { orientation: body.orientation } : {}),
+        ...(body.description !== undefined ? { description: body.description } : {}),
+        ...(body.pgnTags !== undefined ? { pgnTags: body.pgnTags } : {}),
       })
       .where(eq(chessStudyChapters.id, chapterId))
       .returning();
     return row ?? null;
+  }
+
+  /** Bulk-insert chapters produced by a PGN import (S1). */
+  async createChaptersFromImport(studyId: UUIDType, chapters: CreateChessStudyChapterBody[]) {
+    return this.db.transaction(async (trx) => {
+      const [{ maxOrder }] = await trx
+        .select({ maxOrder: sql<number>`COALESCE(MAX(${chessStudyChapters.displayOrder}), -1)` })
+        .from(chessStudyChapters)
+        .where(eq(chessStudyChapters.studyId, studyId));
+
+      let order = Number(maxOrder);
+      const created = [];
+      for (const body of chapters) {
+        order += 1;
+        const [row] = await trx
+          .insert(chessStudyChapters)
+          .values({
+            studyId,
+            title: body.title,
+            rootFen: body.rootFen ?? "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+            moveNodes: body.moveNodes ?? [],
+            mode: body.mode,
+            concealFromPly: body.concealFromPly ?? null,
+            practiceGoal: body.practiceGoal ?? null,
+            practiceGoalType: body.practiceGoalType ?? null,
+            practiceGoalTargetValue: body.practiceGoalTargetValue ?? null,
+            orientation: body.orientation ?? "white",
+            description: body.description ?? null,
+            pgnTags: body.pgnTags ?? {},
+            displayOrder: order,
+          })
+          .returning();
+        created.push(row);
+      }
+
+      if (created.length > 0) {
+        await trx
+          .update(chessStudies)
+          .set({ chapterCount: sql`${chessStudies.chapterCount} + ${created.length}` })
+          .where(eq(chessStudies.id, studyId));
+      }
+
+      return created;
+    });
   }
 
   async deleteChapter(studyId: UUIDType, chapterId: UUIDType) {

@@ -18,8 +18,8 @@ Sau L0–L10 và Classroom C5 (đã có `assignStudy` chia sẻ study cho lớp 
 
 | Đợt    | Nội dung                                                    | Ghi chú                 |
 | ------ | ----------------------------------------------------------- | ----------------------- |
-| **S0** | Docs teardown + roadmap (file này)                          | không product code      |
-| **S1** | PGN import/export + orientation/description/pgnTags         |                         |
+| **S0** | Docs teardown + roadmap                                     | #42 merged              |
+| **S1** | PGN import/export + orientation/description/pgnTags         | (đang merge)            |
 | **S2** | Shapes-on-node + gamebook hint/onWrong/onCorrect            |                         |
 | **S3** | Discovery filters, invite-by-identity, clone UX, allowClone | không unlisted/like     |
 | **S4** | Embed study vào **lesson khóa học**                         | khác C5 classroom share |

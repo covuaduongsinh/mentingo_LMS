@@ -211,6 +211,17 @@ export type ChessStudyChapterMode =
 
 export const CHESS_STUDY_CHAPTER_MODE_LIST = Object.values(CHESS_STUDY_CHAPTER_MODES);
 
+/** Board orientation for a study chapter (viewer / learner side). */
+export const CHESS_STUDY_ORIENTATIONS = {
+  WHITE: "white",
+  BLACK: "black",
+} as const;
+
+export type ChessStudyOrientation =
+  (typeof CHESS_STUDY_ORIENTATIONS)[keyof typeof CHESS_STUDY_ORIENTATIONS];
+
+export const CHESS_STUDY_ORIENTATION_LIST = Object.values(CHESS_STUDY_ORIENTATIONS);
+
 /** Structured goal grading for a `practice` chapter — see chess-learn-business-spec.md. */
 export const CHESS_PRACTICE_GOAL_TYPES = {
   CHECKMATE_IN_N: "checkmate_in_n",

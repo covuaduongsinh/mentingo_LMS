@@ -10,11 +10,18 @@ import { hasPermission } from "src/common/permissions/permission.utils";
 
 import { ChessStudyRepository, type ListChessStudiesParams } from "./chess-study.repository";
 import { evaluatePracticeGoal, replayPracticeMoves } from "./utils/practice-goal.utils";
+import {
+  exportChapterPgn,
+  exportStudyPgn,
+  parseStudyPgnImport,
+  StudyPgnError,
+} from "./utils/study-pgn.utils";
 
 import type {
   AddChessStudyMemberBody,
   CreateChessStudyBody,
   CreateChessStudyChapterBody,
+  ImportStudyPgnBody,
   ReorderChessStudyChaptersBody,
   SubmitPracticeAttemptBody,
   UpdateChessStudyBody,
@@ -132,6 +139,66 @@ export class ChessStudyService {
     const study = await this.getStudyOrThrow(studyId);
     await this.assertCanWrite(study, user);
     return this.repository.createChapter(studyId, body);
+  }
+
+  async importStudyPgn(studyId: UUIDType, body: ImportStudyPgnBody, user: CurrentUserType) {
+    const study = await this.getStudyOrThrow(studyId);
+    await this.assertCanWrite(study, user);
+
+    let drafts;
+    try {
+      drafts = parseStudyPgnImport(body.pgn);
+    } catch (error) {
+      if (error instanceof StudyPgnError) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
+
+    const chapterBodies: CreateChessStudyChapterBody[] = drafts.map((draft) => ({
+      title: draft.title,
+      rootFen: draft.rootFen,
+      moveNodes: draft.moveNodes,
+      mode: body.mode,
+      orientation: draft.orientation,
+      pgnTags: draft.pgnTags,
+    }));
+
+    return this.repository.createChaptersFromImport(studyId, chapterBodies);
+  }
+
+  async exportStudyPgn(studyId: UUIDType, user: CurrentUserType): Promise<string> {
+    const study = await this.getStudyOrThrow(studyId);
+    await this.assertCanRead(study, user);
+    const chapters = await this.repository.getChaptersByStudyId(studyId);
+    return exportStudyPgn(
+      chapters.map((chapter) => ({
+        rootFen: chapter.rootFen,
+        moveNodes: chapter.moveNodes,
+        pgnTags: chapter.pgnTags,
+        orientation: chapter.orientation,
+        title: chapter.title,
+      })),
+    );
+  }
+
+  async exportStudyChapterPgn(
+    studyId: UUIDType,
+    chapterId: UUIDType,
+    user: CurrentUserType,
+  ): Promise<string> {
+    const study = await this.getStudyOrThrow(studyId);
+    await this.assertCanRead(study, user);
+    const chapter = await this.repository.getChapterById(chapterId);
+    if (!chapter || chapter.studyId !== studyId) {
+      throw new NotFoundException("chess.study.errors.chapterNotFound");
+    }
+    return exportChapterPgn({
+      rootFen: chapter.rootFen,
+      moveNodes: chapter.moveNodes,
+      pgnTags: chapter.pgnTags ?? { Event: chapter.title },
+      orientation: chapter.orientation,
+    });
   }
 
   async updateChapter(
