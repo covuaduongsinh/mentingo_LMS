@@ -96,26 +96,21 @@ describe("ChessStudyService", () => {
       getLessonChessStudyLink: jest.fn(),
       canAccessChessStudyLesson: jest.fn().mockResolvedValue(true),
       updateLessonChessStudyLink: jest.fn(),
+      getCourseChapterMeta: jest.fn().mockResolvedValue({
+        chapterId: "ch-1",
+        courseAuthorId: OWNER_ID,
+        primaryLanguage: "en",
+      }),
+      getLessonCourseMeta: jest.fn().mockResolvedValue({
+        lessonId: "lesson-1",
+        courseAuthorId: OWNER_ID,
+      }),
+      getMaxLessonDisplayOrder: jest.fn().mockResolvedValue(0),
       ...repositoryOverrides,
     } as unknown as ChessStudyRepository;
 
-    const adminLessonRepository = {
-      getMaxDisplayOrder: jest.fn().mockResolvedValue(0),
-    };
-    const adminLessonService = {
-      validateAccess: jest.fn().mockResolvedValue(undefined),
-    };
-    const localizationService = {
-      getBaseLanguage: jest.fn().mockResolvedValue({ language: "en" }),
-    };
-
     return {
-      service: new ChessStudyService(
-        repository,
-        adminLessonRepository as never,
-        adminLessonService as never,
-        localizationService as never,
-      ),
+      service: new ChessStudyService(repository),
       repository,
     };
   };

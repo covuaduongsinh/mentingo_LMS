@@ -4,18 +4,9 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import {
-  CHESS_STUDY_MEMBER_ROLES,
-  CHESS_STUDY_VISIBILITY,
-  ENTITY_TYPES,
-  PERMISSIONS,
-} from "@repo/shared";
+import { CHESS_STUDY_MEMBER_ROLES, CHESS_STUDY_VISIBILITY, PERMISSIONS } from "@repo/shared";
 
 import { hasPermission } from "src/common/permissions/permission.utils";
-import { AdminLessonRepository } from "src/lesson/repositories/adminLesson.repository";
-import { AdminLessonService } from "src/lesson/services/adminLesson.service";
-import { LocalizationService } from "src/localization/localization.service";
-import { ENTITY_TYPE } from "src/localization/localization.types";
 
 import { ChessStudyRepository, type ListChessStudiesParams } from "./chess-study.repository";
 import { evaluatePracticeGoal, replayPracticeMoves } from "./utils/practice-goal.utils";
@@ -43,12 +34,7 @@ import type { CurrentUserType } from "src/common/types/current-user.type";
 
 @Injectable()
 export class ChessStudyService {
-  constructor(
-    private readonly repository: ChessStudyRepository,
-    private readonly adminLessonRepository: AdminLessonRepository,
-    private readonly adminLessonService: AdminLessonService,
-    private readonly localizationService: LocalizationService,
-  ) {}
+  constructor(private readonly repository: ChessStudyRepository) {}
 
   private canManageAny(user: CurrentUserType): boolean {
     return hasPermission(user.permissions, PERMISSIONS.CHESS_STUDY_MANAGE);
@@ -297,8 +283,27 @@ export class ChessStudyService {
   // --- S4: course lesson embed ---
 
   async createChessStudyLesson(body: CreateChessStudyLessonBody, user: CurrentUserType) {
-    // Ownership / chapter access only — avoid importing CourseModule (circular dep with Chess).
-    await this.adminLessonService.validateAccess(ENTITY_TYPES.CHAPTER, user, body.chapterId);
+    const canAuthor =
+      this.canManageAny(user) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_CREATE) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE_OWN);
+    if (!canAuthor) {
+      throw new ForbiddenException("chess.study.errors.lessonAuthorDenied");
+    }
+
+    const chapterMeta = await this.repository.getCourseChapterMeta(body.chapterId);
+    if (!chapterMeta) {
+      throw new NotFoundException("chess.study.errors.curriculumChapterNotFound");
+    }
+    const isCourseAuthor = chapterMeta.courseAuthorId === user.userId;
+    if (
+      !isCourseAuthor &&
+      !this.canManageAny(user) &&
+      !hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE)
+    ) {
+      throw new ForbiddenException("chess.study.errors.lessonAuthorDenied");
+    }
 
     // Author must be able to read the study they embed.
     const study = await this.getStudyOrThrow(body.studyId);
@@ -311,15 +316,12 @@ export class ChessStudyService {
       }
     }
 
-    const { language } = await this.localizationService.getBaseLanguage(
-      ENTITY_TYPE.CHAPTER,
-      body.chapterId,
-    );
-    const displayOrder = (await this.adminLessonRepository.getMaxDisplayOrder(body.chapterId)) + 1;
+    const language = chapterMeta.primaryLanguage ?? "en";
+    const displayOrder = (await this.repository.getMaxLessonDisplayOrder(body.chapterId)) + 1;
 
     const lessonRow = await this.repository.createChessStudyLessonRow(
       body.chapterId,
-      language,
+      language as "en",
       body.title,
       body.description ?? undefined,
       displayOrder,
@@ -404,11 +406,29 @@ export class ChessStudyService {
     body: UpdateChessStudyLessonBody,
     user: CurrentUserType,
   ) {
-    await this.adminLessonService.validateAccess(ENTITY_TYPES.LESSON, user, lessonId);
-
     const link = await this.repository.getLessonChessStudyLink(lessonId);
     if (!link) {
       throw new NotFoundException("chess.study.errors.lessonEmbedNotFound");
+    }
+
+    const canAuthor =
+      this.canManageAny(user) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE_OWN);
+    if (!canAuthor) {
+      throw new ForbiddenException("chess.study.errors.lessonAuthorDenied");
+    }
+
+    const lessonMeta = await this.repository.getLessonCourseMeta(lessonId);
+    if (!lessonMeta) {
+      throw new NotFoundException("chess.study.errors.lessonEmbedNotFound");
+    }
+    if (
+      lessonMeta.courseAuthorId !== user.userId &&
+      !this.canManageAny(user) &&
+      !hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE)
+    ) {
+      throw new ForbiddenException("chess.study.errors.lessonAuthorDenied");
     }
 
     if (body.studyId) {

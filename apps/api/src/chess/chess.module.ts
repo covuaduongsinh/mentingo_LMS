@@ -1,8 +1,5 @@
 import { Module } from "@nestjs/common";
 
-import { LessonModule } from "src/lesson/lesson.module";
-import { LocalizationModule } from "src/localization/localization.module";
-
 import { ChessAnalysisRepository } from "./chess-analysis.repository";
 import { ChessAnalysisService } from "./chess-analysis.service";
 import { ChessInsightRepository } from "./chess-insight.repository";
@@ -24,8 +21,7 @@ import { ChessEngineController } from "./engine/engine.controller";
 import { ChessEngineService } from "./engine/engine.service";
 
 @Module({
-  // LessonModule only — do not import CourseModule here (circular via WebSocket → Course → Chess).
-  imports: [LessonModule, LocalizationModule],
+  // No LessonModule/CourseModule imports: both pull WebSocket → Chess and create a require cycle.
   controllers: [ChessController, ChessEngineController],
   providers: [
     ChessService,

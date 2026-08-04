@@ -472,6 +472,40 @@ export class ChessStudyRepository {
 
   // --- S4: lesson embed ---
 
+  async getCourseChapterMeta(chapterId: UUIDType) {
+    const [row] = await this.db
+      .select({
+        chapterId: chapters.id,
+        courseAuthorId: courses.authorId,
+        primaryLanguage: courses.baseLanguage,
+      })
+      .from(chapters)
+      .innerJoin(courses, eq(courses.id, chapters.courseId))
+      .where(eq(chapters.id, chapterId));
+    return row ?? null;
+  }
+
+  async getLessonCourseMeta(lessonId: UUIDType) {
+    const [row] = await this.db
+      .select({
+        lessonId: lessons.id,
+        courseAuthorId: courses.authorId,
+      })
+      .from(lessons)
+      .innerJoin(chapters, eq(chapters.id, lessons.chapterId))
+      .innerJoin(courses, eq(courses.id, chapters.courseId))
+      .where(eq(lessons.id, lessonId));
+    return row ?? null;
+  }
+
+  async getMaxLessonDisplayOrder(chapterId: UUIDType) {
+    const [row] = await this.db
+      .select({ maxOrder: sql<number>`COALESCE(MAX(${lessons.displayOrder}), -1)` })
+      .from(lessons)
+      .where(eq(lessons.chapterId, chapterId));
+    return Number(row?.maxOrder ?? -1);
+  }
+
   async createChessStudyLessonRow(
     chapterId: UUIDType,
     language: SupportedLanguages,
