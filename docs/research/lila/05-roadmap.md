@@ -188,6 +188,16 @@ Bảng mới: `chess_broadcasts`, `chess_broadcast_rounds`, `chess_broadcast_tea
 
 Không còn đợt nào theo kế hoạch đã duyệt cho phần "còn thiếu so với lila" nói chung. Các mục còn lại trong [03-feature-matrix.md](./03-feature-matrix.md) đều đã được xếp vào "Follow-up Work" của đợt tương ứng — là quyết định phạm vi có ghi chú rõ trong spec từng đợt, không phải việc bị bỏ sót.
 
+## Roadmap phụ: Study depth (S0–S6) — đào sâu module Study
+
+Sau L2 (MVP Study/Chapter) + L7 (practice goal) + C5 (chia sẻ study cho lớp), còn một lớp gap so với Study đầy đủ trên hệ tham chiếu: PGN in/out, shapes server-side, gamebook per-node, UX discovery/invite, **nhúng study vào lesson khóa học**, autosave, E2E. Chu kỳ **S0–S6** xử lý các gap đó theo clean-room.
+
+- Teardown: [07-study-deep-teardown.md](./07-study-deep-teardown.md)
+- Roadmap chi tiết + bảng đợt: [08-study-roadmap.md](./08-study-roadmap.md)
+- Master spec MVP: `docs/specs/chess-study-business-spec.md` (S1–S6 thêm/cập nhật spec con)
+
+Cùng quy tắc tự động hoá: mỗi đợt verify → commit → push → PR → merge → đợt sau. Visibility giữ **public/private** (không unlisted/like trong S\*).
+
 ## Roadmap phụ: Classroom (C0–C8) — mở rộng sâu module `clas`
 
 Sau khi L0–L10 đóng, một khảo sát riêng đào sâu module `clas` (lớp học) của lila — vốn ở L5 chỉ được port một lát mỏng 5 endpoint dựng tạm trên `groups` — cho thấy khoảng cách còn rất lớn (41 route so với 5). Roadmap con này (C0–C8) xây một module **Classroom** độc lập, đầy đủ tính năng ngang lila `clas`, cộng phần mở rộng riêng của mentingo (nối lớp với khóa học/bài tập/chứng chỉ — lila không có). Xem `docs/research/lila/06-clas-teardown.md` (đặc tả clean-room chi tiết) và `docs/specs/classroom-business-spec.md` (đặc tả nghiệp vụ mentingo, nguồn sự thật cho C1–C8). `docs/specs/chess-class-management-business-spec.md` (L5) được đánh dấu superseded bởi tài liệu mới.
