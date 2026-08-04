@@ -3193,6 +3193,12 @@ export const chessStudyChapters = pgTable(
     // the free-text display label. Null on every pre-existing chapter (ungraded).
     practiceGoalType: text("practice_goal_type").$type<ChessPracticeGoalType>(),
     practiceGoalTargetValue: integer("practice_goal_target_value"),
+    /** Board orientation when viewing/editing (S1). */
+    orientation: text("orientation").$type<"white" | "black">().notNull().default("white"),
+    /** Optional intro text for the chapter (S1). */
+    description: text("description"),
+    /** PGN header tags preserved on import/export (S1). */
+    pgnTags: jsonb("pgn_tags").$type<Record<string, string>>().notNull().default({}),
     displayOrder: integer("display_order").notNull().default(0),
     tenantId,
   },

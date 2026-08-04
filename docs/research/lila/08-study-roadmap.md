@@ -16,15 +16,15 @@
 
 ## Bảng đợt
 
-| Đợt    | Nội dung                                                        | Spec                                                           | PR       |
-| ------ | --------------------------------------------------------------- | -------------------------------------------------------------- | -------- |
-| **S0** | Deep teardown docs + roadmap này + cập nhật matrix/HANDOVER     | (docs only)                                                    | (sẽ ghi) |
-| **S1** | PGN import/export + chapter orientation / description / pgnTags | `docs/specs/chess-study-pgn-and-chapter-meta-business-spec.md` |          |
-| **S2** | Shapes-on-node + gamebook per-node hint/onWrong/onCorrect       | `docs/specs/chess-study-gamebook-and-shapes-business-spec.md`  |          |
-| **S3** | Discovery filters, invite-by-identity, clone UX, allowClone     | `docs/specs/chess-study-ux-and-membership-business-spec.md`    |          |
-| **S4** | Embed study chapter vào lesson khóa học                         | `docs/specs/chess-study-course-embed-business-spec.md`         |          |
-| **S5** | Autosave chapter + optimistic concurrency (+ presence optional) | `docs/specs/chess-study-editing-reliability-business-spec.md`  |          |
-| **S6** | E2E Playwright, i18n VI, cập nhật master study spec + HANDOVER  | cập nhật `chess-study-business-spec.md`                        |          |
+| Đợt    | Nội dung                                                        | Spec                                                           | PR         |
+| ------ | --------------------------------------------------------------- | -------------------------------------------------------------- | ---------- |
+| **S0** | Deep teardown docs + roadmap này + cập nhật matrix/HANDOVER     | (docs only)                                                    | #42 merged |
+| **S1** | PGN import/export + chapter orientation / description / pgnTags | `docs/specs/chess-study-pgn-and-chapter-meta-business-spec.md` | (this PR)  |
+| **S2** | Shapes-on-node + gamebook per-node hint/onWrong/onCorrect       | `docs/specs/chess-study-gamebook-and-shapes-business-spec.md`  |            |
+| **S3** | Discovery filters, invite-by-identity, clone UX, allowClone     | `docs/specs/chess-study-ux-and-membership-business-spec.md`    |            |
+| **S4** | Embed study chapter vào lesson khóa học                         | `docs/specs/chess-study-course-embed-business-spec.md`         |            |
+| **S5** | Autosave chapter + optimistic concurrency (+ presence optional) | `docs/specs/chess-study-editing-reliability-business-spec.md`  |            |
+| **S6** | E2E Playwright, i18n VI, cập nhật master study spec + HANDOVER  | cập nhật `chess-study-business-spec.md`                        |            |
 
 ## Chi tiết đợt
 

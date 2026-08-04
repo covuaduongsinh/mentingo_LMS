@@ -1,6 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Header,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Res,
+} from "@nestjs/common";
 import { PERMISSIONS } from "@repo/shared";
 import { Type } from "@sinclair/typebox";
+import { Response } from "express";
 import { Validate } from "nestjs-typebox";
 
 import {
@@ -59,6 +71,7 @@ import {
   chessStudyChapterSchema,
   chessStudyDetailSchema,
   chessStudySchema,
+  importStudyPgnBodySchema,
   practiceAttemptResultSchema,
   reorderChessStudyChaptersBodySchema,
   submitPracticeAttemptBodySchema,
@@ -67,6 +80,7 @@ import {
   type AddChessStudyMemberBody,
   type CreateChessStudyBody,
   type CreateChessStudyChapterBody,
+  type ImportStudyPgnBody,
   type ReorderChessStudyChaptersBody,
   type SubmitPracticeAttemptBody,
   type UpdateChessStudyBody,
@@ -463,6 +477,50 @@ export class ChessController {
   })
   async cloneStudy(@Param("id") id: UUIDType, @CurrentUser() user: CurrentUserType) {
     return new BaseResponse(await this.chessStudyService.cloneStudy(id, user));
+  }
+
+  @Post("studies/:id/import-pgn")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Validate({
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "body", schema: importStudyPgnBodySchema },
+    ],
+    response: baseResponse(Type.Array(chessStudyChapterSchema)),
+  })
+  async importStudyPgn(
+    @Param("id") id: UUIDType,
+    @Body() body: ImportStudyPgnBody,
+    @CurrentUser() user: CurrentUserType,
+  ) {
+    return new BaseResponse(await this.chessStudyService.importStudyPgn(id, body, user));
+  }
+
+  @Get("studies/:id/export.pgn")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Header("Content-Type", "text/plain; charset=utf-8")
+  async exportStudyPgn(
+    @Param("id") id: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+    @Res() res: Response,
+  ) {
+    const pgn = await this.chessStudyService.exportStudyPgn(id, user);
+    res.setHeader("Content-Disposition", `attachment; filename="study-${id}.pgn"`);
+    res.send(pgn);
+  }
+
+  @Get("studies/:id/chapters/:chapterId/export.pgn")
+  @RequirePermission(PERMISSIONS.CHESS_STUDY_READ)
+  @Header("Content-Type", "text/plain; charset=utf-8")
+  async exportStudyChapterPgn(
+    @Param("id") id: UUIDType,
+    @Param("chapterId") chapterId: UUIDType,
+    @CurrentUser() user: CurrentUserType,
+    @Res() res: Response,
+  ) {
+    const pgn = await this.chessStudyService.exportStudyChapterPgn(id, chapterId, user);
+    res.setHeader("Content-Disposition", `attachment; filename="chapter-${chapterId}.pgn"`);
+    res.send(pgn);
   }
 
   @Post("studies/:id/chapters")
