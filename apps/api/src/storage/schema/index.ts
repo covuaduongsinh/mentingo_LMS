@@ -3129,6 +3129,11 @@ export const chessAnalysisSessionParticipants = pgTable(
  * (child of the chapter's root position); `order` reconstructs sibling order so index 0
  * stays the mainline continuation.
  */
+/** Board annotation shapes stored on a study move node (S2). Mirrors web BoardShape. */
+export type ChessStudyBoardShape =
+  | { kind: "arrow"; from: string; to: string; color: string }
+  | { kind: "circle"; square: string; color: string };
+
 export type ChessStudyFlatMoveNode = {
   id: string;
   parentId: string | null;
@@ -3138,6 +3143,14 @@ export type ChessStudyFlatMoveNode = {
   comment?: string;
   glyph?: string;
   order: number;
+  /** Right-click arrows/circles on this move (S2). */
+  shapes?: ChessStudyBoardShape[];
+  /** Gamebook coaching text shown before the learner tries the next move (S2). */
+  hint?: string;
+  /** Shown when the learner plays a wrong move at this step (S2). */
+  onWrong?: string;
+  /** Shown after the learner finds the correct move leading to this node (S2). */
+  onCorrect?: string;
 };
 
 export const chessStudies = pgTable(

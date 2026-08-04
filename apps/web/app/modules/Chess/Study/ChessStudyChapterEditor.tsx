@@ -2,6 +2,7 @@ import {
   CHESS_PRACTICE_GOAL_TYPES,
   CHESS_STUDY_CHAPTER_MODES,
   CHESS_STUDY_ORIENTATIONS,
+  type ChessPracticeGoalType,
   type ChessStudyOrientation,
 } from "@repo/shared";
 import { useEffect, useMemo, useState } from "react";
@@ -27,7 +28,6 @@ import {
 } from "~/modules/Chess/board/moveTree";
 import { useMoveTree } from "~/modules/Chess/board/useMoveTree";
 
-import type { ChessPracticeGoalType } from "@repo/shared";
 import type { GetStudyResponse } from "~/api/generated-api";
 import type { BoardShape } from "~/modules/Chess/board";
 
@@ -47,7 +47,9 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
     [chapter],
   );
   const moveTree = useMoveTree(chapter.rootFen, initialTree);
-  const [shapes, setShapes] = useState<BoardShape[]>([]);
+  const [shapes, setShapes] = useState<BoardShape[]>(
+    () => (moveTree.currentNode?.shapes as BoardShape[] | undefined) ?? [],
+  );
   const [title, setTitle] = useState(chapter.title);
   const [description, setDescription] = useState(
     "description" in chapter && typeof chapter.description === "string" ? chapter.description : "",
@@ -68,9 +70,17 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
   );
   const [concealFromPly, setConcealFromPly] = useState(chapter.concealFromPly ?? 0);
   const [comment, setComment] = useState(moveTree.currentNode?.comment ?? "");
+  const [hint, setHint] = useState(moveTree.currentNode?.hint ?? "");
+  const [onWrong, setOnWrong] = useState(moveTree.currentNode?.onWrong ?? "");
+  const [onCorrect, setOnCorrect] = useState(moveTree.currentNode?.onCorrect ?? "");
 
+  // When navigating, load that node's shapes + coaching fields into local edit state.
   useEffect(() => {
     setComment(moveTree.currentNode?.comment ?? "");
+    setShapes((moveTree.currentNode?.shapes as BoardShape[] | undefined) ?? []);
+    setHint(moveTree.currentNode?.hint ?? "");
+    setOnWrong(moveTree.currentNode?.onWrong ?? "");
+    setOnCorrect(moveTree.currentNode?.onCorrect ?? "");
   }, [moveTree.currentNode]);
 
   useEffect(() => {
@@ -93,14 +103,22 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
     moveTree.playMove({ uci, san, fenAfter });
   };
 
-  const commitComment = () => {
+  const commitNodeAnnotations = () => {
+    if (moveTree.path.length === 0) return;
+    moveTree.annotateComment(moveTree.path, comment);
+    moveTree.annotateShapes(moveTree.path, shapes);
+    moveTree.annotateGamebook(moveTree.path, { hint, onWrong, onCorrect });
+  };
+
+  const handleShapesChange = (next: BoardShape[]) => {
+    setShapes(next);
     if (moveTree.path.length > 0) {
-      moveTree.annotateComment(moveTree.path, comment);
+      moveTree.annotateShapes(moveTree.path, next);
     }
   };
 
   const handleSave = async () => {
-    commitComment();
+    commitNodeAnnotations();
     await saveChapter({
       studyId,
       chapterId: chapter.id,
@@ -112,7 +130,6 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
         practiceGoalType: practiceGoalType === "none" ? null : practiceGoalType,
         practiceGoalTargetValue: practiceGoalType === "none" ? null : practiceGoalTargetValue,
         concealFromPly: chapter.mode === CHESS_STUDY_CHAPTER_MODES.CONCEAL ? concealFromPly : null,
-        // S1 fields — regenerated in generated-api after swagger refresh from a running API.
         orientation,
         description: description.trim() || null,
       } as Parameters<typeof saveChapter>[0]["data"] & {
@@ -131,7 +148,7 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
           onMove={handleMove}
           size={400}
           shapes={shapes}
-          onShapesChange={setShapes}
+          onShapesChange={handleShapesChange}
           orientation={orientation}
         />
         <div className="rounded-md border border-neutral-200 bg-neutral-50 p-3">
@@ -152,10 +169,53 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
             rows={2}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            onBlur={commitComment}
+            onBlur={commitNodeAnnotations}
             disabled={moveTree.path.length === 0}
           />
         </div>
+        {chapter.mode === CHESS_STUDY_CHAPTER_MODES.GAMEBOOK ? (
+          <div className="space-y-2 rounded-md border border-neutral-200 bg-neutral-50 p-3">
+            <p className="text-xs font-semibold text-neutral-700">
+              {t("chess.study.gamebookFields", {
+                defaultValue: "Gamebook coaching (this move)",
+              })}
+            </p>
+            <div className="space-y-1">
+              <Label className="text-xs">{t("chess.study.hint", { defaultValue: "Hint" })}</Label>
+              <Textarea
+                rows={2}
+                value={hint}
+                onChange={(e) => setHint(e.target.value)}
+                onBlur={commitNodeAnnotations}
+                disabled={moveTree.path.length === 0}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">
+                {t("chess.study.onWrong", { defaultValue: "When wrong" })}
+              </Label>
+              <Textarea
+                rows={2}
+                value={onWrong}
+                onChange={(e) => setOnWrong(e.target.value)}
+                onBlur={commitNodeAnnotations}
+                disabled={moveTree.path.length === 0}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">
+                {t("chess.study.onCorrect", { defaultValue: "When correct" })}
+              </Label>
+              <Textarea
+                rows={2}
+                value={onCorrect}
+                onChange={(e) => setOnCorrect(e.target.value)}
+                onBlur={commitNodeAnnotations}
+                disabled={moveTree.path.length === 0}
+              />
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <div className="w-full max-w-sm space-y-3 rounded-lg border border-neutral-200 bg-white p-4">

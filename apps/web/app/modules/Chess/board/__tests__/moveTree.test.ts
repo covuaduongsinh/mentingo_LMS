@@ -4,12 +4,16 @@ import {
   addMove,
   createMoveTree,
   deleteNode,
+  flattenMoveTree,
   getFenAtPath,
   movetextFromTree,
   nodesOnPath,
   promoteToMainline,
   setComment,
+  setGamebookFields,
   setGlyph,
+  setShapes,
+  unflattenMoveTree,
 } from "../moveTree";
 
 const ROOT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -119,6 +123,23 @@ describe("moveTree", () => {
     expect(e4Node.comment).toBe("Open game");
     expect(e4Node.children[0].glyph).toBeUndefined(); // e5, untouched
     expect(e4Node.children[1].glyph).toBe("!?"); // c5
+  });
+
+  it("round-trips shapes and gamebook fields through flatten/unflatten (S2)", () => {
+    const shapes = [{ kind: "circle" as const, square: "e4" as const, color: "green" as const }];
+    const afterE4 = addMove(createMoveTree(ROOT_FEN), [], e4(), makeId);
+    let tree = setShapes(afterE4.tree, afterE4.path, shapes);
+    tree = setGamebookFields(tree, afterE4.path, {
+      hint: "Look at the center",
+      onWrong: "Not that move",
+      onCorrect: "Yes — occupy the center",
+    });
+    const flat = flattenMoveTree(tree);
+    expect(flat[0].shapes).toEqual(shapes);
+    expect(flat[0].hint).toBe("Look at the center");
+    const restored = unflattenMoveTree(ROOT_FEN, flat);
+    expect(restored.children[0].shapes).toEqual(shapes);
+    expect(restored.children[0].onCorrect).toBe("Yes — occupy the center");
   });
 
   it("movetextFromTree renders standard PGN movetext with variations in parentheses", () => {
