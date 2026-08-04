@@ -103,7 +103,13 @@ export const updateChessStudyLessonBodySchema = Type.Object({
   description: Type.Optional(Type.Union([Type.String({ maxLength: 5000 }), Type.Null()])),
 });
 
-export const updateChessStudyChapterBodySchema = Type.Partial(createChessStudyChapterBodySchema);
+export const updateChessStudyChapterBodySchema = Type.Intersect([
+  Type.Partial(createChessStudyChapterBodySchema),
+  Type.Object({
+    /** Optimistic concurrency token (S5) — ISO timestamp of last known chapter.updatedAt. */
+    expectedUpdatedAt: Type.Optional(Type.String()),
+  }),
+]);
 
 export const reorderChessStudyChaptersBodySchema = Type.Object({
   chapterIds: Type.Array(UUIDSchema, { minItems: 1 }),

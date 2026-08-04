@@ -5,10 +5,12 @@ import {
   type ChessPracticeGoalType,
   type ChessStudyOrientation,
 } from "@repo/shared";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { match } from "ts-pattern";
 
 import { useUpdateChessStudyChapter } from "~/api/mutations/useUpdateChessStudyChapter";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -38,15 +40,25 @@ type ChessStudyChapterEditorProps = {
   chapter: ChapterData;
 };
 
+type SaveStatus = "idle" | "saving" | "saved" | "error" | "conflict";
+
 export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterEditorProps) {
   const { t } = useTranslation();
-  const { mutateAsync: saveChapter, isPending } = useUpdateChessStudyChapter();
+  const { mutateAsync: saveChapter, isPending } = useUpdateChessStudyChapter({ silent: true });
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [knownUpdatedAt, setKnownUpdatedAt] = useState(chapter.updatedAt);
+  const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dirtyRef = useRef(false);
 
   const initialTree = useMemo(
     () => unflattenMoveTree(chapter.rootFen, chapter.moveNodes),
     [chapter],
   );
   const moveTree = useMoveTree(chapter.rootFen, initialTree);
+
+  useEffect(() => {
+    setKnownUpdatedAt(chapter.updatedAt);
+  }, [chapter.updatedAt, chapter.id]);
   const [shapes, setShapes] = useState<BoardShape[]>(
     () => (moveTree.currentNode?.shapes as BoardShape[] | undefined) ?? [],
   );
@@ -101,6 +113,7 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
 
   const handleMove = (uci: string, fenAfter: string, san: string) => {
     moveTree.playMove({ uci, san, fenAfter });
+    markDirty();
   };
 
   const commitNodeAnnotations = () => {
@@ -115,29 +128,79 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
     if (moveTree.path.length > 0) {
       moveTree.annotateShapes(moveTree.path, next);
     }
+    markDirty();
   };
 
-  const handleSave = async () => {
+  const buildSavePayload = useCallback(() => {
     commitNodeAnnotations();
-    await saveChapter({
-      studyId,
-      chapterId: chapter.id,
-      data: {
-        title: title.trim() || chapter.title,
-        rootFen: moveTree.tree.rootFen,
-        moveNodes: flattenMoveTree(moveTree.tree),
-        practiceGoal: practiceGoal.trim() || null,
-        practiceGoalType: practiceGoalType === "none" ? null : practiceGoalType,
-        practiceGoalTargetValue: practiceGoalType === "none" ? null : practiceGoalTargetValue,
-        concealFromPly: chapter.mode === CHESS_STUDY_CHAPTER_MODES.CONCEAL ? concealFromPly : null,
-        orientation,
-        description: description.trim() || null,
-      } as Parameters<typeof saveChapter>[0]["data"] & {
-        orientation?: ChessStudyOrientation;
-        description?: string | null;
-      },
-    });
+    return {
+      title: title.trim() || chapter.title,
+      rootFen: moveTree.tree.rootFen,
+      moveNodes: flattenMoveTree(moveTree.tree),
+      practiceGoal: practiceGoal.trim() || null,
+      practiceGoalType: practiceGoalType === "none" ? null : practiceGoalType,
+      practiceGoalTargetValue: practiceGoalType === "none" ? null : practiceGoalTargetValue,
+      concealFromPly: chapter.mode === CHESS_STUDY_CHAPTER_MODES.CONCEAL ? concealFromPly : null,
+      orientation,
+      description: description.trim() || null,
+      expectedUpdatedAt: knownUpdatedAt,
+    } as Parameters<typeof saveChapter>[0]["data"] & {
+      orientation?: ChessStudyOrientation;
+      description?: string | null;
+      expectedUpdatedAt?: string;
+    };
+  }, [
+    title,
+    chapter,
+    moveTree.tree,
+    practiceGoal,
+    practiceGoalType,
+    practiceGoalTargetValue,
+    concealFromPly,
+    orientation,
+    description,
+    knownUpdatedAt,
+  ]);
+
+  const handleSave = async (fromAutosave = false) => {
+    setSaveStatus("saving");
+    try {
+      const saved = await saveChapter({
+        studyId,
+        chapterId: chapter.id,
+        data: buildSavePayload(),
+      });
+      if (saved && typeof saved === "object" && "updatedAt" in saved && saved.updatedAt) {
+        setKnownUpdatedAt(String(saved.updatedAt));
+      }
+      dirtyRef.current = false;
+      setSaveStatus("saved");
+      if (!fromAutosave) {
+        // brief flash
+      }
+    } catch (error: unknown) {
+      const status =
+        error && typeof error === "object" && "response" in error
+          ? (error as { response?: { status?: number } }).response?.status
+          : undefined;
+      setSaveStatus(status === 409 ? "conflict" : "error");
+    }
   };
+
+  const markDirty = () => {
+    dirtyRef.current = true;
+    setSaveStatus("idle");
+    if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+    autosaveTimer.current = setTimeout(() => {
+      if (dirtyRef.current) void handleSave(true);
+    }, 1500);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
@@ -221,14 +284,23 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
       <div className="w-full max-w-sm space-y-3 rounded-lg border border-neutral-200 bg-white p-4">
         <div className="space-y-1">
           <Label>{t("chess.study.fieldTitle", { defaultValue: "Title" })}</Label>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+          <Input
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              markDirty();
+            }}
+          />
         </div>
         <div className="space-y-1">
           <Label>{t("chess.study.chapterDescription", { defaultValue: "Chapter intro" })}</Label>
           <Textarea
             rows={2}
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              setDescription(e.target.value);
+              markDirty();
+            }}
             placeholder={t("chess.study.chapterDescriptionPlaceholder", {
               defaultValue: "Optional introduction for learners",
             })}
@@ -323,9 +395,30 @@ export function ChessStudyChapterEditor({ studyId, chapter }: ChessStudyChapterE
             />
           </div>
         ) : null}
-        <Button type="button" onClick={() => void handleSave()} disabled={isPending}>
-          {t("common.button.save", { defaultValue: "Save" })}
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button type="button" onClick={() => void handleSave(false)} disabled={isPending}>
+            {t("common.button.save", { defaultValue: "Save" })}
+          </Button>
+          <Badge
+            variant={match(saveStatus)
+              .with("conflict", "error", () => "destructive" as const)
+              .with("saved", () => "default" as const)
+              .otherwise(() => "outline" as const)}
+          >
+            {match(saveStatus)
+              .with("saving", () => t("chess.study.saveStatusSaving", { defaultValue: "Saving…" }))
+              .with("saved", () => t("chess.study.saveStatusSaved", { defaultValue: "Saved" }))
+              .with("conflict", () =>
+                t("chess.study.saveStatusConflict", {
+                  defaultValue: "Conflict — reload and try again",
+                }),
+              )
+              .with("error", () =>
+                t("chess.study.saveStatusError", { defaultValue: "Save failed" }),
+              )
+              .otherwise(() => t("chess.study.saveStatusIdle", { defaultValue: "Autosave on" }))}
+          </Badge>
+        </div>
         <p className="break-all text-xs text-neutral-500">{movetextFromTree(moveTree.tree)}</p>
       </div>
     </div>
