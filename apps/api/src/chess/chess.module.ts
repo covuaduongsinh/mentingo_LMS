@@ -21,6 +21,7 @@ import { ChessEngineController } from "./engine/engine.controller";
 import { ChessEngineService } from "./engine/engine.service";
 
 @Module({
+  // No LessonModule/CourseModule imports: both pull WebSocket → Chess and create a require cycle.
   controllers: [ChessController, ChessEngineController],
   providers: [
     ChessService,

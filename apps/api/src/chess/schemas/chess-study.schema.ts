@@ -88,6 +88,21 @@ export const importStudyPgnBodySchema = Type.Object({
   mode: Type.Optional(chessStudyChapterModeSchema),
 });
 
+export const createChessStudyLessonBodySchema = Type.Object({
+  chapterId: UUIDSchema,
+  title: Type.String({ minLength: 1, maxLength: 300 }),
+  description: Type.Optional(Type.Union([Type.String({ maxLength: 5000 }), Type.Null()])),
+  studyId: UUIDSchema,
+  studyChapterId: Type.Optional(Type.Union([UUIDSchema, Type.Null()])),
+});
+
+export const updateChessStudyLessonBodySchema = Type.Object({
+  studyId: Type.Optional(UUIDSchema),
+  studyChapterId: Type.Optional(Type.Union([UUIDSchema, Type.Null()])),
+  title: Type.Optional(Type.String({ minLength: 1, maxLength: 300 })),
+  description: Type.Optional(Type.Union([Type.String({ maxLength: 5000 }), Type.Null()])),
+});
+
 export const updateChessStudyChapterBodySchema = Type.Partial(createChessStudyChapterBodySchema);
 
 export const reorderChessStudyChaptersBodySchema = Type.Object({
@@ -124,6 +139,14 @@ export const chessStudyDetailSchema = Type.Intersect([
     members: Type.Array(chessStudyMemberSchema),
   }),
 ]);
+
+export const chessStudyLessonLearnerResponseSchema = Type.Object({
+  lessonId: UUIDSchema,
+  studyId: Type.Union([UUIDSchema, Type.Null()]),
+  studyChapterId: Type.Union([UUIDSchema, Type.Null()]),
+  studyMissing: Type.Boolean(),
+  study: Type.Union([chessStudyDetailSchema, Type.Null()]),
+});
 
 export const createChessStudyBodySchema = Type.Object({
   title: Type.String({ minLength: 1, maxLength: 300 }),
@@ -165,3 +188,5 @@ export type AddChessStudyMemberBody = Static<typeof addChessStudyMemberBodySchem
 export type ChessStudyMoveNode = Static<typeof chessStudyMoveNodeSchema>;
 export type SubmitPracticeAttemptBody = Static<typeof submitPracticeAttemptBodySchema>;
 export type ImportStudyPgnBody = Static<typeof importStudyPgnBodySchema>;
+export type CreateChessStudyLessonBody = Static<typeof createChessStudyLessonBodySchema>;
+export type UpdateChessStudyLessonBody = Static<typeof updateChessStudyLessonBodySchema>;

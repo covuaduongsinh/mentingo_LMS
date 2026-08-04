@@ -8,6 +8,7 @@ export const LESSON_TYPE_OPTION_HANDLES = {
   SCORM: "scorm",
   LIVE_TRAINING: "live_training",
   ASSIGNMENT: "assignment",
+  CHESS_STUDY: "chess_study",
 } as const;
 
 export const CURRICULUM_HANDLES = {

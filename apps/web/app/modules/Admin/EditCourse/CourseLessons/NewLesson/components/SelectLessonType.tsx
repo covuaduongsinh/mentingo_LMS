@@ -1,4 +1,4 @@
-import { ClipboardList, PackageOpen, Users } from "lucide-react";
+import { ClipboardList, PackageOpen, Swords, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { useGlobalSettings } from "~/api/queries/useGlobalSettings";
@@ -79,6 +79,13 @@ const lessonTypes: readonly LessonTypeConfig[] = [
     lucideIcon: ClipboardList,
     title: "adminCourseView.curriculum.lesson.other.assignment",
     description: "adminCourseView.curriculum.lesson.other.assignmentLessonDescription",
+  },
+  {
+    contentType: ContentTypes.CHESS_STUDY_FORM,
+    handle: LESSON_TYPE_OPTION_HANDLES.CHESS_STUDY,
+    lucideIcon: Swords,
+    title: "adminCourseView.curriculum.lesson.other.chessStudy",
+    description: "adminCourseView.curriculum.lesson.other.chessStudyLessonDescription",
   },
 ];
 

@@ -87,10 +87,32 @@ describe("ChessStudyService", () => {
       findNextIncompletePracticeChapter: jest.fn().mockResolvedValue(null),
       createChaptersFromImport: jest.fn().mockResolvedValue([]),
       findUserIdByIdentity: jest.fn().mockResolvedValue(null),
+      createChessStudyLessonRow: jest.fn().mockResolvedValue({ id: "lesson-1", chapterId: "ch-1" }),
+      createLessonChessStudyLink: jest.fn().mockResolvedValue({
+        lessonId: "lesson-1",
+        studyId: STUDY_ID,
+        studyChapterId: null,
+      }),
+      getLessonChessStudyLink: jest.fn(),
+      canAccessChessStudyLesson: jest.fn().mockResolvedValue(true),
+      updateLessonChessStudyLink: jest.fn(),
+      getCourseChapterMeta: jest.fn().mockResolvedValue({
+        chapterId: "ch-1",
+        courseAuthorId: OWNER_ID,
+        primaryLanguage: "en",
+      }),
+      getLessonCourseMeta: jest.fn().mockResolvedValue({
+        lessonId: "lesson-1",
+        courseAuthorId: OWNER_ID,
+      }),
+      getMaxLessonDisplayOrder: jest.fn().mockResolvedValue(0),
       ...repositoryOverrides,
     } as unknown as ChessStudyRepository;
 
-    return { service: new ChessStudyService(repository), repository };
+    return {
+      service: new ChessStudyService(repository),
+      repository,
+    };
   };
 
   describe("getStudyDetail (read access)", () => {

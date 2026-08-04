@@ -21,11 +21,13 @@ import type {
   AddChessStudyMemberBody,
   CreateChessStudyBody,
   CreateChessStudyChapterBody,
+  CreateChessStudyLessonBody,
   ImportStudyPgnBody,
   ReorderChessStudyChaptersBody,
   SubmitPracticeAttemptBody,
   UpdateChessStudyBody,
   UpdateChessStudyChapterBody,
+  UpdateChessStudyLessonBody,
 } from "./schemas/chess-study.schema";
 import type { UUIDType } from "src/common";
 import type { CurrentUserType } from "src/common/types/current-user.type";
@@ -276,6 +278,176 @@ export class ChessStudyService {
     const study = await this.getStudyOrThrow(studyId);
     this.assertCanManage(study, user);
     await this.repository.removeMember(studyId, userId);
+  }
+
+  // --- S4: course lesson embed ---
+
+  async createChessStudyLesson(body: CreateChessStudyLessonBody, user: CurrentUserType) {
+    const canAuthor =
+      this.canManageAny(user) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_CREATE) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE_OWN);
+    if (!canAuthor) {
+      throw new ForbiddenException("chess.study.errors.lessonAuthorDenied");
+    }
+
+    const chapterMeta = await this.repository.getCourseChapterMeta(body.chapterId);
+    if (!chapterMeta) {
+      throw new NotFoundException("chess.study.errors.curriculumChapterNotFound");
+    }
+    const isCourseAuthor = chapterMeta.courseAuthorId === user.userId;
+    if (
+      !isCourseAuthor &&
+      !this.canManageAny(user) &&
+      !hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE)
+    ) {
+      throw new ForbiddenException("chess.study.errors.lessonAuthorDenied");
+    }
+
+    // Author must be able to read the study they embed.
+    const study = await this.getStudyOrThrow(body.studyId);
+    await this.assertCanRead(study, user);
+
+    if (body.studyChapterId) {
+      const chapter = await this.repository.getChapterById(body.studyChapterId);
+      if (!chapter || chapter.studyId !== body.studyId) {
+        throw new BadRequestException("chess.study.errors.chapterNotFound");
+      }
+    }
+
+    const language = chapterMeta.primaryLanguage ?? "en";
+    const displayOrder = (await this.repository.getMaxLessonDisplayOrder(body.chapterId)) + 1;
+
+    const lessonRow = await this.repository.createChessStudyLessonRow(
+      body.chapterId,
+      language as "en",
+      body.title,
+      body.description ?? undefined,
+      displayOrder,
+    );
+
+    const link = await this.repository.createLessonChessStudyLink({
+      lessonId: lessonRow.id,
+      studyId: body.studyId,
+      studyChapterId: body.studyChapterId ?? null,
+    });
+
+    return {
+      lessonId: lessonRow.id,
+      studyId: link.studyId,
+      studyChapterId: link.studyChapterId,
+    };
+  }
+
+  async getChessStudyLessonForLearner(lessonId: UUIDType, user: CurrentUserType) {
+    const link = await this.repository.getLessonChessStudyLink(lessonId);
+    if (!link) {
+      throw new NotFoundException("chess.study.errors.lessonEmbedNotFound");
+    }
+
+    const canAccessLesson =
+      this.canManageAny(user) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_READ_MANAGEABLE) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE) ||
+      (await this.repository.canAccessChessStudyLesson(lessonId, user.userId));
+
+    if (!canAccessLesson) {
+      throw new ForbiddenException("chess.study.errors.lessonAccessDenied");
+    }
+
+    if (!link.studyId) {
+      return {
+        lessonId,
+        studyId: null,
+        studyChapterId: link.studyChapterId,
+        studyMissing: true,
+        study: null,
+      };
+    }
+
+    const study = await this.repository.getStudyById(link.studyId);
+    if (!study) {
+      return {
+        lessonId,
+        studyId: link.studyId,
+        studyChapterId: link.studyChapterId,
+        studyMissing: true,
+        study: null,
+      };
+    }
+
+    // Lesson enrollment grants temporary read of private studies for this view only.
+    const [chaptersList, members] = await Promise.all([
+      this.repository.getChaptersByStudyId(study.id),
+      this.repository.getMembersByStudyId(study.id),
+    ]);
+
+    const filteredChapters = link.studyChapterId
+      ? chaptersList.filter((chapter) => chapter.id === link.studyChapterId)
+      : chaptersList;
+
+    return {
+      lessonId,
+      studyId: study.id,
+      studyChapterId: link.studyChapterId,
+      studyMissing: false,
+      study: {
+        ...study,
+        chapters: filteredChapters.length > 0 ? filteredChapters : chaptersList,
+        members,
+        canWrite: false,
+      },
+    };
+  }
+
+  async updateChessStudyLesson(
+    lessonId: UUIDType,
+    body: UpdateChessStudyLessonBody,
+    user: CurrentUserType,
+  ) {
+    const link = await this.repository.getLessonChessStudyLink(lessonId);
+    if (!link) {
+      throw new NotFoundException("chess.study.errors.lessonEmbedNotFound");
+    }
+
+    const canAuthor =
+      this.canManageAny(user) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE) ||
+      hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE_OWN);
+    if (!canAuthor) {
+      throw new ForbiddenException("chess.study.errors.lessonAuthorDenied");
+    }
+
+    const lessonMeta = await this.repository.getLessonCourseMeta(lessonId);
+    if (!lessonMeta) {
+      throw new NotFoundException("chess.study.errors.lessonEmbedNotFound");
+    }
+    if (
+      lessonMeta.courseAuthorId !== user.userId &&
+      !this.canManageAny(user) &&
+      !hasPermission(user.permissions, PERMISSIONS.COURSE_UPDATE)
+    ) {
+      throw new ForbiddenException("chess.study.errors.lessonAuthorDenied");
+    }
+
+    if (body.studyId) {
+      const study = await this.getStudyOrThrow(body.studyId);
+      await this.assertCanRead(study, user);
+    }
+
+    const nextStudyId = body.studyId ?? link.studyId;
+    if (body.studyChapterId && nextStudyId) {
+      const chapter = await this.repository.getChapterById(body.studyChapterId);
+      if (!chapter || chapter.studyId !== nextStudyId) {
+        throw new BadRequestException("chess.study.errors.chapterNotFound");
+      }
+    }
+
+    return this.repository.updateLessonChessStudyLink(lessonId, {
+      studyId: body.studyId,
+      studyChapterId: body.studyChapterId,
+    });
   }
 
   async submitPracticeAttempt(

@@ -3248,6 +3248,31 @@ export const chessStudyMembers = pgTable(
   })),
 );
 
+/**
+ * Links a curriculum lesson (type chess_study) to a chess Study and optional chapter (S4).
+ * studyId/chapterId set-null on delete so the lesson shell can show a placeholder.
+ */
+export const lessonChessStudies = pgTable(
+  "lesson_chess_studies",
+  {
+    ...id,
+    ...timestamps,
+    lessonId: uuid("lesson_id")
+      .references(() => lessons.id, { onDelete: "cascade" })
+      .notNull(),
+    studyId: uuid("study_id").references(() => chessStudies.id, { onDelete: "set null" }),
+    studyChapterId: uuid("study_chapter_id").references(() => chessStudyChapters.id, {
+      onDelete: "set null",
+    }),
+    tenantId,
+  },
+  (table) => ({
+    ...withTenantIdIndex("lesson_chess_studies")(table),
+    lessonUniqueIdx: uniqueIndex("lesson_chess_studies_lesson_id_unique_idx").on(table.lessonId),
+    studyIdx: index("lesson_chess_studies_study_id_idx").on(table.studyId),
+  }),
+);
+
 export const chessPuzzles = pgTable(
   "chess_puzzles",
   {
