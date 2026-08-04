@@ -3,7 +3,7 @@
 **Ngày:** 2026-08-04 (cập nhật)
 **Nền tảng:** monorepo Mentingo LMS + module cờ vua (MIT-only)
 **Domain mục tiêu:** `covuahocduong.com`
-**Trạng thái:** W1–W4 (module cờ) + LMS-core PR1–PR5 + roadmap lila L0–L10 đã **merged**. Classroom C0–C5 đã merged (C6–C8 còn lại). **Study depth S0–S6** (đào sâu Study sau MVP L2) đang triển khai — xem mục -5.
+**Trạng thái:** W1–W4 (module cờ) + LMS-core PR1–PR5 + roadmap lila L0–L10 đã **merged**. Classroom C0–C8 đã tiến triển. **Study depth S0–S6** (đào sâu Study sau MVP L2) đã **hoàn tất merge** — xem mục -5.
 
 ---
 
@@ -16,15 +16,17 @@ Sau L0–L10 và Classroom C5 (đã có `assignStudy` chia sẻ study cho lớp 
 - Matrix mục B đã cập nhật trạng thái sau L2 + trỏ S\*
 - Master MVP: `docs/specs/chess-study-business-spec.md`
 
-| Đợt    | Nội dung                                                    | Ghi chú                 |
-| ------ | ----------------------------------------------------------- | ----------------------- |
-| **S0** | Docs teardown + roadmap                                     | #42 merged              |
-| **S1** | PGN import/export + orientation/description/pgnTags         | (đang merge)            |
-| **S2** | Shapes-on-node + gamebook hint/onWrong/onCorrect            |                         |
-| **S3** | Discovery filters, invite-by-identity, clone UX, allowClone | không unlisted/like     |
-| **S4** | Embed study vào **lesson khóa học**                         | khác C5 classroom share |
-| **S5** | Autosave + optimistic concurrency (+ presence optional)     | không full OT tree      |
-| **S6** | E2E Playwright + i18n + cập nhật spec master                |                         |
+| Đợt    | Nội dung                                                    | Ghi chú    |
+| ------ | ----------------------------------------------------------- | ---------- |
+| **S0** | Docs teardown + roadmap                                     | #42 merged |
+| **S1** | PGN import/export + orientation/description/pgnTags         | #43 merged |
+| **S2** | Shapes-on-node + gamebook hint/onWrong/onCorrect            | #44 merged |
+| **S3** | Discovery filters, invite-by-identity, clone UX, allowClone | #45 merged |
+| **S4** | Embed study vào **lesson khóa học**                         | #46 merged |
+| **S5** | Autosave + optimistic concurrency                           | #47 merged |
+| **S6** | E2E smoke + i18n en/vi + HANDOVER/roadmap                   | (this PR)  |
+
+**Migrations:** `0210` chapter meta, `0211` allow_clone, `0212` lesson_chess_studies — chạy `pnpm db:migrate` trên mỗi môi trường.
 
 **Đã chốt:** visibility chỉ `public`/`private`; không like; mỗi đợt commit+push+PR+merge rồi sang đợt sau. Clean-room: [docs/research/lila/00-cleanroom-policy.md](docs/research/lila/00-cleanroom-policy.md).
 

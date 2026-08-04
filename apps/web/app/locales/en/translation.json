@@ -276,7 +276,33 @@
       "guidedDone": "Chapter complete",
       "guidedWrong": "Not quite — try again.",
       "guidedReveal": "Reveal move",
-      "guidedRestart": "Restart"
+      "guidedRestart": "Restart",
+      "scopeAll": "All visible",
+      "scopeMine": "My studies",
+      "scopeShared": "Shared with me",
+      "importPgn": "Import PGN",
+      "exportPgn": "Export PGN",
+      "exportChapterPgn": "Export chapter PGN",
+      "pastePgn": "Paste PGN (one or more games)",
+      "importPgnSubmit": "Import as chapters",
+      "chapterDescription": "Chapter intro",
+      "chapterDescriptionPlaceholder": "Optional introduction for learners",
+      "orientation": "Board orientation",
+      "orientationWhite": "White",
+      "orientationBlack": "Black",
+      "gamebookFields": "Gamebook coaching (this move)",
+      "hint": "Hint",
+      "onWrong": "When wrong",
+      "onCorrect": "When correct",
+      "guidedHint": "Hint",
+      "guidedCorrectDefault": "Correct!",
+      "memberIdentity": "Email or username",
+      "lessonStudyMissing": "This chess study is no longer available.",
+      "saveStatusSaving": "Saving…",
+      "saveStatusSaved": "Saved",
+      "saveStatusConflict": "Conflict — reload and try again",
+      "saveStatusError": "Save failed",
+      "saveStatusIdle": "Autosave on"
     },
     "puzzle": {
       "title": "Puzzle training",
@@ -408,7 +434,11 @@
       "puzzleImportFailed": "Could not queue the import",
       "seekCreateFailed": "Could not create the seek",
       "seekCancelFailed": "Could not cancel the seek",
-      "seekAcceptFailed": "Could not accept the seek"
+      "seekAcceptFailed": "Could not accept the seek",
+      "pgnImported": "PGN imported into new chapter(s)",
+      "pgnImportFailed": "Could not import PGN",
+      "studyLessonCreated": "Chess study lesson created",
+      "studyLessonCreateFailed": "Could not create chess study lesson"
     }
   },
   "chessTournament": {
@@ -880,7 +910,8 @@
       "embed": "Embed",
       "scorm": "SCORM",
       "live_training": "Live Training",
-      "assignment": "Assignment"
+      "assignment": "Assignment",
+      "chess_study": "Chess study"
     },
     "error": {
       "somethingWentWrong": "Oops! Something went wrong."
@@ -3405,7 +3436,9 @@
           "taskDescriptionTooltip": "Briefly describe what the participant should do during the conversation with the AI mentor.",
           "assignment": "Assignment",
           "assignmentLessonDescription": "Create a graded task or homework assignment for learners to complete.",
-          "tasks": "Tasks"
+          "tasks": "Tasks",
+          "chessStudy": "Chess study lesson",
+          "chessStudyLessonDescription": "Embed a multi-chapter chess study into this course"
         },
         "assignmentTaskType": {
           "short_answer": "Short answer",
